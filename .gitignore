@@ -1,0 +1,18 @@
+# Python virtual environments
+geo_env/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+*.npy
+*.npy
+*.npy
+*.npy
