@@ -1,0 +1,12 @@
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+include = "\\.pyi?$"
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+extend-exclude = ["notebooks", "data", "outputs", ".venv", "geo_env"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

@@ -1,5 +1,6 @@
 # Python virtual environments
 geo_env/
+.venv/
 venv/
 env/
 
@@ -10,9 +11,14 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
+# Data artifacts (keep raw samples tracked under data/raw/)
+*.npy
+!data/raw/**/*.npy
+data/processed/
+data/external/
+
+# Outputs
+outputs/
+
 # OS files
 .DS_Store
-*.npy
-*.npy
-*.npy
-*.npy

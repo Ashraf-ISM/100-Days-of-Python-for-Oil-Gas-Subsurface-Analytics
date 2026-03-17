@@ -936,102 +936,47 @@ Cloud Platforms:
 ```
 100-days-python-oil-gas-analytics/
 │
-├── 📂 .github/
-│   ├── workflows/
-│   │   ├── ci.yml                    # Automated testing
-│   │   └── deploy.yml                # Deployment automation
-│   └── ISSUE_TEMPLATE/
-│       ├── bug_report.md
-│       └── feature_request.md
+├── 📂 data/
+│   ├── 📂 raw/                       # Raw datasets and samples
+│   ├── 📂 processed/                 # Derived datasets
+│   └── 📂 external/                  # Third-party datasets
 │
-├── 📂 phase-01-subsurface-data-engineering/
-│   ├── 📂 day-01-05-well-log-ingestion/
-│   │   ├── 📂 notebooks/
-│   │   │   ├── day01_las_basics.ipynb
-│   │   │   ├── day02_batch_processing.ipynb
-│   │   │   ├── day03_depth_alignment.ipynb
-│   │   │   ├── day04_log_standardization.ipynb
-│   │   │   └── day05_qc_automation.ipynb
-│   │   ├── 📂 scripts/
-│   │   │   ├── las_ingestion.py
-│   │   │   ├── batch_processor.py
-│   │   │   └── qc_validator.py
-│   │   ├── 📂 data/
-│   │   │   ├── sample_wells/
-│   │   │   └── test_data/
-│   │   ├── 📂 outputs/
-│   │   │   ├── processed_logs/
-│   │   │   └── qc_reports/
-│   │   ├── 📄 README.md
-│   │   ├── 📄 requirements.txt
-│   │   └── 📄 LEARNING_NOTES.md
-│   │
-│   ├── 📂 day-06-10-production-analytics/
-│   ├── 📂 day-11-15-qc-anomaly-detection/
-│   └── 📂 day-16-20-geological-zonation/
+├── 📂 notebooks/
+│   ├── 📂 day-01/
+│   ├── 📂 day-02/
+│   ├── 📂 day-03/
+│   └── 📂 bruges/
 │
-├── 📂 phase-02-petrophysics-rock-physics/
-│   ├── 📂 day-21-25-core-petro-computations/
-│   ├── 📂 day-26-30-crossplots-rock-typing/
-│   ├── 📂 day-31-35-saturation-contacts/
-│   └── 📂 day-36-40-rock-physics-modeling/
+├── 📂 src/
+│   └── 📂 seismic/
 │
-├── 📂 phase-03-seismic-data-analytics/
-│   ├── 📂 day-41-45-segy-handling/
-│   ├── 📂 day-46-50-seismic-attributes/
-│   ├── 📂 day-51-55-time-depth-conversion/
-│   └── 📂 day-56-60-seismic-well-tie/
+├── 📂 outputs/
+│   ├── 📂 figures/
+│   └── 📂 reports/
 │
-├── 📂 phase-04-ml-subsurface-analytics/
-│   ├── 📂 day-61-65-electrofacies-classification/
-│   ├── 📂 day-66-70-property-prediction/
-│   ├── 📂 day-71-75-production-forecasting/
-│   ├── 📂 day-76-80-seismic-to-property/
-│   └── 📂 day-81-85-explainability-uncertainty/
-│
-├── 📂 phase-05-capstone-project/
-│   ├── 📂 backend/
-│   ├── 📂 frontend/
-│   ├── 📂 models/
-│   ├── 📂 tests/
-│   ├── 📂 docs/
-│   ├── 📄 Dockerfile
-│   └── 📄 docker-compose.yml
+├── 📂 scripts/
+│   ├── 📄 git_push_day1.sh
+│   └── 📄 push-on-repo.sh
 │
 ├── 📂 docs/
-│   ├── 📄 ROADMAP.md                 # Detailed daily breakdown
-│   ├── 📄 TECH_STACK.md              # Technology explanations
-│   ├── 📄 RESOURCES.md               # Learning materials
-│   ├── 📄 FAQ.md                     # Common questions
-│   ├── 📄 CONTRIBUTING.md            # Contribution guidelines
-│   └── 📄 CODE_OF_CONDUCT.md         # Community standards
-│
-├── 📂 utils/
-│   ├── 📄 __init__.py
-│   ├── 📄 logging_config.py          # Centralized logging
-│   ├── 📄 data_validators.py         # Data validation utilities
-│   ├── 📄 plotting_templates.py      # Visualization templates
-│   └── 📄 constants.py               # Industry constants
-│
-├── 📂 assets/
-│   ├── 📂 images/                    # Screenshots, diagrams
-│   ├── 📂 logos/                     # Branding assets
-│   └── 📂 presentations/             # Slide decks
+│   ├── 📄 ROADMAP.md
+│   ├── 📄 CONTRIBUTING.md
+│   └── 📄 CODE_OF_CONDUCT.md
 │
 ├── 📂 tests/
-│   ├── 📄 test_las_processing.py
-│   ├── 📄 test_petrophysics.py
-│   └── 📄 test_ml_models.py
 │
-├── 📄 requirements.txt               # Python dependencies
-├── 📄 environment.yml                # Conda environment
-├── 📄 setup.py                       # Package installation
-├── 📄 pyproject.toml                 # Modern Python packaging
-├── 📄 README.md                      # This file
-├── 📄 LICENSE                        # MIT License
-├── 📄 .gitignore                     # Git ignore rules
-├── 📄 .pre-commit-config.yaml        # Code quality hooks
-└── 📄 CHANGELOG.md                   # Version history
+├── 📄 requirements.txt
+├── 📄 requirements-dev.txt
+├── 📄 environment.yml
+├── 📄 pyproject.toml
+├── 📄 .editorconfig
+├── 📄 .pre-commit-config.yaml
+├── 📂 .github/
+│   └── 📂 workflows/
+│       └── 📄 ci.yml
+├── 📄 README.md
+├── 📄 LICENSE
+└── 📄 CHANGELOG.md
 ```
 
 <br>
