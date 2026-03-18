@@ -679,7 +679,7 @@ def export_attributes(attr_dict, kmeans_labels, mlp_labels, data_shape):
 
 
 # ─────────────────────────────────────────────────────────────
-# 10.  SUMMARY DASHBOARD
+# 10.  SUMMARY DASHBOARD for Results
 # ─────────────────────────────────────────────────────────────
 def summary_dashboard(data, attr_dict, kmeans_labels,
                       mlp_labels, dt_ms, data_shape, n_clusters):
