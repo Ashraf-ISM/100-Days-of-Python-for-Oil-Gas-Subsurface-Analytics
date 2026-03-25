@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="100 Days of Python for Oil & Gas Subsurface Analytics">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1b2d"/>
+      <stop offset="50%" stop-color="#12324a"/>
+      <stop offset="100%" stop-color="#184b3a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f6c453"/>
+      <stop offset="100%" stop-color="#f28e2b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <g opacity="0.2">
+    <circle cx="980" cy="80" r="90" fill="#ffffff"/>
+    <circle cx="1100" cy="240" r="140" fill="#ffffff"/>
+    <circle cx="180" cy="250" r="120" fill="#ffffff"/>
+  </g>
+  <rect x="70" y="70" width="12" height="180" fill="url(#accent)"/>
+  <text x="100" y="140" fill="#f7f9fb" font-size="40" font-family="Georgia, 'Times New Roman', serif" font-weight="700">
+    100 Days of Python for Oil &amp; Gas
+  </text>
+  <text x="100" y="190" fill="#d6e2ea" font-size="22" font-family="'Trebuchet MS', Arial, sans-serif">
+    Subsurface Analytics - Portfolio-Ready - Industry-Grade
+  </text>
+  <g>
+    <rect x="100" y="220" rx="18" ry="18" width="210" height="40" fill="url(#accent)"/>
+    <text x="120" y="247" fill="#0f1b2d" font-size="18" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="700">
+      Roadmap Inside
+    </text>
+  </g>
+</svg>

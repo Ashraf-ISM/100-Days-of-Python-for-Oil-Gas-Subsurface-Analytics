@@ -1,0 +1,40 @@
+name: "Bug report"
+description: "Report a reproducible problem"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for taking the time to report a bug."
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened and what did you expect?
+      placeholder: A clear and concise description.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide steps so we can reproduce the issue.
+      placeholder: |
+        1. Go to...
+        2. Run...
+        3. See error...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or traceback
+      description: Paste any relevant output.
+      render: shell
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, and install method.
+      placeholder: e.g., Ubuntu 22.04, Python 3.11, pip
+    validations:
+      required: true

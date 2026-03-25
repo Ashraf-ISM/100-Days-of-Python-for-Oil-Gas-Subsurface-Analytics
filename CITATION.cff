@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "100 Days of Python for Oil & Gas Subsurface Analytics"
+message: "If you use this project, please cite it using this file."
+type: software
+authors:
+  - given-names: Ashraf
+    family-names: ISM
+repository-code: "https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics"
+url: "https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics"
+license: MIT

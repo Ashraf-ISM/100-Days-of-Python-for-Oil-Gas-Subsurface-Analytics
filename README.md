@@ -1,5 +1,12 @@
 <div align="center">
 
+<p align="center">
+  <img src="assets/banner.svg" alt="Subsurface Analytics banner" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/logo.svg" alt="Subsurface Analytics logo" width="120"/>
+</p>
+
 ```
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║                                                                           ║
@@ -20,9 +27,10 @@
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
-[![Progress](https://img.shields.io/badge/Progress-0%2F100_Days-orange?style=for-the-badge)](docs/ROADMAP.md)
-[![Stars](https://img.shields.io/github/stars/yourusername/repo?style=for-the-badge&color=yellow)](https://github.com/yourusername/repo/stargazers)
-[![Forks](https://img.shields.io/github/forks/yourusername/repo?style=for-the-badge&color=blue)](https://github.com/yourusername/repo/network)
+[![CI](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/actions/workflows/ci.yml)
+[![Progress](https://img.shields.io/badge/Progress-3%2F100_Days-orange?style=for-the-badge)](docs/ROADMAP.md)
+[![Stars](https://img.shields.io/github/stars/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics?style=for-the-badge&color=yellow)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/stargazers)
+[![Forks](https://img.shields.io/github/forks/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics?style=for-the-badge&color=blue)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/network)
 
 <br>
 
@@ -30,7 +38,7 @@
 
 <br>
 
-[🚀 Get Started](#-quick-start) • [📊 Roadmap](#-complete-roadmap) • [🛠️ Tech Stack](#️-technology-stack) • [📚 Resources](#-learning-resources) • [🤝 Contribute](#-contributing)
+[🧭 Getting Started](docs/GETTING_STARTED.md) • [🚀 Quick Start](#-quick-start) • [📊 Roadmap](#-complete-roadmap) • [🛠️ Tech Stack](#️-technology-stack) • [📚 Resources](#-learning-resources) • [❓ FAQ](docs/FAQ.md) • [🤝 Contribute](#-contributing)
 
 </div>
 
@@ -46,14 +54,19 @@
 - [Complete Roadmap](#-complete-roadmap)
 - [Technology Stack](#️-technology-stack)
 - [Repository Structure](#-repository-structure)
+- [Getting Started](#-getting-started)
+- [Gallery](#-gallery)
 - [Quick Start](#-quick-start)
 - [Daily Workflow](#-daily-workflow)
 - [Deliverables & Portfolio](#-deliverables--portfolio)
 - [Prerequisites](#-prerequisites)
 - [Learning Resources](#-learning-resources)
 - [Community & Support](#-community--support)
+- [FAQ](#-faq)
 - [Success Stories](#-success-stories)
 - [Contributing](#-contributing)
+- [Security](#-security)
+- [Support](#-support)
 - [License](#-license)
 
 <br>
@@ -934,7 +947,7 @@ Cloud Platforms:
 ## 📁 **Repository Structure**
 
 ```
-100-days-python-oil-gas-analytics/
+100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/
 │
 ├── 📂 data/
 │   ├── 📂 raw/                       # Raw datasets and samples
@@ -954,11 +967,19 @@ Cloud Platforms:
 │   ├── 📂 figures/
 │   └── 📂 reports/
 │
+├── 📂 assets/
+│   ├── 📄 banner.svg
+│   ├── 📄 logo.svg
+│   └── 📂 badges/
+│       └── 📄 completion-badge.svg
+│
 ├── 📂 scripts/
 │   ├── 📄 git_push_day1.sh
 │   └── 📄 push-on-repo.sh
 │
 ├── 📂 docs/
+│   ├── 📄 GETTING_STARTED.md
+│   ├── 📄 FAQ.md
 │   ├── 📄 ROADMAP.md
 │   ├── 📄 CONTRIBUTING.md
 │   └── 📄 CODE_OF_CONDUCT.md
@@ -972,12 +993,46 @@ Cloud Platforms:
 ├── 📄 .editorconfig
 ├── 📄 .pre-commit-config.yaml
 ├── 📂 .github/
+│   ├── 📂 ISSUE_TEMPLATE/
+│   └── 📄 PULL_REQUEST_TEMPLATE.md
 │   └── 📂 workflows/
 │       └── 📄 ci.yml
 ├── 📄 README.md
+├── 📄 SECURITY.md
+├── 📄 SUPPORT.md
+├── 📄 CITATION.cff
+├── 📄 Makefile
 ├── 📄 LICENSE
 └── 📄 CHANGELOG.md
 ```
+
+<br>
+
+---
+
+<br>
+
+## 🧭 **Getting Started**
+
+If you're new, start with the concise guide here: `docs/GETTING_STARTED.md`.
+
+<br>
+
+---
+
+<br>
+
+## 🖼️ **Gallery**
+
+<div align="center">
+
+<img src="outputs/figures/day-02/seismic_2d_sections.png" alt="Seismic 2D sections" width="85%"/>
+
+<img src="outputs/figures/day-02/seismic_3d_slices.png" alt="Seismic 3D slices" width="85%"/>
+
+<img src="outputs/figures/bruges/ricker_wavelet.png" alt="Ricker wavelet" width="85%"/>
+
+</div>
 
 <br>
 
@@ -1006,8 +1061,8 @@ Before beginning, ensure you have:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/100-days-python-oil-gas-analytics.git
-cd 100-days-python-oil-gas-analytics
+git clone https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics.git
+cd 100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics
 
 # Create conda environment from file
 conda env create -f environment.yml
@@ -1026,8 +1081,8 @@ jupyter lab
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/100-days-python-oil-gas-analytics.git
-cd 100-days-python-oil-gas-analytics
+git clone https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics.git
+cd 100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics
 
 # Create virtual environment
 python -m venv venv
@@ -1048,15 +1103,9 @@ python -c "import numpy, pandas, lasio; print('✅ Setup complete')"
 #### **Option 3: Docker Container (Advanced)**
 
 ```bash
-# Pull pre-built image
-docker pull yourusername/subsurface-analytics:latest
-
-# Run container with Jupyter
-docker run -p 8888:8888 -v $(pwd):/workspace subsurface-analytics
-
-# Or build from scratch
+# Build and run
 docker build -t subsurface-analytics .
-docker-compose up
+docker run -p 8888:8888 -v $(pwd):/workspace subsurface-analytics
 ```
 
 <br>
@@ -1333,7 +1382,7 @@ print(f"Clean data points: {len(df_clean)}")
 2. 🔍 Search closed GitHub Issues
 3. 💬 Ask in Discussions tab
 4. 🐛 Report bugs with Issue template
-5. 📧 Email: support@subsurface-analytics.dev (response within 48hrs)
+5. 📌 Review SUPPORT.md for the best contact paths
 ```
 
 <br>
@@ -1346,7 +1395,7 @@ We welcome contributions! Here's how:
 # Fork the repository on GitHub
 
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/100-days-python-oil-gas-analytics.git
+git clone https://github.com/YOUR_USERNAME/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics.git
 
 # Create a feature branch
 git checkout -b feature/new-petrophysics-tool
@@ -1370,6 +1419,16 @@ git push origin feature/new-petrophysics-tool
 - 📚 Tutorial notebooks
 
 See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
+
+<br>
+
+---
+
+<br>
+
+## ❓ **FAQ**
+
+Common questions are answered in `docs/FAQ.md`.
 
 <br>
 
@@ -1419,7 +1478,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 Edit the badge at the top of this README:
 
 ```markdown
-![Progress](https://img.shields.io/badge/Progress-25%2F100-orange?style=for-the-badge)
+![Progress](https://img.shields.io/badge/Progress-3%2F100-orange?style=for-the-badge)
 ```
 
 <br>
@@ -1456,11 +1515,31 @@ Upon completion, you can self-issue a certificate by:
 4. (Optional) Request peer review from 2 community members
 
 **Digital Badge:**  
-We provide SVG badge templates in `/assets/badges/` — add to your:
+We provide SVG badge templates in `assets/badges/` (see `assets/badges/completion-badge.svg`) — add to your:
 - LinkedIn profile
 - GitHub README
 - Personal website
 - Email signature
+
+<br>
+
+---
+
+<br>
+
+## 🔐 **Security**
+
+Please read `SECURITY.md` for vulnerability reporting guidelines.
+
+<br>
+
+---
+
+<br>
+
+## 🧰 **Support**
+
+Support channels and response expectations are listed in `SUPPORT.md`.
 
 <br>
 
@@ -1500,20 +1579,19 @@ This curriculum was built with inspiration and contributions from:
 
 <br>
 
-## 📞 **Contact & Social**
+## 📞 **Contact & Community**
 
 <div align="center">
 
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=for-the-badge&logo=github)](https://github.com/yourusername)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/yourprofile)
-[![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/yourhandle)
-[![Email](https://img.shields.io/badge/Email-Contact-red?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your.email@example.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=for-the-badge&logo=github)](https://github.com/Ashraf-ISM)
+[![Discussions](https://img.shields.io/badge/Discussions-Join-2E7D32?style=for-the-badge&logo=github)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/discussions)
+[![Issues](https://img.shields.io/badge/Issues-Report-red?style=for-the-badge&logo=github)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/issues)
 
 <br>
 
 ### 💡 **Questions? Suggestions? Found a Bug?**
 
-[Open an Issue](https://github.com/yourusername/repo/issues) • [Start a Discussion](https://github.com/yourusername/repo/discussions) • [Send Email](mailto:your.email@example.com)
+[Open an Issue](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/issues) • [Start a Discussion](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/discussions)
 
 <br>
 
