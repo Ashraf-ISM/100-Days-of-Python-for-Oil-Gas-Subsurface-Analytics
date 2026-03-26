@@ -18,7 +18,9 @@ data/processed/
 data/external/
 
 # Outputs
-outputs/
+outputs/*
 
+!outputs/day_13-20/
+!outputs/day_13-20/**
 # OS files
 .DS_Store
