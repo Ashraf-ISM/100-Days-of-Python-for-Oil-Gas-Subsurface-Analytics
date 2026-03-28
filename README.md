@@ -1026,7 +1026,7 @@ If you're new, start with the concise guide here: `docs/GETTING_STARTED.md`.
 
 <div align="center">
 
-<img src="outputs/figures/day_13-20/Input%20Data-Time%20domain.png)" alt="Seismic 2D sections" width="85%"/>
+<img src="outputs/figures/day_13-20/Input Data-Time domain.png)" alt="S/Time domain Data" width="85%"/>
 
 <img src="outputs/figures/day_13-20/Interpolation_Method_Comparison.png" alt="/Interpolation Method Comparison" width="85%"/>
 
