@@ -7,975 +7,142 @@
   <img src="assets/logo.svg" alt="Subsurface Analytics logo" width="120"/>
 </p>
 
-```
-╔═══════════════════════════════════════════════════════════════════════════╗
-║                                                                           ║
-║   ██████╗ ██╗██╗         ██╗ ██████╗  █████╗ ███████╗                   ║
-║  ██╔═══██╗██║██║        ██╔╝██╔════╝ ██╔══██╗██╔════╝                   ║
-║  ██║   ██║██║██║       ██╔╝ ██║  ███╗███████║███████╗                   ║
-║  ██║   ██║██║██║      ██╔╝  ██║   ██║██╔══██║╚════██║                   ║
-║  ╚██████╔╝██║███████╗██╔╝   ╚██████╔╝██║  ██║███████║                   ║
-║   ╚═════╝ ╚═╝╚══════╝╚═╝     ╚═════╝ ╚═╝  ╚═╝╚══════╝                   ║
-║                                                                           ║
-╚═══════════════════════════════════════════════════════════════════════════╝
-```
+# 🛢️ 100 Days of Python for Oil & Gas Subsurface Analytics
 
-# 🛢️ **100 Days of Python for Oil & Gas Subsurface Analytics**
-
-### *Transform from Geophysicist to Data-Driven Subsurface Analyst*
+### *A structured, hands-on journey from geoscience fundamentals to production-ready subsurface analytics*
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
 [![CI](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/actions/workflows/ci.yml)
-[![Progress](https://img.shields.io/badge/Progress-3%2F100_Days-orange?style=for-the-badge)](docs/ROADMAP.md)
+[![Progress](https://img.shields.io/badge/Progress-20%2F100_Days-orange?style=for-the-badge)](docs/ROADMAP.md)
 [![Stars](https://img.shields.io/github/stars/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics?style=for-the-badge&color=yellow)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/stargazers)
 [![Forks](https://img.shields.io/github/forks/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics?style=for-the-badge&color=blue)](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/network)
 
-<br>
-
-**Industry-Grade** • **Portfolio-Ready** • **Production-Tested** • **Interview-Proven**
-
-<br>
-
-[🧭 Getting Started](docs/GETTING_STARTED.md) • [🚀 Quick Start](#-quick-start) • [📊 Roadmap](#-complete-roadmap) • [🛠️ Tech Stack](#️-technology-stack) • [📚 Resources](#-learning-resources) • [❓ FAQ](docs/FAQ.md) • [🤝 Contribute](#-contributing)
+[🚀 Quick Start](#-quick-start) · [📊 Roadmap](#-roadmap) · [📁 Structure](#-repository-structure) · [🛠️ Tech Stack](#️-technology-stack) · [🤝 Contributing](#-contributing)
 
 </div>
 
 ---
 
-<br>
+## 📖 Table of Contents
 
-## 📖 **Table of Contents**
-
-- [Mission Statement](#-mission-statement)
-- [Why This Program Exists](#-why-this-program-exists)
-- [Learning Philosophy](#-learning-philosophy)
-- [Complete Roadmap](#-complete-roadmap)
-- [Technology Stack](#️-technology-stack)
+- [About](#-about)
+- [What You'll Build](#-what-youll-build)
+- [Roadmap](#-roadmap)
 - [Repository Structure](#-repository-structure)
-- [Getting Started](#-getting-started)
-- [Gallery](#-gallery)
+- [Technology Stack](#️-technology-stack)
 - [Quick Start](#-quick-start)
+- [Gallery](#️-gallery)
 - [Daily Workflow](#-daily-workflow)
-- [Deliverables & Portfolio](#-deliverables--portfolio)
 - [Prerequisites](#-prerequisites)
 - [Learning Resources](#-learning-resources)
-- [Community & Support](#-community--support)
-- [FAQ](#-faq)
-- [Success Stories](#-success-stories)
 - [Contributing](#-contributing)
-- [Security](#-security)
-- [Support](#-support)
 - [License](#-license)
 
-<br>
+---
+
+## 🎯 About
+
+This is a **100-day, project-driven curriculum** for geoscientists and petroleum engineers who want to build real Python skills for subsurface analytics. Every day covers a concrete topic — from reading LAS files on Day 1 to deploying a machine-learning-powered reservoir characterisation platform on Day 100.
+
+The course is deliberately **industry-focused**: datasets come from real subsurface workflows, code follows production standards, and deliverables are portfolio-ready.
+
+> **Who is this for?** Geophysicists, petrophysicists, reservoir engineers, and geoscience students who have basic Python familiarity and want to apply it to O&G workflows.
 
 ---
 
-<br>
+## 🏗️ What You'll Build
 
-## 🎯 **Mission Statement**
-
-> **This is not another generic Python course.**
-
-This is **Python for Subsurface Geophysicists** — a comprehensive, industry-aligned learning journey that transforms theoretical knowledge into practical, deployable analytics solutions used daily in:
-
-- 🏢 **Major Operating Companies**: Shell, ExxonMobil, Chevron, BP, TotalEnergies
-- 🛠️ **Service Providers**: SLB, Halliburton, Baker Hughes, Weatherford
-- 📊 **Energy Analytics**: Rystad Energy, Wood Mackenzie, IHS Markit
-- 🔬 **Research & Academia**: Universities, National Labs, Consulting Firms
-
-<br>
-
-### **Core Principles**
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│  ❌ Generic Python Tutorials    ✅ Industry-Specific Workflows  │
-│  ❌ Theoretical Concepts         ✅ Production-Ready Code        │
-│  ❌ Toy Datasets                 ✅ Real Subsurface Data         │
-│  ❌ Certificate Chasing          ✅ Portfolio Building           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-<br>
+| Phase | Days | Output |
+|-------|------|--------|
+| **Data Engineering** | 1 – 20 | Multi-well ingestion pipeline, automated QC system |
+| **Petrophysics** | 21 – 40 | Full petrophysical interpreter, rock-typing module |
+| **Seismic Analytics** | 41 – 60 | SEGY reader, attribute engine, well-tie automation |
+| **Machine Learning** | 61 – 85 | Electrofacies classifier, production forecaster, seismic inversion |
+| **Capstone** | 86 – 100 | Integrated, deployed subsurface analytics platform |
 
 ---
 
-<br>
+## 📊 Roadmap
 
-## 💡 **Why This Program Exists**
+### Phase I — Subsurface Data Engineering *(Days 1–20)*
 
-### **The Industry Gap**
+| Days | Topic | Key Deliverable |
+|------|-------|----------------|
+| 1–5  | Well log ingestion (LAS/DLIS) | `well_log_ingestion_pipeline.py` |
+| 6–10 | Production data analytics | Decline-curve analyser notebook |
+| 11–15 | Data QC & anomaly detection | Automated QC dashboard |
+| 16–20 | Geological zonation | Formation-top handler & cross-section tool |
 
-The oil and gas industry is undergoing a **digital transformation**, but there's a critical skills gap:
+### Phase II — Petrophysics & Rock Physics *(Days 21–40)*
 
-| Traditional Geophysicist | Modern Digital Geophysicist |
-|:------------------------|:----------------------------|
-| Manual log interpretation | Automated ML-based analysis |
-| Desktop software licenses | Cloud-native Python workflows |
-| Excel-based production tracking | Real-time analytics dashboards |
-| Limited dataset analysis | Big data seismic processing |
-| Siloed domain expertise | Integrated data science approach |
+| Days | Topic | Key Deliverable |
+|------|-------|----------------|
+| 21–25 | Core petrophysical calculations | `petrophysics_engine.py` (Vsh, PHIE, Sw, Perm) |
+| 26–30 | Cross-plots & rock typing | Electrofacies clustering module |
+| 31–35 | Saturation height & fluid contacts | OOIP/OGIP calculator |
+| 36–40 | Rock physics modelling | Gassmann fluid-substitution toolkit |
 
-<br>
+### Phase III — Seismic Data Analytics *(Days 41–60)*
 
-### **What You'll Achieve**
+| Days | Topic | Key Deliverable |
+|------|-------|----------------|
+| 41–45 | SEGY I/O & header parsing | `segy_data_explorer.py` |
+| 46–50 | Seismic attribute computation | Multi-attribute engine (RMS, coherence, curvature) |
+| 51–55 | Time-depth conversion | Velocity model builder |
+| 56–60 | Seismic-well tie | Automated well-tie & synthetic seismogram tool |
 
-By Day 100, you will have:
+### Phase IV — Machine Learning for Subsurface *(Days 61–85)*
 
-- ✅ **12+ GitHub Repositories** with production-ready code
-- ✅ **Portfolio Dashboard** showcasing subsurface analytics projects
-- ✅ **Industry-Relevant Skills** matching job descriptions at major O&G companies
-- ✅ **Technical Blog Posts** demonstrating expertise (optional)
-- ✅ **Networking Opportunities** through open-source contributions
+| Days | Topic | Key Deliverable |
+|------|-------|----------------|
+| 61–65 | Electrofacies classification | Random Forest / GMM classifier |
+| 66–70 | Reservoir property prediction | XGBoost porosity/permeability predictor |
+| 71–75 | Production forecasting | LSTM + Prophet time-series pipeline |
+| 76–80 | Seismic-to-property inversion | 3D property cube from attributes |
+| 81–85 | Explainability & uncertainty | SHAP dashboard, Monte Carlo uncertainty |
 
-<br>
+### Phase V — Industry-Grade Capstone *(Days 86–100)*
 
----
+Deploy one of three capstone options:
 
-<br>
-
-## 🧠 **Learning Philosophy**
-
-### **The 100-Day Framework**
-
-```
-Day 1-20:  Foundation    → Build the data engineering backbone
-Day 21-40: Specialization → Master petrophysics & rock physics
-Day 41-60: Integration   → Combine wells, seismic, and production
-Day 61-85: Intelligence  → Apply machine learning & AI
-Day 86-100: Mastery      → Deploy industry-grade capstone project
-```
-
-<br>
-
-### **Daily Structure**
-
-Each day follows a proven learning pattern:
-
-```mermaid
-graph LR
-    A[Theory 20min] --> B[Code-Along 40min]
-    B --> C[Practice 60min]
-    C --> D[Document 20min]
-    D --> E[Commit & Push]
-```
-
-**Total Time Investment**: 2-3 hours/day • **Total Commitment**: 200-300 hours
-
-<br>
+- **Option A** — Integrated subsurface analytics web platform (FastAPI + Streamlit)
+- **Option B** — Distributable Python toolkit published to PyPI
+- **Option C** — ML-driven reservoir characterisation pipeline with a benchmarking dataset
 
 ---
 
-<br>
-
-## 📊 **Complete Roadmap**
-
-<br>
-
-### **🗓️ Phase Overview**
-
-<table>
-<tr>
-<td width="20%" align="center">
-
-**Phase I**<br>
-🗄️ **Data Engineering**<br>
-<sub>Days 1-20</sub>
-
-</td>
-<td width="20%" align="center">
-
-**Phase II**<br>
-🪨 **Petrophysics**<br>
-<sub>Days 21-40</sub>
-
-</td>
-<td width="20%" align="center">
-
-**Phase III**<br>
-🌊 **Seismic Analytics**<br>
-<sub>Days 41-60</sub>
-
-</td>
-<td width="20%" align="center">
-
-**Phase IV**<br>
-🤖 **Machine Learning**<br>
-<sub>Days 61-85</sub>
-
-</td>
-<td width="20%" align="center">
-
-**Phase V**<br>
-🏗️ **Capstone**<br>
-<sub>Days 86-100</sub>
-
-</td>
-</tr>
-</table>
-
-<br>
-
----
-
-<br>
-
-## 🗄️ **PHASE I: Subsurface Data Engineering** <sub>(Days 1-20)</sub>
-
-> **Foundation**: *Build the backbone of all digital subsurface workflows*
-
-<br>
-
-### **Days 1-5: Well Log Data Ingestion**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Core Concepts**
-- LAS file format structure (v2.0, v3.0)
-- Batch processing architectures
-- Depth alignment algorithms
-- Log standardization protocols
-
-**Technical Skills**
-```python
-import lasio
-import pandas as pd
-import numpy as np
-
-# Multi-well ingestion pipeline
-# Depth resampling & interpolation
-# Missing data handling strategies
-# Memory-efficient processing
-```
-
-**Industry Applications**
-- Multi-basin well database construction
-- Real-time drilling data ingestion
-- Legacy data digitization projects
-- Cloud-based well data lakes
-
-**Deliverables**
-- ✅ `well_log_ingestion_pipeline.py` - Production-ready script
-- ✅ `batch_processor.ipynb` - Jupyter workflow demonstration
-- ✅ `data_quality_report.html` - Automated QC dashboard
-- ✅ `README.md` - Complete documentation
-
-**Success Metrics**
-- Process 100+ wells in < 5 minutes
-- Handle 15+ log curve types
-- 99%+ data integrity validation
-
-</details>
-
-<br>
-
-### **Days 6-10: Production Data Analytics**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Core Concepts**
-- Time-series data structures
-- Oil/gas/water rate analysis
-- Field-level aggregation
-- Decline curve fundamentals
-
-**Technical Skills**
-```python
-# Daily/monthly production handling
-# Cumulative production calculations
-# Rate normalization techniques
-# Outlier detection & filtering
-```
-
-**Industry Applications**
-- Asset performance monitoring
-- Reservoir surveillance
-- Economic forecasting
-- Regulatory reporting
-
-**Deliverables**
-- ✅ `production_analytics_engine.py`
-- ✅ `decline_curve_analyzer.ipynb`
-- ✅ Interactive Plotly dashboard
-- ✅ Automated monthly reports
-
-</details>
-
-<br>
-
-### **Days 11-15: Data QC & Anomaly Detection**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Core Concepts**
-- Statistical quality control
-- Automated anomaly detection
-- Machine learning for QC
-- Industry QC standards (SPWLA, SEG)
-
-**Technical Skills**
-```python
-from sklearn.ensemble import IsolationForest
-from scipy import stats
-
-# Z-score outlier detection
-# Isolation Forest implementation
-# Log curve spike identification
-# Environmental correction validation
-```
-
-**Deliverables**
-- ✅ `automated_qc_system.py`
-- ✅ Anomaly flagging dashboard
-- ✅ QC report generator
-- ✅ Best practices documentation
-
-</details>
-
-<br>
-
-### **Days 16-20: Geological Zonation**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Core Concepts**
-- Formation tops handling
-- Stratigraphic correlation
-- Net-to-gross calculations
-- Zone-wise petrophysical summaries
-
-**Deliverables**
-- ✅ `geological_zonation_tool.py`
-- ✅ Zone-wise reservoir summary reports
-- ✅ Cross-section visualization toolkit
-- ✅ Integration with interpretation software
-
-</details>
-
-<br>
-
----
-
-<br>
-
-## 🪨 **PHASE II: Petrophysics & Rock Physics** <sub>(Days 21-40)</sub>
-
-> **Specialization**: *Master the physics of reservoir rocks and fluids*
-
-<br>
-
-### **Days 21-25: Core Petrophysical Computations**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Core Equations Implemented**
-
-```python
-# Volume of Shale (Vsh)
-Vsh = (GR - GR_clean) / (GR_shale - GR_clean)
-
-# Effective Porosity
-PHIE = PHI_T * (1 - Vsh)
-
-# Archie Water Saturation
-Sw = (a * Rw / (PHIE**m * Rt))**(1/n)
-
-# Simandoux (Shaly Sand)
-# Permeability Models (Timur, Coates-Dumanoir)
-```
-
-**Deliverables**
-- ✅ `petrophysics_engine.py` - Full interpreter
-- ✅ Interactive parameter tuning notebooks
-- ✅ Multi-well batch processing
-- ✅ Visualization templates (Plotly/Matplotlib)
-
-</details>
-
-<br>
-
-### **Days 26-30: Cross-Plots & Rock Typing**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Key Cross-Plots**
-- Density-Neutron (RHOB-NPHI)
-- M-N Plot (mineralogy identification)
-- Pickett Plot (Rw determination)
-- Buckles Plot (irreducible water saturation)
-
-**Machine Learning Integration**
-```python
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-
-# Automated electrofacies classification
-# Unsupervised rock type clustering
-# Supervised lithology prediction
-```
-
-**Deliverables**
-- ✅ `rock_typing_module.py`
-- ✅ Interactive cross-plot dashboard
-- ✅ Lithology discrimination engine
-- ✅ Facies classification models
-
-</details>
-
-<br>
-
-### **Days 31-35: Saturation Height & Contacts**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Reservoir Engineering Physics**
-- Capillary pressure theory
-- Free water level (FWL) determination
-- Transition zone modeling
-- J-function normalization
-
-**Deliverables**
-- ✅ `contact_estimation_tool.py`
-- ✅ Saturation-height function library
-- ✅ Reservoir contact visualization
-- ✅ Volume calculations (OOIP, OGIP)
-
-</details>
-
-<br>
-
-### **Days 36-40: Rock Physics Modeling**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Advanced Concepts**
-- Gassmann fluid substitution
-- Velocity-porosity relationships (Wyllie, Raymer-Hunt)
-- Elastic impedance
-- AVO modeling foundations
-
-**Deliverables**
-- ✅ `rock_physics_toolkit.py`
-- ✅ Synthetic seismic generator
-- ✅ Fluid substitution calculator
-- ✅ Integration with seismic workflows
-
-</details>
-
-<br>
-
----
-
-<br>
-
-## 🌊 **PHASE III: Seismic Data Analytics** <sub>(Days 41-60)</sub>
-
-> **Integration**: *Bridge wells and seismic for subsurface insights*
-
-<br>
-
-### **Days 41-45: SEGY File Handling**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**SEGY Fundamentals**
-- Binary header parsing
-- Trace header interpretation
-- 2D/3D data structures
-- Endianness handling
-
-**Technical Implementation**
-```python
-import segyio
-import numpy as np
-
-# Read/write SEGY workflows
-# Trace & header extraction
-# Coordinate system handling
-# Amplitude extraction
-```
-
-**Deliverables**
-- ✅ `segy_data_explorer.py`
-- ✅ Header analysis toolkit
-- ✅ Quick-look visualization
-- ✅ Format conversion utilities
-
-</details>
-
-<br>
-
-### **Days 46-50: Seismic Attributes**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Computed Attributes**
-- RMS amplitude
-- Envelope (reflection strength)
-- Instantaneous frequency
-- Instantaneous phase
-- Coherence/Semblance
-- Curvature attributes
-
-**Deliverables**
-- ✅ `seismic_attributes_engine.py`
-- ✅ Multi-attribute computation pipeline
-- ✅ Visualization best practices
-- ✅ Interpretation workflows
-
-</details>
-
-<br>
-
-### **Days 51-55: Time-Depth Conversion**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Velocity Modeling**
-- Checkshot data processing
-- Sonic log calibration
-- Velocity field interpolation
-- Two-way time (TWT) ↔ depth
-
-**Deliverables**
-- ✅ `time_depth_converter.py`
-- ✅ Velocity model builder
-- ✅ QC visualization tools
-- ✅ Batch well processing
-
-</details>
-
-<br>
-
-### **Days 56-60: Seismic-Well Tie**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Well Tie Workflow**
-- Sonic log editing
-- Density log QC
-- Wavelet estimation
-- Synthetic seismogram generation
-- Correlation coefficient optimization
-
-**Deliverables**
-- ✅ `well_tie_automation.py`
-- ✅ Interactive tie adjustment tool
-- ✅ Multi-well tie workflow
-- ✅ Quality metrics dashboard
-
-</details>
-
-<br>
-
----
-
-<br>
-
-## 🤖 **PHASE IV: Machine Learning for Subsurface** <sub>(Days 61-85)</sub>
-
-> **Intelligence**: *Apply modern AI to geophysical problems*
-
-<br>
-
-### **Days 61-65: Electrofacies Classification**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**ML Algorithms**
-- K-Means Clustering
-- Gaussian Mixture Models (GMM)
-- Random Forest Classifier
-- Support Vector Machines (SVM)
-- Neural Networks (MLP)
-
-**Workflow**
-```python
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-
-# Feature engineering from logs
-# Multi-well training dataset
-# Cross-validation strategies
-# Hyperparameter optimization
-```
-
-**Deliverables**
-- ✅ `electrofacies_classifier.py`
-- ✅ Trained models (saved with joblib)
-- ✅ Prediction confidence metrics
-- ✅ Validation against core data
-
-</details>
-
-<br>
-
-### **Days 66-70: Reservoir Property Prediction**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Target Properties**
-- Porosity prediction (missing log sections)
-- Permeability estimation
-- Water saturation refinement
-- Lithology classification
-
-**Advanced Techniques**
-- Gradient Boosting (XGBoost, LightGBM)
-- Ensemble methods
-- Feature importance analysis
-- SHAP values for explainability
-
-**Deliverables**
-- ✅ `property_predictor_ml.py`
-- ✅ Model performance reports
-- ✅ Blind well testing
-- ✅ Uncertainty quantification
-
-</details>
-
-<br>
-
-### **Days 71-75: Production Forecasting**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Methods**
-- Traditional Decline Curve Analysis (DCA)
-- LSTM/GRU time-series models
-- Prophet forecasting
-- Production type curves
-
-**Integration**
-```python
-from tensorflow.keras import Sequential, LSTM
-import fbprophet
-
-# Time-series preprocessing
-# Multi-well forecasting
-# Economic limit prediction
-# Confidence intervals
-```
-
-**Deliverables**
-- ✅ `production_forecast_ml.py`
-- ✅ Comparison: Traditional vs ML
-- ✅ Interactive forecasting dashboard
-- ✅ Economics integration (NPV, IRR)
-
-</details>
-
-<br>
-
-### **Days 76-80: Seismic-to-Property Inversion**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Supervised Learning Pipeline**
-- Seismic attributes as features
-- Well log properties as labels
-- Spatial prediction across seismic volume
-- 3D property models
-
-**Deliverables**
-- ✅ `seismic_inversion_ml.py`
-- ✅ 3D porosity/saturation cubes
-- ✅ Validation metrics (RMSE, R²)
-- ✅ Visualization in Plotly/Mayavi
-
-</details>
-
-<br>
-
-### **Days 81-85: Explainability & Uncertainty**
-
-<details>
-<summary><b>🔍 Click to Expand Learning Objectives</b></summary>
-
-<br>
-
-**Critical for Industry Adoption**
-- SHAP (SHapley Additive exPlanations)
-- LIME (Local Interpretable Model-agnostic Explanations)
-- Prediction intervals (quantile regression)
-- Monte Carlo dropout (Bayesian NNs)
-
-**Deliverables**
-- ✅ `explainable_ml_toolkit.py`
-- ✅ Feature importance dashboards
-- ✅ Confidence visualization
-- ✅ Best practices documentation
-
-</details>
-
-<br>
-
----
-
-<br>
-
-## 🏗️ **PHASE V: Industry-Grade Capstone** <sub>(Days 86-100)</sub>
-
-> **Mastery**: *Deploy a production-ready integrated platform*
-
-<br>
-
-### **Capstone Project Options**
-
-<table>
-<tr>
-<td width="33%">
-
-#### **Option 1**
-### 🌐 Integrated Subsurface Analytics Platform
-
-**Features**
-- Multi-basin well database
-- Real-time production dashboard
-- ML-powered predictions
-- Seismic visualization
-- Economic modeling
-
-**Tech Stack**
-- Backend: FastAPI / Flask
-- Frontend: Streamlit / Dash
-- Database: PostgreSQL / MongoDB
-- Deployment: Docker + AWS/Azure
-
-</td>
-<td width="33%">
-
-#### **Option 2**
-### 🛠️ Digital Geophysicist Toolkit
-
-**Modules**
-- Well log interpreter
-- Petrophysical calculator
-- Seismic attribute generator
-- Well-tie automation
-- ML property predictor
-
-**Distribution**
-- Python package (PyPI)
-- CLI interface
-- Jupyter extensions
-- Documentation site (Sphinx)
-
-</td>
-<td width="33%">
-
-#### **Option 3**
-### 🤖 ML-Driven Reservoir Characterization
-
-**Pipeline**
-- Automated feature extraction
-- Multi-algorithm ensemble
-- 3D property modeling
-- Uncertainty quantification
-- Validation framework
-
-**Deliverables**
-- Research paper (preprint)
-- Open-source model zoo
-- Benchmarking datasets
-- Tutorial notebooks
-
-</td>
-</tr>
-</table>
-
-<br>
-
-### **Capstone Requirements**
-
-```
-✅ Complete GitHub repository with professional README
-✅ Comprehensive documentation (user guide + API reference)
-✅ Automated testing suite (pytest + CI/CD)
-✅ Docker containerization
-✅ Live demo deployment (Heroku, Streamlit Cloud, or AWS)
-✅ Technical blog post explaining methodology
-✅ LinkedIn portfolio showcase
-✅ (Optional) Conference presentation submission
-```
-
-<br>
-
----
-
-<br>
-
-## 🛠️ **Technology Stack**
-
-### **Core Scientific Computing**
-
-```yaml
-Fundamentals:
-  - numpy: 1.24+          # Numerical computing foundation
-  - pandas: 2.0+          # Data manipulation & analysis
-  - scipy: 1.11+          # Scientific algorithms
-  - matplotlib: 3.7+      # Static visualization
-  - seaborn: 0.12+        # Statistical visualization
-```
-
-### **Subsurface Data Formats**
-
-```yaml
-Industry Standards:
-  - lasio: 0.31+          # LAS file I/O (well logs)
-  - segyio: 1.9+          # SEG-Y seismic data
-  - welly: 0.5+           # Well log handling
-  - striplog: 0.9+        # Lithology & stratigraphy
-  - dlisio: 0.3+          # DLIS format (advanced)
-```
-
-### **Geophysics & Petrophysics**
-
-```yaml
-Specialized Libraries:
-  - bruges: 0.5+          # Geophysical equations
-  - segysak: 0.5+         # Seismic data processing
-  - PVTpy: 1.0+           # PVT calculations
-  - petrosim: custom      # Custom petrophysics module
-```
-
-### **Machine Learning & AI**
-
-```yaml
-ML Frameworks:
-  - scikit-learn: 1.3+    # Classical ML algorithms
-  - xgboost: 2.0+         # Gradient boosting
-  - lightgbm: 4.0+        # Fast gradient boosting
-  - tensorflow: 2.14+     # Deep learning
-  - keras: 2.14+          # High-level neural networks
-  - pytorch: 2.1+         # Research-grade deep learning
-
-Explainability:
-  - shap: 0.43+           # Model interpretation
-  - lime: 0.2+            # Local explanations
-```
-
-### **Visualization & Dashboards**
-
-```yaml
-Interactive Viz:
-  - plotly: 5.17+         # Interactive plots
-  - dash: 2.14+           # Web dashboards
-  - streamlit: 1.28+      # Rapid prototyping
-  - panel: 1.3+           # Flexible dashboards
-  - holoviews: 1.18+      # Data exploration
-
-Advanced:
-  - mayavi: 4.8+          # 3D scientific visualization
-  - pyvista: 0.42+        # 3D mesh visualization
-```
-
-### **Cloud & Deployment**
-
-```yaml
-DevOps:
-  - docker: latest        # Containerization
-  - github-actions: ---   # CI/CD pipelines
-  - pytest: 7.4+          # Testing framework
-  - sphinx: 7.2+          # Documentation
-
-Cloud Platforms:
-  - AWS: S3, EC2, Lambda
-  - Azure: Blob, ML Studio
-  - Google Cloud: Storage, AI Platform
-```
-
-<br>
-
----
-
-<br>
-
-## 📁 **Repository Structure**
+## 📁 Repository Structure
 
 ```
 100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/
 │
 ├── 📂 data/
-│   ├── 📂 raw/                       # Raw datasets and samples
-│   ├── 📂 processed/                 # Derived datasets
-│   └── 📂 external/                  # Third-party datasets
+│   └── 📂 raw/                    # Raw well-log, SEGY, and production data
 │
 ├── 📂 notebooks/
-│   ├── 📂 day-01/
-│   ├── 📂 day-02/
-│   ├── 📂 day-03/
-│   └── 📂 bruges/
+│   ├── �� day-01/                 # LAS file basics & PyVista intro
+│   ├── 📂 day-02/                 # SEGY read/write workflows
+│   ├── 📂 day-03/                 # Seismic I/O with seisio
+│   ├── 📂 day-04-09bruges/        # Bruges geophysics library deep-dive
+│   ├── 📂 day-10-multi-attribute/ # Multi-attribute seismic analysis
+│   ├── 📂 day-11-DEEP_LEARNING/   # Deep learning foundations
+│   └── 📂 day-13-20_Seismic-Attributes/  # Full attribute computation suite
 │
 ├── 📂 src/
-│   └── 📂 seismic/
+│   └── 📂 seismic/                # Reusable seismic processing modules
 │
 ├── 📂 outputs/
-│   ├── 📂 figures/
-│   └── 📂 reports/
+│   ├── 📂 figures/                # Saved plots and visualisations
+│   └── 📂 reports/                # HTML/PDF report outputs
 │
 ├── 📂 assets/
 │   ├── 📄 banner.svg
 │   ├── 📄 logo.svg
 │   └── 📂 badges/
-│       └── 📄 completion-badge.svg
 │
-├── 📂 scripts/
-│   ├── 📄 git_push_day1.sh
-│   └── 📄 push-on-repo.sh
+├── 📂 scripts/                    # Utility and automation scripts
 │
 ├── 📂 docs/
 │   ├── 📄 GETTING_STARTED.md
@@ -985,601 +152,228 @@ Cloud Platforms:
 │   └── 📄 CODE_OF_CONDUCT.md
 │
 ├── 📂 tests/
+│   └── 📄 test_structure.py
 │
 ├── 📄 requirements.txt
-├── 📄 requirements-dev.txt
-├── 📄 environment.yml
+├── 📄 environment.yml             # Conda environment (Python 3.11)
 ├── 📄 pyproject.toml
-├── 📄 .editorconfig
-├── 📄 .pre-commit-config.yaml
-├── 📂 .github/
-│   ├── 📂 ISSUE_TEMPLATE/
-│   └── 📄 PULL_REQUEST_TEMPLATE.md
-│   └── 📂 workflows/
-│       └── 📄 ci.yml
-├── 📄 README.md
-├── 📄 SECURITY.md
-├── 📄 SUPPORT.md
-├── 📄 CITATION.cff
 ├── 📄 Makefile
+├── 📄 CHANGELOG.md
+├── 📄 CITATION.cff
 ├── 📄 LICENSE
-└── 📄 CHANGELOG.md
+└── 📄 README.md
 ```
 
-<br>
+---
+
+## 🛠️ Technology Stack
+
+### Core Scientific Computing
+| Library | Purpose |
+|---------|---------|
+| `numpy` | Array computing |
+| `pandas` | Tabular data & time series |
+| `scipy` | Scientific algorithms |
+| `matplotlib` / `seaborn` | Static visualisation |
+
+### Subsurface Formats
+| Library | Purpose |
+|---------|---------|
+| `lasio` | LAS well-log files |
+| `segyio` / `seisio` | SEG-Y seismic data |
+| `bruges` | Geophysical equations & rock physics |
+| `pyvista` | 3-D mesh & volume visualisation |
+
+### Machine Learning
+| Library | Purpose |
+|---------|---------|
+| `scikit-learn` | Classical ML (clustering, classification, regression) |
+| `xgboost` / `lightgbm` | Gradient boosting |
+| `tensorflow` / `keras` | Deep learning |
+| `shap` | Model explainability |
+
+### Visualisation & Dashboards
+| Library | Purpose |
+|---------|---------|
+| `plotly` | Interactive charts |
+| `dash` / `streamlit` | Web dashboards |
+| `panel` / `holoviews` | Data exploration apps |
 
 ---
 
-<br>
+## 🚀 Quick Start
 
-## 🧭 **Getting Started**
-
-If you're new, start with the concise guide here: `docs/GETTING_STARTED.md`.
-
-<br>
-
----
-
-<br>
-
-## 🖼️ **Gallery**
-
-<div align="center">
-
-<img src="outputs/figures/day_13-20/Input_Data_Time_domain.png" alt="Time domain Data" width="85%"/>
-
-<img src="outputs/figures/day_13-20/Interpolation_Method_Comparison.png" alt="/Interpolation Method Comparison" width="85%"/>
-
-<img src="outputs/figures/bruges/ricker_wavelet.png" alt="Ricker wavelet" width="85%"/>
-
-</div>
-
-<br>
-
----
-
-<br>
-
-## 🚀 **Quick Start**
-
-### **Prerequisites**
-
-Before beginning, ensure you have:
-
-- ✅ **Python 3.9+** (3.10 recommended)
-- ✅ **Git** for version control
-- ✅ **Conda** or **pip** for package management
-- ✅ **Jupyter** Lab or Notebook
-- ✅ **VS Code** or PyCharm (recommended IDEs)
-- ✅ **10GB+ free disk space** for data and models
-
-<br>
-
-### **Installation Steps**
-
-#### **Option 1: Conda Environment (Recommended)**
+### Option 1 — Conda (recommended)
 
 ```bash
-# Clone the repository
 git clone https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics.git
 cd 100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics
 
-# Create conda environment from file
 conda env create -f environment.yml
+conda activate geo
 
-# Activate environment
-conda activate subsurface-analytics
-
-# Verify installation
-python -c "import lasio, segyio, sklearn; print('✅ All core packages installed')"
-
-# Launch Jupyter Lab
 jupyter lab
 ```
 
-#### **Option 2: pip + Virtual Environment**
+### Option 2 — pip + virtualenv
 
 ```bash
-# Clone repository
 git clone https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics.git
 cd 100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics
 
-# Create virtual environment
 python -m venv venv
-
-# Activate (Windows)
-venv\Scripts\activate
-
-# Activate (Mac/Linux)
-source venv/bin/activate
-
-# Install dependencies
+source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Verify
-python -c "import numpy, pandas, lasio; print('✅ Setup complete')"
+jupyter lab
 ```
 
-#### **Option 3: Docker Container (Advanced)**
+### Verify the install
 
 ```bash
-# Build and run
-docker build -t subsurface-analytics .
-docker run -p 8888:8888 -v $(pwd):/workspace subsurface-analytics
+python -c "import lasio, segyio, bruges, numpy; print('✅ Core packages installed')"
 ```
 
-<br>
-
-### **First Day Walkthrough**
+### Start Day 1
 
 ```bash
-# Navigate to Day 1
-cd phase-01-subsurface-data-engineering/day-01-05-well-log-ingestion
+cd notebooks/day-01
+jupyter notebook day1.ipynb
+```
 
-# Open the first notebook
-jupyter notebook notebooks/day01_las_basics.ipynb
+After completing each day, track your progress:
 
-# Follow the guided tutorial
-# Complete exercises
-# Run scripts in scripts/ directory
-
-# Track your progress
+```bash
 git add .
-git commit -m "Day 01: LAS file basics complete ✅"
+git commit -m "Day 01: LAS basics complete ✅"
 git push origin main
 ```
 
-<br>
+---
+
+## 🖼️ Gallery
+
+<div align="center">
+
+<img src="outputs/figures/day_13-20/Input_Data_Time_domain.png" alt="Seismic time-domain data" width="85%"/>
+
+<img src="outputs/figures/day_13-20/Interpolation_Method_Comparison.png" alt="Interpolation method comparison" width="85%"/>
+
+<img src="outputs/figures/bruges/ricker_wavelet.png" alt="Ricker wavelet (bruges)" width="85%"/>
+
+</div>
 
 ---
 
-<br>
+## 🗓️ Daily Workflow
 
-## 🗓️ **Daily Workflow**
-
-### **Morning Routine (30 minutes)**
+Each day is designed for roughly **2–3 hours** of focused work:
 
 ```
-1️⃣  Review yesterday's code & notes
-2️⃣  Read today's learning objectives (README.md in day folder)
-3️⃣  Watch recommended video/read article (if provided)
-4️⃣  Set up workspace (open VS Code + Jupyter)
+① Review yesterday's notebook and notes                    ~15 min
+② Work through today's notebook (code-along)              ~60 min
+③ Complete the practice exercises                         ~45 min
+④ Commit code with a descriptive message                  ~10 min
+⑤ Document key learnings in the day's README or notes    ~10 min
 ```
-
-### **Core Learning (90 minutes)**
-
-```
-5️⃣  Work through notebook tutorials (code-along)
-6️⃣  Run provided scripts and understand logic
-7️⃣  Experiment with parameters and data
-8️⃣  Complete practice exercises
-```
-
-### **Evening Review (30 minutes)**
-
-```
-9️⃣  Document learnings in LEARNING_NOTES.md
-🔟  Write summary blog post (optional but recommended)
-1️⃣1️⃣  Commit code to GitHub with descriptive message
-1️⃣2️⃣  Update progress tracker in main README.md
-```
-
-### **Weekend Deep Dive (Optional)**
-
-```
-📖  Read research papers on current topic
-🛠️  Refactor code for better performance
-🌐  Explore related open-source projects
-🤝  Engage with community (discussions, forums)
-```
-
-<br>
 
 ---
 
-<br>
+## 📋 Prerequisites
 
-## 📦 **Deliverables & Portfolio**
+**Required**
+- Python basics (variables, loops, functions, list comprehensions)
+- NumPy arrays and pandas DataFrames
+- Basic command-line and Git usage
+- Background in geophysics, petrophysics, or petroleum engineering
 
-### **By End of 100 Days**
-
-<table>
-<tr>
-<td width="50%">
-
-#### **Technical Deliverables**
-
-- ✅ **20+ Jupyter Notebooks** with complete workflows
-- ✅ **15+ Python Scripts** for production use
-- ✅ **5 Major Projects** across all phases
-- ✅ **1 Capstone Platform** deployed live
-- ✅ **100+ Git Commits** showing consistent progress
-- ✅ **Comprehensive Documentation** for all code
-- ✅ **Test Suite** with 80%+ coverage
-- ✅ **Docker Images** for reproducibility
-
-</td>
-<td width="50%">
-
-#### **Professional Portfolio**
-
-- ✅ **GitHub Profile** showcasing projects
-- ✅ **LinkedIn Posts** documenting journey
-- ✅ **Technical Blog** (Medium/Dev.to) with 5+ articles
-- ✅ **Resume Projects Section** updated
-- ✅ **Kaggle Notebooks** (optional)
-- ✅ **Conference Talk Submission** (optional)
-- ✅ **Open-Source Contributions** to industry tools
-- ✅ **Certification Badge** (self-issued)
-
-</td>
-</tr>
-</table>
-
-<br>
-
-### **Sample Portfolio Projects**
-
-1. **PetroML**: Machine learning toolkit for petrophysics
-2. **SeismicPy**: Automated seismic interpretation pipeline
-3. **WellDash**: Interactive well log visualization platform
-4. **ReservoirAI**: Production forecasting with neural networks
-5. **SubsurfaceQC**: Automated data quality control system
-
-<br>
-
----
-
-<br>
-
-## 📚 **Learning Resources**
-
-### **Books (Essential Reading)**
-
-| Title | Author | Focus Area |
-|-------|--------|------------|
-| **Python for Data Analysis** | Wes McKinney | pandas, NumPy fundamentals |
-| **Hands-On Machine Learning** | Aurélien Géron | Scikit-learn, TensorFlow |
-| **The Paleontological Data Explorer** | Peter Sadler | Geoscience data analysis |
-| **Petrophysics** | Djebbar & Donaldson | Core petrophysical concepts |
-| **Seismic Data Analysis** | Öz Yilmaz | Seismic processing theory |
-
-<br>
-
-### **Online Courses (Recommended)**
-
-```
-🎓 Coursera: "Machine Learning" by Andrew Ng
-🎓 DataCamp: "Python for Data Science"
-🎓 Udacity: "Deep Learning Nanodegree"
-🎓 SEG: "Geophysics for Practitioners" (free)
-🎓 Subsurface.ai: Industry-specific ML courses
-```
-
-<br>
-
-### **Datasets (Practice Data)**
-
-| Dataset | Size | Description | Source |
-|---------|------|-------------|--------|
-| **Volve Field** | 40GB+ | Complete North Sea field data | Equinor Open Data |
-| **Poseidon NW Australia** | 15GB | Well logs, seismic, production | Geoscience Australia |
-| **FORCE ML Competition** | 5GB | Lithology prediction challenge | FORCE 2020 |
-| **Kansas Geological Survey** | Varies | Public well data | KGS Open Database |
-| **SEG Open Data** | Varies | Seismic datasets | SEG Wiki |
-
-<br>
-
-### **Communities & Forums**
-
-```
-💬 LinkedIn Groups:
-   - "Petroleum Geoscience & Engineering"
-   - "Machine Learning in Oil & Gas"
-   - "Python for Geoscientists"
-
-💬 Reddit:
-   - r/oilandgasworkers
-   - r/datascience
-   - r/Python
-
-💬 Slack/Discord:
-   - Software Underground
-   - Geophysics Community
-   - PyData
-
-💬 GitHub Organizations:
-   - agilescientific
-   - seg (Society of Exploration Geophysicists)
-   - subsurface-ai
-```
-
-<br>
-
-### **Industry Blogs & Newsletters**
-
-- 📰 [**Agile Geoscience**](https://agilescientific.com/blog) - Matt Hall's insights
-- 📰 [**Subsurface.blog**](https://subsurface.blog) - Community articles
-- 📰 [**Towards Data Science - Geoscience**](https://towardsdatascience.com/tagged/geoscience)
-- 📰 **JPT (Journal of Petroleum Technology)** - SPE publications
-
-<br>
-
----
-
-<br>
-
-## 🎯 **Prerequisites**
-
-### **Required Knowledge**
-
-<table>
-<tr>
-<td width="50%">
-
-#### **Must Have** ✅
-
-- Basic Python syntax (variables, loops, functions)
-- Understanding of NumPy arrays
-- pandas DataFrames basics
-- Command-line familiarity
-- Git version control fundamentals
-- **Geophysics/Petroleum Engineering background**
-
-</td>
-<td width="50%">
-
-#### **Nice to Have** ⭐
-
-- Jupyter notebook experience
-- Basic statistics knowledge
-- Linear algebra concepts
+**Helpful but not essential**
 - Machine learning awareness
-- Cloud computing exposure
-- Docker/containerization basics
+- Jupyter notebook experience
+- Basic statistics and linear algebra
 
-</td>
-</tr>
-</table>
-
-<br>
-
-### **Pre-Program Assessment**
-
-Test your readiness with this checklist:
+**Not sure if you're ready?** Run the snippet below — if you can follow the logic, you're good to go:
 
 ```python
-# Can you understand and run this code?
+import numpy as np, pandas as pd
 
-import numpy as np
-import pandas as pd
-
-# Create sample well log data
 depth = np.arange(1000, 2000, 0.5)
-gr = np.random.normal(75, 25, len(depth))
-
-df = pd.DataFrame({'DEPTH': depth, 'GR': gr})
-df_clean = df[(df['GR'] > 0) & (df['GR'] < 150)]
-
-print(f"Clean data points: {len(df_clean)}")
+gr    = np.random.normal(75, 25, len(depth))
+df    = pd.DataFrame({'DEPTH': depth, 'GR': gr})
+print(df[(df['GR'] > 0) & (df['GR'] < 150)].describe())
 ```
-
-✅ **If yes**: You're ready to start!  
-❌ **If no**: Complete a Python basics course first (2-3 weeks)
-
-<br>
 
 ---
 
-<br>
+## 📚 Learning Resources
 
-## 💬 **Community & Support**
+### Essential Books
+| Title | Author | Focus |
+|-------|--------|-------|
+| *Python for Data Analysis* | Wes McKinney | pandas & NumPy |
+| *Hands-On Machine Learning* | Aurélien Géron | Scikit-learn, TensorFlow |
+| *Petrophysics* | Djebbar & Donaldson | Core petrophysical theory |
+| *Seismic Data Analysis* | Öz Yilmaz | Seismic processing theory |
 
-### **Getting Help**
+### Open Datasets
+| Dataset | Description | Source |
+|---------|-------------|--------|
+| **Volve Field** | Complete North Sea field (logs, seismic, production) | [Equinor Open Data](https://www.equinor.com/energy/volve-data-sharing) |
+| **Poseidon NW Australia** | Well logs & seismic | [Geoscience Australia](https://www.ga.gov.au/) |
+| **FORCE 2020** | Lithology prediction ML competition | [FORCE](https://github.com/bolgebrygg/Force-2020-Machine-Learning-competition) |
+| **KGS Open Data** | Public well database | [Kansas Geological Survey](https://www.kgs.ku.edu/) |
+| **SEG Open Data** | Curated seismic datasets | [SEG Wiki](https://wiki.seg.org/wiki/Open_data) |
 
-```
-1. 📖 Check the FAQ.md in /docs
-2. 🔍 Search closed GitHub Issues
-3. 💬 Ask in Discussions tab
-4. 🐛 Report bugs with Issue template
-5. 📌 Review SUPPORT.md for the best contact paths
-```
+### Community
+- [**Software Underground**](https://softwareunderground.org/) — Slack community for geoscience + tech
+- [**Agile Geoscience Blog**](https://agilescientific.com/blog) — Python geoscience articles
+- [**SEG Open Source**](https://github.com/seg) — Society of Exploration Geophysicists repos
 
-<br>
+---
 
-### **Contributing**
+## 🤝 Contributing
 
-We welcome contributions! Here's how:
+Contributions are welcome! Bug fixes, new notebooks, improved documentation, and additional exercises are all appreciated.
 
 ```bash
-# Fork the repository on GitHub
-
-# Clone your fork
+# 1. Fork the repository
+# 2. Clone your fork
 git clone https://github.com/YOUR_USERNAME/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics.git
 
-# Create a feature branch
-git checkout -b feature/new-petrophysics-tool
+# 3. Create a feature branch
+git checkout -b feature/buckles-plot-module
 
-# Make changes and commit
-git add .
-git commit -m "Add Buckles plot functionality"
+# 4. Commit your changes
+git commit -m "Add Buckles plot to rock typing module"
 
-# Push to your fork
-git push origin feature/new-petrophysics-tool
-
-# Open Pull Request on main repo
+# 5. Push and open a Pull Request
+git push origin feature/buckles-plot-module
 ```
 
-**Contribution Areas:**
-- 🐛 Bug fixes
-- 📝 Documentation improvements
-- ✨ New features/modules
-- 🎨 Visualization enhancements
-- 🧪 Additional test cases
-- 📚 Tutorial notebooks
-
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
-
-<br>
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for the full contribution guide and [docs/CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) for community standards.
 
 ---
 
-<br>
+## 🔐 Security
 
-## ❓ **FAQ**
-
-Common questions are answered in `docs/FAQ.md`.
-
-<br>
+Please review [SECURITY.md](SECURITY.md) before reporting vulnerabilities.
 
 ---
 
-<br>
+## 📄 License
 
-## 🌟 **Success Stories**
-
-> *"This program helped me transition from traditional geophysicist to data scientist role at a major operator. The portfolio projects were interview game-changers!"*  
-> **— Sarah M., Geophysicist → ML Engineer, Shell**
-
-<br>
-
-> *"As a petroleum engineer, I always relied on commercial software. Now I build custom analytics tools for my team using Python. Career transformation in 100 days!"*  
-> **— Ahmed K., Production Engineer, Saudi Aramco**
-
-<br>
-
-> *"The seismic ML projects directly led to my startup's first product. Industry-relevant education at its finest."*  
-> **— Chen L., Founder, SeismicAI Solutions**
-
-<br>
-
-### **Career Outcomes (Alumni Survey)**
-
-```
-📊 Survey Results (n=143 completers):
-
-✅ 78% reported salary increase within 6 months
-✅ 65% changed roles to more technical positions
-✅ 92% felt "significantly more confident" in Python
-✅ 45% contributed to open-source projects post-program
-✅ 23% started side businesses/consulting
-```
-
-<br>
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details. Free for personal and commercial use; attribution appreciated.
 
 ---
 
-<br>
+## 🙏 Acknowledgements
 
-## 📊 **Progress Tracking**
-
-### **Update Your Progress Badge**
-
-Edit the badge at the top of this README:
-
-```markdown
-![Progress](https://img.shields.io/badge/Progress-3%2F100-orange?style=for-the-badge)
-```
-
-<br>
-
-### **Completion Checklist**
-
-Track your journey:
-
-- [ ] **Phase I Complete** (Days 1-20) — Data Engineering Foundation
-- [ ] **Phase II Complete** (Days 21-40) — Petrophysics Mastery
-- [ ] **Phase III Complete** (Days 41-60) — Seismic Analytics
-- [ ] **Phase IV Complete** (Days 61-85) — Machine Learning Integration
-- [ ] **Phase V Complete** (Days 86-100) — Capstone Deployed
-
-**Milestone Rewards:**
-- 🎉 **Day 25**: Share first project on LinkedIn
-- 🎉 **Day 50**: Write technical blog post
-- 🎉 **Day 75**: Present at team/meetup (optional)
-- 🎉 **Day 100**: Celebrate! Update resume, apply for roles
-
-<br>
+- [**Agile Geoscience**](https://agilescientific.com/) — inspiration and open-source geoscience tools
+- [**Software Underground**](https://softwareunderground.org/) — community support
+- [**SEG**](https://seg.org/) — technical resources and open datasets
+- Maintainers of `lasio`, `segyio`, and `bruges` — the backbone of this curriculum
 
 ---
-
-<br>
-
-## 🏆 **Certification**
-
-Upon completion, you can self-issue a certificate by:
-
-1. Creating a `COMPLETION.md` file documenting all deliverables
-2. Linking to your GitHub repositories
-3. Sharing on LinkedIn with hashtag `#100DaysSubsurfaceAnalytics`
-4. (Optional) Request peer review from 2 community members
-
-**Digital Badge:**  
-We provide SVG badge templates in `assets/badges/` (see `assets/badges/completion-badge.svg`) — add to your:
-- LinkedIn profile
-- GitHub README
-- Personal website
-- Email signature
-
-<br>
-
----
-
-<br>
-
-## 🔐 **Security**
-
-Please read `SECURITY.md` for vulnerability reporting guidelines.
-
-<br>
-
----
-
-<br>
-
-## 🧰 **Support**
-
-Support channels and response expectations are listed in `SUPPORT.md`.
-
-<br>
-
----
-
-<br>
-
-## 📄 **License**
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License - Free for personal and commercial use
-Attribution appreciated but not required
-No warranty provided
-```
-
-<br>
-
----
-
-<br>
-
-## 🙏 **Acknowledgments**
-
-This curriculum was built with inspiration and contributions from:
-
-- **Agile Geoscience** - Python geoscience pioneers
-- **Software Underground** - Amazing community support
-- **SEG (Society of Exploration Geophysicists)** - Technical resources
-- **Open-source contributors** - lasio, segyio, bruges developers
-- **Industry professionals** - Technical reviewers from major O&G companies
-
-<br>
-
----
-
-<br>
-
-## 📞 **Contact & Community**
 
 <div align="center">
 
@@ -1589,35 +383,10 @@ This curriculum was built with inspiration and contributions from:
 
 <br>
 
-### 💡 **Questions? Suggestions? Found a Bug?**
-
-[Open an Issue](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/issues) • [Start a Discussion](https://github.com/Ashraf-ISM/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics/discussions)
+**⭐ Star this repo if it helps your learning journey!**
 
 <br>
 
----
-
-<br>
-
-<sub>Built with ❤️ by the Subsurface Analytics Community</sub>
-
-<br>
-
-**⭐ Star this repository if you find it valuable!**
-
-**🔀 Fork it to start your own 100-day journey!**
-
-**📢 Share it with fellow geoscientists!**
-
-<br>
-
-```
-╔══════════════════════════════════════════════════════════════╗
-║                                                              ║
-║  "The best way to predict the subsurface is to model it."   ║
-║                                       — Digital Geophysicist ║
-║                                                              ║
-╚══════════════════════════════════════════════════════════════╝
-```
+<sub>Built with ❤️ for the subsurface analytics community</sub>
 
 </div>
