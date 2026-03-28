@@ -1026,9 +1026,9 @@ If you're new, start with the concise guide here: `docs/GETTING_STARTED.md`.
 
 <div align="center">
 
-<img src="outputs/figures/day-02/seismic_2d_sections.png" alt="Seismic 2D sections" width="85%"/>
+<img src="outputs/figures/day_13-20/Input%20Data-Time%20domain.png)" alt="Seismic 2D sections" width="85%"/>
 
-<img src="outputs/figures/day-02/seismic_3d_slices.png" alt="Seismic 3D slices" width="85%"/>
+<img src="outputs/figures/day_13-20/Interpolation_Method_Comparison.png" alt="/Interpolation Method Comparison" width="85%"/>
 
 <img src="outputs/figures/bruges/ricker_wavelet.png" alt="Ricker wavelet" width="85%"/>
 
