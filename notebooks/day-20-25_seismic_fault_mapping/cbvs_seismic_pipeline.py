@@ -1,373 +1,345 @@
 """
 =============================================================================
-  CBVS Seismic Data Pipeline
-  Read → Convert → Visualize → Save
-  Author: Ashraf | IIT (ISM) Dhanbad
+  CBVS Seismic Data Pipeline  —  OpendTect (dGB) Edition
+  Read → Convert → Visualise → Save
+  Author : Ashraf | IIT (ISM) Dhanbad
+  Fixed  : NumPy 2.0 compatibility + proper dGB/OpendTect CBVS parsing
 =============================================================================
 
-DEPENDENCIES (install once):
-    pip install segyio numpy matplotlib scipy segysak
+DEPENDENCIES:
+    pip install segyio numpy matplotlib
 
-CBVS NOTE:
-  CBVS is a Paradigm/Emerson proprietary format. Two reading strategies:
-  
-  PATH A (Recommended) - Pre-convert CBVS to SEGY using:
-    • SeismicUnix: cbvs2su file.cbvs | segywrite tape=file.segy
-    • Petrel / Kingdom: Export → SEG-Y
-    Then use the segyio-based reader below.
-
-  PATH B - Raw binary reader (works for simple CBVS without compression)
+CBVS FORMAT NOTES (OpendTect / dGB Earth Sciences):
+  * Magic bytes  : 64 47 42  ("dGB")
+  * Endianness   : little-endian (LE)
+  * No per-trace SEG-Y style 240-byte headers
+  * Data block   : packed LE float32  ->  n_traces x n_samples
+  * Geometry info stored separately in .par / survey files
+  * This reader auto-detects the data-start offset by scanning the file
 =============================================================================
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 from matplotlib.ticker import AutoMinorLocator
-import os
 import struct
+import os
 import warnings
 warnings.filterwarnings("ignore")
 
-# ─── Try importing segyio (optional but preferred) ────────────────────────────
 try:
     import segyio
     SEGYIO_AVAILABLE = True
 except ImportError:
     SEGYIO_AVAILABLE = False
-    print("[WARNING] segyio not installed. Install with: pip install segyio")
+    print("[WARNING] segyio not installed -> SEG-Y export disabled.")
+    print("          Install: pip install segyio\n")
 
 
 # =============================================================================
-#  PATH A: Read from SEG-Y (after converting CBVS → SEGY externally)
+#  OpendTect CBVS Reader  (dGB magic)
 # =============================================================================
 
-def read_segy(filepath: str) -> dict:
+class OpendTectCBVSReader:
     """
-    Read a 2D SEG-Y file and return a dict with data + metadata.
+    Reader for OpendTect CBVS seismic files (magic: dGB\\x01 or dGB\\x02).
 
-    Parameters
-    ----------
-    filepath : str
-        Path to .segy / .sgy file
-
-    Returns
-    -------
-    dict with keys:
-        data      : np.ndarray, shape (n_traces, n_samples)
-        dt        : float, sample interval in seconds
-        n_traces  : int
-        n_samples : int
-        cdp       : np.ndarray, CDP numbers per trace
-        twt       : np.ndarray, two-way time axis in seconds
-    """
-    if not SEGYIO_AVAILABLE:
-        raise ImportError("Install segyio: pip install segyio")
-
-    print(f"[INFO] Reading SEG-Y file: {filepath}")
-    with segyio.open(filepath, "r", ignore_geometry=True) as f:
-        n_traces  = f.tracecount
-        n_samples = len(f.samples)
-        dt        = segyio.tools.dt(f) / 1e6          # microsec → seconds
-        twt       = f.samples / 1000.0                # ms → s (if stored in ms)
-
-        data = np.zeros((n_traces, n_samples), dtype=np.float32)
-        cdp  = np.zeros(n_traces, dtype=np.int32)
-
-        for i, tr in enumerate(f.trace):
-            data[i, :] = tr
-            cdp[i]     = f.header[i][segyio.TraceField.CDP]
-
-    print(f"[INFO] Loaded  : {n_traces} traces × {n_samples} samples")
-    print(f"[INFO] dt      : {dt*1000:.3f} ms  |  TWT range: {twt[0]:.3f}–{twt[-1]:.3f} s")
-
-    return {
-        "data"     : data,
-        "dt"       : dt,
-        "n_traces" : n_traces,
-        "n_samples": n_samples,
-        "cdp"      : cdp,
-        "twt"      : twt,
-    }
-
-
-# =============================================================================
-#  PATH B: Raw binary CBVS reader (no external conversion needed)
-# =============================================================================
-
-class CBVSReader:
-    """
-    Minimal raw-binary CBVS reader.
-
-    CBVS layout (simplified, uncompressed):
-      Bytes  0–3999  : File header (ASCII/binary mix)
-      Then N trace records, each:
-          Trace header : 240 bytes (SEG-Y style)
-          Trace data   : n_samples × 4 bytes (IEEE float32, big-endian)
-
-    If your CBVS file has a different layout (compressed, tiled),
-    this reader will need adjustment. Print hex dump to inspect header.
+    Layout:
+      File header  (variable size, little-endian binary + ASCII)
+      Float32 data block  (n_traces x n_samples, LE, NO per-trace headers)
     """
 
-    CBVS_MAGIC = b"CBVS"          # first 4 bytes of a typical CBVS file
-    FILE_HDR_SIZE = 4000           # bytes in file header block
+    DGB_MAGIC = b"dGB"
 
     def __init__(self, filepath: str):
-        self.filepath = filepath
-        self._fh = None
+        self.filepath  = filepath
+        self.raw       = None
+        self._filesize = os.path.getsize(filepath)
 
-    def _open(self):
-        self._fh = open(self.filepath, "rb")
+    def _load(self):
+        with open(self.filepath, "rb") as f:
+            self.raw = f.read()
 
-    def _close(self):
-        if self._fh:
-            self._fh.close()
-
-    def inspect_header(self, n_bytes: int = 64):
-        """Print first n_bytes as hex + ASCII for manual inspection."""
+    def inspect_header(self, n_bytes: int = 256):
         with open(self.filepath, "rb") as f:
             raw = f.read(n_bytes)
-        print(f"\n[CBVS HEADER DUMP] First {n_bytes} bytes:")
+        print(f"\n[dGB CBVS HEADER DUMP] First {n_bytes} bytes:")
+        print(f"  File size : {self._filesize:,} bytes  ({self._filesize/1e6:.2f} MB)")
         for i in range(0, len(raw), 16):
-            chunk = raw[i:i+16]
+            chunk    = raw[i:i+16]
             hex_part = " ".join(f"{b:02X}" for b in chunk)
             asc_part = "".join(chr(b) if 32 <= b < 127 else "." for b in chunk)
             print(f"  {i:04X}  {hex_part:<48}  {asc_part}")
 
-    def read(self, n_samples: int = None, n_traces: int = None,
-             endian: str = ">") -> dict:
+    def _parse_dgb_header(self):
         """
-        Read binary CBVS data.
+        Scan for z-sampling triplet (float64 start, float64 step, int32 n)
+        which OpendTect stores somewhere in the first 512 bytes.
+        """
+        raw = self.raw
+        version = raw[3]
+        print(f"[dGB] Format version byte : 0x{version:02X}  ({version})")
+
+        dt_ms, n_samp, z_start = None, None, None
+
+        for off in range(4, min(len(raw) - 20, 512)):
+            try:
+                zs  = struct.unpack_from("<d", raw, off)[0]
+                zst = struct.unpack_from("<d", raw, off + 8)[0]
+                ns  = struct.unpack_from("<i", raw, off + 16)[0]
+                if (0.0 <= zs  <= 5000.0 and
+                    0.1 <= zst  <= 10.0  and
+                    100 <= ns   <= 20000):
+                    dt_ms, n_samp, z_start = zst, ns, zs
+                    print(f"[dGB] z-sampling at offset 0x{off:04X}: "
+                          f"start={zs:.2f} ms, step={zst:.4f} ms, n={ns}")
+                    break
+            except Exception:
+                continue
+
+        return dt_ms, n_samp, z_start
+
+    def _find_data_offset(self, n_samples: int):
+        """
+        Scan for the byte offset where packed LE float32 data begins.
+        Tests candidate offsets and checks for finite non-zero values.
+        """
+        raw      = self.raw
+        fsize    = len(raw)
+        trace_sz = n_samples * 4
+
+        for hdr_sz in range(64, 2048, 4):
+            data_bytes = fsize - hdr_sz
+            if data_bytes < trace_sz:
+                continue
+            test_len = min(n_samples * 4, data_bytes)
+            try:
+                test = np.frombuffer(raw[hdr_sz : hdr_sz + test_len], dtype="<f4")
+                if np.all(np.isfinite(test)) and np.any(test != 0.0):
+                    n_tr = data_bytes // trace_sz
+                    print(f"[dGB] Data block at offset 0x{hdr_sz:04X} "
+                          f"({hdr_sz} bytes) -> {n_tr} traces")
+                    return hdr_sz, n_tr
+            except Exception:
+                continue
+
+        print("[WARNING] Auto-detect failed. Falling back to offset=128.")
+        return 128, (fsize - 128) // trace_sz
+
+    def read(self,
+             n_samples  : int   = None,
+             dt_ms      : float = None,
+             n_traces   : int   = None,
+             hdr_offset : int   = None) -> dict:
+        """
+        Read OpendTect CBVS.
 
         Parameters
         ----------
-        n_samples : int  - samples per trace (from file or known a-priori)
-        n_traces  : int  - number of traces (if None, inferred from file size)
-        endian    : str  - ">" big-endian (default), "<" little-endian
-
-        Returns
-        -------
-        dict with same keys as read_segy()
+        n_samples  : samples/trace  (auto from header if None)
+        dt_ms      : sample interval ms  (auto if None)
+        n_traces   : trace count  (auto from file size if None)
+        hdr_offset : byte offset to data start  (auto if None)
         """
-        self._open()
-        raw = self._fh.read()
-        self._close()
+        self._load()
+        raw = self.raw
 
-        # ── detect magic ──────────────────────────────────────────────────
-        magic = raw[:4]
-        if magic == self.CBVS_MAGIC:
-            print("[INFO] CBVS magic bytes detected ✓")
+        if raw[:3] == self.DGB_MAGIC:
+            print("[INFO] dGB / OpendTect CBVS magic confirmed OK")
         else:
-            print(f"[WARNING] Unexpected magic: {magic!r} — proceeding anyway")
+            print(f"[WARNING] Unexpected magic: {raw[:4]!r}")
 
-        # ── parse file header for n_samples and dt if not provided ────────
-        # Offset 3220–3227 in SEG-Y-style CBVS: sample interval (μs) + n_samples
-        # Adjust offsets if your file differs!
-        try:
-            dt_us      = struct.unpack_from(f"{endian}H", raw, 3216)[0]   # μs
-            ns_hdr     = struct.unpack_from(f"{endian}H", raw, 3220)[0]   # samples
-            dt         = dt_us * 1e-6
-            if n_samples is None:
-                n_samples = ns_hdr
-            print(f"[INFO] Header → dt={dt*1000:.3f} ms, n_samples={n_samples}")
-        except Exception:
-            dt = 0.002  # fallback 2 ms
-            print(f"[WARNING] Could not parse dt/n_samples from header. "
-                  f"Using defaults: dt={dt*1000} ms, n_samples={n_samples}")
+        hdr_dt_ms, hdr_ns, hdr_z0 = self._parse_dgb_header()
 
-        # ── infer trace count ─────────────────────────────────────────────
-        data_start    = self.FILE_HDR_SIZE
-        trace_hdr_sz  = 240                              # bytes per trace header
-        trace_data_sz = n_samples * 4                    # float32
-        trace_total   = trace_hdr_sz + trace_data_sz
+        if n_samples is None:
+            n_samples = hdr_ns if hdr_ns else 1500
+            print(f"[INFO] n_samples = {n_samples}  (from header scan)")
 
-        available = len(raw) - data_start
+        if dt_ms is None:
+            dt_ms = hdr_dt_ms if hdr_dt_ms else 2.0
+            print(f"[INFO] dt        = {dt_ms} ms  (from header scan)")
+
+        dt = dt_ms * 1e-3
+
+        if hdr_offset is None:
+            hdr_offset, inferred_ntr = self._find_data_offset(n_samples)
+        else:
+            inferred_ntr = (len(raw) - hdr_offset) // (n_samples * 4)
+
         if n_traces is None:
-            n_traces = available // trace_total
-        print(f"[INFO] Inferred {n_traces} traces × {n_samples} samples")
+            n_traces = inferred_ntr
 
-        # ── read trace data ───────────────────────────────────────────────
-        data = np.zeros((n_traces, n_samples), dtype=np.float32)
-        cdp  = np.zeros(n_traces, dtype=np.int32)
-        fmt  = f"{endian}f"
+        print(f"\n[INFO] Reading : {n_traces} traces x {n_samples} samples")
+        print(f"[INFO] dt      : {dt_ms:.4f} ms | record length: "
+              f"{n_samples * dt_ms / 1000:.3f} s\n")
 
-        for i in range(n_traces):
-            offset_hdr  = data_start + i * trace_total
-            offset_data = offset_hdr + trace_hdr_sz
-            # CDP from trace header byte 21 (word 11, 4-byte int)
-            cdp[i]   = struct.unpack_from(f"{endian}i", raw, offset_hdr + 20)[0]
-            raw_data = raw[offset_data : offset_data + trace_data_sz]
-            arr      = np.frombuffer(raw_data, dtype=np.float32)
-            if endian == ">":
-                arr = arr.byteswap().newbyteorder()
-            data[i, :] = arr[:n_samples]
+        # -- NumPy 2.0-compatible: use dtype='<f4' directly -----------------
+        data_bytes = n_traces * n_samples * 4
+        data_raw   = raw[hdr_offset : hdr_offset + data_bytes]
+
+        if len(data_raw) < data_bytes:
+            print(f"[WARNING] File shorter than expected!")
+            n_traces = len(data_raw) // (n_samples * 4)
+            data_raw = data_raw[:n_traces * n_samples * 4]
+
+        data = np.frombuffer(data_raw, dtype="<f4").reshape(n_traces, n_samples).copy()
+        data = np.where(np.isfinite(data), data, 0.0)
 
         twt = np.arange(n_samples) * dt
+        cdp = np.arange(1, n_traces + 1)
+
+        print(f"[INFO] Amplitude range  : {data.min():.4g}  to  {data.max():.4g}")
+        print(f"[INFO] Non-zero traces  : "
+              f"{np.sum(np.any(data != 0, axis=1))} / {n_traces}")
 
         return {
             "data"     : data,
             "dt"       : dt,
+            "dt_ms"    : dt_ms,
             "n_traces" : n_traces,
             "n_samples": n_samples,
             "cdp"      : cdp,
             "twt"      : twt,
+            "z_start"  : hdr_z0 or 0.0,
         }
 
 
 # =============================================================================
-#  SAVE functions
+#  Standard SEG-Y reader
+# =============================================================================
+
+def read_segy(filepath: str) -> dict:
+    if not SEGYIO_AVAILABLE:
+        raise ImportError("Install segyio: pip install segyio")
+    print(f"[INFO] Reading SEG-Y: {filepath}")
+    with segyio.open(filepath, "r", ignore_geometry=True) as f:
+        n_traces  = f.tracecount
+        n_samples = len(f.samples)
+        dt        = segyio.tools.dt(f) / 1e6
+        twt       = f.samples / 1000.0
+        data      = np.stack([f.trace[i] for i in range(n_traces)])
+        cdp       = np.array([f.header[i][segyio.TraceField.CDP]
+                               for i in range(n_traces)], dtype=np.int32)
+    print(f"[INFO] {n_traces} traces x {n_samples} samples | dt={dt*1e3:.3f} ms")
+    return {"data": data, "dt": dt, "dt_ms": dt*1e3,
+            "n_traces": n_traces, "n_samples": n_samples,
+            "cdp": cdp, "twt": twt, "z_start": 0.0}
+
+
+# =============================================================================
+#  SAVE
 # =============================================================================
 
 def save_npy(seismic: dict, out_dir: str = "."):
-    """Save amplitude data and axes as .npy files."""
     os.makedirs(out_dir, exist_ok=True)
     np.save(os.path.join(out_dir, "seismic_data.npy"), seismic["data"])
     np.save(os.path.join(out_dir, "seismic_twt.npy"),  seismic["twt"])
     np.save(os.path.join(out_dir, "seismic_cdp.npy"),  seismic["cdp"])
-    print(f"[SAVED] NPY files → {out_dir}/")
-    print(f"        seismic_data.npy  shape={seismic['data'].shape}")
-
+    print(f"\n[SAVED] NPY  ->  {out_dir}/seismic_data.npy  "
+          f"shape={seismic['data'].shape}")
 
 def save_segy(seismic: dict, out_path: str):
-    """
-    Write a 2D section back to SEG-Y using segyio.
-    
-    Parameters
-    ----------
-    seismic  : dict returned by read_segy() or CBVSReader.read()
-    out_path : str, output .segy path
-    """
-    if not SEGYIO_AVAILABLE:
-        raise ImportError("Install segyio: pip install segyio")
 
-    data     = seismic["data"]
-    dt_us    = int(seismic["dt"] * 1e6)        # seconds → microseconds
-    n_traces, n_samples = data.shape
-    cdp      = seismic["cdp"]
+    if not SEGYIO_AVAILABLE:
+        print("[SKIP] segyio not available.")
+        return
+
+    data = seismic["data"].astype(np.float32)
+
+    # 🔥 clean bad values
+    data = np.where(np.abs(data) > 1e6, 0, data)
+
+    dt_us = int(seismic["dt"] * 1e6)
+    n_tr, ns = data.shape
+    cdp = seismic["cdp"]
 
     spec = segyio.spec()
-    spec.sorting  = segyio.TraceSortingFormat.CDP_SORTING
-    spec.format   = segyio.SegySampleFormat.IBM_FLOAT_4_BYTE
-    spec.samples  = np.arange(n_samples, dtype=np.float32) * seismic["dt"] * 1000  # ms
-    spec.tracecount = n_traces
+    spec.tracecount = n_tr
+    spec.format = 5  # ✅ IEEE float
+    spec.samples = range(ns)
+
+    # (Optional for 2D)
+    # spec.sorting = segyio.TraceSortingFormat.INLINE_SORTING
 
     with segyio.create(out_path, spec) as f:
-        f.bin.update(tsort=segyio.TraceSortingFormat.CDP_SORTING,
-                     hdt=dt_us, dto=dt_us,
-                     hns=n_samples, nso=n_samples)
-        for i in range(n_traces):
-            f.trace[i] = data[i].astype(np.float32)
+
+        f.bin.update(
+            hdt=dt_us,
+            dto=dt_us,
+            hns=ns,
+            nso=ns
+        )
+
+        for i in range(n_tr):
+            f.trace[i] = data[i]
+
             f.header[i].update({
-                segyio.TraceField.CDP         : int(cdp[i]),
-                segyio.TraceField.TRACE_SEQUENCE_LINE: i + 1,
-                segyio.TraceField.DelayRecordingTime : 0,
-                segyio.TraceField.SAMPLE_COUNT: n_samples,
-                segyio.TraceField.INTERVAL    : dt_us,
-            })
+            segyio.TraceField.CDP: int(cdp[i]),
+            segyio.TraceField.TRACE_SEQUENCE_LINE: i + 1,
+        })
 
-    print(f"[SAVED] SEG-Y → {out_path}")
-
+    print(f"[SAVED] SEGY -> {out_path}")
 
 # =============================================================================
 #  VISUALISATION
 # =============================================================================
 
-def plot_seismic_section(seismic: dict,
-                         clip_pct: float = 98,
-                         cmap: str = "gray",
-                         title: str = "2D Seismic Section",
-                         out_path: str = None,
-                         dpi: int = 300):
-    """
-    Publication-quality wiggle / variable-density seismic section plot.
-
-    Parameters
-    ----------
-    seismic   : dict from read_segy() or CBVSReader.read()
-    clip_pct  : percentile for amplitude clipping (default 98)
-    cmap      : colormap — 'gray', 'seismic', 'RdBu_r', 'bwr'
-    title     : plot title
-    out_path  : if set, saves PNG to this path
-    dpi       : dots-per-inch for saved figure
-    """
-    data     = seismic["data"].T       # shape → (n_samples, n_traces) for imshow
-    twt      = seismic["twt"]
-    cdp      = seismic["cdp"]
-    n_traces = seismic["n_traces"]
-
+def plot_seismic_section(seismic, clip_pct=98, cmap="gray",
+                         title="2D Seismic Section (OpendTect CBVS)",
+                         out_path=None, dpi=300):
+    data = seismic["data"].T
+    twt  = seismic["twt"]
+    cdp  = seismic["cdp"]
     vmax = np.nanpercentile(np.abs(data), clip_pct)
-    vmin = -vmax
+    vmin = -vmax if vmax > 0 else -1
 
     fig, axes = plt.subplots(1, 2, figsize=(18, 9),
-                             gridspec_kw={"width_ratios": [3, 1]})
-
-    # ── Left: Variable-density display ────────────────────────────────────
+                              gridspec_kw={"width_ratios": [3, 1]})
     ax = axes[0]
-    im = ax.imshow(data,
-                   aspect="auto",
-                   cmap=cmap,
-                   vmin=vmin, vmax=vmax,
+    im = ax.imshow(data, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                    extent=[cdp[0], cdp[-1], twt[-1], twt[0]],
                    interpolation="bilinear")
-    ax.set_xlabel("CDP Number", fontsize=13, fontweight="bold")
-    ax.set_ylabel("Two-Way Time (s)", fontsize=13, fontweight="bold")
+    ax.set_xlabel("CDP / Trace Number", fontsize=13, fontweight="bold")
+    ax.set_ylabel("Two-Way Time  (s)",  fontsize=13, fontweight="bold")
     ax.set_title(title, fontsize=15, fontweight="bold", pad=12)
     ax.xaxis.set_minor_locator(AutoMinorLocator(5))
     ax.yaxis.set_minor_locator(AutoMinorLocator(5))
     ax.tick_params(which="both", direction="in", top=True, right=True)
-    cbar = fig.colorbar(im, ax=ax, orientation="vertical",
-                        fraction=0.02, pad=0.02)
-    cbar.set_label("Amplitude", fontsize=11)
+    fig.colorbar(im, ax=ax, fraction=0.02, pad=0.02, label="Amplitude")
 
-    # ── Right: RMS amplitude with depth ───────────────────────────────────
-    ax2 = axes[1]
-    rms = np.sqrt(np.mean(data**2, axis=1))
+    ax2  = axes[1]
+    rms  = np.sqrt(np.mean(data**2, axis=1))
     ax2.plot(rms, twt, color="#E63946", lw=1.5)
+    ax2.fill_betweenx(twt, 0, rms, alpha=0.2, color="#E63946")
     ax2.invert_yaxis()
     ax2.set_xlabel("RMS Amplitude", fontsize=12)
-    ax2.set_title("RMS Profile", fontsize=13, fontweight="bold")
-    ax2.set_ylabel("TWT (s)", fontsize=12)
+    ax2.set_ylabel("TWT  (s)",      fontsize=12)
+    ax2.set_title("RMS Profile",    fontsize=13, fontweight="bold")
     ax2.tick_params(which="both", direction="in")
     ax2.xaxis.set_minor_locator(AutoMinorLocator(4))
     ax2.yaxis.set_minor_locator(AutoMinorLocator(5))
     ax2.grid(True, linestyle="--", alpha=0.4)
-    ax2.fill_betweenx(twt, 0, rms, alpha=0.2, color="#E63946")
 
     plt.tight_layout()
-
     if out_path:
         plt.savefig(out_path, dpi=dpi, bbox_inches="tight")
-        print(f"[SAVED] Figure → {out_path}")
+        print(f"[SAVED] Section plot  ->  {out_path}")
     plt.show()
 
 
-def plot_amplitude_spectrum(seismic: dict,
-                            n_traces_sample: int = 100,
-                            out_path: str = None,
-                            dpi: int = 300):
-    """
-    Plot the average amplitude (frequency) spectrum of the section.
-
-    Parameters
-    ----------
-    seismic          : dict from reader
-    n_traces_sample  : number of traces to average over
-    """
-    data = seismic["data"]
-    dt   = seismic["dt"]
-    n_traces, n_samples = data.shape
-
-    step     = max(1, n_traces // n_traces_sample)
-    subset   = data[::step, :]
-    spectra  = np.abs(np.fft.rfft(subset, axis=1))
-    avg_spec = np.mean(spectra, axis=0)
-    freqs    = np.fft.rfftfreq(n_samples, d=dt)
+def plot_amplitude_spectrum(seismic, n_traces_sample=100,
+                            out_path=None, dpi=300):
+    data  = seismic["data"]
+    dt    = seismic["dt"]
+    step  = max(1, data.shape[0] // n_traces_sample)
+    avg   = np.mean(np.abs(np.fft.rfft(data[::step], axis=1)), axis=0)
+    freqs = np.fft.rfftfreq(seismic["n_samples"], d=dt)
 
     fig, ax = plt.subplots(figsize=(9, 5))
-    ax.plot(freqs, avg_spec, color="#2A9D8F", lw=2)
-    ax.fill_between(freqs, avg_spec, alpha=0.2, color="#2A9D8F")
-    ax.set_xlabel("Frequency (Hz)", fontsize=13)
-    ax.set_ylabel("Amplitude", fontsize=13)
+    ax.plot(freqs, avg, color="#2A9D8F", lw=2)
+    ax.fill_between(freqs, avg, alpha=0.2, color="#2A9D8F")
+    ax.set_xlabel("Frequency  (Hz)", fontsize=13)
+    ax.set_ylabel("Amplitude",       fontsize=13)
     ax.set_title("Average Amplitude Spectrum", fontsize=14, fontweight="bold")
     ax.set_xlim(0, freqs[-1])
     ax.xaxis.set_minor_locator(AutoMinorLocator(5))
@@ -375,120 +347,110 @@ def plot_amplitude_spectrum(seismic: dict,
     ax.tick_params(which="both", direction="in", top=True, right=True)
     ax.grid(True, linestyle="--", alpha=0.4)
     plt.tight_layout()
-
     if out_path:
         plt.savefig(out_path, dpi=dpi, bbox_inches="tight")
-        print(f"[SAVED] Spectrum → {out_path}")
+        print(f"[SAVED] Spectrum      ->  {out_path}")
     plt.show()
 
 
-def plot_trace_wiggle(seismic: dict,
-                      n_traces: int = 50,
-                      gain: float = 1.0,
-                      out_path: str = None,
-                      dpi: int = 300):
-    """
-    Classic wiggle trace display for a subset of traces.
-
-    Parameters
-    ----------
-    n_traces : how many traces to plot
-    gain     : amplitude scale factor
-    """
-    data     = seismic["data"]
-    twt      = seismic["twt"]
-    n_total  = seismic["n_traces"]
-    step     = max(1, n_total // n_traces)
-    subset   = data[::step, :]
-    n_plot   = subset.shape[0]
-
-    norm  = np.nanpercentile(np.abs(subset), 95)
-    if norm == 0:
-        norm = 1.0
+def plot_trace_wiggle(seismic, n_traces=50, gain=1.0,
+                      out_path=None, dpi=300):
+    data   = seismic["data"]
+    twt    = seismic["twt"]
+    step   = max(1, seismic["n_traces"] // n_traces)
+    subset = data[::step]
+    n_plot = subset.shape[0]
+    norm   = np.nanpercentile(np.abs(subset), 95) or 1.0
     subset = subset / norm * gain
 
     fig, ax = plt.subplots(figsize=(14, 8))
     for i in range(n_plot):
-        tr  = subset[i, :]
+        tr = subset[i]
         ax.plot(tr + i, twt, color="k", lw=0.4)
-        ax.fill_betweenx(twt, i, tr + i,
-                         where=(tr > 0), color="#264653", alpha=0.7)
-
+        ax.fill_betweenx(twt, i, tr + i, where=(tr > 0),
+                         color="#264653", alpha=0.7)
     ax.set_xlim(-1, n_plot)
     ax.invert_yaxis()
     ax.set_xlabel("Trace Index (subsampled)", fontsize=13)
-    ax.set_ylabel("Two-Way Time (s)", fontsize=13)
-    ax.set_title("Wiggle Trace Display", fontsize=14, fontweight="bold")
+    ax.set_ylabel("Two-Way Time  (s)",        fontsize=13)
+    ax.set_title("Wiggle Trace Display",      fontsize=14, fontweight="bold")
     ax.yaxis.set_minor_locator(AutoMinorLocator(5))
     ax.tick_params(which="both", direction="in", right=True)
     ax.grid(True, axis="y", linestyle="--", alpha=0.35)
     plt.tight_layout()
-
     if out_path:
         plt.savefig(out_path, dpi=dpi, bbox_inches="tight")
-        print(f"[SAVED] Wiggle → {out_path}")
+        print(f"[SAVED] Wiggle plot   ->  {out_path}")
     plt.show()
 
 
+def diagnose_cbvs(filepath: str, n_samples_guess: int = 1500):
+    fsize = os.path.getsize(filepath)
+    print(f"\n{'='*60}")
+    print(f"CBVS DIAGNOSTIC: {os.path.basename(filepath)}")
+    print(f"{'='*60}")
+    print(f"File size : {fsize:,} bytes  ({fsize/1e6:.3f} MB)")
+    print(f"\nIf n_samples = {n_samples_guess}:")
+    for hoff in [64, 128, 256, 512, 1024, 2048, 4000]:
+        data_sz = fsize - hoff
+        if data_sz > 0:
+            n_tr = data_sz // (n_samples_guess * 4)
+            rem  = data_sz % (n_samples_guess * 4)
+            print(f"  hdr={hoff:5d}  ->  {n_tr:6d} traces  (remainder {rem} bytes)")
+    print(f"{'='*60}\n")
+
+
 # =============================================================================
-#  MAIN — edit paths below and run
+#  MAIN  --  edit settings below
 # =============================================================================
 
 if __name__ == "__main__":
 
-    # ─── USER SETTINGS ────────────────────────────────────────────────────
-    INPUT_FORMAT = "segy"         # "segy" or "cbvs"
-    INPUT_FILE   = "your_file.segy"   # ← change to your file path
+    # ---- USER SETTINGS -------------------------------------------------------
+    INPUT_FORMAT = "cbvs"           # "cbvs" or "segy"
+    INPUT_FILE   = "/media/ashraf/𝓐𝓢𝓗𝓡𝓐𝓕1/Seismic-data/F3_Demo_2023/Seismics/Seismic/Seismic^28.cbvs"   # <- your file name
     OUTPUT_DIR   = "seismic_output"
-    # ──────────────────────────────────────────────────────────────────────
+
+    # Leave as None to auto-detect. Override if auto-detect is wrong:
+    N_SAMPLES    = None     # e.g. 1500
+    DT_MS        = None     # e.g. 2.0
+    HDR_OFFSET   = None     # e.g. 128
+    # --------------------------------------------------------------------------
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    # ── STEP 1: Read data ─────────────────────────────────────────────────
-    if INPUT_FORMAT == "segy":
+    # STEP 0: inspect
+    if INPUT_FORMAT == "cbvs":
+        reader = OpendTectCBVSReader(INPUT_FILE)
+        reader.inspect_header(n_bytes=256)
+        diagnose_cbvs(INPUT_FILE, n_samples_guess=N_SAMPLES or 1500)
+
+    # STEP 1: read
+    if INPUT_FORMAT == "cbvs":
+        seismic = reader.read(n_samples=N_SAMPLES, dt_ms=DT_MS,
+                              hdr_offset=HDR_OFFSET)
+    else:
         seismic = read_segy(INPUT_FILE)
 
-    elif INPUT_FORMAT == "cbvs":
-        reader = CBVSReader(INPUT_FILE)
-
-        # Inspect header first to understand byte layout
-        reader.inspect_header(n_bytes=128)
-
-        # Adjust n_samples and endian based on your file
-        seismic = reader.read(
-            n_samples = 1500,     # ← set from your acquisition params
-            endian    = ">",      # ">" big-endian (most seismic) or "<" little
-        )
-
-    # ── STEP 2: Save as NPY ───────────────────────────────────────────────
+    # STEP 2: save NPY
     save_npy(seismic, out_dir=OUTPUT_DIR)
 
-    # ── STEP 3: Save as SEG-Y (optional) ─────────────────────────────────
-    if SEGYIO_AVAILABLE:
-        save_segy(seismic, out_path=os.path.join(OUTPUT_DIR, "converted.segy"))
+    # STEP 3: save SEG-Y
+    save_segy(seismic, out_path=os.path.join(OUTPUT_DIR, "converted.segy"))
 
-    # ── STEP 4: Visualise ─────────────────────────────────────────────────
+    # STEP 4: visualise
     plot_seismic_section(
-        seismic,
-        clip_pct = 98,
-        cmap     = "gray",
-        title    = "2D Seismic Section",
-        out_path = os.path.join(OUTPUT_DIR, "seismic_section.png"),
-        dpi      = 300,
-    )
+        seismic, clip_pct=98, cmap="gray",
+        out_path=os.path.join(OUTPUT_DIR, "seismic_section.png"), dpi=300)
 
     plot_amplitude_spectrum(
         seismic,
-        out_path = os.path.join(OUTPUT_DIR, "amplitude_spectrum.png"),
-        dpi      = 300,
-    )
+        out_path=os.path.join(OUTPUT_DIR, "amplitude_spectrum.png"), dpi=300)
 
     plot_trace_wiggle(
-        seismic,
-        n_traces = 60,
-        gain     = 1.2,
-        out_path = os.path.join(OUTPUT_DIR, "wiggle_display.png"),
-        dpi      = 300,
-    )
+        seismic, n_traces=60, gain=1.2,
+        out_path=os.path.join(OUTPUT_DIR, "wiggle_display.png"), dpi=300)
 
-    print("\n[DONE] All outputs saved to:", OUTPUT_DIR)
+    print(f"\n{'='*50}")
+    print(f"  ALL DONE  ->  outputs in: {OUTPUT_DIR}/")
+    print(f"{'='*50}")
