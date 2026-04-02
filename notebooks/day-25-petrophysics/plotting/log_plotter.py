@@ -165,6 +165,137 @@ class LogCanvas(FigureCanvas):
                           fontsize=9, color="#1E293B", y=0.97)
         self.draw()
 
+    # ── generic plots ──────────────────────────────────────────────────────
+
+    def _depth_mask(self, depth: np.ndarray,
+                    depth_from: float | None,
+                    depth_to: float | None) -> np.ndarray:
+        if depth_from is None:
+            depth_from = float(depth.min()) if len(depth) else 0.0
+        if depth_to is None:
+            depth_to = float(depth.max()) if len(depth) else 0.0
+        return (depth >= depth_from) & (depth <= depth_to)
+
+    def _get_curve_data(self, well: WellData, name: str,
+                        depth_from: float | None,
+                        depth_to: float | None) -> np.ndarray:
+        curve = well.get_curve(name)
+        if curve is None or len(curve.data) == 0:
+            return np.array([])
+        mask = self._depth_mask(well.depth, depth_from, depth_to)
+        return curve.data[mask]
+
+    def _plot_empty(self, title: str, subtitle: str = "No data"):
+        self.fig.clear()
+        ax = self.fig.add_subplot(111)
+        ax.set_facecolor("#FFFFFF")
+        ax.axis("off")
+        ax.text(0.5, 0.6, title, ha="center", va="center",
+                fontsize=11, color="#1E293B")
+        ax.text(0.5, 0.45, subtitle, ha="center", va="center",
+                fontsize=9, color="#94A3B8")
+        self.draw()
+
+    def plot_histogram(self, well: WellData, curve_name: str,
+                       depth_from: float | None = None,
+                       depth_to: float | None = None):
+        data = self._get_curve_data(well, curve_name, depth_from, depth_to)
+        data = data[np.isfinite(data)]
+        if len(data) == 0:
+            self._plot_empty("Histogram", f"No data for {curve_name}")
+            return
+        self.fig.clear()
+        ax = self.fig.add_subplot(111)
+        ax.hist(data, bins=40, color="#3B82F6", alpha=0.8, edgecolor="#1E293B")
+        ax.set_title(f"Histogram: {curve_name}", fontsize=10, color="#1E293B")
+        ax.set_xlabel(curve_name, fontsize=8)
+        ax.set_ylabel("Count", fontsize=8)
+        ax.grid(True, color="#E2E8F0", linewidth=0.5, linestyle=":")
+        self.draw()
+
+    def plot_box(self, well: WellData, curve_name: str,
+                 depth_from: float | None = None,
+                 depth_to: float | None = None):
+        data = self._get_curve_data(well, curve_name, depth_from, depth_to)
+        data = data[np.isfinite(data)]
+        if len(data) == 0:
+            self._plot_empty("Box Plot", f"No data for {curve_name}")
+            return
+        self.fig.clear()
+        ax = self.fig.add_subplot(111)
+        ax.boxplot(data, vert=True, patch_artist=True,
+                   boxprops=dict(facecolor="#22C55E", alpha=0.7, color="#166534"),
+                   medianprops=dict(color="#0F172A"))
+        ax.set_title(f"Box Plot: {curve_name}", fontsize=10, color="#1E293B")
+        ax.set_ylabel(curve_name, fontsize=8)
+        ax.grid(True, axis="y", color="#E2E8F0", linewidth=0.5, linestyle=":")
+        self.draw()
+
+    def plot_cross(self, well: WellData, x_name: str, y_name: str,
+                   depth_from: float | None = None,
+                   depth_to: float | None = None):
+        x = self._get_curve_data(well, x_name, depth_from, depth_to)
+        y = self._get_curve_data(well, y_name, depth_from, depth_to)
+        if len(x) == 0 or len(y) == 0:
+            self._plot_empty("Cross Plot", f"Missing {x_name} or {y_name}")
+            return
+        mask = np.isfinite(x) & np.isfinite(y)
+        x = x[mask]
+        y = y[mask]
+        if len(x) == 0:
+            self._plot_empty("Cross Plot", "No valid samples")
+            return
+        self.fig.clear()
+        ax = self.fig.add_subplot(111)
+        ax.scatter(x, y, s=6, c="#EF4444", alpha=0.6, edgecolors="none")
+        ax.set_title(f"Cross Plot: {x_name} vs {y_name}", fontsize=10, color="#1E293B")
+        ax.set_xlabel(x_name, fontsize=8)
+        ax.set_ylabel(y_name, fontsize=8)
+        ax.grid(True, color="#E2E8F0", linewidth=0.5, linestyle=":")
+        self.draw()
+
+    def plot_pair(self, well: WellData, curve_names: List[str],
+                  depth_from: float | None = None,
+                  depth_to: float | None = None):
+        names = [n for n in curve_names if n]
+        names = list(dict.fromkeys(names))  # unique, preserve order
+        if len(names) < 2:
+            self._plot_empty("Pair Plot", "Select at least two curves")
+            return
+        names = names[:4]  # keep it compact
+        data = []
+        for n in names:
+            d = self._get_curve_data(well, n, depth_from, depth_to)
+            data.append(d)
+
+        self.fig.clear()
+        n = len(names)
+        gs = self.fig.add_gridspec(n, n, wspace=0.15, hspace=0.15)
+        for i in range(n):
+            for j in range(n):
+                ax = self.fig.add_subplot(gs[i, j])
+                ax.tick_params(labelsize=6)
+                if i == j:
+                    d = data[i]
+                    d = d[np.isfinite(d)]
+                    if len(d):
+                        ax.hist(d, bins=25, color="#60A5FA", alpha=0.8)
+                else:
+                    x = data[j]
+                    y = data[i]
+                    mask = np.isfinite(x) & np.isfinite(y)
+                    ax.scatter(x[mask], y[mask], s=4, c="#64748B", alpha=0.5, edgecolors="none")
+                if i == n - 1:
+                    ax.set_xlabel(names[j], fontsize=7)
+                else:
+                    ax.set_xticklabels([])
+                if j == 0:
+                    ax.set_ylabel(names[i], fontsize=7)
+                else:
+                    ax.set_yticklabels([])
+        self.fig.suptitle("Pair Plot", fontsize=10, color="#1E293B", y=0.98)
+        self.draw()
+
 
 class LogPlotWidget(QWidget):
     """Drop-in QWidget containing the log canvas."""
@@ -182,3 +313,56 @@ class LogPlotWidget(QWidget):
              depth_to: float = None,
              tops=None):
         self.canvas.plot_well(well, tracks, depth_from, depth_to, tops)
+
+    def plot_mode(self, well: WellData, mode: str,
+                  curves: List[str],
+                  depth_from: float = None,
+                  depth_to: float = None):
+        mode = (mode or "").lower()
+        curves = [c for c in curves if c]
+
+        if "hist" in mode:
+            if curves:
+                self.canvas.plot_histogram(well, curves[0], depth_from, depth_to)
+            else:
+                self.canvas._plot_empty("Histogram", "Select a curve")
+            return
+
+        if "box" in mode:
+            if curves:
+                self.canvas.plot_box(well, curves[0], depth_from, depth_to)
+            else:
+                self.canvas._plot_empty("Box Plot", "Select a curve")
+            return
+
+        if "cross" in mode:
+            if len(curves) >= 2:
+                self.canvas.plot_cross(well, curves[0], curves[1], depth_from, depth_to)
+            else:
+                self.canvas._plot_empty("Cross Plot", "Select X and Y curves")
+            return
+
+        if "pair" in mode:
+            self.canvas.plot_pair(well, curves, depth_from, depth_to)
+            return
+
+        if "triple" in mode:
+            if not curves:
+                self.canvas._plot_empty("Triple Combo", "Select three curves")
+                return
+            tracks = [
+                TrackConfig(curves[i], [{"name": curves[i], "color": "#2563EB", "lw": 1.1}])
+                for i in range(min(3, len(curves)))
+            ]
+            self.canvas.plot_well(well, tracks, depth_from, depth_to, tops=None)
+            return
+
+        # Default: Multi-track
+        if curves:
+            tracks = [
+                TrackConfig(c, [{"name": c, "color": "#2563EB", "lw": 1.1}])
+                for c in curves
+            ]
+            self.canvas.plot_well(well, tracks, depth_from, depth_to, tops=None)
+        else:
+            self.canvas.plot_well(well, None, depth_from, depth_to, tops=None)
