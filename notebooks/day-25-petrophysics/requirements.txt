@@ -1,6 +1,0 @@
-PyQt5
-lasio
-numpy
-pandas
-matplotlib
-scikit-learn
