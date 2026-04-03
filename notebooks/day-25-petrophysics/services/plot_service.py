@@ -7,21 +7,43 @@ from plotting import plot_tools
 
 
 class PlotService:
-    def __init__(self, ui: QtWidgets.QMainWindow):
+    def __init__(self, ui: QtWidgets.QMainWindow, data_service):
         self.ui = ui
+        self.data = data_service
+
+    def _get_df(self):
+        well = self.data._get_current_well()
+        if not well:
+            return None
+        return getattr(well, "data", None)
 
     def new_log_plot(self):
-        QtWidgets.QMessageBox.information(self.ui, "Plot", "Multi-track plot stub.")
-        # plot_tools.plot_multitrack(...)
+        df = self._get_df()
+        if df is None:
+            return
+        plot_tools.plot_multitrack(df)
 
     def new_crossplot(self):
-        QtWidgets.QMessageBox.information(self.ui, "Plot", "Crossplot stub.")
-        # plot_tools.plot_crossplot(...)
+        df = self._get_df()
+        if df is None:
+            return
+        # Use first two curves
+        cols = list(df.columns)
+        if len(cols) < 2:
+            return
+        plot_tools.plot_crossplot(df, cols[0], cols[1])
 
     def new_histogram(self):
-        QtWidgets.QMessageBox.information(self.ui, "Plot", "Histogram stub.")
-        # plot_tools.plot_histogram(...)
+        df = self._get_df()
+        if df is None:
+            return
+        cols = list(df.columns)
+        if not cols:
+            return
+        plot_tools.plot_histogram(df, cols[0])
 
     def new_triple_combo(self):
-        QtWidgets.QMessageBox.information(self.ui, "Plot", "Triple combo stub.")
-        # plot_tools.plot_triple_combo(...)
+        df = self._get_df()
+        if df is None:
+            return
+        plot_tools.plot_triple_combo(df)
