@@ -36,16 +36,17 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if data_tab is None or dock_contents is None:
             return
 
-        # Clear existing widgets in the tab
-        old_layout = data_tab.layout()
-        if old_layout is not None:
-            while old_layout.count():
-                item = old_layout.takeAt(0)
+        # Clear existing widgets in the tab (keep the layout to avoid warnings)
+        existing_layout = data_tab.layout()
+        if existing_layout is not None:
+            while existing_layout.count():
+                item = existing_layout.takeAt(0)
                 widget = item.widget()
                 if widget is not None:
                     widget.setParent(None)
-                    widget.deleteLater()
-            old_layout.setParent(None)
+        else:
+            existing_layout = QtWidgets.QVBoxLayout(data_tab)
+            existing_layout.setContentsMargins(0, 0, 0, 0)
 
         # Detach contents from dock and hide the dock
         if dock is not None:
@@ -53,9 +54,8 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             dock.hide()
 
         dock_contents.setParent(data_tab)
-        layout = QtWidgets.QVBoxLayout(data_tab)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(dock_contents)
+        existing_layout.setContentsMargins(0, 0, 0, 0)
+        existing_layout.addWidget(dock_contents)
 
     def _connect_tab_switches(self) -> None:
         """Wire toolbar/menu actions and dashboard buttons to tab indices."""
