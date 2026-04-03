@@ -44,6 +44,11 @@ class MainController:
         self._connect_action("actionNewLogPlot", self.plots.new_log_plot)
         self._connect_action("actionNewCrossplot", self.plots.new_crossplot)
         self._connect_action("actionNewHistogram", self.plots.new_histogram)
+        # Plotting (plots tab buttons)
+        self._connect_widget("btnPlotMultiTrack", "clicked", self.plots.new_log_plot)
+        self._connect_widget("btnPlotTripleCombo", "clicked", self.plots.new_triple_combo)
+        self._connect_widget("btnPlotCrossplot", "clicked", self.plots.new_crossplot)
+        self._connect_widget("btnPlotHistogram", "clicked", self.plots.new_histogram)
 
         # Calculations (buttons in tab)
         self._connect_widget("btnCalcVsh", "clicked", self.interp.compute_vsh)

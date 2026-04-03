@@ -937,14 +937,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
      <property name="spacing">
       <number>5</number>
      </property>
-     <property name="contentsMargins" stdset="0">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>0</width>
-       <height>0</height>
-      </rect>
-     </property>
      <item>
       <widget class="QLineEdit" name="lineEditBrowserSearch">
        <property name="toolTip">
@@ -973,14 +965,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         <layout class="QVBoxLayout" name="layoutProject">
          <property name="spacing">
           <number>4</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>2</x>
-           <y>2</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
          </property>
          <item>
           <widget class="QTreeWidget" name="treeProject">
@@ -1246,14 +1230,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         <layout class="QVBoxLayout" name="layoutCurves">
          <property name="spacing">
           <number>4</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>2</x>
-           <y>2</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
          </property>
          <item>
           <layout class="QHBoxLayout" name="layoutCurveHeader">
@@ -1580,14 +1556,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
          <property name="spacing">
           <number>4</number>
          </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>2</x>
-           <y>2</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
-         </property>
          <item>
           <layout class="QHBoxLayout" name="layoutZoneHeader">
            <item>
@@ -1700,7 +1668,57 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
          </item>
         </layout>
        </widget>
-      </widget>
+      
+       <widget class="QWidget" name="tabPlots">
+        <attribute name="title">
+         <string>Plots</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="layoutPlots">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblPlotHint">
+           <property name="text">
+            <string>Select a plot type to open in the main view.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="layoutPlotButtons">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="btnPlotMultiTrack">
+             <property name="text">
+              <string>Multi-Track</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="btnPlotTripleCombo">
+             <property name="text">
+              <string>Triple Combo</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="btnPlotCrossplot">
+             <property name="text">
+              <string>Crossplot</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="btnPlotHistogram">
+             <property name="text">
+              <string>Histogram</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+</widget>
      </item>
     </layout>
    </widget>
@@ -1720,14 +1738,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
      <property name="spacing">
       <number>4</number>
      </property>
-     <property name="contentsMargins" stdset="0">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>0</width>
-       <height>0</height>
-      </rect>
-     </property>
      <item>
       <widget class="QTabWidget" name="tabProperties">
        <property name="tabPosition">
@@ -1740,14 +1750,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         <layout class="QVBoxLayout" name="layoutTrackProps">
          <property name="spacing">
           <number>5</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>4</x>
-           <y>4</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
          </property>
          <item>
           <widget class="QGroupBox" name="groupTrackGeneral">
@@ -1980,14 +1982,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         <layout class="QVBoxLayout" name="layoutCurveProps">
          <property name="spacing">
           <number>5</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>4</x>
-           <y>4</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
          </property>
          <item>
           <widget class="QGroupBox" name="groupCurveIdent">
@@ -2324,14 +2318,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
          <property name="spacing">
           <number>5</number>
          </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>4</x>
-           <y>4</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
-         </property>
          <item>
           <widget class="QGroupBox" name="groupGrossCriteria">
            <property name="title">
@@ -2578,14 +2564,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
          <property name="spacing">
           <number>5</number>
          </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>4</x>
-           <y>4</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
-         </property>
          <item>
           <widget class="QGroupBox" name="groupWellID">
            <property name="title">
@@ -2770,84 +2748,131 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockConsole">
+  
+  <widget class="QDockWidget" name="dockData">
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
-    <string>  Output Console, Statistics &amp; Data</string>
+    <string>  Data &amp; Analysis</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockConsoleContents">
-    <layout class="QVBoxLayout" name="layoutConsoleMain">
+   <widget class="QWidget" name="dockDataContents">
+    <layout class="QVBoxLayout" name="layoutDataMain">
      <property name="spacing">
       <number>0</number>
      </property>
-     <property name="contentsMargins" stdset="0">
-      <rect>
-       <x>2</x>
-       <y>2</y>
-       <width>0</width>
-       <height>0</height>
-      </rect>
-     </property>
      <item>
-      <widget class="QTabWidget" name="tabConsole">
+      <widget class="QTabWidget" name="tabData">
        <property name="tabPosition">
         <enum>QTabWidget::North</enum>
        </property>
-       <widget class="QWidget" name="tabMessages">
+       <widget class="QWidget" name="tabDataTable">
         <attribute name="title">
-         <string>Messages</string>
+         <string>All Data</string>
         </attribute>
-        <layout class="QVBoxLayout" name="layoutMessages">
+        <layout class="QVBoxLayout" name="layoutDataTable">
          <property name="spacing">
-          <number>4</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>3</x>
-           <y>3</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
+          <number>5</number>
          </property>
          <item>
-          <layout class="QHBoxLayout" name="layoutMsgFilter">
+          <layout class="QHBoxLayout" name="layoutDataTableControls">
            <item>
-            <widget class="QCheckBox" name="checkMsgInfo">
+            <widget class="QLabel" name="lblDTWell">
              <property name="text">
-              <string>INFO</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>Well:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkMsgWarn">
+            <widget class="QComboBox" name="comboDTWell">
+             <item>
+              <property name="text">
+               <string>CHr-1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tau-1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Experior</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblDTFrom">
              <property name="text">
-              <string>WARN</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>From (ft):</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkMsgError">
-             <property name="text">
-              <string>ERROR</string>
+            <widget class="QDoubleSpinBox" name="spinDTFrom">
+             <property name="decimals">
+              <number>1</number>
              </property>
-             <property name="checked">
-              <bool>true</bool>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>99999.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>3000.000000000000000</double>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="spacerMsgFilter">
+            <widget class="QLabel" name="lblDTTo">
+             <property name="text">
+              <string>To (ft):</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="spinDTTo">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>99999.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>4000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnLoadData">
+             <property name="text">
+              <string>Load</string>
+             </property>
+             <property name="maximumWidth">
+              <number>60</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnExportTable">
+             <property name="text">
+              <string>Export CSV</string>
+             </property>
+             <property name="maximumWidth">
+              <number>90</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="spacerDT">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -2859,57 +2884,181 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
              </property>
             </spacer>
            </item>
-           <item>
-            <widget class="QPushButton" name="btnClearLog">
-             <property name="text">
-              <string>Clear</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnSaveLog">
-             <property name="text">
-              <string>Save Log</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="textEditMessages">
-           <property name="lineWrapMode">
-            <enum>QPlainTextEdit::NoWrap</enum>
-           </property>
-           <property name="readOnly">
+          <widget class="QTableWidget" name="tableData">
+           <property name="alternatingRowColors">
             <bool>true</bool>
            </property>
-           <property name="plainText">
-            <string>[INFO]  PetroAnalyst Pro v1.0 initialized successfully.
-[INFO]  Project loaded: SandboxMay2016
-[INFO]  Wells loaded: CHr-1 (14 curves), Tau-1 (12 curves), Experior (18 curves)
-[INFO]  LAS files imported from: D:\SandboxMay2016\
-[INFO]  Core data loaded for CHr-1, Experior
-[INFO]  Ready. Welcome to PetroAnalyst Pro.</string>
+           <property name="rowCount">
+            <number>0</number>
            </property>
+           <property name="columnCount">
+            <number>12</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>DEPTH</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>GR</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SP</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>CALI</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>RHOB</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>NPHI</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>LLD</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>DT</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>VSH</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>PHIE</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>SW</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>PERM</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabHeaderInfo">
+        <attribute name="title">
+         <string>Header</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="layoutHeaderInfo">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QTableWidget" name="tableHeaderInfo">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>5</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Section</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Item</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Unit</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Description</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabLogInfo">
+        <attribute name="title">
+         <string>Log Info</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="layoutLogInfo">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QTableWidget" name="tableLogInfo">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>4</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Mnemonic</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Unit</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Description</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Type</string>
+            </property>
+           </column>
           </widget>
          </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tabStatistics">
         <attribute name="title">
-         <string>Statistics</string>
+         <string>Data Stats</string>
         </attribute>
         <layout class="QVBoxLayout" name="layoutStatistics">
          <property name="spacing">
           <number>5</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>3</x>
-           <y>3</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
          </property>
          <item>
           <layout class="QHBoxLayout" name="layoutStatsControls">
@@ -3086,112 +3235,62 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabDataTable">
+       <widget class="QWidget" name="tabRenameColumns">
         <attribute name="title">
-         <string>Data Table</string>
+         <string>Rename Columns</string>
         </attribute>
-        <layout class="QVBoxLayout" name="layoutDataTable">
+        <layout class="QVBoxLayout" name="layoutRenameColumns">
          <property name="spacing">
           <number>5</number>
          </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>3</x>
-           <y>3</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
-         </property>
          <item>
-          <layout class="QHBoxLayout" name="layoutDataTableControls">
+          <widget class="QTableWidget" name="tableRenameColumns">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Original</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>New Name</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="layoutRenameButtons">
            <item>
-            <widget class="QLabel" name="lblDTWell">
+            <widget class="QPushButton" name="btnApplyRename">
              <property name="text">
-              <string>Well:</string>
+              <string>Apply</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboDTWell">
-             <item>
-              <property name="text">
-               <string>CHr-1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tau-1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Experior</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lblDTFrom">
+            <widget class="QPushButton" name="btnResetRename">
              <property name="text">
-              <string>From (ft):</string>
+              <string>Reset</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="spinDTFrom">
-             <property name="decimals">
-              <number>1</number>
-             </property>
-             <property name="minimum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>99999.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>3000.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lblDTTo">
+            <widget class="QPushButton" name="btnUndoRename">
              <property name="text">
-              <string>To (ft):</string>
+              <string>Undo</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="spinDTTo">
-             <property name="decimals">
-              <number>1</number>
-             </property>
-             <property name="minimum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>99999.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>4000.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnLoadData">
-             <property name="text">
-              <string>Load</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnExportTable">
-             <property name="text">
-              <string>Export CSV</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="spacerDT">
+            <spacer name="spacerRename">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -3205,271 +3304,54 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
            </item>
           </layout>
          </item>
-         <item>
-          <widget class="QTableWidget" name="tableData">
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="rowCount">
-            <number>0</number>
-           </property>
-           <property name="columnCount">
-            <number>12</number>
-           </property>
-           <column>
-            <property name="text">
-             <string>DEPTH</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>GR</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>SP</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>CALI</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>RHOB</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>NPHI</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>LLD</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>DT</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>VSH</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>PHIE</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>SW</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>PERM</string>
-            </property>
-           </column>
-          </widget>
-         </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabImport">
+       <widget class="QWidget" name="tabCalculations">
         <attribute name="title">
-         <string>Import</string>
+         <string>Calculations</string>
         </attribute>
-        <layout class="QVBoxLayout" name="layoutImport">
+        <layout class="QVBoxLayout" name="layoutCalculations">
          <property name="spacing">
           <number>6</number>
          </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>4</x>
-           <y>4</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
-         </property>
          <item>
-          <widget class="QGroupBox" name="groupImportFile">
-           <property name="title">
-            <string>Import Well Data</string>
-           </property>
-           <layout class="QVBoxLayout" name="layoutImportFile">
-            <property name="spacing">
-             <number>5</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="layoutImportFormat">
-              <item>
-               <widget class="QLabel" name="lblImportFmt">
-                <property name="text">
-                 <string>Format:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboImportFormat">
-                <item>
-                 <property name="text">
-                  <string>LAS 2.0 (*.las)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>LAS 3.0 (*.las)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>DLIS (*.dlis *.dl)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>LIS (*.lis)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>ASCII / Text (*.txt *.dat *.asc)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>CSV (*.csv)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Excel (*.xlsx *.xls)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>WITSML (*.xml)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SEG-Y (*.sgy *.segy)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>ODM / PPDM Database</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>JSON (*.json)</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="layoutImportPath">
-              <item>
-               <widget class="QLineEdit" name="lineEditImportPath">
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="placeholderText">
-                 <string>Select file(s) to import...</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="btnBrowseImport">
-                <property name="text">
-                 <string>Browse...</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="btnStartImport">
-                <property name="text">
-                 <string>Import</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QProgressBar" name="progressImport">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="value">
-               <number>0</number>
-              </property>
-              <property name="textVisible">
-               <bool>true</bool>
-              </property>
-              <property name="format">
-               <string>%v%</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTableWidget" name="tableImportStatus">
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
-           </property>
-           <property name="rowCount">
-            <number>3</number>
-           </property>
-           <property name="columnCount">
-            <number>6</number>
-           </property>
-           <row/>
-           <row/>
-           <row/>
-           <column>
-            <property name="text">
-             <string>File Name</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Format</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Well</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Curves</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Depth Range</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Status</string>
-            </property>
-           </column>
-          </widget>
+          <layout class="QGridLayout" name="layoutCalcButtons">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="btnCalcVsh">
+             <property name="text">
+              <string>Shale Volume</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="btnCalcPhi">
+             <property name="text">
+              <string>Porosity</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="btnCalcSw">
+             <property name="text">
+              <string>Water Saturation</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="btnCalcPerm">
+             <property name="text">
+              <string>Permeability</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="btnCalcNetPay">
+             <property name="text">
+              <string>Net Pay</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -3480,14 +3362,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         <layout class="QVBoxLayout" name="layoutQC">
          <property name="spacing">
           <number>5</number>
-         </property>
-         <property name="contentsMargins" stdset="0">
-          <rect>
-           <x>3</x>
-           <y>3</y>
-           <width>0</width>
-           <height>0</height>
-          </rect>
          </property>
          <item>
           <layout class="QHBoxLayout" name="layoutQCControls">
@@ -3662,6 +3536,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     </layout>
    </widget>
   </widget>
+
   <widget class="QStatusBar" name="statusBar">
    <widget class="QLabel" name="lblStatusWell">
     <property name="geometry">

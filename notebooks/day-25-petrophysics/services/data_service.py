@@ -182,7 +182,7 @@ class DataService:
         log_info = getattr(well, "log_info", {}) or {}
         rows = []
         for name, info in log_info.items():
-            rows.append((name, info.get("unit", ""), info.get("type", ""), info.get("mnemonic", ""), info.get("desc", "")))
+            rows.append((name, info.get("unit", ""), info.get("desc", ""), info.get("type", "")))
         self._fill_table(table, rows)
 
     def _populate_data_table(self, well):
