@@ -1,7 +1,7 @@
 """Plot entry points: all plots live in plotting/plot_tools.py"""
 from __future__ import annotations
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from plotting import plot_tools
 
@@ -56,7 +56,8 @@ class PlotService:
         df = self._get_df()
         if df is None:
             return
-        fig = plot_tools.plot_multitrack(df, show=False)
+        curves = self._get_selected_multitrack_curves()
+        fig = plot_tools.plot_multitrack(df, curves=curves, show=False)
         self._add_plot_tab(fig, "Multi-Track Log Plot")
 
     def new_crossplot(self):
@@ -84,5 +85,21 @@ class PlotService:
         df = self._get_df()
         if df is None:
             return
-        fig = plot_tools.plot_triple_combo(df, show=False)
+        fig = plot_tools.plot_triple_combo_auto(df, show=False)
         self._add_plot_tab(fig, "Triple Combo")
+
+    def _get_selected_multitrack_curves(self):
+        combo = getattr(self.ui, "multitrackcomboBox", None)
+        if combo is None:
+            return None
+        model = combo.model()
+        if model is None:
+            return None
+        selected: list[str] = []
+        for i in range(model.rowCount()):
+            item = model.item(i)
+            if item is None:
+                continue
+            if item.checkState() == QtCore.Qt.Checked:
+                selected.append(item.text())
+        return selected or None
