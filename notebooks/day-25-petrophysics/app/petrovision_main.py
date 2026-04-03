@@ -23,8 +23,39 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         tab_widget = getattr(self, "centralTabWidget", None)
         if tab_widget is not None:
             self.setCentralWidget(tab_widget)
+        self._embed_data_analysis_tab()
         self._connect_tab_switches()
         self.controller = MainController(self)
+
+    def _embed_data_analysis_tab(self) -> None:
+        """Replace the Data Info & Stats tab with the Data & Analysis dock contents."""
+        data_tab = getattr(self, "tabDataInfoStats", None)
+        dock = getattr(self, "dockData", None)
+        dock_contents = getattr(self, "dockDataContents", None)
+
+        if data_tab is None or dock_contents is None:
+            return
+
+        # Clear existing widgets in the tab
+        old_layout = data_tab.layout()
+        if old_layout is not None:
+            while old_layout.count():
+                item = old_layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                    widget.deleteLater()
+            old_layout.setParent(None)
+
+        # Detach contents from dock and hide the dock
+        if dock is not None:
+            dock.setWidget(None)
+            dock.hide()
+
+        dock_contents.setParent(data_tab)
+        layout = QtWidgets.QVBoxLayout(data_tab)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(dock_contents)
 
     def _connect_tab_switches(self) -> None:
         """Wire toolbar/menu actions and dashboard buttons to tab indices."""
