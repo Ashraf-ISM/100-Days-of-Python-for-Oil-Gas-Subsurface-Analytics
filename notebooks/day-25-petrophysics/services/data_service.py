@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from core.well_data_loader import load_well
 
@@ -227,14 +227,46 @@ class DataService:
         if df is None:
             return
         curves = list(df.columns)
-        for combo_name in ("comboLVTemplate", "multitrackcomboBox"):
-            combo = getattr(self.ui, combo_name, None)
-            if combo is None:
-                continue
-            combo.blockSignals(True)
-            combo.clear()
-            combo.addItems(curves)
-            combo.blockSignals(False)
+        combo_lv = getattr(self.ui, "comboLVTemplate", None)
+        if combo_lv is not None:
+            combo_lv.blockSignals(True)
+            combo_lv.clear()
+            combo_lv.addItems(curves)
+            combo_lv.blockSignals(False)
+
+        combo_multi = getattr(self.ui, "multitrackcomboBox", None)
+        if combo_multi is not None:
+            self._set_checkable_combo(combo_multi, curves)
+
+    def _set_checkable_combo(self, combo: QtWidgets.QComboBox, items: list[str]) -> None:
+        model = QtGui.QStandardItemModel()
+        for name in items:
+            item = QtGui.QStandardItem(name)
+            item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsUserCheckable)
+            item.setData(QtCore.Qt.Unchecked, QtCore.Qt.CheckStateRole)
+            model.appendRow(item)
+        combo.setModel(model)
+        combo.setEditable(True)
+        line_edit = combo.lineEdit()
+        if line_edit is not None:
+            line_edit.setReadOnly(True)
+            line_edit.setPlaceholderText("Select curves...")
+        model.itemChanged.connect(lambda _item: self._update_combo_display(combo))
+        self._update_combo_display(combo)
+
+    def _update_combo_display(self, combo: QtWidgets.QComboBox) -> None:
+        model = combo.model()
+        if model is None:
+            return
+        selected: list[str] = []
+        for i in range(model.rowCount()):
+            item = model.item(i)
+            if item is not None and item.checkState() == QtCore.Qt.Checked:
+                selected.append(item.text())
+        text = ", ".join(selected) if selected else "Select curves..."
+        line_edit = combo.lineEdit()
+        if line_edit is not None:
+            line_edit.setText(text)
 
     def _update_project_tree(self):
         tree = getattr(self.ui, "treeProject", None)

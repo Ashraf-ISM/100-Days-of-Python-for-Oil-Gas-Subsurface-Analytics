@@ -49,6 +49,9 @@ class MainController:
         self._connect_widget("btnPlotTripleCombo", "clicked", self.plots.new_triple_combo)
         self._connect_widget("btnPlotCrossplot", "clicked", self.plots.new_crossplot)
         self._connect_widget("btnPlotHistogram", "clicked", self.plots.new_histogram)
+        # Log viewer tab buttons
+        self._connect_widget("plottriplecomboplot", "clicked", self.plots.new_triple_combo)
+        self._connect_widget("plotmutlitrack", "clicked", self.plots.new_log_plot)
 
         # Calculations (buttons in tab)
         self._connect_widget("btnCalcVsh", "clicked", self.interp.compute_vsh)
