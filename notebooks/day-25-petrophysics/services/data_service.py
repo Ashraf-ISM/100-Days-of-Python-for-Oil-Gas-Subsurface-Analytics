@@ -227,23 +227,26 @@ class DataService:
         if df is None:
             return
         curves = list(df.columns)
-        track1, track2, track3 = self._select_triple_tracks(curves)
         combo_track1 = getattr(self.ui, "triplecombotrack1", None)
         if combo_track1 is not None:
-            self._set_checkable_combo(combo_track1, curves, set(track1))
+            self._set_checkable_combo(combo_track1, curves, set(), "Track 1 curves...")
         combo_track2 = getattr(self.ui, "triplecombotrack2", None)
         if combo_track2 is not None:
-            self._set_checkable_combo(combo_track2, curves, set(track2))
+            self._set_checkable_combo(combo_track2, curves, set(), "Track 2 curves...")
         combo_track3 = getattr(self.ui, "triplecombotrack3", None)
         if combo_track3 is not None:
-            self._set_checkable_combo(combo_track3, curves, set(track3))
+            self._set_checkable_combo(combo_track3, curves, set(), "Track 3 curves...")
 
         combo_multi = getattr(self.ui, "multitrackcomboBox", None)
         if combo_multi is not None:
-            self._set_checkable_combo(combo_multi, curves, set())
+            self._set_checkable_combo(combo_multi, curves, set(), "Select curves...")
 
     def _set_checkable_combo(
-        self, combo: QtWidgets.QComboBox, items: list[str], checked: set[str]
+        self,
+        combo: QtWidgets.QComboBox,
+        items: list[str],
+        checked: set[str],
+        placeholder: str = "Select curves...",
     ) -> None:
         model = QtGui.QStandardItemModel()
         for name in items:
@@ -257,9 +260,9 @@ class DataService:
         line_edit = combo.lineEdit()
         if line_edit is not None:
             line_edit.setReadOnly(True)
-            line_edit.setPlaceholderText("Select curves...")
-        model.itemChanged.connect(lambda _item: self._update_combo_display(combo))
-        self._update_combo_display(combo)
+            line_edit.setPlaceholderText(placeholder)
+        model.itemChanged.connect(lambda _item, target=combo, text=placeholder: self._update_combo_display(target, text))
+        self._update_combo_display(combo, placeholder)
 
     @staticmethod
     def _find_first(columns: list[str], candidates: list[str]) -> str | None:
@@ -321,7 +324,11 @@ class DataService:
                     break
         return track1, track2, track3
 
-    def _update_combo_display(self, combo: QtWidgets.QComboBox) -> None:
+    def _update_combo_display(
+        self,
+        combo: QtWidgets.QComboBox,
+        placeholder: str = "Select curves...",
+    ) -> None:
         model = combo.model()
         if model is None:
             return
@@ -330,7 +337,12 @@ class DataService:
             item = model.item(i)
             if item is not None and item.checkState() == QtCore.Qt.Checked:
                 selected.append(item.text())
-        text = ", ".join(selected) if selected else "Select curves..."
+        if not selected:
+            text = placeholder
+        elif len(selected) <= 2:
+            text = ", ".join(selected)
+        else:
+            text = f"{len(selected)} curves selected"
         line_edit = combo.lineEdit()
         if line_edit is not None:
             line_edit.setText(text)

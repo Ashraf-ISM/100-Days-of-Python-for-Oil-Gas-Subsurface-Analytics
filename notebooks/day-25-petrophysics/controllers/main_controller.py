@@ -69,6 +69,7 @@ class MainController:
         self._connect_widget("tabData", "currentChanged", self.data.on_data_tab_changed)
         self._connect_widget("comboDTWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboCurveWell", "currentTextChanged", self.data.on_curve_well_changed)
+        self._connect_widget("comboLVWell", "currentTextChanged", self.data.set_current_well)
 
         # QC
         self._connect_widget("btnRunQC", "clicked", self.qc.run_qc)

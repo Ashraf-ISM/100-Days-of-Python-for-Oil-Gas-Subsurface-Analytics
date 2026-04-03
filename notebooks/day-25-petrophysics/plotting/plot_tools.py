@@ -183,6 +183,59 @@ def plot_triple_combo_auto(df, *, show: bool = True):
     return fig
 
 
+def plot_triple_combo_tracks(
+    df,
+    track1: list[str],
+    track2: list[str],
+    track3: list[str],
+    *,
+    show: bool = True,
+):
+    depth = _get_depth(df)
+    fig, axes = plt.subplots(1, 3, figsize=(12, 8), sharey=True)
+
+    # Track 1
+    if track1:
+        main = track1[0]
+        if main in df.columns:
+            axes[0].plot(df[main], depth, color="green", label=main)
+        if len(track1) > 1:
+            ax_tw = axes[0].twiny()
+            for extra in track1[1:]:
+                if extra in df.columns:
+                    ax_tw.plot(df[extra], depth, label=extra)
+            ax_tw.set_xlabel("Track 1 (Extra)")
+            ax_tw.legend(fontsize=8)
+        axes[0].set_xlabel(main)
+    axes[0].invert_yaxis()
+    axes[0].grid(True, alpha=0.3)
+
+    # Track 2: Resistivity
+    if track2:
+        for curve in track2:
+            if curve in df.columns:
+                axes[1].plot(df[curve], depth, label=curve)
+        axes[1].set_xscale("log")
+        axes[1].set_xlabel("Resistivity")
+        axes[1].legend(fontsize=8)
+    axes[1].grid(True, alpha=0.3)
+
+    # Track 3: Density + Porosity
+    if track3:
+        for curve in track3:
+            if curve in df.columns:
+                axes[2].plot(df[curve], depth, label=curve)
+        axes[2].set_xlabel("Density / Porosity")
+        axes[2].legend(fontsize=8)
+    axes[2].grid(True, alpha=0.3)
+
+    axes[0].set_ylabel("DEPTH")
+    fig.suptitle("Triple Combo")
+    if show:
+        plt.show()
+    return fig
+
+
 def plot_crossplot(df, x_curve: str, y_curve: str, *, show: bool = True):
     fig = plt.figure(figsize=(6, 6))
     plt.scatter(df[x_curve], df[y_curve], s=6, alpha=0.6)
