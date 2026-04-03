@@ -706,27 +706,33 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboLVTemplate">
-         <item>
-          <property name="text">
-           <string>Standard Triple Combo</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Formation Evaluation</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Geomechanics Suite</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Custom...</string>
-          </property>
-         </item>
+        <widget class="CheckableCombobox" name="triplecombotrack1">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::PreventContextMenu</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GR Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select GR Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="CheckableCombobox" name="triplecombotrack2">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resistivity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="CheckableCombobox" name="triplecombotrack3">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porosity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
         </widget>
        </item>
        <item>
@@ -744,7 +750,11 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </widget>
        </item>
        <item>
-        <widget class="CheckableCombobox" name="multitrackcomboBox"/>
+        <widget class="CheckableCombobox" name="multitrackcomboBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select curves&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="plotmutlitrack">
