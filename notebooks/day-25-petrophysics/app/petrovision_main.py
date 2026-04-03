@@ -20,6 +20,9 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         super().__init__()
         ui_path = UI_DIR / UI_FILE
         uic.loadUi(str(ui_path), self)
+        tab_widget = getattr(self, "centralTabWidget", None)
+        if tab_widget is not None:
+            self.setCentralWidget(tab_widget)
         self._connect_tab_switches()
         self.controller = MainController(self)
 
