@@ -1808,60 +1808,111 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
    </widget>
   </widget>
 
-  <!-- ======================== BOTTOM DOCK: CONSOLE ======================== -->
-  <widget class="QDockWidget" name="dockConsole">
-   <property name="windowTitle"><string>  Output Console, Statistics &amp; Data</string></property>
+    <!-- ======================== BOTTOM DOCK: DATA & ANALYSIS ======================== -->
+  <widget class="QDockWidget" name="dockData">
+   <property name="windowTitle"><string>  Data &amp; Analysis</string></property>
    <property name="features">
     <set>QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetClosable</set>
    </property>
    <attribute name="dockWidgetArea"><number>8</number></attribute>
-   <widget class="QWidget" name="dockConsoleContents">
-    <layout class="QVBoxLayout" name="layoutConsoleMain">
-     <property name="spacing"><number>0</number></property>
+   <widget class="QWidget" name="dockDataContents">
+    <layout class="QVBoxLayout" name="layoutDataMain">
      <item>
-      <widget class="QTabWidget" name="tabConsole">
+      <widget class="QTabWidget" name="tabDataHub">
        <property name="tabPosition"><enum>QTabWidget::North</enum></property>
 
-       <!-- MESSAGES -->
-       <widget class="QWidget" name="tabMessages">
-        <attribute name="title"><string>Messages</string></attribute>
-        <layout class="QVBoxLayout" name="layoutMessages">
-         <property name="spacing"><number>4</number></property>
+       <!-- ALL DATA -->
+       <widget class="QWidget" name="tabDataAll">
+        <attribute name="title"><string>All Data</string></attribute>
+        <layout class="QVBoxLayout" name="layoutDataAll">
          <item>
-          <layout class="QHBoxLayout" name="layoutMsgFilter">
-           <item><widget class="QCheckBox" name="checkMsgInfo"><property name="text"><string>INFO</string></property><property name="checked"><bool>true</bool></property></widget></item>
-           <item><widget class="QCheckBox" name="checkMsgWarn"><property name="text"><string>WARN</string></property><property name="checked"><bool>true</bool></property></widget></item>
-           <item><widget class="QCheckBox" name="checkMsgError"><property name="text"><string>ERROR</string></property><property name="checked"><bool>true</bool></property></widget></item>
+          <layout class="QHBoxLayout" name="layoutDataAllControls">
+           <item><widget class="QLabel" name="lblDTWell"><property name="text"><string>Well:</string></property></widget></item>
            <item>
-            <spacer name="spacerMsgFilter">
+            <widget class="QComboBox" name="comboDTWell">
+             <item><property name="text"><string>CHr-1</string></property></item>
+             <item><property name="text"><string>Tau-1</string></property></item>
+             <item><property name="text"><string>Experior</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QLabel" name="lblDTFrom"><property name="text"><string>From:</string></property></widget></item>
+           <item><widget class="QDoubleSpinBox" name="spinDTFrom"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>3000.0</double></property></widget></item>
+           <item><widget class="QLabel" name="lblDTTo"><property name="text"><string>To:</string></property></widget></item>
+           <item><widget class="QDoubleSpinBox" name="spinDTTo"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>4000.0</double></property></widget></item>
+           <item><widget class="QPushButton" name="btnLoadData"><property name="text"><string>Load</string></property><property name="maximumWidth"><number>70</number></property></widget></item>
+           <item><widget class="QPushButton" name="btnExportTable"><property name="text"><string>Export CSV</string></property><property name="maximumWidth"><number>95</number></property></widget></item>
+           <item>
+            <spacer name="spacerDT">
              <property name="orientation"><enum>Qt::Horizontal</enum></property>
              <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
             </spacer>
            </item>
-           <item><widget class="QPushButton" name="btnClearLog"><property name="text"><string>Clear</string></property><property name="maximumWidth"><number>65</number></property></widget></item>
-           <item><widget class="QPushButton" name="btnSaveLog"><property name="text"><string>Save Log</string></property><property name="maximumWidth"><number>75</number></property></widget></item>
           </layout>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="textEditMessages">
-           <property name="readOnly"><bool>true</bool></property>
-           <property name="lineWrapMode"><enum>QPlainTextEdit::NoWrap</enum></property>
-           <property name="plainText"><string>[INFO]  PetroAnalyst Pro v1.0 initialized successfully.
-[INFO]  Project loaded: SandboxMay2016
-[INFO]  Wells loaded: CHr-1 (14 curves), Tau-1 (12 curves), Experior (18 curves)
-[INFO]  LAS files imported from: D:\SandboxMay2016\
-[INFO]  Core data loaded for CHr-1, Experior
-[INFO]  Ready. Welcome to PetroAnalyst Pro.</string></property>
+          <widget class="QTableWidget" name="tableData">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="rowCount"><number>0</number></property>
+           <property name="columnCount"><number>12</number></property>
+           <column><property name="text"><string>DEPTH</string></property></column>
+           <column><property name="text"><string>GR</string></property></column>
+           <column><property name="text"><string>SP</string></property></column>
+           <column><property name="text"><string>CALI</string></property></column>
+           <column><property name="text"><string>RHOB</string></property></column>
+           <column><property name="text"><string>NPHI</string></property></column>
+           <column><property name="text"><string>LLD</string></property></column>
+           <column><property name="text"><string>DT</string></property></column>
+           <column><property name="text"><string>VSH</string></property></column>
+           <column><property name="text"><string>PHIE</string></property></column>
+           <column><property name="text"><string>SW</string></property></column>
+           <column><property name="text"><string>PERM</string></property></column>
           </widget>
          </item>
         </layout>
        </widget>
 
-       <!-- STATISTICS -->
-       <widget class="QWidget" name="tabStatistics">
-        <attribute name="title"><string>Statistics</string></attribute>
+       <!-- HEADER INFO -->
+       <widget class="QWidget" name="tabHeaderInfo">
+        <attribute name="title"><string>Header</string></attribute>
+        <layout class="QVBoxLayout" name="layoutHeaderInfo">
+         <item>
+          <widget class="QTableWidget" name="tableHeaderInfo">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="rowCount"><number>0</number></property>
+           <property name="columnCount"><number>5</number></property>
+           <column><property name="text"><string>Section</string></property></column>
+           <column><property name="text"><string>Mnemonic</string></property></column>
+           <column><property name="text"><string>Unit</string></property></column>
+           <column><property name="text"><string>Value</string></property></column>
+           <column><property name="text"><string>Description</string></property></column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- LOG INFO -->
+       <widget class="QWidget" name="tabLogInfo">
+        <attribute name="title"><string>Log Info</string></attribute>
+        <layout class="QVBoxLayout" name="layoutLogInfo">
+         <item>
+          <widget class="QTableWidget" name="tableLogInfo">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="rowCount"><number>0</number></property>
+           <property name="columnCount"><number>5</number></property>
+           <column><property name="text"><string>Curve</string></property></column>
+           <column><property name="text"><string>Unit</string></property></column>
+           <column><property name="text"><string>Type</string></property></column>
+           <column><property name="text"><string>Mnemonic</string></property></column>
+           <column><property name="text"><string>Description</string></property></column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- DATA STATS -->
+       <widget class="QWidget" name="tabDataStats">
+        <attribute name="title"><string>Data Stats</string></attribute>
         <layout class="QVBoxLayout" name="layoutStatistics">
-         <property name="spacing"><number>5</number></property>
          <item>
           <layout class="QHBoxLayout" name="layoutStatsControls">
            <item><widget class="QLabel" name="lblStatWell"><property name="text"><string>Well:</string></property></widget></item>
@@ -1917,132 +1968,58 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         </layout>
        </widget>
 
-       <!-- DATA TABLE -->
-       <widget class="QWidget" name="tabDataTable">
-        <attribute name="title"><string>Data Table</string></attribute>
-        <layout class="QVBoxLayout" name="layoutDataTable">
-         <property name="spacing"><number>5</number></property>
+       <!-- RENAME COLUMNS -->
+       <widget class="QWidget" name="tabRenameCols">
+        <attribute name="title"><string>Rename Columns</string></attribute>
+        <layout class="QVBoxLayout" name="layoutRenameCols">
          <item>
-          <layout class="QHBoxLayout" name="layoutDataTableControls">
-           <item><widget class="QLabel" name="lblDTWell"><property name="text"><string>Well:</string></property></widget></item>
+          <widget class="QTableWidget" name="tableRenameColumns">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="rowCount"><number>0</number></property>
+           <property name="columnCount"><number>2</number></property>
+           <column><property name="text"><string>Current Name</string></property></column>
+           <column><property name="text"><string>New Name</string></property></column>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="layoutRenameBtns">
+           <item><widget class="QPushButton" name="btnApplyRename"><property name="text"><string>Apply Rename</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnResetRename"><property name="text"><string>Reset</string></property></widget></item>
            <item>
-            <widget class="QComboBox" name="comboDTWell">
-             <item><property name="text"><string>CHr-1</string></property></item>
-             <item><property name="text"><string>Tau-1</string></property></item>
-             <item><property name="text"><string>Experior</string></property></item>
-            </widget>
-           </item>
-           <item><widget class="QLabel" name="lblDTFrom"><property name="text"><string>From (ft):</string></property></widget></item>
-           <item><widget class="QDoubleSpinBox" name="spinDTFrom"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>3000.0</double></property></widget></item>
-           <item><widget class="QLabel" name="lblDTTo"><property name="text"><string>To (ft):</string></property></widget></item>
-           <item><widget class="QDoubleSpinBox" name="spinDTTo"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>4000.0</double></property></widget></item>
-           <item><widget class="QPushButton" name="btnLoadData"><property name="text"><string>Load</string></property><property name="maximumWidth"><number>60</number></property></widget></item>
-           <item><widget class="QPushButton" name="btnExportTable"><property name="text"><string>Export CSV</string></property><property name="maximumWidth"><number>90</number></property></widget></item>
-           <item>
-            <spacer name="spacerDT">
+            <spacer name="spacerRename">
              <property name="orientation"><enum>Qt::Horizontal</enum></property>
              <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
             </spacer>
            </item>
           </layout>
          </item>
+        </layout>
+       </widget>
+
+       <!-- CALCULATIONS -->
+       <widget class="QWidget" name="tabCalculations">
+        <attribute name="title"><string>Calculations</string></attribute>
+        <layout class="QVBoxLayout" name="layoutCalculations">
          <item>
-          <widget class="QTableWidget" name="tableData">
-           <property name="alternatingRowColors"><bool>true</bool></property>
-           <property name="rowCount"><number>0</number></property>
-           <property name="columnCount"><number>12</number></property>
-           <column><property name="text"><string>DEPTH</string></property></column>
-           <column><property name="text"><string>GR</string></property></column>
-           <column><property name="text"><string>SP</string></property></column>
-           <column><property name="text"><string>CALI</string></property></column>
-           <column><property name="text"><string>RHOB</string></property></column>
-           <column><property name="text"><string>NPHI</string></property></column>
-           <column><property name="text"><string>LLD</string></property></column>
-           <column><property name="text"><string>DT</string></property></column>
-           <column><property name="text"><string>VSH</string></property></column>
-           <column><property name="text"><string>PHIE</string></property></column>
-           <column><property name="text"><string>SW</string></property></column>
-           <column><property name="text"><string>PERM</string></property></column>
-          </widget>
+          <layout class="QHBoxLayout" name="layoutCalcRow1">
+           <item><widget class="QPushButton" name="btnCalcVsh"><property name="text"><string>Shale Volume</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnCalcPhi"><property name="text"><string>Porosity</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnCalcSw"><property name="text"><string>Water Saturation</string></property></widget></item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="layoutCalcRow2">
+           <item><widget class="QPushButton" name="btnCalcPerm"><property name="text"><string>Permeability</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnCalcNetPay"><property name="text"><string>Net Pay</string></property></widget></item>
+          </layout>
          </item>
         </layout>
        </widget>
 
-       <!-- IMPORT STATUS -->
-       <widget class="QWidget" name="tabImport">
-        <attribute name="title"><string>Import</string></attribute>
-        <layout class="QVBoxLayout" name="layoutImport">
-         <property name="spacing"><number>6</number></property>
-         <item>
-          <widget class="QGroupBox" name="groupImportFile">
-           <property name="title"><string>Import Well Data</string></property>
-           <layout class="QVBoxLayout" name="layoutImportFile">
-            <property name="spacing"><number>5</number></property>
-            <item>
-             <layout class="QHBoxLayout" name="layoutImportFormat">
-              <item><widget class="QLabel" name="lblImportFmt"><property name="text"><string>Format:</string></property></widget></item>
-              <item>
-               <widget class="QComboBox" name="comboImportFormat">
-                <item><property name="text"><string>LAS 2.0 (*.las)</string></property></item>
-                <item><property name="text"><string>LAS 3.0 (*.las)</string></property></item>
-                <item><property name="text"><string>DLIS (*.dlis *.dl)</string></property></item>
-                <item><property name="text"><string>LIS (*.lis)</string></property></item>
-                <item><property name="text"><string>ASCII / Text (*.txt *.dat *.asc)</string></property></item>
-                <item><property name="text"><string>CSV (*.csv)</string></property></item>
-                <item><property name="text"><string>Excel (*.xlsx *.xls)</string></property></item>
-                <item><property name="text"><string>WITSML (*.xml)</string></property></item>
-                <item><property name="text"><string>SEG-Y (*.sgy *.segy)</string></property></item>
-                <item><property name="text"><string>ODM / PPDM Database</string></property></item>
-                <item><property name="text"><string>JSON (*.json)</string></property></item>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="layoutImportPath">
-              <item>
-               <widget class="QLineEdit" name="lineEditImportPath">
-                <property name="readOnly"><bool>true</bool></property>
-                <property name="placeholderText"><string>Select file(s) to import...</string></property>
-               </widget>
-              </item>
-              <item><widget class="QPushButton" name="btnBrowseImport"><property name="text"><string>Browse...</string></property><property name="maximumWidth"><number>90</number></property></widget></item>
-              <item><widget class="QPushButton" name="btnStartImport"><property name="text"><string>Import</string></property><property name="maximumWidth"><number>70</number></property></widget></item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QProgressBar" name="progressImport">
-              <property name="value"><number>0</number></property>
-              <property name="maximum"><number>100</number></property>
-              <property name="textVisible"><bool>true</bool></property>
-              <property name="format"><string>%v%</string></property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTableWidget" name="tableImportStatus">
-           <property name="alternatingRowColors"><bool>true</bool></property>
-           <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
-           <property name="rowCount"><number>3</number></property>
-           <property name="columnCount"><number>6</number></property>
-           <column><property name="text"><string>File Name</string></property></column>
-           <column><property name="text"><string>Format</string></property></column>
-           <column><property name="text"><string>Well</string></property></column>
-           <column><property name="text"><string>Curves</string></property></column>
-           <column><property name="text"><string>Depth Range</string></property></column>
-           <column><property name="text"><string>Status</string></property></column>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-
-       <!-- QUALITY CONTROL -->
+       <!-- QC -->
        <widget class="QWidget" name="tabQC">
         <attribute name="title"><string>QC</string></attribute>
         <layout class="QVBoxLayout" name="layoutQC">
-         <property name="spacing"><number>5</number></property>
          <item>
           <layout class="QHBoxLayout" name="layoutQCControls">
            <item><widget class="QLabel" name="lblQCWell"><property name="text"><string>Well:</string></property></widget></item>
@@ -2102,8 +2079,7 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
     </layout>
    </widget>
   </widget>
-
-  <!-- ======================== STATUS BAR ======================== -->
+<!-- ======================== STATUS BAR ======================== -->
   <widget class="QStatusBar" name="statusBar">
    <widget class="QLabel" name="lblStatusWell">
     <property name="text"><string> Well: CHr-1 </string></property>
