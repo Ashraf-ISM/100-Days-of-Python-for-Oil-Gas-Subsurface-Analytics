@@ -837,7 +837,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
    <widget class="QWidget" name="widgetWellSelector">
     <layout class="QHBoxLayout" name="layoutWellSel">
      <property name="spacing"><number>4</number></property>
-     <property name="contentsMargins"><rect><x>2</x><y>0</y><x>2</x><y>0</y></rect></property>
      <item>
       <widget class="QLabel" name="lblWellSel">
        <property name="text"><string>Well:</string></property>
@@ -874,7 +873,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
    <widget class="QWidget" name="widgetDepthScale">
     <layout class="QHBoxLayout" name="layoutDepth">
      <property name="spacing"><number>4</number></property>
-     <property name="contentsMargins"><rect><x>2</x><y>0</y><x>2</x><y>0</y></rect></property>
      <item>
       <widget class="QLabel" name="lblDepth">
        <property name="text"><string>Scale:</string></property>
@@ -951,7 +949,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
    <widget class="QWidget" name="dockBrowserContents">
     <layout class="QVBoxLayout" name="layoutBrowser">
      <property name="spacing"><number>5</number></property>
-     <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
      <!-- Search -->
      <item>
       <widget class="QLineEdit" name="lineEditBrowserSearch">
@@ -971,7 +968,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Project</string></attribute>
         <layout class="QVBoxLayout" name="layoutProject">
          <property name="spacing"><number>4</number></property>
-         <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>2</y></rect></property>
          <item>
           <widget class="QTreeWidget" name="treeProject">
            <property name="alternatingRowColors"><bool>true</bool></property>
@@ -1207,7 +1203,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Curves</string></attribute>
         <layout class="QVBoxLayout" name="layoutCurves">
          <property name="spacing"><number>4</number></property>
-         <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>2</y></rect></property>
          <item>
           <layout class="QHBoxLayout" name="layoutCurveHeader">
            <item>
@@ -1483,7 +1478,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Zones</string></attribute>
         <layout class="QVBoxLayout" name="layoutZonesTab">
          <property name="spacing"><number>4</number></property>
-         <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>2</y></rect></property>
          <item>
           <layout class="QHBoxLayout" name="layoutZoneHeader">
            <item><widget class="QLabel" name="lblZoneWellSel"><property name="text"><string>Well:</string></property></widget></item>
@@ -1538,7 +1532,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
    <widget class="QWidget" name="dockPropertiesContents">
     <layout class="QVBoxLayout" name="layoutPropertiesMain">
      <property name="spacing"><number>4</number></property>
-     <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
      <item>
       <widget class="QTabWidget" name="tabProperties">
        <property name="tabPosition"><enum>QTabWidget::North</enum></property>
@@ -1548,7 +1541,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Track</string></attribute>
         <layout class="QVBoxLayout" name="layoutTrackProps">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
          <item>
           <widget class="QGroupBox" name="groupTrackGeneral">
            <property name="title"><string>Track Settings</string></property>
@@ -1609,7 +1601,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Curve</string></attribute>
         <layout class="QVBoxLayout" name="layoutCurveProps">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
          <item>
           <widget class="QGroupBox" name="groupCurveIdent">
            <property name="title"><string>Curve Identification</string></property>
@@ -1706,7 +1697,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Net Pay</string></attribute>
         <layout class="QVBoxLayout" name="layoutZoneCriteria">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
          <item>
           <widget class="QGroupBox" name="groupGrossCriteria">
            <property name="title"><string>Gross Rock Criteria</string></property>
@@ -1760,7 +1750,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Well Info</string></attribute>
         <layout class="QVBoxLayout" name="layoutWellInfo">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
          <item>
           <widget class="QGroupBox" name="groupWellID">
            <property name="title"><string>Well Identification</string></property>
@@ -1829,7 +1818,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
    <widget class="QWidget" name="dockConsoleContents">
     <layout class="QVBoxLayout" name="layoutConsoleMain">
      <property name="spacing"><number>0</number></property>
-     <property name="contentsMargins"><rect><x>2</x><y>2</y><x>2</x><y>2</y></rect></property>
      <item>
       <widget class="QTabWidget" name="tabConsole">
        <property name="tabPosition"><enum>QTabWidget::North</enum></property>
@@ -1839,7 +1827,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Messages</string></attribute>
         <layout class="QVBoxLayout" name="layoutMessages">
          <property name="spacing"><number>4</number></property>
-         <property name="contentsMargins"><rect><x>3</x><y>3</y><x>3</x><y>3</y></rect></property>
          <item>
           <layout class="QHBoxLayout" name="layoutMsgFilter">
            <item><widget class="QCheckBox" name="checkMsgInfo"><property name="text"><string>INFO</string></property><property name="checked"><bool>true</bool></property></widget></item>
@@ -1875,7 +1862,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Statistics</string></attribute>
         <layout class="QVBoxLayout" name="layoutStatistics">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>3</x><y>4</y><x>3</x><y>3</y></rect></property>
          <item>
           <layout class="QHBoxLayout" name="layoutStatsControls">
            <item><widget class="QLabel" name="lblStatWell"><property name="text"><string>Well:</string></property></widget></item>
@@ -1936,7 +1922,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Data Table</string></attribute>
         <layout class="QVBoxLayout" name="layoutDataTable">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>3</x><y>4</y><x>3</x><y>3</y></rect></property>
          <item>
           <layout class="QHBoxLayout" name="layoutDataTableControls">
            <item><widget class="QLabel" name="lblDTWell"><property name="text"><string>Well:</string></property></widget></item>
@@ -1988,7 +1973,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>Import</string></attribute>
         <layout class="QVBoxLayout" name="layoutImport">
          <property name="spacing"><number>6</number></property>
-         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
          <item>
           <widget class="QGroupBox" name="groupImportFile">
            <property name="title"><string>Import Well Data</string></property>
@@ -2059,7 +2043,6 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
         <attribute name="title"><string>QC</string></attribute>
         <layout class="QVBoxLayout" name="layoutQC">
          <property name="spacing"><number>5</number></property>
-         <property name="contentsMargins"><rect><x>3</x><y>4</y><x>3</x><y>3</y></rect></property>
          <item>
           <layout class="QHBoxLayout" name="layoutQCControls">
            <item><widget class="QLabel" name="lblQCWell"><property name="text"><string>Well:</string></property></widget></item>
@@ -2360,9 +2343,9 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
   <!-- Well selector combo → status bar well label -->
   <connection>
    <sender>comboActiveWell</sender>
-   <signal>currentTextChanged(const QString&amp;)</signal>
+   <signal>currentTextChanged(QString)</signal>
    <receiver>lblStatusWell</receiver>
-   <slot>setText(const QString&amp;)</slot>
+   <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel"><x>200</x><y>38</y></hint>
     <hint type="destinationlabel"><x>120</x><y>974</y></hint>
@@ -2372,9 +2355,9 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
   <!-- Depth mode combo → status bar depth label -->
   <connection>
    <sender>comboDepthMode</sender>
-   <signal>currentTextChanged(const QString&amp;)</signal>
+   <signal>currentTextChanged(QString)</signal>
    <receiver>lblStatusDepth</receiver>
-   <slot>setText(const QString&amp;)</slot>
+   <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel"><x>400</x><y>38</y></hint>
     <hint type="destinationlabel"><x>300</x><y>974</y></hint>
