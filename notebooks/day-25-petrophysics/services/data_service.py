@@ -250,13 +250,12 @@ class DataService:
             if log_info:
                 for curve_name, info in log_info.items():
                     unit = info.get("unit", "")
-                    curve_type = info.get("type", "")
-                    QtWidgets.QTreeWidgetItem(curves_parent, [curve_name, unit, curve_type])
+                    QtWidgets.QTreeWidgetItem(curves_parent, [curve_name, unit])
             else:
                 df = getattr(well, "data", None)
                 if df is not None:
                     for curve_name in df.columns:
-                        QtWidgets.QTreeWidgetItem(curves_parent, [str(curve_name), "", ""])
+                        QtWidgets.QTreeWidgetItem(curves_parent, [str(curve_name), ""])
         tree.expandAll()
 
     def _update_curves_tree(self, well):
