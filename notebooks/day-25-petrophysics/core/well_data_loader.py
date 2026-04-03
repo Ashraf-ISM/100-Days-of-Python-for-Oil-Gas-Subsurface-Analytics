@@ -22,7 +22,7 @@ def _read_las(path: str):
     log_info = {
         curve.mnemonic: {
             "unit": curve.unit,
-            "type": curve.curve_type or "",
+            "type": getattr(curve, "curve_type", "") or "",
             "mnemonic": curve.mnemonic,
             "desc": curve.descr,
         }
