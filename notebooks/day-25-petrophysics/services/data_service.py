@@ -95,26 +95,42 @@ class DataService:
         well = self._get_current_well()
         if not well:
             return
+    
         df = getattr(well, "data", None)
         table = getattr(self.ui, "tableStatistics", None)
-        curve_combo = getattr(self.ui, "comboStatCurve", None)
-        if df is None or table is None or curve_combo is None:
+    
+        if df is None or table is None:
             return
-        curve = curve_combo.currentText()
-        if curve not in df.columns:
-            return
+    
         try:
-            series = df[curve].dropna()
-            stats = [
-                ("Min", series.min(), "", ""),
-                ("Max", series.max(), "", ""),
-                ("Mean", series.mean(), "", ""),
-                ("Std", series.std(), "", ""),
-                ("Count", series.count(), "", ""),
-            ]
-            self._fill_table(table, stats)
-        except Exception:
-            return
+            # Only numeric columns
+            desc = df.describe().transpose()  # transpose for better UI
+    
+            rows = []
+            for col_name, row in desc.iterrows():
+                rows.append((
+                    col_name,
+                    round(row.get("count", 0), 3),
+                    round(row.get("mean", 0), 3),
+                    round(row.get("std", 0), 3),
+                    round(row.get("min", 0), 3),
+                    round(row.get("25%", 0), 3),
+                    round(row.get("50%", 0), 3),
+                    round(row.get("75%", 0), 3),
+                    round(row.get("max", 0), 3),
+                ))
+    
+            # Set headers manually (IMPORTANT)
+            table.setColumnCount(9)
+            table.setHorizontalHeaderLabels([
+                "Curve", "Count", "Mean", "Std",
+                "Min", "25%", "50%", "75%", "Max"
+            ])
+    
+            self._fill_table(table, rows)
+    
+        except Exception as e:
+            print("Stats Error:", e)
 
     def _update_well_lists(self):
         for combo_name in (

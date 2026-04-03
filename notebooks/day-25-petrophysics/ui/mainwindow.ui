@@ -473,78 +473,175 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
    <property name="tabPosition">
     <enum>QTabWidget::North</enum>
    </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <property name="documentMode">
+    <bool>true</bool>
+   </property>
    <property name="tabsClosable">
     <bool>false</bool>
    </property>
    <property name="movable">
     <bool>false</bool>
    </property>
-   <property name="documentMode">
-    <bool>true</bool>
-   </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-
-   
    <widget class="QWidget" name="tabDashboard">
-    <attribute name="title"><string>⌂ Dashboard</string></attribute>
+    <attribute name="title">
+     <string>⌂ Dashboard</string>
+    </attribute>
     <layout class="QVBoxLayout" name="layoutDashboard">
      <item>
       <widget class="QLabel" name="lblDashTitle">
-       <property name="text"><string>PetroAnalyst Pro — Welcome</string></property>
-       <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignTop</set></property>
        <property name="styleSheet">
         <string>font-size:18px;font-weight:700;color:#2A5090;padding:20px 0 6px 0;</string>
+       </property>
+       <property name="text">
+        <string>PetroAnalyst Pro — Welcome</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="lblDashSub">
-       <property name="text"><string>Open a project or import LAS data to begin.  Use the toolbar or menus above to open any analysis module.</string></property>
-       <property name="alignment"><set>Qt::AlignHCenter</set></property>
-       <property name="wordWrap"><bool>true</bool></property>
-       <property name="styleSheet"><string>font-size:13px;color:#4A6A8A;</string></property>
+       <property name="styleSheet">
+        <string>font-size:13px;color:#4A6A8A;</string>
+       </property>
+       <property name="text">
+        <string>Open a project or import LAS data to begin.  Use the toolbar or menus above to open any analysis module.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
       <spacer name="spacerDashV">
-       <property name="orientation"><enum>Qt::Vertical</enum></property>
-       <property name="sizeHint" stdset="0"><size><width>20</width><height>60</height></size></property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>60</height>
+        </size>
+       </property>
       </spacer>
      </item>
      <item>
       <layout class="QHBoxLayout" name="layoutDashCards">
        <item>
         <widget class="QGroupBox" name="cardImport">
-         <property name="title"><string>Quick Import</string></property>
+         <property name="title">
+          <string>Quick Import</string>
+         </property>
          <layout class="QVBoxLayout">
-          <item><widget class="QPushButton" name="btnDashImportLAS"><property name="text"><string>Import LAS File...</string></property></widget></item>
-          <item><widget class="QPushButton" name="btnDashImportCSV"><property name="text"><string>Import CSV / Excel...</string></property></widget></item>
-          <item><widget class="QPushButton" name="btnDashImportSEGY"><property name="text"><string>Import SEG-Y...</string></property></widget></item>
+          <item>
+           <widget class="QPushButton" name="btnDashImportLAS">
+            <property name="text">
+             <string>Import LAS File...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashImportCSV">
+            <property name="text">
+             <string>Import CSV / Excel...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashImportSEGY">
+            <property name="text">
+             <string>Import SEG-Y...</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="cardRecent">
-         <property name="title"><string>Recent Projects</string></property>
+         <property name="title">
+          <string>Recent Projects</string>
+         </property>
          <layout class="QVBoxLayout">
-          <item><widget class="QPushButton" name="btnDashRecent1"><property name="text"><string>SandboxMay2016</string></property></widget></item>
-          <item><widget class="QPushButton" name="btnDashRecent2"><property name="text"><string>Field_A_EvalProject</string></property></widget></item>
-          <item><widget class="QPushButton" name="btnDashRecent3"><property name="text"><string>OffshoreBlock_7</string></property></widget></item>
+          <item>
+           <widget class="QPushButton" name="btnDashRecent1">
+            <property name="text">
+             <string>SandboxMay2016</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashRecent2">
+            <property name="text">
+             <string>Field_A_EvalProject</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashRecent3">
+            <property name="text">
+             <string>OffshoreBlock_7</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="cardModules">
-         <property name="title"><string>Open Module</string></property>
+         <property name="title">
+          <string>Open Module</string>
+         </property>
          <layout class="QGridLayout">
-          <item row="0" column="0"><widget class="QPushButton" name="btnDashLogView"><property name="text"><string>Log Viewer</string></property></widget></item>
-          <item row="0" column="1"><widget class="QPushButton" name="btnDashXplot"><property name="text"><string>Crossplot</string></property></widget></item>
-          <item row="1" column="0"><widget class="QPushButton" name="btnDashVsh"><property name="text"><string>Shale Volume</string></property></widget></item>
-          <item row="1" column="1"><widget class="QPushButton" name="btnDashSw"><property name="text"><string>Water Saturation</string></property></widget></item>
-          <item row="2" column="0"><widget class="QPushButton" name="btnDashGeo"><property name="text"><string>Geomechanics</string></property></widget></item>
-          <item row="2" column="1"><widget class="QPushButton" name="btnDashCorr"><property name="text"><string>Well Correlation</string></property></widget></item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="btnDashLogView">
+            <property name="text">
+             <string>Log Viewer</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="btnDashXplot">
+            <property name="text">
+             <string>Crossplot</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="btnDashVsh">
+            <property name="text">
+             <string>Shale Volume</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="btnDashSw">
+            <property name="text">
+             <string>Water Saturation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="btnDashGeo">
+            <property name="text">
+             <string>Geomechanics</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="btnDashCorr">
+            <property name="text">
+             <string>Well Correlation</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -552,74 +649,149 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
      </item>
      <item>
       <spacer name="spacerDashV2">
-       <property name="orientation"><enum>Qt::Vertical</enum></property>
-       <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
       </spacer>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabLogViewer">
-    <attribute name="title"><string>Well Log Plots</string></attribute>
+    <attribute name="title">
+     <string>Well Log Plots</string>
+    </attribute>
     <layout class="QVBoxLayout" name="layoutLogViewer">
-   <property name="spacing"><number>4</number></property>
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="layoutLogViewerControls">
-       <item><widget class="QLabel" name="lblLVWell"><property name="text"><string>Well:</string></property></widget></item>
+       <item>
+        <widget class="QLabel" name="lblLVWell">
+         <property name="text">
+          <string>Well:</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QComboBox" name="comboLVWell">
-         <item><property name="text"><string>CHr-1</string></property></item>
-         <item><property name="text"><string>Tau-1</string></property></item>
-         <item><property name="text"><string>Experior</string></property></item>
+         <item>
+          <property name="text">
+           <string>CHr-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Tau-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Experior</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item><widget class="QLabel" name="lblLVTemplate"><property name="text"><string>Template:</string></property></widget></item>
+       <item>
+        <widget class="QLabel" name="triplecomboplot">
+         <property name="text">
+          <string>Triple combo plot</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QComboBox" name="comboLVTemplate">
-         <item><property name="text"><string>Standard Triple Combo</string></property></item>
-         <item><property name="text"><string>Formation Evaluation</string></property></item>
-         <item><property name="text"><string>Geomechanics Suite</string></property></item>
-         <item><property name="text"><string>Custom...</string></property></item>
+         <item>
+          <property name="text">
+           <string>Standard Triple Combo</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Formation Evaluation</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Geomechanics Suite</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Custom...</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item><widget class="QLabel" name="lblLVFrom"><property name="text"><string>From (ft):</string></property></widget></item>
        <item>
-        <widget class="QDoubleSpinBox" name="spinLVFrom">
-         <property name="maximum"><double>99999.0</double></property>
-         <property name="value"><double>3000.0</double></property>
+        <widget class="QPushButton" name="plottriplecomboplot">
+         <property name="text">
+          <string> Plot Triple combo</string>
+         </property>
         </widget>
        </item>
-       <item><widget class="QLabel" name="lblLVTo"><property name="text"><string>To (ft):</string></property></widget></item>
        <item>
-        <widget class="QDoubleSpinBox" name="spinLVTo">
-         <property name="maximum"><double>99999.0</double></property>
-         <property name="value"><double>4000.0</double></property>
+        <widget class="QLabel" name="Multitrackplot">
+         <property name="text">
+          <string>Multi-track plot</string>
+         </property>
         </widget>
        </item>
-       <item><widget class="QPushButton" name="btnLVRender"><property name="text"><string>Render Plot</string></property></widget></item>
-       <item><widget class="QPushButton" name="btnLVAddTrack"><property name="text"><string>+ Track</string></property></widget></item>
-       <item><widget class="QPushButton" name="btnLVExportPDF"><property name="text"><string>Export PDF</string></property></widget></item>
+       <item>
+        <widget class="QComboBox" name="multitrackcomboBox"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="plotmutlitrack">
+         <property name="text">
+          <string>plot multitrack</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="spacerLV">
-         <property name="orientation"><enum>Qt::Horizontal</enum></property>
-         <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
         </spacer>
        </item>
       </layout>
      </item>
      <item>
       <widget class="QFrame" name="frameLogViewerCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background-color:#FFFFFF;border:1px solid #C2D0E0;</string></property>
+       <property name="styleSheet">
+        <string>background-color:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
        <layout class="QVBoxLayout">
         <item>
          <widget class="QLabel" name="lblLogViewerPlaceholder">
-          <property name="text"><string>Log viewer canvas — connect PyQtGraph / Matplotlib widget here.
-Use the controls above to select well, template and depth range, then click Render Plot.</string></property>
-          <property name="alignment"><set>Qt::AlignCenter</set></property>
-          <property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property>
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Log viewer canvas — connect PyQtGraph / Matplotlib widget here.
+Use the controls above to select well, template and depth range, then click Render Plot.</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
        </layout>
@@ -627,82 +799,234 @@ Use the controls above to select well, template and depth range, then click Rend
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabDataInfoStats">
-    <attribute name="title"><string>Data Info &amp; Stats</string></attribute>
+    <attribute name="title">
+     <string>Data Info &amp; Stats</string>
+    </attribute>
     <layout class="QVBoxLayout" name="layoutDIS">
-   <property name="spacing"><number>5</number></property>
+     <property name="spacing">
+      <number>5</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="layoutDISControls">
-       <item><widget class="QLabel" name="lblDISWell"><property name="text"><string>Well:</string></property></widget></item>
        <item>
-        <widget class="QComboBox" name="comboDISWell">
-         <item><property name="text"><string>CHr-1</string></property></item>
-         <item><property name="text"><string>Tau-1</string></property></item>
-         <item><property name="text"><string>Experior</string></property></item>
-         <item><property name="text"><string>All Wells</string></property></item>
+        <widget class="QLabel" name="lblDISWell">
+         <property name="text">
+          <string>Well:</string>
+         </property>
         </widget>
        </item>
-       <item><widget class="QPushButton" name="btnDISRefresh"><property name="text"><string>Refresh</string></property></widget></item>
-       <item><widget class="QPushButton" name="btnDISExport"><property name="text"><string>Export Report</string></property></widget></item>
        <item>
-        <spacer name="spacerDIS"><property name="orientation"><enum>Qt::Horizontal</enum></property>
-         <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer>
+        <widget class="QComboBox" name="comboDISWell">
+         <item>
+          <property name="text">
+           <string>CHr-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Tau-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Experior</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>All Wells</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnDISRefresh">
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnDISExport">
+         <property name="text">
+          <string>Export Report</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="spacerDIS">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
      <item>
       <widget class="QTabWidget" name="tabDISInner">
        <widget class="QWidget" name="tabDISHeader">
-        <attribute name="title"><string>Header Info</string></attribute>
+        <attribute name="title">
+         <string>Header Info</string>
+        </attribute>
         <layout class="QVBoxLayout">
          <item>
           <widget class="QTableWidget" name="tableDISHeader">
-           <property name="alternatingRowColors"><bool>true</bool></property>
-           <property name="rowCount"><number>15</number></property>
-           <property name="columnCount"><number>3</number></property>
-           <column><property name="text"><string>Field</string></property></column>
-           <column><property name="text"><string>Value</string></property></column>
-           <column><property name="text"><string>Unit</string></property></column>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>15</number>
+           </property>
+           <property name="columnCount">
+            <number>3</number>
+           </property>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <column>
+            <property name="text">
+             <string>Field</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Unit</string>
+            </property>
+           </column>
           </widget>
          </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tabDISCurveInfo">
-        <attribute name="title"><string>Curve Info</string></attribute>
+        <attribute name="title">
+         <string>Curve Info</string>
+        </attribute>
         <layout class="QVBoxLayout">
          <item>
           <widget class="QTableWidget" name="tableDISCurveInfo">
-           <property name="alternatingRowColors"><bool>true</bool></property>
-           <property name="rowCount"><number>0</number></property>
-           <property name="columnCount"><number>6</number></property>
-           <column><property name="text"><string>Mnemonic</string></property></column>
-           <column><property name="text"><string>Unit</string></property></column>
-           <column><property name="text"><string>Min</string></property></column>
-           <column><property name="text"><string>Max</string></property></column>
-           <column><property name="text"><string>Mean</string></property></column>
-           <column><property name="text"><string>Null %</string></property></column>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>6</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Mnemonic</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Unit</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Min</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Max</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Mean</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Null %</string>
+            </property>
+           </column>
           </widget>
          </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tabDISSummary">
-        <attribute name="title"><string>Statistics Summary</string></attribute>
+        <attribute name="title">
+         <string>Statistics Summary</string>
+        </attribute>
         <layout class="QVBoxLayout">
          <item>
           <widget class="QTableWidget" name="tableDISSummary">
-           <property name="alternatingRowColors"><bool>true</bool></property>
-           <property name="rowCount"><number>0</number></property>
-           <property name="columnCount"><number>8</number></property>
-           <column><property name="text"><string>Curve</string></property></column>
-           <column><property name="text"><string>Count</string></property></column>
-           <column><property name="text"><string>Min</string></property></column>
-           <column><property name="text"><string>Max</string></property></column>
-           <column><property name="text"><string>Mean</string></property></column>
-           <column><property name="text"><string>Median</string></property></column>
-           <column><property name="text"><string>Std Dev</string></property></column>
-           <column><property name="text"><string>P10 / P90</string></property></column>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>8</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Curve</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Count</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Min</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Max</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Mean</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Median</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Std Dev</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>P10 / P90</string>
+            </property>
+           </column>
           </widget>
          </item>
         </layout>
@@ -711,95 +1035,262 @@ Use the controls above to select well, template and depth range, then click Rend
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabCrossplot">
-    <attribute name="title"><string>Crossplot</string></attribute>
+    <attribute name="title">
+     <string>Crossplot</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutCrossplot">
-   <property name="spacing"><number>4</number></property>
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupXplotControls">
-       <property name="title"><string>Crossplot Settings</string></property>
-       <property name="maximumWidth"><number>260</number></property>
+       <property name="title">
+        <string>Crossplot Settings</string>
+       </property>
        <layout class="QFormLayout" name="formXplot">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_001"><property name="text"><string>Well:</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_001">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="comboXplotWell">
-          <item><property name="text"><string>CHr-1</string></property></item>
-          <item><property name="text"><string>Tau-1</string></property></item>
-          <item><property name="text"><string>Experior</string></property></item>
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tau-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Experior</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_002"><property name="text"><string>X Axis:</string></property></widget></item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_002">
+          <property name="text">
+           <string>X Axis:</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="comboXplotX">
-          <item><property name="text"><string>RHOB</string></property></item>
-          <item><property name="text"><string>NPHI</string></property></item>
-          <item><property name="text"><string>GR</string></property></item>
-          <item><property name="text"><string>LLD</string></property></item>
-          <item><property name="text"><string>DT</string></property></item>
-          <item><property name="text"><string>SW</string></property></item>
-          <item><property name="text"><string>PHIE</string></property></item>
+          <item>
+           <property name="text">
+            <string>RHOB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NPHI</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>GR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>LLD</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SW</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>PHIE</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_003"><property name="text"><string>Y Axis:</string></property></widget></item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_003">
+          <property name="text">
+           <string>Y Axis:</string>
+          </property>
+         </widget>
+        </item>
         <item row="2" column="1">
          <widget class="QComboBox" name="comboXplotY">
-          <item><property name="text"><string>NPHI</string></property></item>
-          <item><property name="text"><string>RHOB</string></property></item>
-          <item><property name="text"><string>GR</string></property></item>
-          <item><property name="text"><string>LLD</string></property></item>
-          <item><property name="text"><string>DT</string></property></item>
-          <item><property name="text"><string>SW</string></property></item>
-          <item><property name="text"><string>PHIE</string></property></item>
+          <item>
+           <property name="text">
+            <string>NPHI</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>RHOB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>GR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>LLD</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SW</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>PHIE</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_004"><property name="text"><string>Color By:</string></property></widget></item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_004">
+          <property name="text">
+           <string>Color By:</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="1">
          <widget class="QComboBox" name="comboXplotColor">
-          <item><property name="text"><string>GR</string></property></item>
-          <item><property name="text"><string>VSH</string></property></item>
-          <item><property name="text"><string>SW</string></property></item>
-          <item><property name="text"><string>None</string></property></item>
+          <item>
+           <property name="text">
+            <string>GR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>VSH</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SW</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_005"><property name="text"><string>Zone Filter:</string></property></widget></item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_005">
+          <property name="text">
+           <string>Zone Filter:</string>
+          </property>
+         </widget>
+        </item>
         <item row="4" column="1">
          <widget class="QComboBox" name="comboXplotZone">
-          <item><property name="text"><string>All Zones</string></property></item>
+          <item>
+           <property name="text">
+            <string>All Zones</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_006"><property name="text"><string>Show Regression:</string></property></widget></item>
-        <item row="5" column="1"><widget class="QCheckBox" name="checkXplotRegr"><property name="text"><string>Yes</string></property></widget></item>
-        <item row="6" column="0"><widget class="QLabel" name="auto_label_007"><property name="text"><string>Crossplot Type:</string></property></widget></item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_006">
+          <property name="text">
+           <string>Show Regression:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="checkXplotRegr">
+          <property name="text">
+           <string>Yes</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="auto_label_007">
+          <property name="text">
+           <string>Crossplot Type:</string>
+          </property>
+         </widget>
+        </item>
         <item row="6" column="1">
          <widget class="QComboBox" name="comboXplotType">
-          <item><property name="text"><string>Neutron-Density</string></property></item>
-          <item><property name="text"><string>Sonic-Density</string></property></item>
-          <item><property name="text"><string>M-N Plot</string></property></item>
-          <item><property name="text"><string>Pickett Plot</string></property></item>
-          <item><property name="text"><string>Custom</string></property></item>
+          <item>
+           <property name="text">
+            <string>Neutron-Density</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sonic-Density</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>M-N Plot</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pickett Plot</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Custom</string>
+           </property>
+          </item>
          </widget>
         </item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnXplotRender"><property name="text"><string>Render Crossplot</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnXplotExport"><property name="text"><string>Export Image...</string></property></widget></item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameXplotCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
        <layout class="QVBoxLayout">
         <item>
          <widget class="QLabel" name="lblXplotPlaceholder">
-          <property name="text"><string>Crossplot canvas
-(PyQtGraph / Matplotlib widget)</string></property>
-          <property name="alignment"><set>Qt::AlignCenter</set></property>
-          <property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property>
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Crossplot canvas
+(PyQtGraph / Matplotlib widget)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
        </layout>
@@ -807,598 +1298,2110 @@ Use the controls above to select well, template and depth range, then click Rend
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabHistogram">
-    <attribute name="title"><string>Histogram</string></attribute>
+    <attribute name="title">
+     <string>Histogram</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutHistogram">
-   <property name="spacing"><number>4</number></property>
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupHistControls">
-       <property name="title"><string>Histogram Settings</string></property>
-       <property name="maximumWidth"><number>240</number></property>
+       <property name="title">
+        <string>Histogram Settings</string>
+       </property>
        <layout class="QFormLayout" name="formHist">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_008"><property name="text"><string>Well:</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_008">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="comboHistWell">
-          <item><property name="text"><string>CHr-1</string></property></item>
-          <item><property name="text"><string>Tau-1</string></property></item>
-          <item><property name="text"><string>All Wells</string></property></item>
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tau-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>All Wells</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_009"><property name="text"><string>Curve:</string></property></widget></item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_009">
+          <property name="text">
+           <string>Curve:</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="comboHistCurve">
-          <item><property name="text"><string>GR</string></property></item>
-          <item><property name="text"><string>RHOB</string></property></item>
-          <item><property name="text"><string>NPHI</string></property></item>
-          <item><property name="text"><string>VSH</string></property></item>
-          <item><property name="text"><string>PHIE</string></property></item>
-          <item><property name="text"><string>SW</string></property></item>
+          <item>
+           <property name="text">
+            <string>GR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>RHOB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NPHI</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>VSH</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>PHIE</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SW</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_010"><property name="text"><string>Bins:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QSpinBox" name="spinHistBins"><property name="minimum"><number>5</number></property><property name="maximum"><number>200</number></property><property name="value"><number>30</number></property></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_011"><property name="text"><string>Normalize:</string></property></widget></item>
-        <item row="3" column="1"><widget class="QCheckBox" name="checkHistNorm"><property name="text"><string>PDF</string></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_012"><property name="text"><string>Zone Filter:</string></property></widget></item>
-        <item row="4" column="1"><widget class="QComboBox" name="comboHistZone"><item><property name="text"><string>All Zones</string></property></item></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnHistRender"><property name="text"><string>Render Histogram</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnHistExport"><property name="text"><string>Export Image...</string></property></widget></item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_010">
+          <property name="text">
+           <string>Bins:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="spinHistBins">
+          <property name="minimum">
+           <number>5</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="value">
+           <number>30</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_011">
+          <property name="text">
+           <string>Normalize:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="checkHistNorm">
+          <property name="text">
+           <string>PDF</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_012">
+          <property name="text">
+           <string>Zone Filter:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="comboHistZone">
+          <item>
+           <property name="text">
+            <string>All Zones</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameHistCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
        <layout class="QVBoxLayout">
-        <item><widget class="QLabel" name="lblHistPlaceholder"><property name="text"><string>Histogram canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item>
+        <item>
+         <widget class="QLabel" name="lblHistPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Histogram canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabRoseDiagram">
-    <attribute name="title"><string>Rose Diagram</string></attribute>
+    <attribute name="title">
+     <string>Rose Diagram</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutRose">
-   <property name="spacing"><number>4</number></property>
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupRoseControls">
-       <property name="title"><string>Rose Diagram Settings</string></property>
-       <property name="maximumWidth"><number>240</number></property>
+       <property name="title">
+        <string>Rose Diagram Settings</string>
+       </property>
        <layout class="QFormLayout">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_013"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboRoseWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_014"><property name="text"><string>Azimuth Curve:</string></property></widget></item>
-        <item row="1" column="1"><widget class="QComboBox" name="comboRoseCurve"><item><property name="text"><string>DIP_AZ</string></property></item></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_015"><property name="text"><string>Bins (°):</string></property></widget></item>
-        <item row="2" column="1"><widget class="QSpinBox" name="spinRoseBins"><property name="minimum"><number>4</number></property><property name="maximum"><number>72</number></property><property name="value"><number>18</number></property></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnRoseRender"><property name="text"><string>Render Rose Diagram</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnRoseExport"><property name="text"><string>Export Image...</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_013">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboRoseWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_014">
+          <property name="text">
+           <string>Azimuth Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboRoseCurve">
+          <item>
+           <property name="text">
+            <string>DIP_AZ</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_015">
+          <property name="text">
+           <string>Bins (°):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="spinRoseBins">
+          <property name="minimum">
+           <number>4</number>
+          </property>
+          <property name="maximum">
+           <number>72</number>
+          </property>
+          <property name="value">
+           <number>18</number>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameRoseCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblRosePlaceholder"><property name="text"><string>Rose Diagram canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblRosePlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Rose Diagram canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabShaleVolume">
-    <attribute name="title"><string>Shale Volume (Vcl)</string></attribute>
+    <attribute name="title">
+     <string>Shale Volume (Vcl)</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutVcl">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupVclParams">
-       <property name="title"><string>Vcl Parameters</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Vcl Parameters</string>
+       </property>
        <layout class="QFormLayout" name="formVcl">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_016"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboVclWell"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_017"><property name="text"><string>GR Curve:</string></property></widget></item>
-        <item row="1" column="1"><widget class="QComboBox" name="comboVclGR"><item><property name="text"><string>GR</string></property></item></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_018"><property name="text"><string>GR Clean (min):</string></property></widget></item>
-        <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinVclGRmin"><property name="maximum"><double>300.0</double></property><property name="value"><double>15.0</double></property></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_019"><property name="text"><string>GR Shale (max):</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinVclGRmax"><property name="maximum"><double>300.0</double></property><property name="value"><double>120.0</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_020"><property name="text"><string>Method:</string></property></widget></item>
-        <item row="4" column="1">
-         <widget class="QComboBox" name="comboVclMethod">
-          <item><property name="text"><string>Linear GR</string></property></item>
-          <item><property name="text"><string>Larionov (Tertiary)</string></property></item>
-          <item><property name="text"><string>Larionov (Older Rocks)</string></property></item>
-          <item><property name="text"><string>Steiber</string></property></item>
-          <item><property name="text"><string>Clavier</string></property></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_016">
+          <property name="text">
+           <string>Well:</string>
+          </property>
          </widget>
         </item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_021"><property name="text"><string>Output Curve Name:</string></property></widget></item>
-        <item row="5" column="1"><widget class="QLineEdit" name="lineVclOutName"><property name="text"><string>VSH</string></property></widget></item>
-        <item row="6" column="0"><widget class="QLabel" name="auto_label_022"><property name="text"><string>Apply to Zone:</string></property></widget></item>
-        <item row="6" column="1"><widget class="QComboBox" name="comboVclZone"><item><property name="text"><string>Entire Well</string></property></item></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnVclCalculate"><property name="text"><string>▶  Calculate Vcl</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnVclPreview"><property name="text"><string>Preview Log</string></property></widget></item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboVclWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tau-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_017">
+          <property name="text">
+           <string>GR Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboVclGR">
+          <item>
+           <property name="text">
+            <string>GR</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_018">
+          <property name="text">
+           <string>GR Clean (min):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDoubleSpinBox" name="spinVclGRmin">
+          <property name="maximum">
+           <double>300.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>15.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_019">
+          <property name="text">
+           <string>GR Shale (max):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinVclGRmax">
+          <property name="maximum">
+           <double>300.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>120.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_020">
+          <property name="text">
+           <string>Method:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="comboVclMethod">
+          <item>
+           <property name="text">
+            <string>Linear GR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Larionov (Tertiary)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Larionov (Older Rocks)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Steiber</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Clavier</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_021">
+          <property name="text">
+           <string>Output Curve Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="lineVclOutName">
+          <property name="text">
+           <string>VSH</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="auto_label_022">
+          <property name="text">
+           <string>Apply to Zone:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QComboBox" name="comboVclZone">
+          <item>
+           <property name="text">
+            <string>Entire Well</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameVclCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblVclPlaceholder"><property name="text"><string>Vcl preview log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblVclPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Vcl preview log canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabPorosity">
-    <attribute name="title"><string>Porosity Calculation</string></attribute>
+    <attribute name="title">
+     <string>Porosity Calculation</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutPhi">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupPhiParams">
-       <property name="title"><string>Porosity Parameters</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Porosity Parameters</string>
+       </property>
        <layout class="QFormLayout" name="formPhi">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_023"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboPhiWell"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_024"><property name="text"><string>Method:</string></property></widget></item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboPhiMethod">
-          <item><property name="text"><string>Density (PHID)</string></property></item>
-          <item><property name="text"><string>Neutron (PHIN)</string></property></item>
-          <item><property name="text"><string>Sonic (DT)</string></property></item>
-          <item><property name="text"><string>Density-Neutron (PHIE)</string></property></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_023">
+          <property name="text">
+           <string>Well:</string>
+          </property>
          </widget>
         </item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_025"><property name="text"><string>Matrix Density (g/cc):</string></property></widget></item>
-        <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPhiRhoma"><property name="decimals"><number>3</number></property><property name="minimum"><double>2.0</double></property><property name="maximum"><double>3.0</double></property><property name="value"><double>2.65</double></property></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_026"><property name="text"><string>Fluid Density (g/cc):</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPhiRhof"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.8</double></property><property name="maximum"><double>1.2</double></property><property name="value"><double>1.0</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_027"><property name="text"><string>Vcl Correction:</string></property></widget></item>
-        <item row="4" column="1"><widget class="QCheckBox" name="checkPhiVclCorr"><property name="text"><string>Apply</string></property><property name="checked"><bool>true</bool></property></widget></item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_028"><property name="text"><string>Output Name:</string></property></widget></item>
-        <item row="5" column="1"><widget class="QLineEdit" name="linePhiOutName"><property name="text"><string>PHIE</string></property></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnPhiCalculate"><property name="text"><string>▶  Calculate Porosity</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnPhiPreview"><property name="text"><string>Preview Log</string></property></widget></item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboPhiWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tau-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_024">
+          <property name="text">
+           <string>Method:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboPhiMethod">
+          <item>
+           <property name="text">
+            <string>Density (PHID)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Neutron (PHIN)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sonic (DT)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Density-Neutron (PHIE)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_025">
+          <property name="text">
+           <string>Matrix Density (g/cc):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDoubleSpinBox" name="spinPhiRhoma">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>2.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>2.650000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_026">
+          <property name="text">
+           <string>Fluid Density (g/cc):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinPhiRhof">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>0.800000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>1.200000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_027">
+          <property name="text">
+           <string>Vcl Correction:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QCheckBox" name="checkPhiVclCorr">
+          <property name="text">
+           <string>Apply</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_028">
+          <property name="text">
+           <string>Output Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="linePhiOutName">
+          <property name="text">
+           <string>PHIE</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="framePhiCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblPhiPlaceholder"><property name="text"><string>Porosity preview log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblPhiPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Porosity preview log canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabWaterSaturation">
-    <attribute name="title"><string>Water Saturation (Sw)</string></attribute>
+    <attribute name="title">
+     <string>Water Saturation (Sw)</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutSw">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupSwParams">
-       <property name="title"><string>Archie / Sw Parameters</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Archie / Sw Parameters</string>
+       </property>
        <layout class="QFormLayout" name="formSw">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_029"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboSwWell"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_030"><property name="text"><string>Method:</string></property></widget></item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboSwMethod">
-          <item><property name="text"><string>Archie</string></property></item>
-          <item><property name="text"><string>Simandoux</string></property></item>
-          <item><property name="text"><string>Modified Simandoux</string></property></item>
-          <item><property name="text"><string>Indonesia</string></property></item>
-          <item><property name="text"><string>Waxman-Smits</string></property></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_029">
+          <property name="text">
+           <string>Well:</string>
+          </property>
          </widget>
         </item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_031"><property name="text"><string>Resistivity Curve:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QComboBox" name="comboSwRt"><item><property name="text"><string>LLD</string></property></item><item><property name="text"><string>LLS</string></property></item></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_032"><property name="text"><string>Rw (ohm.m):</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinSwRw"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>10.0</double></property><property name="value"><double>0.05</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_033"><property name="text"><string>a (tortuosity):</string></property></widget></item>
-        <item row="4" column="1"><widget class="QDoubleSpinBox" name="spinSwA"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.1</double></property><property name="maximum"><double>2.0</double></property><property name="value"><double>1.0</double></property></widget></item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_034"><property name="text"><string>m (cementation):</string></property></widget></item>
-        <item row="5" column="1"><widget class="QDoubleSpinBox" name="spinSwM"><property name="decimals"><number>3</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>3.0</double></property><property name="value"><double>2.0</double></property></widget></item>
-        <item row="6" column="0"><widget class="QLabel" name="auto_label_035"><property name="text"><string>n (saturation):</string></property></widget></item>
-        <item row="6" column="1"><widget class="QDoubleSpinBox" name="spinSwN"><property name="decimals"><number>3</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>3.0</double></property><property name="value"><double>2.0</double></property></widget></item>
-        <item row="7" column="0"><widget class="QLabel" name="auto_label_036"><property name="text"><string>PHIE Curve:</string></property></widget></item>
-        <item row="7" column="1"><widget class="QComboBox" name="comboSwPhie"><item><property name="text"><string>PHIE</string></property></item></widget></item>
-        <item row="8" column="0"><widget class="QLabel" name="auto_label_037"><property name="text"><string>Output Name:</string></property></widget></item>
-        <item row="8" column="1"><widget class="QLineEdit" name="lineSwOutName"><property name="text"><string>SW</string></property></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnSwCalculate"><property name="text"><string>▶  Calculate Sw</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnSwPreview"><property name="text"><string>Preview Log</string></property></widget></item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboSwWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tau-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_030">
+          <property name="text">
+           <string>Method:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboSwMethod">
+          <item>
+           <property name="text">
+            <string>Archie</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Simandoux</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Modified Simandoux</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Indonesia</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Waxman-Smits</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_031">
+          <property name="text">
+           <string>Resistivity Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboSwRt">
+          <item>
+           <property name="text">
+            <string>LLD</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>LLS</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_032">
+          <property name="text">
+           <string>Rw (ohm.m):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinSwRw">
+          <property name="decimals">
+           <number>4</number>
+          </property>
+          <property name="minimum">
+           <double>0.001000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>10.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.050000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_033">
+          <property name="text">
+           <string>a (tortuosity):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDoubleSpinBox" name="spinSwA">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>2.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_034">
+          <property name="text">
+           <string>m (cementation):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QDoubleSpinBox" name="spinSwM">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>2.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="auto_label_035">
+          <property name="text">
+           <string>n (saturation):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QDoubleSpinBox" name="spinSwN">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>3.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>2.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="auto_label_036">
+          <property name="text">
+           <string>PHIE Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QComboBox" name="comboSwPhie">
+          <item>
+           <property name="text">
+            <string>PHIE</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="auto_label_037">
+          <property name="text">
+           <string>Output Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLineEdit" name="lineSwOutName">
+          <property name="text">
+           <string>SW</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameSwCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblSwPlaceholder"><property name="text"><string>Sw preview log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblSwPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Sw preview log canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabPermeability">
-    <attribute name="title"><string>Permeability (K)</string></attribute>
+    <attribute name="title">
+     <string>Permeability (K)</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutPerm">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupPermParams">
-       <property name="title"><string>Permeability Parameters</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Permeability Parameters</string>
+       </property>
        <layout class="QFormLayout" name="formPerm">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_038"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboPermWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_039"><property name="text"><string>Model:</string></property></widget></item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboPermModel">
-          <item><property name="text"><string>Timur (Coates)</string></property></item>
-          <item><property name="text"><string>Kozeny-Carman</string></property></item>
-          <item><property name="text"><string>Wyllie-Rose</string></property></item>
-          <item><property name="text"><string>Core Regression</string></property></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_038">
+          <property name="text">
+           <string>Well:</string>
+          </property>
          </widget>
         </item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_040"><property name="text"><string>PHIE Curve:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QComboBox" name="comboPermPhie"><item><property name="text"><string>PHIE</string></property></item></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_041"><property name="text"><string>Swi (irreducible):</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPermSwi"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.2</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_042"><property name="text"><string>Coeff C:</string></property></widget></item>
-        <item row="4" column="1"><widget class="QDoubleSpinBox" name="spinPermC"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>100.0</double></property><property name="value"><double>0.0316</double></property></widget></item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_043"><property name="text"><string>Output Name:</string></property></widget></item>
-        <item row="5" column="1"><widget class="QLineEdit" name="linePermOutName"><property name="text"><string>PERM</string></property></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnPermCalculate"><property name="text"><string>▶  Calculate K</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnPermPreview"><property name="text"><string>Preview Log</string></property></widget></item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboPermWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_039">
+          <property name="text">
+           <string>Model:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboPermModel">
+          <item>
+           <property name="text">
+            <string>Timur (Coates)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Kozeny-Carman</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Wyllie-Rose</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Core Regression</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_040">
+          <property name="text">
+           <string>PHIE Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboPermPhie">
+          <item>
+           <property name="text">
+            <string>PHIE</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_041">
+          <property name="text">
+           <string>Swi (irreducible):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinPermSwi">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>0.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.200000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_042">
+          <property name="text">
+           <string>Coeff C:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDoubleSpinBox" name="spinPermC">
+          <property name="decimals">
+           <number>4</number>
+          </property>
+          <property name="minimum">
+           <double>0.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.031600000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_043">
+          <property name="text">
+           <string>Output Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="linePermOutName">
+          <property name="text">
+           <string>PERM</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="framePermCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblPermPlaceholder"><property name="text"><string>Permeability preview log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblPermPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Permeability preview log canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabNetPay">
-    <attribute name="title"><string>Net Pay / Cutoff</string></attribute>
+    <attribute name="title">
+     <string>Net Pay / Cutoff</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutNetPay">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupNetPayParams">
-       <property name="title"><string>Cutoff Criteria</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Cutoff Criteria</string>
+       </property>
        <layout class="QFormLayout" name="formNetPay">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_044"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboNetPayWell"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>All Wells</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_045"><property name="text"><string>Vcl Cutoff (max):</string></property></widget></item>
-        <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinNetPayVcl"><property name="decimals"><number>2</number></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.4</double></property></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_046"><property name="text"><string>PHIE Cutoff (min):</string></property></widget></item>
-        <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinNetPayPhi"><property name="decimals"><number>3</number></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.08</double></property></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_047"><property name="text"><string>Sw Cutoff (max):</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinNetPaySw"><property name="decimals"><number>2</number></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.65</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_048"><property name="text"><string>Perm Cutoff (mD):</string></property></widget></item>
-        <item row="4" column="1"><widget class="QDoubleSpinBox" name="spinNetPayPerm"><property name="decimals"><number>2</number></property><property name="maximum"><double>10000.0</double></property><property name="value"><double>0.1</double></property></widget></item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_049"><property name="text"><string>Flag Output Name:</string></property></widget></item>
-        <item row="5" column="1"><widget class="QLineEdit" name="lineNetPayOut"><property name="text"><string>Pay_Flag</string></property></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnNetPayCalculate"><property name="text"><string>▶  Apply Cutoffs</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnNetPayReport"><property name="text"><string>Net Pay Summary Report</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_044">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboNetPayWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>All Wells</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_045">
+          <property name="text">
+           <string>Vcl Cutoff (max):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="spinNetPayVcl">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.400000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_046">
+          <property name="text">
+           <string>PHIE Cutoff (min):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDoubleSpinBox" name="spinNetPayPhi">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.080000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_047">
+          <property name="text">
+           <string>Sw Cutoff (max):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinNetPaySw">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.650000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_048">
+          <property name="text">
+           <string>Perm Cutoff (mD):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDoubleSpinBox" name="spinNetPayPerm">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <double>10000.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.100000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_049">
+          <property name="text">
+           <string>Flag Output Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="lineNetPayOut">
+          <property name="text">
+           <string>Pay_Flag</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameNetPayCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblNetPayPlaceholder"><property name="text"><string>Net Pay flag log canvas
-(results table will appear here)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblNetPayPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Net Pay flag log canvas
+(results table will appear here)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabWellCorrelation">
-    <attribute name="title"><string>Well Correlation</string></attribute>
+    <attribute name="title">
+     <string>Well Correlation</string>
+    </attribute>
     <layout class="QVBoxLayout" name="layoutWellCorr">
-   <property name="spacing"><number>4</number></property>
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="layoutWCControls">
-       <item><widget class="QLabel" name="auto_label_050"><property name="text"><string>Wells:</string></property></widget></item>
+       <item>
+        <widget class="QLabel" name="auto_label_050">
+         <property name="text">
+          <string>Wells:</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QListWidget" name="listWCWells">
-         <property name="selectionMode"><enum>QAbstractItemView::ExtendedSelection</enum></property>
-         <property name="maximumHeight"><number>60</number></property>
-         <item><property name="text"><string>CHr-1</string></property></item>
-         <item><property name="text"><string>Tau-1</string></property></item>
-         <item><property name="text"><string>Experior</string></property></item>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <item>
+          <property name="text">
+           <string>CHr-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Tau-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Experior</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item><widget class="QLabel" name="auto_label_051"><property name="text"><string>Template:</string></property></widget></item>
+       <item>
+        <widget class="QLabel" name="auto_label_051">
+         <property name="text">
+          <string>Template:</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QComboBox" name="comboWCTemplate">
-         <item><property name="text"><string>Standard Triple Combo</string></property></item>
-         <item><property name="text"><string>Formation Evaluation</string></property></item>
+         <item>
+          <property name="text">
+           <string>Standard Triple Combo</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Formation Evaluation</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item><widget class="QLabel" name="auto_label_052"><property name="text"><string>Datum:</string></property></widget></item>
+       <item>
+        <widget class="QLabel" name="auto_label_052">
+         <property name="text">
+          <string>Datum:</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QComboBox" name="comboWCDatum">
-         <item><property name="text"><string>MD</string></property></item>
-         <item><property name="text"><string>TVDSS</string></property></item>
-         <item><property name="text"><string>Formation Top</string></property></item>
+         <item>
+          <property name="text">
+           <string>MD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TVDSS</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Formation Top</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item><widget class="QPushButton" name="btnWCRender"><property name="text"><string>Render Correlation Panel</string></property></widget></item>
-       <item><spacer name="spacerWC"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+       <item>
+        <widget class="QPushButton" name="btnWCRender">
+         <property name="text">
+          <string>Render Correlation Panel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="spacerWC">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </item>
      <item>
       <widget class="QFrame" name="frameWCCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblWCPlaceholder"><property name="text"><string>Multi-well correlation panel canvas
-(side-by-side well log display)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblWCPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Multi-well correlation panel canvas
+(side-by-side well log display)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabMultiMineral">
-    <attribute name="title"><string>Multi-Mineral (ELAN)</string></attribute>
+    <attribute name="title">
+     <string>Multi-Mineral (ELAN)</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutELAN">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupELANParams">
-       <property name="title"><string>ELAN Configuration</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>ELAN Configuration</string>
+       </property>
        <layout class="QFormLayout" name="formELAN">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_053"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboELANWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_054"><property name="text"><string>Model:</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_053">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboELANWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_054">
+          <property name="text">
+           <string>Model:</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="comboELANModel">
-          <item><property name="text"><string>Quartz + Calcite + Illite</string></property></item>
-          <item><property name="text"><string>Sandstone (3-mineral)</string></property></item>
-          <item><property name="text"><string>Carbonate (4-mineral)</string></property></item>
-          <item><property name="text"><string>Custom...</string></property></item>
+          <item>
+           <property name="text">
+            <string>Quartz + Calcite + Illite</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sandstone (3-mineral)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Carbonate (4-mineral)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Custom...</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_055"><property name="text"><string>Input Curves:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QLabel" name="lblELANCurves"><property name="text"><string>GR, RHOB, NPHI, DT, LLD</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_056"><property name="text"><string>Solver:</string></property></widget></item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_055">
+          <property name="text">
+           <string>Input Curves:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="lblELANCurves">
+          <property name="text">
+           <string>GR, RHOB, NPHI, DT, LLD</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_056">
+          <property name="text">
+           <string>Solver:</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="1">
          <widget class="QComboBox" name="comboELANSolver">
-          <item><property name="text"><string>Least-Squares (NNLS)</string></property></item>
-          <item><property name="text"><string>Weighted Inversion</string></property></item>
+          <item>
+           <property name="text">
+            <string>Least-Squares (NNLS)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Weighted Inversion</string>
+           </property>
+          </item>
          </widget>
         </item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnELANRun"><property name="text"><string>▶  Run ELAN Inversion</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnELANReport"><property name="text"><string>Generate Report</string></property></widget></item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameELANCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblELANPlaceholder"><property name="text"><string>ELAN volumetric output canvas
-(stacked mineral volume tracks)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblELANPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>ELAN volumetric output canvas
+(stacked mineral volume tracks)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabFMIAnalysis">
-    <attribute name="title"><string>FMI / Image Analysis</string></attribute>
+    <attribute name="title">
+     <string>FMI / Image Analysis</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutFMI">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupFMIParams">
-       <property name="title"><string>FMI / FMS Settings</string></property>
-       <property name="maximumWidth"><number>280</number></property>
+       <property name="title">
+        <string>FMI / FMS Settings</string>
+       </property>
        <layout class="QFormLayout" name="formFMI">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_057"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboFMIWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_058"><property name="text"><string>Image Curve:</string></property></widget></item>
-        <item row="1" column="1"><widget class="QComboBox" name="comboFMICurve"><item><property name="text"><string>FMI_Static</string></property></item><item><property name="text"><string>FMI_Dynamic</string></property></item></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_059"><property name="text"><string>Normalization:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QComboBox" name="comboFMINorm"><item><property name="text"><string>Static</string></property></item><item><property name="text"><string>Dynamic</string></property></item><item><property name="text"><string>Adaptive</string></property></item></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_060"><property name="text"><string>Dip Analysis:</string></property></widget></item>
-        <item row="3" column="1"><widget class="QCheckBox" name="checkFMIDip"><property name="text"><string>Enable</string></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_061"><property name="text"><string>Fracture Detection:</string></property></widget></item>
-        <item row="4" column="1"><widget class="QCheckBox" name="checkFMIFrac"><property name="text"><string>Enable</string></property></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnFMIDisplay"><property name="text"><string>▶  Display Image</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnFMIPickDips"><property name="text"><string>Pick Dips / Tadpole</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_057">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboFMIWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_058">
+          <property name="text">
+           <string>Image Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboFMICurve">
+          <item>
+           <property name="text">
+            <string>FMI_Static</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>FMI_Dynamic</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_059">
+          <property name="text">
+           <string>Normalization:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboFMINorm">
+          <item>
+           <property name="text">
+            <string>Static</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dynamic</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Adaptive</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_060">
+          <property name="text">
+           <string>Dip Analysis:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="checkFMIDip">
+          <property name="text">
+           <string>Enable</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_061">
+          <property name="text">
+           <string>Fracture Detection:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QCheckBox" name="checkFMIFrac">
+          <property name="text">
+           <string>Enable</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameFMICanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblFMIPlaceholder"><property name="text"><string>Borehole image / Tadpole plot canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblFMIPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Borehole image / Tadpole plot canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabWellboreStability">
-    <attribute name="title"><string>Wellbore Stability</string></attribute>
+    <attribute name="title">
+     <string>Wellbore Stability</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutWBS">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupWBSParams">
-       <property name="title"><string>Geomechanics — Wellbore Stability</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Geomechanics — Wellbore Stability</string>
+       </property>
        <layout class="QFormLayout" name="formWBS">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_062"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboWBSWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_063"><property name="text"><string>UCS Model:</string></property></widget></item>
-        <item row="1" column="1"><widget class="QComboBox" name="comboWBSUCS"><item><property name="text"><string>Chang et al. (2006)</string></property></item><item><property name="text"><string>Bradford et al.</string></property></item></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_064"><property name="text"><string>Failure Criterion:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QComboBox" name="comboWBSFailure"><item><property name="text"><string>Mohr-Coulomb</string></property></item><item><property name="text"><string>Drucker-Prager</string></property></item><item><property name="text"><string>Mogi-Coulomb</string></property></item></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_065"><property name="text"><string>Sv Gradient (psi/ft):</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinWBSSv"><property name="decimals"><number>4</number></property><property name="value"><double>0.95</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_066"><property name="text"><string>SHmax Azimuth (°):</string></property></widget></item>
-        <item row="4" column="1"><widget class="QDoubleSpinBox" name="spinWBSSHaz"><property name="maximum"><double>360.0</double></property><property name="value"><double>45.0</double></property></widget></item>
-        <item row="5" column="0"><widget class="QLabel" name="auto_label_067"><property name="text"><string>Pore Pressure Curve:</string></property></widget></item>
-        <item row="5" column="1"><widget class="QComboBox" name="comboWBSPP"><item><property name="text"><string>PP_Eaton</string></property></item><item><property name="text"><string>PP_Bowers</string></property></item></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnWBSCalculate"><property name="text"><string>▶  Run Stability Analysis</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnWBSMudWindow"><property name="text"><string>Safe Mud Weight Window</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_062">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboWBSWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_063">
+          <property name="text">
+           <string>UCS Model:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboWBSUCS">
+          <item>
+           <property name="text">
+            <string>Chang et al. (2006)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Bradford et al.</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_064">
+          <property name="text">
+           <string>Failure Criterion:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboWBSFailure">
+          <item>
+           <property name="text">
+            <string>Mohr-Coulomb</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Drucker-Prager</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Mogi-Coulomb</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_065">
+          <property name="text">
+           <string>Sv Gradient (psi/ft):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinWBSSv">
+          <property name="decimals">
+           <number>4</number>
+          </property>
+          <property name="value">
+           <double>0.950000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_066">
+          <property name="text">
+           <string>SHmax Azimuth (°):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDoubleSpinBox" name="spinWBSSHaz">
+          <property name="maximum">
+           <double>360.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>45.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="auto_label_067">
+          <property name="text">
+           <string>Pore Pressure Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QComboBox" name="comboWBSPP">
+          <item>
+           <property name="text">
+            <string>PP_Eaton</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>PP_Bowers</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameWBSCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblWBSPlaceholder"><property name="text"><string>Wellbore stability / mud weight window canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblWBSPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Wellbore stability / mud weight window canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabPorePressure">
-    <attribute name="title"><string>Pore Pressure</string></attribute>
+    <attribute name="title">
+     <string>Pore Pressure</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutPP">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupPPParams">
-       <property name="title"><string>Pore Pressure Parameters</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Pore Pressure Parameters</string>
+       </property>
        <layout class="QFormLayout" name="formPP">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_068"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboPPWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_069"><property name="text"><string>Method:</string></property></widget></item>
-        <item row="1" column="1"><widget class="QComboBox" name="comboPPMethod"><item><property name="text"><string>Eaton (DT)</string></property></item><item><property name="text"><string>Eaton (Resistivity)</string></property></item><item><property name="text"><string>Bowers</string></property></item><item><property name="text"><string>Equivalent Depth</string></property></item></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_070"><property name="text"><string>Eaton Exponent:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPPEaton"><property name="decimals"><number>2</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>5.0</double></property><property name="value"><double>3.0</double></property></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_071"><property name="text"><string>Hydrostatic Gradient:</string></property></widget></item>
-        <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPPHydro"><property name="decimals"><number>4</number></property><property name="value"><double>0.433</double></property></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_072"><property name="text"><string>Normal Compaction Trend:</string></property></widget></item>
-        <item row="4" column="1"><widget class="QComboBox" name="comboPPNCT"><item><property name="text"><string>Auto-fit</string></property></item><item><property name="text"><string>Manual</string></property></item></widget></item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnPPCalculate"><property name="text"><string>▶  Calculate Pore Pressure</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnPPReport"><property name="text"><string>PP Summary Report</string></property></widget></item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_068">
+          <property name="text">
+           <string>Well:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboPPWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_069">
+          <property name="text">
+           <string>Method:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboPPMethod">
+          <item>
+           <property name="text">
+            <string>Eaton (DT)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Eaton (Resistivity)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Bowers</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Equivalent Depth</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_070">
+          <property name="text">
+           <string>Eaton Exponent:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDoubleSpinBox" name="spinPPEaton">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>5.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>3.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_071">
+          <property name="text">
+           <string>Hydrostatic Gradient:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="spinPPHydro">
+          <property name="decimals">
+           <number>4</number>
+          </property>
+          <property name="value">
+           <double>0.433000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_072">
+          <property name="text">
+           <string>Normal Compaction Trend:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="comboPPNCT">
+          <item>
+           <property name="text">
+            <string>Auto-fit</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Manual</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="framePPCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblPPPlaceholder"><property name="text"><string>Pore pressure / overburden canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblPPPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Pore pressure / overburden canvas</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
-   
    <widget class="QWidget" name="tabGeomechanics">
-    <attribute name="title"><string>Geomechanics Suite</string></attribute>
+    <attribute name="title">
+     <string>Geomechanics Suite</string>
+    </attribute>
     <layout class="QHBoxLayout" name="layoutGeo">
-   <property name="spacing"><number>6</number></property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupGeoParams">
-       <property name="title"><string>Rock Mechanical Parameters</string></property>
-       <property name="maximumWidth"><number>300</number></property>
+       <property name="title">
+        <string>Rock Mechanical Parameters</string>
+       </property>
        <layout class="QFormLayout" name="formGeo">
-        <item row="0" column="0"><widget class="QLabel" name="auto_label_073"><property name="text"><string>Well:</string></property></widget></item>
-        <item row="0" column="1"><widget class="QComboBox" name="comboGeoWell"><item><property name="text"><string>CHr-1</string></property></item></widget></item>
-        <item row="1" column="0"><widget class="QLabel" name="auto_label_074"><property name="text"><string>DT Curve:</string></property></widget></item>
-        <item row="1" column="1"><widget class="QComboBox" name="comboGeoDT"><item><property name="text"><string>DT</string></property></item></widget></item>
-        <item row="2" column="0"><widget class="QLabel" name="auto_label_075"><property name="text"><string>DTS Curve:</string></property></widget></item>
-        <item row="2" column="1"><widget class="QComboBox" name="comboGeoDTS"><item><property name="text"><string>DTS</string></property></item><item><property name="text"><string>--- Not Available ---</string></property></item></widget></item>
-        <item row="3" column="0"><widget class="QLabel" name="auto_label_076"><property name="text"><string>RHOB Curve:</string></property></widget></item>
-        <item row="3" column="1"><widget class="QComboBox" name="comboGeoRHOB"><item><property name="text"><string>RHOB</string></property></item></widget></item>
-        <item row="4" column="0"><widget class="QLabel" name="auto_label_077"><property name="text"><string>Outputs:</string></property></widget></item>
-        <item row="4" column="1">
-         <widget class="QWidget" name="widgetGeoOutputs">
-          <layout class="QVBoxLayout">
-   <property name="spacing"><number>2</number></property>
-           <item><widget class="QCheckBox" name="checkGeoUCS"><property name="text"><string>UCS</string></property><property name="checked"><bool>true</bool></property></widget></item>
-           <item><widget class="QCheckBox" name="checkGeoE"><property name="text"><string>Young's Modulus (E)</string></property><property name="checked"><bool>true</bool></property></widget></item>
-           <item><widget class="QCheckBox" name="checkGeoPR"><property name="text"><string>Poisson's Ratio (ν)</string></property><property name="checked"><bool>true</bool></property></widget></item>
-           <item><widget class="QCheckBox" name="checkGeoBI"><property name="text"><string>Brittleness Index</string></property><property name="checked"><bool>true</bool></property></widget></item>
-          </layout>
+        <item row="0" column="0">
+         <widget class="QLabel" name="auto_label_073">
+          <property name="text">
+           <string>Well:</string>
+          </property>
          </widget>
         </item>
-       </layout>
-       <layout class="QVBoxLayout">
-        <item><widget class="QPushButton" name="btnGeoCalculate"><property name="text"><string>▶  Calculate Rock Mechanics</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnGeoStressAnalysis"><property name="text"><string>Stress Analysis...</string></property></widget></item>
-        <item><widget class="QPushButton" name="btnGeoReport"><property name="text"><string>Geomechanics Report</string></property></widget></item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboGeoWell">
+          <item>
+           <property name="text">
+            <string>CHr-1</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="auto_label_074">
+          <property name="text">
+           <string>DT Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboGeoDT">
+          <item>
+           <property name="text">
+            <string>DT</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="auto_label_075">
+          <property name="text">
+           <string>DTS Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboGeoDTS">
+          <item>
+           <property name="text">
+            <string>DTS</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>--- Not Available ---</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="auto_label_076">
+          <property name="text">
+           <string>RHOB Curve:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="comboGeoRHOB">
+          <item>
+           <property name="text">
+            <string>RHOB</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="auto_label_077">
+          <property name="text">
+           <string>Outputs:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <layout class="QVBoxLayout">
+          <property name="spacing">
+           <number>2</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="checkGeoUCS">
+            <property name="text">
+             <string>UCS</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkGeoE">
+            <property name="text">
+             <string>Young's Modulus (E)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkGeoPR">
+            <property name="text">
+             <string>Poisson's Ratio (ν)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkGeoBI">
+            <property name="text">
+             <string>Brittleness Index</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
       <widget class="QFrame" name="frameGeoCanvas">
-       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
-       <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
-       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #C2D0E0;</string></property>
-       <layout class="QVBoxLayout"><item><widget class="QLabel" name="lblGeoPlaceholder"><property name="text"><string>Geomechanics output log canvas
-(UCS, E, ν, Brittleness tracks)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property></widget></item></layout>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QLabel" name="lblGeoPlaceholder">
+          <property name="styleSheet">
+           <string>color:#8898A8;font-size:13px;</string>
+          </property>
+          <property name="text">
+           <string>Geomechanics output log canvas
+(UCS, E, ν, Brittleness tracks)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
-
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -2582,7 +4585,6 @@ Use the controls above to select well, template and depth range, then click Rend
          </item>
         </layout>
        </widget>
-      
        <widget class="QWidget" name="tabPlots">
         <attribute name="title">
          <string>Plots</string>
@@ -2632,7 +4634,7 @@ Use the controls above to select well, template and depth range, then click Rend
          </item>
         </layout>
        </widget>
-</widget>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -2656,6 +4658,9 @@ Use the controls above to select well, template and depth range, then click Rend
       <widget class="QTabWidget" name="tabData">
        <property name="tabPosition">
         <enum>QTabWidget::North</enum>
+       </property>
+       <property name="currentIndex">
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tabDataTable">
         <attribute name="title">
@@ -2744,18 +4749,12 @@ Use the controls above to select well, template and depth range, then click Rend
              <property name="text">
               <string>Load</string>
              </property>
-             <property name="maximumWidth">
-              <number>60</number>
-             </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnExportTable">
              <property name="text">
               <string>Export CSV</string>
-             </property>
-             <property name="maximumWidth">
-              <number>90</number>
              </property>
             </widget>
            </item>
@@ -3424,7 +5423,6 @@ Use the controls above to select well, template and depth range, then click Rend
     </layout>
    </widget>
   </widget>
-
   <widget class="QStatusBar" name="statusBar">
    <widget class="QLabel" name="lblStatusWell">
     <property name="geometry">
@@ -4597,221 +6595,292 @@ Use the controls above to select well, template and depth range, then click Rend
  </widget>
  <resources/>
  <connections>
-  
-
-  
   <connection>
    <sender>actionNewLogPlot</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actiondatainfo</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionNewCrossplot</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionNewHistogram</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionNewRoseDiagram</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionShaleVolume</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionPorosityCalc</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionWaterSaturation</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionPermeability</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionNetPay</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionWellCorrelation</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionMultimineralAnalysis</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionFMIAnalysis</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionWellboreStability</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionPorePressure</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionStressAnalysis</sender>
    <signal>triggered()</signal>
    <receiver>centralTabWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>400</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>400</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>actionSaveProject</sender>
    <signal>triggered()</signal>
    <receiver>lblStatusReady</receiver>
    <slot>update()</slot>
    <hints>
-    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>974</y></hint>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>974</y>
+    </hint>
    </hints>
   </connection>
-
-  
   <connection>
    <sender>comboZoneWell</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>comboStatZone</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
-    <hint type="sourcelabel"><x>120</x><y>400</y></hint>
-    <hint type="destinationlabel"><x>840</x><y>825</y></hint>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>400</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>840</x>
+     <y>825</y>
+    </hint>
    </hints>
   </connection>
  </connections>
