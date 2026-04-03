@@ -41,6 +41,12 @@ class DataService:
         self._current_well = name
         self._refresh_views()
 
+    def on_curve_well_changed(self, name: str):
+        if not name or name not in self._wells:
+            return
+        well = self._wells[name]
+        self._update_curves_tree(well)
+
     def on_data_tab_changed(self, index: int):
         _ = index
         self._refresh_views()
@@ -133,23 +139,45 @@ class DataService:
             print("Stats Error:", e)
 
     def _update_well_lists(self):
-        for combo_name in (
+        all_well_combos = (
             "comboActiveWell",
             "comboCurveWell",
             "comboZoneWell",
             "comboStatWell",
             "comboDTWell",
             "comboQCWell",
-        ):
+            "comboLVWell",
+            "comboDISWell",
+            "comboXplotWell",
+            "comboHistWell",
+            "comboRoseWell",
+            "comboVclWell",
+            "comboPhiWell",
+            "comboSwWell",
+            "comboPermWell",
+            "comboNetPayWell",
+            "comboELANWell",
+            "comboFMIWell",
+            "comboWBSWell",
+            "comboPPWell",
+            "comboGeoWell",
+        )
+        combos_with_all = {"comboDISWell", "comboHistWell", "comboStatWell", "comboQCWell"}
+        wells_sorted = sorted(self._wells.keys())
+        for combo_name in all_well_combos:
             combo = getattr(self.ui, combo_name, None)
             if combo is None:
                 continue
+            combo.blockSignals(True)
             combo.clear()
-            combo.addItems(sorted(self._wells.keys()))
+            combo.addItems(wells_sorted)
+            if combo_name in combos_with_all:
+                combo.addItem("All Wells")
             if self._current_well:
                 idx = combo.findText(self._current_well)
                 if idx >= 0:
                     combo.setCurrentIndex(idx)
+            combo.blockSignals(False)
 
         # update curve list combos
         well = self._get_current_well()
@@ -165,6 +193,9 @@ class DataService:
                 continue
             combo.clear()
             combo.addItems(curves)
+        self._update_plot_curve_combos(well)
+        self._update_project_tree()
+        self._update_curves_tree(well)
 
     def _refresh_views(self):
         well = self._get_current_well()
@@ -175,6 +206,9 @@ class DataService:
         self._populate_log_info(well)
         self._populate_data_table(well)
         self._populate_rename_table(well)
+        self._update_plot_curve_combos(well)
+        self._update_project_tree()
+        self._update_curves_tree(well)
 
     def _update_curve_lists(self, well):
         df = getattr(well, "data", None)
@@ -187,6 +221,61 @@ class DataService:
                 continue
             combo.clear()
             combo.addItems(curves)
+
+    def _update_plot_curve_combos(self, well):
+        df = getattr(well, "data", None)
+        if df is None:
+            return
+        curves = list(df.columns)
+        for combo_name in ("comboLVTemplate", "multitrackcomboBox"):
+            combo = getattr(self.ui, combo_name, None)
+            if combo is None:
+                continue
+            combo.blockSignals(True)
+            combo.clear()
+            combo.addItems(curves)
+            combo.blockSignals(False)
+
+    def _update_project_tree(self):
+        tree = getattr(self.ui, "treeProject", None)
+        if tree is None:
+            return
+        tree.clear()
+        for well_name in sorted(self._wells.keys()):
+            well = self._wells[well_name]
+            well_item = QtWidgets.QTreeWidgetItem([well_name, "[Well]"])
+            tree.addTopLevelItem(well_item)
+            curves_parent = QtWidgets.QTreeWidgetItem(well_item, ["Curves", ""])
+            log_info = getattr(well, "log_info", {}) or {}
+            if log_info:
+                for curve_name, info in log_info.items():
+                    unit = info.get("unit", "")
+                    curve_type = info.get("type", "")
+                    QtWidgets.QTreeWidgetItem(curves_parent, [curve_name, unit, curve_type])
+            else:
+                df = getattr(well, "data", None)
+                if df is not None:
+                    for curve_name in df.columns:
+                        QtWidgets.QTreeWidgetItem(curves_parent, [str(curve_name), "", ""])
+        tree.expandAll()
+
+    def _update_curves_tree(self, well):
+        tree = getattr(self.ui, "treeCurves", None)
+        if tree is None or well is None:
+            return
+        tree.clear()
+        log_info = getattr(well, "log_info", {}) or {}
+        if log_info:
+            for curve_name, info in log_info.items():
+                unit = info.get("unit", "")
+                curve_type = info.get("type", "")
+                QtWidgets.QTreeWidgetItem(tree, [curve_name, unit, curve_type])
+        else:
+            df = getattr(well, "data", None)
+            if df is None:
+                return
+            for curve_name in df.columns:
+                QtWidgets.QTreeWidgetItem(tree, [str(curve_name), "", ""])
 
     def _get_current_well(self):
         if self._current_well and self._current_well in self._wells:
