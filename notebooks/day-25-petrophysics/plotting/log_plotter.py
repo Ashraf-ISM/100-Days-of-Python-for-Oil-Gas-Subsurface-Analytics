@@ -357,7 +357,7 @@ class LogPlotWidget(QWidget):
             self.canvas.plot_well(well, tracks, depth_from, depth_to, tops=None)
             return
 
-        # Default: Multi-track
+        # Default: Multi-track plot with selected curves
         if curves:
             tracks = [
                 TrackConfig(c, [{"name": c, "color": "#2563EB", "lw": 1.1}])
