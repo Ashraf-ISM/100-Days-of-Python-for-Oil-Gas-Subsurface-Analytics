@@ -1433,32 +1433,114 @@ QStatusBar {
                 </item>
                </layout>
               </widget>
-              <widget class="QScrollArea" name="scrollLogCanvas">
-               <property name="horizontalScrollBarPolicy">
-                <enum>Qt::ScrollBarAsNeeded</enum>
+              <widget class="QTabWidget" name="tabLogDisplayViews">
+               <property name="currentIndex">
+                <number>0</number>
                </property>
-               <property name="widgetResizable">
-                <bool>true</bool>
-               </property>
-               <widget class="QWidget" name="logCanvasWidget">
-                <property name="geometry">
-                 <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>617</width>
-                  <height>584</height>
-                 </rect>
-                </property>
-                <layout class="QVBoxLayout" name="logCanvasLayout">
+               <widget class="QWidget" name="tabLogCanvasView">
+                <attribute name="title">
+                 <string>Multi-Track Plot</string>
+                </attribute>
+                <layout class="QVBoxLayout" name="verticalLayoutLogCanvasTab">
                  <item>
-                  <widget class="QLabel" name="lblLogCanvasPlaceholder">
-                   <property name="text">
-                    <string>Log canvas renders here (matplotlib / pyqtgraph backend)</string>
+                  <widget class="QScrollArea" name="scrollLogCanvas">
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAsNeeded</enum>
                    </property>
-                   <property name="alignment">
-                    <set>Qt::AlignCenter</set>
+                   <property name="widgetResizable">
+                    <bool>true</bool>
                    </property>
+                   <widget class="QWidget" name="logCanvasWidget">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>617</width>
+                      <height>584</height>
+                     </rect>
+                    </property>
+                    <layout class="QVBoxLayout" name="logCanvasLayout">
+                     <item>
+                      <widget class="QLabel" name="lblLogCanvasPlaceholder">
+                       <property name="text">
+                        <string>Log canvas renders here (matplotlib / pyqtgraph backend)</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
                   </widget>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="tabLogDataInspector">
+                <attribute name="title">
+                 <string>Data Inspector</string>
+                </attribute>
+                <layout class="QVBoxLayout" name="layoutLogDataInspector">
+                 <item>
+                  <layout class="QHBoxLayout" name="layoutLogDataToolbar">
+                   <item>
+                    <widget class="QLabel" name="lblDataViewMode">
+                     <property name="text">
+                      <string>View:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="comboDataViewMode">
+                     <item>
+                      <property name="text">
+                       <string>Describe</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>All Data</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Head (200)</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Null Stats</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="btnRefreshDataView">
+                     <property name="text">
+                      <string>Refresh</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QTableWidget" name="tableDataInspector"/>
+                 </item>
+                 <item>
+                  <widget class="QTextBrowser" name="txtDataSummary"/>
                  </item>
                 </layout>
                </widget>
@@ -3448,52 +3530,32 @@ p, li { white-space: pre-wrap; }
                   <widget class="QComboBox" name="comboCrossplotType">
                    <item>
                     <property name="text">
-                     <string>Pickett Plot (log Φ vs log Rt)</string>
+                     <string>Histogram</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Neutron-Density (NPHI vs RHOB)</string>
+                     <string>Boxplot</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>M-N Plot (Lithology ID)</string>
+                     <string>Pair Plot</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Sonic-Density (DT vs RHOB)</string>
+                     <string>Cross Plot (X vs Y)</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>GR vs NPHI</string>
+                     <string>Triple Combo</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Poro vs Perm (Klinkenberg)</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Sw vs BVW (Water Contact)</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>AI vs Vp/Vs (Fluid Discrimination)</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Lambda-Rho vs Mu-Rho</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Custom X vs Y</string>
+                     <string>Multi-Track Plot</string>
                     </property>
                    </item>
                   </widget>
@@ -3611,6 +3673,36 @@ p, li { white-space: pre-wrap; }
                      <string>Linear</string>
                     </property>
                    </item>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="labelCrossZ">
+                   <property name="text">
+                    <string>Z / 3rd Log:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QComboBox" name="comboCrossZ">
+                   <item>
+                    <property name="text">
+                     <string>SW_ARCHIE</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="7" column="0">
+                  <widget class="QLabel" name="labelCrossLogs">
+                   <property name="text">
+                    <string>Logs (multi-select):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="7" column="1">
+                  <widget class="QListWidget" name="listCrossLogs">
+                   <property name="selectionMode">
+                    <enum>QAbstractItemView::ExtendedSelection</enum>
+                   </property>
                   </widget>
                  </item>
                 </layout>
