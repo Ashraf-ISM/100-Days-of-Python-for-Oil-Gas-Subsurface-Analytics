@@ -227,23 +227,30 @@ class DataService:
         if df is None:
             return
         curves = list(df.columns)
-        combo_lv = getattr(self.ui, "comboLVTemplate", None)
-        if combo_lv is not None:
-            combo_lv.blockSignals(True)
-            combo_lv.clear()
-            combo_lv.addItems(curves)
-            combo_lv.blockSignals(False)
+        track1, track2, track3 = self._select_triple_tracks(curves)
+        combo_track1 = getattr(self.ui, "triplecombotrack1", None)
+        if combo_track1 is not None:
+            self._set_checkable_combo(combo_track1, curves, set(track1))
+        combo_track2 = getattr(self.ui, "triplecombotrack2", None)
+        if combo_track2 is not None:
+            self._set_checkable_combo(combo_track2, curves, set(track2))
+        combo_track3 = getattr(self.ui, "triplecombotrack3", None)
+        if combo_track3 is not None:
+            self._set_checkable_combo(combo_track3, curves, set(track3))
 
         combo_multi = getattr(self.ui, "multitrackcomboBox", None)
         if combo_multi is not None:
-            self._set_checkable_combo(combo_multi, curves)
+            self._set_checkable_combo(combo_multi, curves, set())
 
-    def _set_checkable_combo(self, combo: QtWidgets.QComboBox, items: list[str]) -> None:
+    def _set_checkable_combo(
+        self, combo: QtWidgets.QComboBox, items: list[str], checked: set[str]
+    ) -> None:
         model = QtGui.QStandardItemModel()
         for name in items:
             item = QtGui.QStandardItem(name)
             item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsUserCheckable)
-            item.setData(QtCore.Qt.Unchecked, QtCore.Qt.CheckStateRole)
+            state = QtCore.Qt.Checked if name in checked else QtCore.Qt.Unchecked
+            item.setData(state, QtCore.Qt.CheckStateRole)
             model.appendRow(item)
         combo.setModel(model)
         combo.setEditable(True)
@@ -253,6 +260,66 @@ class DataService:
             line_edit.setPlaceholderText("Select curves...")
         model.itemChanged.connect(lambda _item: self._update_combo_display(combo))
         self._update_combo_display(combo)
+
+    @staticmethod
+    def _find_first(columns: list[str], candidates: list[str]) -> str | None:
+        upper_map = {c: c.upper() for c in columns}
+        for cand in candidates:
+            cand_upper = cand.upper()
+            for col, col_upper in upper_map.items():
+                if col_upper == cand_upper:
+                    return col
+        for cand in candidates:
+            cand_upper = cand.upper()
+            for col, col_upper in upper_map.items():
+                if cand_upper in col_upper:
+                    return col
+        return None
+
+    @staticmethod
+    def _find_all_matching(columns: list[str], tokens: list[str]) -> list[str]:
+        matches: list[str] = []
+        tokens_upper = [t.upper() for t in tokens]
+        for col in columns:
+            col_upper = col.upper()
+            if any(tok in col_upper for tok in tokens_upper):
+                matches.append(col)
+        return matches
+
+    def _select_triple_tracks(self, columns: list[str]):
+        gr = self._find_first(columns, ["GR", "GRC", "SGR", "CGR", "GRD", "GAMMA"])
+        cali = self._find_first(columns, ["CALI", "CAL", "HCAL", "CALD"])
+
+        resistivity = self._find_all_matching(
+            columns, ["RT", "RDEP", "RILD", "LLD", "LLS", "RXO", "RES", "ILD", "ILM", "RS"]
+        )
+        density = self._find_all_matching(columns, ["RHOB", "RHOZ", "RHO", "DEN", "DENB"])
+        porosity = self._find_all_matching(columns, ["NPHI", "PHI", "PHIE", "PHIT", "DPHI", "NPOR", "POR"])
+
+        track1 = [c for c in (gr, cali) if c]
+        track2 = resistivity[:]
+        track3 = density + porosity
+
+        used = set(track1 + track2 + track3)
+        if not track1:
+            for col in columns:
+                if col not in used:
+                    track1 = [col]
+                    used.add(col)
+                    break
+        if not track2:
+            for col in columns:
+                if col not in used:
+                    track2 = [col]
+                    used.add(col)
+                    break
+        if not track3:
+            for col in columns:
+                if col not in used:
+                    track3 = [col]
+                    used.add(col)
+                    break
+        return track1, track2, track3
 
     def _update_combo_display(self, combo: QtWidgets.QComboBox) -> None:
         model = combo.model()

@@ -706,7 +706,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </widget>
        </item>
        <item>
-        <widget class="CheckableCombobox" name="triplecombotrack1">
+        <widget class="QComboBox" name="triplecombotrack1">
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -722,14 +722,14 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </widget>
        </item>
        <item>
-        <widget class="CheckableCombobox" name="triplecombotrack2">
+        <widget class="QComboBox" name="triplecombotrack2">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resistivity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="CheckableCombobox" name="triplecombotrack3">
+        <widget class="QComboBox" name="triplecombotrack3">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porosity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -750,7 +750,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </widget>
        </item>
        <item>
-        <widget class="CheckableCombobox" name="multitrackcomboBox">
+        <widget class="QComboBox" name="multitrackcomboBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select curves&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -6606,13 +6606,7 @@ Use the controls above to select well, template and depth range, then click Rend
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>CheckableCombobox</class>
-   <extends>QComboBox</extends>
-   <header location="global">checkablecombobox.h</header>
-  </customwidget>
- </customwidgets>
+ 
  <resources/>
  <connections>
   <connection>
