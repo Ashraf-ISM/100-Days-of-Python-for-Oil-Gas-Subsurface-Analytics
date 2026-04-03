@@ -15,8 +15,8 @@ class MainController:
         self.ui = ui
         self.projects = ProjectService(ui)
         self.data = DataService(ui)
-        self.plots = PlotService(ui)
-        self.interp = InterpretationService(ui)
+        self.plots = PlotService(ui, self.data)
+        self.interp = InterpretationService(ui, self.data)
         self.qc = QCService(ui)
         self._wire_actions()
 
@@ -56,6 +56,7 @@ class MainController:
         self._connect_widget("btnLoadData", "clicked", self.data.load_data_view)
         self._connect_widget("btnApplyRename", "clicked", self.data.apply_rename)
         self._connect_widget("btnResetRename", "clicked", self.data.reset_rename)
+        self._connect_widget("btnUndoRename", "clicked", self.data.undo_rename)
         self._connect_widget("btnCalcStats", "clicked", self.data.compute_stats)
 
         # QC
