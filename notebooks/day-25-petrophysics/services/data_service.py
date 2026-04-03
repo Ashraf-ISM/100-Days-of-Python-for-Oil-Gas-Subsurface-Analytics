@@ -30,6 +30,35 @@ class DataService:
         self._refresh_views()
         QtWidgets.QMessageBox.information(self.ui, "Import", msg)
 
+    def load_data_view(self):
+        self._refresh_views()
+
+    def apply_rename(self):
+        well = self._get_current_well()
+        if not well:
+            return
+        table = getattr(self.ui, "tableRenameColumns", None)
+        df = getattr(well, "data", None)
+        if table is None or df is None:
+            return
+        try:
+            new_cols = []
+            for r in range(table.rowCount()):
+                item = table.item(r, 1)
+                new_cols.append(item.text() if item else "")
+            if len(new_cols) == len(df.columns):
+                df.columns = new_cols
+            self._refresh_views()
+        except Exception:
+            return
+
+    def reset_rename(self):
+        self._populate_rename_table(self._get_current_well())
+
+    def compute_stats(self):
+        # Placeholder: compute stats and fill tableStatistics later
+        self._populate_stats_stub()
+
     def _update_well_lists(self):
         for combo_name in (
             "comboActiveWell",
