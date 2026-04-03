@@ -744,7 +744,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="multitrackcomboBox"/>
+        <widget class="CheckableCombobox" name="multitrackcomboBox"/>
        </item>
        <item>
         <widget class="QPushButton" name="plotmutlitrack">
@@ -3872,6 +3872,9 @@ Use the controls above to select well, template and depth range, then click Rend
        <property name="tabPosition">
         <enum>QTabWidget::North</enum>
        </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
        <property name="documentMode">
         <bool>false</bool>
        </property>
@@ -6593,6 +6596,13 @@ Use the controls above to select well, template and depth range, then click Rend
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CheckableCombobox</class>
+   <extends>QComboBox</extends>
+   <header location="global">checkablecombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
