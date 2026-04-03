@@ -16,7 +16,7 @@ from controllers.main_controller import MainController  # noqa: E402
 class PetroVisionMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        ui_path = ROOT_DIR / "ui" / "PetroVisionPro.ui"
+        ui_path = ROOT_DIR / "ui" / "mainwindow.ui"
         uic.loadUi(str(ui_path), self)
         self.controller = MainController(self)
 

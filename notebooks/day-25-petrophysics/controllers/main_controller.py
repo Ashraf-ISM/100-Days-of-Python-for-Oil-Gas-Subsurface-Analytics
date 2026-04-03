@@ -63,6 +63,8 @@ class MainController:
         self._connect_widget("btnResetRename", "clicked", self.data.reset_rename)
         self._connect_widget("btnUndoRename", "clicked", self.data.undo_rename)
         self._connect_widget("btnCalcStats", "clicked", self.data.compute_stats)
+        self._connect_widget("tabData", "currentChanged", self.data.on_data_tab_changed)
+        self._connect_widget("comboDTWell", "currentTextChanged", self.data.set_current_well)
 
         # QC
         self._connect_widget("btnRunQC", "clicked", self.qc.run_qc)

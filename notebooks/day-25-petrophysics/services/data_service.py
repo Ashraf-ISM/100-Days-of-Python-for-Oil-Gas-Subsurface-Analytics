@@ -35,6 +35,22 @@ class DataService:
     def load_data_view(self):
         self._refresh_views()
 
+    def set_current_well(self, name: str):
+        if not name or name not in self._wells:
+            return
+        self._current_well = name
+        self._refresh_views()
+
+    def on_data_tab_changed(self, index: int):
+        _ = index
+        self._refresh_views()
+        tab = getattr(self.ui, "tabData", None)
+        if tab is None:
+            return
+        current = tab.currentWidget()
+        if current is not None and current.objectName() == "tabStatistics":
+            self.compute_stats()
+
     def apply_rename(self):
         well = self._get_current_well()
         if not well:
