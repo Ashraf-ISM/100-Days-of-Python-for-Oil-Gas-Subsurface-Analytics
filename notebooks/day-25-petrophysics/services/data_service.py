@@ -138,10 +138,23 @@ class DataService:
         well = self._get_current_well()
         if not well:
             return
+        self._update_curve_lists(well)
         self._populate_header_info(well)
         self._populate_log_info(well)
         self._populate_data_table(well)
         self._populate_rename_table(well)
+
+    def _update_curve_lists(self, well):
+        df = getattr(well, "data", None)
+        if df is None:
+            return
+        curves = list(df.columns)
+        for combo_name in ("comboStatCurve", "comboQCCurve"):
+            combo = getattr(self.ui, combo_name, None)
+            if combo is None:
+                continue
+            combo.clear()
+            combo.addItems(curves)
 
     def _get_current_well(self):
         if self._current_well and self._current_well in self._wells:
