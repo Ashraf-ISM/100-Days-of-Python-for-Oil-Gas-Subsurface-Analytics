@@ -1985,6 +1985,7 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
           <layout class="QHBoxLayout" name="layoutRenameBtns">
            <item><widget class="QPushButton" name="btnApplyRename"><property name="text"><string>Apply Rename</string></property></widget></item>
            <item><widget class="QPushButton" name="btnResetRename"><property name="text"><string>Reset</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnUndoRename"><property name="text"><string>Undo</string></property></widget></item>
            <item>
             <spacer name="spacerRename">
              <property name="orientation"><enum>Qt::Horizontal</enum></property>
