@@ -1,0 +1,2458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PetroAnalystMainWindow</class>
+ <widget class="QMainWindow" name="PetroAnalystMainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1680</width><height>980</height></rect>
+  </property>
+  <property name="minimumSize">
+   <size><width>1200</width><height>700</height></size>
+  </property>
+  <property name="windowTitle">
+   <string>PetroAnalyst Pro v1.0 — Petrophysics Interpretation Platform</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ============================================================
+   PETROANALYST PRO — LIGHT PROFESSIONAL THEME
+   ============================================================ */
+
+QMainWindow {
+    background-color: #EBF0F6;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+}
+
+/* ---- Menu Bar ---- */
+QMenuBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #3A72B5, stop:1 #2A5C9E);
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 1px 4px;
+    border-bottom: 2px solid #1D4A85;
+    spacing: 2px;
+}
+QMenuBar::item {
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: transparent;
+}
+QMenuBar::item:selected, QMenuBar::item:pressed {
+    background-color: rgba(255,255,255,0.20);
+    color: #FFFFFF;
+}
+
+/* ---- Menus ---- */
+QMenu {
+    background-color: #FFFFFF;
+    border: 1px solid #BECFE6;
+    border-radius: 5px;
+    padding: 5px 2px;
+    font-size: 12px;
+    color: #1B2B40;
+}
+QMenu::item {
+    padding: 5px 24px 5px 30px;
+    border-radius: 3px;
+    margin: 1px 4px;
+}
+QMenu::item:selected {
+    background-color: #3A72B5;
+    color: #FFFFFF;
+}
+QMenu::icon {
+    margin-left: 6px;
+}
+QMenu::separator {
+    height: 1px;
+    background-color: #DCE8F5;
+    margin: 4px 10px;
+}
+
+/* ---- Toolbars ---- */
+QToolBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #F4F7FB, stop:1 #E6EDF5);
+    border-bottom: 1px solid #C2D0E0;
+    spacing: 2px;
+    padding: 3px 6px;
+}
+QToolBar::separator {
+    width: 1px;
+    background-color: #C2D0E0;
+    margin: 3px 5px;
+}
+QToolButton {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 6px;
+    color: #1B2B40;
+    font-size: 11px;
+    min-width: 28px;
+    min-height: 28px;
+}
+QToolButton:hover {
+    background-color: #D6E5F5;
+    border-color: #9DB8D6;
+    color: #1B2B40;
+}
+QToolButton:pressed {
+    background-color: #BDD0E8;
+    border-color: #7899BB;
+}
+QToolButton:checked {
+    background-color: #3A72B5;
+    color: #FFFFFF;
+    border-color: #2A5C9E;
+}
+
+/* ---- Dock Widgets ---- */
+QDockWidget {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+QDockWidget::title {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #3A72B5, stop:1 #2A5C9E);
+    color: #FFFFFF;
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid #1D4A85;
+}
+QDockWidget::close-button, QDockWidget::float-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    icon-size: 13px;
+    subcontrol-position: top right;
+}
+QDockWidget::close-button:hover, QDockWidget::float-button:hover {
+    background-color: rgba(255,255,255,0.25);
+    border-radius: 3px;
+}
+
+/* ---- Tree  List Widgets ---- */
+QTreeWidget, QListWidget {
+    background-color: #FFFFFF;
+    alternate-background-color: #F4F8FD;
+    border: 1px solid #CCDAEA;
+    border-radius: 3px;
+    color: #1B2B40;
+    font-size: 12px;
+    outline: 0;
+}
+QTreeWidget::item, QListWidget::item {
+    padding: 3px 4px;
+    border-radius: 2px;
+    min-height: 20px;
+}
+QTreeWidget::item:hover, QListWidget::item:hover {
+    background-color: #E5EFF8;
+}
+QTreeWidget::item:selected, QListWidget::item:selected {
+    background-color: #3A72B5;
+    color: #FFFFFF;
+}
+QHeaderView::section {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #EBF0F6, stop:1 #DDEAF5);
+    color: #2B4A6E;
+    border: none;
+    border-right: 1px solid #C8D8E8;
+    border-bottom: 1px solid #C8D8E8;
+    padding: 5px 8px;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* ---- Tab Widgets ---- */
+QTabWidget::pane {
+    background-color: #FFFFFF;
+    border: 1px solid #C2D0E0;
+    border-radius: 0 4px 4px 4px;
+    top: -1px;
+}
+QTabBar::tab {
+    background-color: #D5E3F0;
+    color: #3A5878;
+    padding: 5px 13px;
+    border: 1px solid #BECFE6;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-right: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 48px;
+}
+QTabBar::tab:selected {
+    background-color: #3A72B5;
+    color: #FFFFFF;
+    border-color: #2A5C9E;
+}
+QTabBar::tab:hover:!selected {
+    background-color: #C0D5EC;
+    color: #1B2B40;
+}
+
+/* ---- Group Boxes ---- */
+QGroupBox {
+    font-size: 11px;
+    font-weight: 700;
+    color: #2A5090;
+    border: 1px solid #C2D4E6;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+    background-color: #FAFCFF;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+    background-color: #FAFCFF;
+    color: #2A5090;
+}
+
+/* ---- Buttons ---- */
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #4A82C4, stop:1 #2A5C9E);
+    color: #FFFFFF;
+    border: 1px solid #1D4A85;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    min-height: 24px;
+}
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #5A92D4, stop:1 #3A6CAE);
+}
+QPushButton:pressed {
+    background-color: #1D4A85;
+    border-color: #123060;
+}
+QPushButton:disabled {
+    background-color: #C8D8E8;
+    color: #8898A8;
+    border-color: #B8C8D8;
+}
+
+/* ---- Line Edits / Spin Boxes / Combos ---- */
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #BFCFDF;
+    border-radius: 3px;
+    padding: 3px 7px;
+    color: #1B2B40;
+    font-size: 12px;
+    min-height: 22px;
+    selection-background-color: #3A72B5;
+    selection-color: white;
+}
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {
+    border-color: #3A72B5;
+    background-color: #F0F7FF;
+}
+QComboBox::drop-down {
+    border: none;
+    padding-right: 5px;
+    width: 18px;
+}
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    border: 1px solid #BFCFDF;
+    selection-background-color: #3A72B5;
+    selection-color: white;
+    font-size: 12px;
+}
+QSpinBox::up-button, QDoubleSpinBox::up-button,
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    background-color: #E0EAF5;
+    border: none;
+    border-radius: 2px;
+    width: 16px;
+}
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover,
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {
+    background-color: #3A72B5;
+    color: white;
+}
+
+/* ---- Table Widgets ---- */
+QTableWidget, QTableView {
+    background-color: #FFFFFF;
+    alternate-background-color: #EFF5FC;
+    gridline-color: #D8E6F2;
+    border: 1px solid #C2D0E0;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #1B2B40;
+    selection-background-color: #3A72B5;
+    selection-color: white;
+}
+QTableWidget::item:hover, QTableView::item:hover {
+    background-color: #E5EFF8;
+}
+
+/* ---- Scroll Bars ---- */
+QScrollBar:vertical {
+    background-color: #EBF0F6;
+    width: 12px;
+    border-radius: 6px;
+    margin: 0;
+}
+QScrollBar::handle:vertical {
+    background-color: #AABFD6;
+    border-radius: 5px;
+    min-height: 28px;
+    margin: 2px;
+}
+QScrollBar::handle:vertical:hover { background-color: #3A72B5; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+QScrollBar:horizontal {
+    background-color: #EBF0F6;
+    height: 12px;
+    border-radius: 6px;
+    margin: 0;
+}
+QScrollBar::handle:horizontal {
+    background-color: #AABFD6;
+    border-radius: 5px;
+    min-width: 28px;
+    margin: 2px;
+}
+QScrollBar::handle:horizontal:hover { background-color: #3A72B5; }
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0; }
+
+/* ---- MDI Area ---- */
+QMdiArea {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop:0 #C8D8EC, stop:1 #B8CCDE);
+}
+QMdiSubWindow {
+    background-color: #FFFFFF;
+    border: 1px solid #A0BBCF;
+    border-radius: 3px;
+}
+QMdiSubWindow::title {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #4A82C4, stop:1 #2A5C9E);
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+/* ---- Plain Text Edit (Console) ---- */
+QPlainTextEdit {
+    background-color: #F5F9FE;
+    color: #1B2B40;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 11px;
+    border: none;
+    border-radius: 0;
+    selection-background-color: #3A72B5;
+}
+
+/* ---- Status Bar ---- */
+QStatusBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #2A5C9E, stop:1 #1D4A85);
+    color: #FFFFFF;
+    font-size: 11px;
+    border-top: 1px solid #1A3F78;
+    padding: 2px 6px;
+}
+QStatusBar::item { border: none; }
+QStatusBar QLabel {
+    color: #DDEEFF;
+    font-size: 11px;
+    padding: 0 8px;
+    border-right: 1px solid rgba(255,255,255,0.25);
+}
+
+/* ---- Progress Bar ---- */
+QProgressBar {
+    background-color: #DCE9F5;
+    border: 1px solid #BFCFDF;
+    border-radius: 4px;
+    text-align: center;
+    color: #1B2B40;
+    font-size: 11px;
+    font-weight: 600;
+    max-height: 16px;
+}
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #3A72B5, stop:1 #56A0E0);
+    border-radius: 3px;
+}
+
+/* ---- CheckBoxes / RadioButtons ---- */
+QCheckBox, QRadioButton {
+    font-size: 12px;
+    color: #1B2B40;
+    spacing: 5px;
+}
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 14px; height: 14px;
+    border: 1.5px solid #9BB0C6;
+    background-color: white;
+}
+QCheckBox::indicator { border-radius: 3px; }
+QRadioButton::indicator { border-radius: 7px; }
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #3A72B5;
+    border-color: #2A5C9E;
+}
+QCheckBox::indicator:hover, QRadioButton::indicator:hover {
+    border-color: #3A72B5;
+}
+
+/* ---- Sliders ---- */
+QSlider::groove:horizontal {
+    height: 4px;
+    background-color: #C2D4E6;
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    width: 14px; height: 14px;
+    background-color: #3A72B5;
+    border-radius: 7px;
+    margin: -5px 0;
+    border: 1px solid #2A5C9E;
+}
+QSlider::sub-page:horizontal { background-color: #3A72B5; border-radius: 2px; }
+
+/* ---- Labels ---- */
+QLabel {
+    color: #1B2B40;
+    font-size: 12px;
+}
+
+/* ---- Tool Tips ---- */
+QToolTip {
+    background-color: #1D3A5E;
+    color: #FFFFFF;
+    border: 1px solid #9BB8D5;
+    border-radius: 4px;
+    padding: 5px 9px;
+    font-size: 11px;
+}
+
+/* ---- Splitters ---- */
+QSplitter::handle {
+    background-color: #C2D0E0;
+}
+QSplitter::handle:horizontal { width: 4px; }
+QSplitter::handle:vertical { height: 4px; }
+QSplitter::handle:hover { background-color: #3A72B5; }
+
+/* ---- Frame ---- */
+QFrame[frameShape="4"], QFrame[frameShape="5"] {
+    color: #C2D0E0;
+}
+   </string>
+  </property>
+
+  <!-- ======================== CENTRAL WIDGET: MDI AREA ======================== -->
+  <widget class="QMdiArea" name="mdiArea">
+   <property name="viewMode">
+    <enum>QMdiArea::TabbedView</enum>
+   </property>
+   <property name="tabPosition">
+    <enum>QTabWidget::North</enum>
+   </property>
+   <property name="tabsClosable">
+    <bool>true</bool>
+   </property>
+   <property name="tabsMovable">
+    <bool>true</bool>
+   </property>
+   <property name="documentMode">
+    <bool>true</bool>
+   </property>
+  </widget>
+
+  <!-- ======================== MENU BAR ======================== -->
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1680</width><height>27</height></rect>
+   </property>
+
+   <!-- FILE -->
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>&amp;File</string></property>
+    <widget class="QMenu" name="menuImportData">
+     <property name="title"><string>Import Data</string></property>
+     <addaction name="actionImportLAS"/>
+     <addaction name="actionImportDLIS"/>
+     <addaction name="actionImportLIS"/>
+     <addaction name="separator"/>
+     <addaction name="actionImportASCII"/>
+     <addaction name="actionImportCSV"/>
+     <addaction name="actionImportExcel"/>
+     <addaction name="separator"/>
+     <addaction name="actionImportWITSML"/>
+     <addaction name="actionImportSEGY"/>
+     <addaction name="actionImportXML"/>
+     <addaction name="actionImportODM"/>
+    </widget>
+    <widget class="QMenu" name="menuExportData">
+     <property name="title"><string>Export Data</string></property>
+     <addaction name="actionExportLAS"/>
+     <addaction name="actionExportCSV"/>
+     <addaction name="actionExportExcel"/>
+     <addaction name="separator"/>
+     <addaction name="actionExportPDF"/>
+     <addaction name="actionExportImageFile"/>
+     <addaction name="actionExportDatabase"/>
+    </widget>
+    <widget class="QMenu" name="menuRecentProjects">
+     <property name="title"><string>Recent Projects</string></property>
+     <addaction name="actionRecent1"/>
+     <addaction name="actionRecent2"/>
+     <addaction name="actionRecent3"/>
+     <addaction name="separator"/>
+     <addaction name="actionClearRecent"/>
+    </widget>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionSaveProject"/>
+    <addaction name="actionSaveProjectAs"/>
+    <addaction name="separator"/>
+    <addaction name="menuImportData"/>
+    <addaction name="menuExportData"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="actionPrintPreview"/>
+    <addaction name="separator"/>
+    <addaction name="menuRecentProjects"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+
+   <!-- EDIT -->
+   <widget class="QMenu" name="menuEdit">
+    <property name="title"><string>&amp;Edit</string></property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+   </widget>
+
+   <!-- VIEW -->
+   <widget class="QMenu" name="menuView">
+    <property name="title"><string>&amp;View</string></property>
+    <widget class="QMenu" name="menuDepthScale">
+     <property name="title"><string>Depth Scale</string></property>
+     <addaction name="actionDepthMD"/>
+     <addaction name="actionDepthTVD"/>
+     <addaction name="actionDepthTVDSS"/>
+    </widget>
+    <widget class="QMenu" name="menuToolbarsToggle">
+     <property name="title"><string>Toolbars</string></property>
+     <addaction name="actionToggleMainToolbar"/>
+     <addaction name="actionToggleWellToolbar"/>
+     <addaction name="actionToggleAnalysisToolbar"/>
+    </widget>
+    <widget class="QMenu" name="menuPanelsToggle">
+     <property name="title"><string>Panels</string></property>
+     <addaction name="actionToggleBrowser"/>
+     <addaction name="actionToggleProperties"/>
+     <addaction name="actionToggleConsole"/>
+    </widget>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="actionZoomFit"/>
+    <addaction name="actionZoomReset"/>
+    <addaction name="separator"/>
+    <addaction name="menuDepthScale"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowGrid"/>
+    <addaction name="actionShowDepthLabels"/>
+    <addaction name="actionShowScaleBar"/>
+    <addaction name="separator"/>
+    <addaction name="menuToolbarsToggle"/>
+    <addaction name="menuPanelsToggle"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
+   </widget>
+
+   <!-- WELL -->
+   <widget class="QMenu" name="menuWell">
+    <property name="title"><string>&amp;Well</string></property>
+    <addaction name="actionAddWell"/>
+    <addaction name="actionWellProperties"/>
+    <addaction name="actionSetActiveWell"/>
+    <addaction name="separator"/>
+    <addaction name="actionWellTops"/>
+    <addaction name="actionWellTrajectory"/>
+    <addaction name="actionCasingCompletion"/>
+    <addaction name="separator"/>
+    <addaction name="actionCoreData"/>
+    <addaction name="actionDSTData"/>
+    <addaction name="actionFluidAnalysis"/>
+    <addaction name="separator"/>
+    <addaction name="actionMudLog"/>
+    <addaction name="separator"/>
+    <addaction name="actionDeleteWell"/>
+   </widget>
+
+   <!-- PLOT -->
+   <widget class="QMenu" name="menuPlot">
+    <property name="title"><string>&amp;Plot</string></property>
+    <addaction name="actionNewLogPlot"/>
+    <addaction name="actionNewCrossplot"/>
+    <addaction name="actionNewHistogram"/>
+    <addaction name="actionNewRoseDiagram"/>
+    <addaction name="actionNewTadpolePlot"/>
+    <addaction name="actionNewStarPlot"/>
+    <addaction name="actionNewPolarPlot"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddTrack"/>
+    <addaction name="actionRemoveTrack"/>
+    <addaction name="actionTrackProperties"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddCurve"/>
+    <addaction name="actionCurveProperties"/>
+    <addaction name="actionCurveFillOptions"/>
+    <addaction name="separator"/>
+    <addaction name="actionSavePlotTemplate"/>
+    <addaction name="actionLoadPlotTemplate"/>
+    <addaction name="actionManageTemplates"/>
+   </widget>
+
+   <!-- INTERPRETATION -->
+   <widget class="QMenu" name="menuInterpretation">
+    <property name="title"><string>&amp;Interpretation</string></property>
+    <addaction name="actionShaleVolume"/>
+    <addaction name="actionPorosityCalc"/>
+    <addaction name="actionWaterSaturation"/>
+    <addaction name="actionPermeability"/>
+    <addaction name="separator"/>
+    <addaction name="actionLithology"/>
+    <addaction name="actionRockTyping"/>
+    <addaction name="actionNetPay"/>
+    <addaction name="separator"/>
+    <addaction name="actionFluidSubstitution"/>
+    <addaction name="actionContactPicking"/>
+    <addaction name="separator"/>
+    <addaction name="actionZoneDefinition"/>
+    <addaction name="actionDepthShiftCorr"/>
+    <addaction name="actionSpliceCurves"/>
+    <addaction name="actionQualityControl"/>
+   </widget>
+
+   <!-- CALCULATION -->
+   <widget class="QMenu" name="menuCalculation">
+    <property name="title"><string>&amp;Calculation</string></property>
+    <addaction name="actionBasicArithmetic"/>
+    <addaction name="actionRockPhysicsModels"/>
+    <addaction name="actionFluidProperties"/>
+    <addaction name="separator"/>
+    <addaction name="actionFormulaEditor"/>
+    <addaction name="actionCustomFormula"/>
+    <addaction name="separator"/>
+    <addaction name="actionNMRCalc"/>
+    <addaction name="actionDielectricCalc"/>
+    <addaction name="actionThermalCalc"/>
+    <addaction name="separator"/>
+    <addaction name="actionBatchProcess"/>
+   </widget>
+
+   <!-- ADVANCED INTERPRETATION -->
+   <widget class="QMenu" name="menuAdvancedInterp">
+    <property name="title"><string>&amp;Advanced Interpretation</string></property>
+    <addaction name="actionAdvRockPhysics"/>
+    <addaction name="actionMultimineralAnalysis"/>
+    <addaction name="actionNMRAnalysis"/>
+    <addaction name="actionDielectricInterp"/>
+    <addaction name="separator"/>
+    <addaction name="actionPressureAnalysis"/>
+    <addaction name="actionTemperatureGradient"/>
+    <addaction name="actionFormationTesting"/>
+    <addaction name="separator"/>
+    <addaction name="actionSeismicPetro"/>
+    <addaction name="actionAVOAnalysis"/>
+   </widget>
+
+   <!-- IMAGE ANALYSIS -->
+   <widget class="QMenu" name="menuImageAnalysis">
+    <property name="title"><string>Image &amp;Analysis</string></property>
+    <addaction name="actionBoreholeImage"/>
+    <addaction name="actionFMIAnalysis"/>
+    <addaction name="actionDipAnalysis"/>
+    <addaction name="actionTadpoleDisplay"/>
+    <addaction name="separator"/>
+    <addaction name="actionStaticNormalization"/>
+    <addaction name="actionDynamicNormalization"/>
+    <addaction name="separator"/>
+    <addaction name="actionFractureDetection"/>
+    <addaction name="actionSedStructures"/>
+    <addaction name="actionStrikeAzimuth"/>
+   </widget>
+
+   <!-- GEOMECHANICS -->
+   <widget class="QMenu" name="menuGeomechanics">
+    <property name="title"><string>&amp;Geomechanics</string></property>
+    <addaction name="actionStressAnalysis"/>
+    <addaction name="actionWellboreStability"/>
+    <addaction name="actionFractureAnalysis"/>
+    <addaction name="actionPorePressure"/>
+    <addaction name="separator"/>
+    <addaction name="actionUCS"/>
+    <addaction name="actionYoungsModulus"/>
+    <addaction name="actionPoissonRatio"/>
+    <addaction name="actionBrittlenessIndex"/>
+    <addaction name="separator"/>
+    <addaction name="actionMudWeightWindow"/>
+   </widget>
+
+   <!-- MULTI-WELL -->
+   <widget class="QMenu" name="menuMultiWell">
+    <property name="title"><string>&amp;Multi-Well</string></property>
+    <addaction name="actionWellCorrelation"/>
+    <addaction name="actionCrossSection"/>
+    <addaction name="actionFenceSection"/>
+    <addaction name="separator"/>
+    <addaction name="actionStatisticalAnalysis"/>
+    <addaction name="actionWellComparison"/>
+    <addaction name="actionBasinAnalysis"/>
+    <addaction name="separator"/>
+    <addaction name="actionVolumetricsCalc"/>
+   </widget>
+
+   <!-- TOOLS -->
+   <widget class="QMenu" name="menuTools">
+    <property name="title"><string>&amp;Tools</string></property>
+    <addaction name="actionUnitConverter"/>
+    <addaction name="actionFormulaEditorTool"/>
+    <addaction name="actionTemplateManager"/>
+    <addaction name="actionDatabaseManager"/>
+    <addaction name="separator"/>
+    <addaction name="actionCurveSmoother"/>
+    <addaction name="actionDepthShiftTool"/>
+    <addaction name="actionOutlierDetection"/>
+    <addaction name="actionDeSpikeTool"/>
+    <addaction name="separator"/>
+    <addaction name="actionPythonConsole"/>
+    <addaction name="actionMacroRecorder"/>
+    <addaction name="separator"/>
+    <addaction name="actionPluginManager"/>
+   </widget>
+
+   <!-- WINDOW -->
+   <widget class="QMenu" name="menuWindow">
+    <property name="title"><string>&amp;Window</string></property>
+    <addaction name="actionTileWindows"/>
+    <addaction name="actionCascadeWindows"/>
+    <addaction name="actionCloseAllWindows"/>
+    <addaction name="separator"/>
+    <addaction name="actionNextWindow"/>
+    <addaction name="actionPrevWindow"/>
+   </widget>
+
+   <!-- HELP -->
+   <widget class="QMenu" name="menuHelp">
+    <property name="title"><string>&amp;Help</string></property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionTutorials"/>
+    <addaction name="actionVideoGuides"/>
+    <addaction name="separator"/>
+    <addaction name="actionKeyboardShortcuts"/>
+    <addaction name="separator"/>
+    <addaction name="actionLicenseManager"/>
+    <addaction name="actionCheckUpdates"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
+
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuWell"/>
+   <addaction name="menuPlot"/>
+   <addaction name="menuInterpretation"/>
+   <addaction name="menuCalculation"/>
+   <addaction name="menuAdvancedInterp"/>
+   <addaction name="menuImageAnalysis"/>
+   <addaction name="menuGeomechanics"/>
+   <addaction name="menuMultiWell"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuHelp"/>
+  </widget>
+
+  <!-- ======================== TOOLBAR 1: MAIN ======================== -->
+  <widget class="QToolBar" name="toolBarMain">
+   <property name="windowTitle"><string>Main Toolbar</string></property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="iconSize">
+    <size><width>22</width><height>22</height></size>
+   </property>
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <attribute name="toolBarBreak"><bool>false</bool></attribute>
+   <addaction name="actionNewProject"/>
+   <addaction name="actionOpenProject"/>
+   <addaction name="actionSaveProject"/>
+   <addaction name="separator"/>
+   <addaction name="actionImportLAS"/>
+   <addaction name="actionExportPDF"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrint"/>
+  </widget>
+
+  <!-- ======================== TOOLBAR 2: WELL DISPLAY ======================== -->
+  <widget class="QToolBar" name="toolBarWellDisplay">
+   <property name="windowTitle"><string>Well Display Toolbar</string></property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="iconSize">
+    <size><width>22</width><height>22</height></size>
+   </property>
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <attribute name="toolBarBreak"><bool>false</bool></attribute>
+   <!-- Well Selector inline widget -->
+   <widget class="QWidget" name="widgetWellSelector">
+    <layout class="QHBoxLayout" name="layoutWellSel">
+     <property name="spacing"><number>4</number></property>
+     <property name="contentsMargins"><rect><x>2</x><y>0</y><x>2</x><y>0</y></rect></property>
+     <item>
+      <widget class="QLabel" name="lblWellSel">
+       <property name="text"><string>Well:</string></property>
+       <property name="styleSheet"><string>QLabel{font-weight:600;font-size:11px;color:#1B2B40;}</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboActiveWell">
+       <property name="minimumWidth"><number>130</number></property>
+       <property name="toolTip"><string>Select active well</string></property>
+       <item><property name="text"><string>CHr-1</string></property></item>
+       <item><property name="text"><string>Tau-1</string></property></item>
+       <item><property name="text"><string>Experior</string></property></item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <addaction name="separator"/>
+   <addaction name="actionAddTrack"/>
+   <addaction name="actionRemoveTrack"/>
+   <addaction name="actionAddCurve"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoomIn"/>
+   <addaction name="actionZoomOut"/>
+   <addaction name="actionZoomFit"/>
+   <addaction name="actionZoomReset"/>
+   <addaction name="separator"/>
+   <addaction name="actionToolSelect"/>
+   <addaction name="actionToolPan"/>
+   <addaction name="actionToolMeasure"/>
+   <addaction name="actionToolPick"/>
+   <addaction name="separator"/>
+   <!-- Depth scale inline widget -->
+   <widget class="QWidget" name="widgetDepthScale">
+    <layout class="QHBoxLayout" name="layoutDepth">
+     <property name="spacing"><number>4</number></property>
+     <property name="contentsMargins"><rect><x>2</x><y>0</y><x>2</x><y>0</y></rect></property>
+     <item>
+      <widget class="QLabel" name="lblDepth">
+       <property name="text"><string>Scale:</string></property>
+       <property name="styleSheet"><string>QLabel{font-weight:600;font-size:11px;color:#1B2B40;}</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboDepthMode">
+       <property name="minimumWidth"><number>90</number></property>
+       <property name="toolTip"><string>Depth reference system</string></property>
+       <item><property name="text"><string>MD (ft)</string></property></item>
+       <item><property name="text"><string>MD (m)</string></property></item>
+       <item><property name="text"><string>TVD (ft)</string></property></item>
+       <item><property name="text"><string>TVD (m)</string></property></item>
+       <item><property name="text"><string>TVDSS (ft)</string></property></item>
+       <item><property name="text"><string>TVDSS (m)</string></property></item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboPlotScale">
+       <property name="minimumWidth"><number>80</number></property>
+       <property name="toolTip"><string>Plot scale</string></property>
+       <item><property name="text"><string>1 : 100</string></property></item>
+       <item><property name="text"><string>1 : 200</string></property></item>
+       <item><property name="text"><string>1 : 500</string></property></item>
+       <item><property name="text"><string>1 : 1000</string></property></item>
+       <item><property name="text"><string>Fit</string></property></item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <addaction name="separator"/>
+   <addaction name="actionShowGrid"/>
+  </widget>
+
+  <!-- ======================== TOOLBAR 3: ANALYSIS ======================== -->
+  <widget class="QToolBar" name="toolBarAnalysis">
+   <property name="windowTitle"><string>Analysis &amp; Interpretation Toolbar</string></property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="iconSize">
+    <size><width>20</width><height>20</height></size>
+   </property>
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <attribute name="toolBarBreak"><bool>true</bool></attribute>
+   <addaction name="actionShaleVolume"/>
+   <addaction name="actionPorosityCalc"/>
+   <addaction name="actionWaterSaturation"/>
+   <addaction name="actionPermeability"/>
+   <addaction name="actionNetPay"/>
+   <addaction name="separator"/>
+   <addaction name="actionNewLogPlot"/>
+   <addaction name="actionNewCrossplot"/>
+   <addaction name="actionNewHistogram"/>
+   <addaction name="actionNewRoseDiagram"/>
+   <addaction name="separator"/>
+   <addaction name="actionWellCorrelation"/>
+   <addaction name="actionMultimineralAnalysis"/>
+   <addaction name="separator"/>
+   <addaction name="actionFMIAnalysis"/>
+   <addaction name="actionWellboreStability"/>
+   <addaction name="actionPorePressure"/>
+  </widget>
+
+  <!-- ======================== LEFT DOCK: PROJECT BROWSER ======================== -->
+  <widget class="QDockWidget" name="dockBrowser">
+   <property name="windowTitle"><string>  Project Browser</string></property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetClosable</set>
+   </property>
+   <property name="minimumWidth"><number>240</number></property>
+   <attribute name="dockWidgetArea"><number>1</number></attribute>
+   <widget class="QWidget" name="dockBrowserContents">
+    <layout class="QVBoxLayout" name="layoutBrowser">
+     <property name="spacing"><number>5</number></property>
+     <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+     <!-- Search -->
+     <item>
+      <widget class="QLineEdit" name="lineEditBrowserSearch">
+       <property name="placeholderText"><string>Search wells, curves, tops...</string></property>
+       <property name="clearButtonEnabled"><bool>true</bool></property>
+       <property name="toolTip"><string>Filter project tree items</string></property>
+      </widget>
+     </item>
+     <!-- Tab Widget -->
+     <item>
+      <widget class="QTabWidget" name="tabBrowser">
+       <property name="tabPosition"><enum>QTabWidget::North</enum></property>
+       <property name="documentMode"><bool>false</bool></property>
+
+       <!-- PROJECT TAB -->
+       <widget class="QWidget" name="tabProject">
+        <attribute name="title"><string>Project</string></attribute>
+        <layout class="QVBoxLayout" name="layoutProject">
+         <property name="spacing"><number>4</number></property>
+         <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>2</y></rect></property>
+         <item>
+          <widget class="QTreeWidget" name="treeProject">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="animated"><bool>true</bool></property>
+           <property name="uniformRowHeights"><bool>false</bool></property>
+           <property name="contextMenuPolicy"><enum>Qt::CustomContextMenu</enum></property>
+           <property name="selectionMode"><enum>QAbstractItemView::ExtendedSelection</enum></property>
+           <column><property name="text"><string>Item</string></property></column>
+           <column><property name="text"><string>Info</string></property></column>
+           
+           <item>
+            <property name="text">
+             <string>SandboxMay2016</string>
+            </property>
+            <property name="text">
+             <string>[Project]</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Wells</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>CHr-1 [Active]</string>
+              </property>
+              <property name="text">
+               <string>Vertical</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Well Logs (14)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Well Tops (6)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Trajectory</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Core Data</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>DST Data</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Completion</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tau-1</string>
+              </property>
+              <property name="text">
+               <string>Vertical</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Well Logs (12)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Well Tops (5)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Trajectory</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Experior</string>
+              </property>
+              <property name="text">
+               <string>Deviated</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Well Logs (18)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Well Tops (8)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Trajectory</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Core Data</string>
+               </property>
+              </item>
+             </item>
+            </item>
+            <item>
+             <property name="text">
+              <string>Log Plots</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>Default Plot</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Triple Combo</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sand-Silt-Malay</string>
+              </property>
+             </item>
+            </item>
+            <item>
+             <property name="text">
+              <string>Crossplots</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>TNPH / RHOB Xplot</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>DT / RHOB Xplot</string>
+              </property>
+             </item>
+            </item>
+            <item>
+             <property name="text">
+              <string>Histograms</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>SGR (API)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>PHIE Distribution</string>
+              </property>
+             </item>
+            </item>
+            <item>
+             <property name="text">
+              <string>Cross Sections</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>X-Section 1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Fence A-B</string>
+              </property>
+             </item>
+            </item>
+            <item>
+             <property name="text">
+              <string>Horizons &amp; Tops</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Templates</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>Standard Triple Combo</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Formation Evaluation</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Geomechanics Suite</string>
+              </property>
+             </item>
+            </item>
+           </item>
+          </widget>
+         </item>
+         <!-- Browser Buttons -->
+         <item>
+          <layout class="QHBoxLayout" name="layoutBrowserBtns">
+           <item>
+            <widget class="QPushButton" name="btnBrowseAddWell">
+             <property name="text"><string>+ Well</string></property>
+             <property name="toolTip"><string>Add new well to project</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseImport">
+             <property name="text"><string>Import</string></property>
+             <property name="toolTip"><string>Import data file</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseRefresh">
+             <property name="text"><string>Refresh</string></property>
+             <property name="toolTip"><string>Refresh tree view</string></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- CURVES TAB -->
+       <widget class="QWidget" name="tabCurves">
+        <attribute name="title"><string>Curves</string></attribute>
+        <layout class="QVBoxLayout" name="layoutCurves">
+         <property name="spacing"><number>4</number></property>
+         <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>2</y></rect></property>
+         <item>
+          <layout class="QHBoxLayout" name="layoutCurveHeader">
+           <item>
+            <widget class="QLabel" name="lblCurveWellSel">
+             <property name="text"><string>Well:</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboCurveWell">
+             <item><property name="text"><string>CHr-1</string></property></item>
+             <item><property name="text"><string>Tau-1</string></property></item>
+             <item><property name="text"><string>Experior</string></property></item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTreeWidget" name="treeCurves">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="contextMenuPolicy"><enum>Qt::CustomContextMenu</enum></property>
+           <column><property name="text"><string>Curve</string></property></column>
+           <column><property name="text"><string>Unit</string></property></column>
+           <column><property name="text"><string>Type</string></property></column>
+           <item>
+            <property name="text">
+             <string>Raw Logs</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>GR</string>
+             </property>
+             <property name="text">
+              <string>gAPI</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>SP</string>
+             </property>
+             <property name="text">
+              <string>mV</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>CALI</string>
+             </property>
+             <property name="text">
+              <string>in</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>RHOB</string>
+             </property>
+             <property name="text">
+              <string>g/cc</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>DRHO</string>
+             </property>
+             <property name="text">
+              <string>g/cc</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>NPHI</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>DT</string>
+             </property>
+             <property name="text">
+              <string>us/ft</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>LLD</string>
+             </property>
+             <property name="text">
+              <string>ohm.m</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>LLS</string>
+             </property>
+             <property name="text">
+              <string>ohm.m</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>MSFL</string>
+             </property>
+             <property name="text">
+              <string>ohm.m</string>
+             </property>
+             <property name="text">
+              <string>Raw</string>
+             </property>
+            </item>
+           </item>
+           <item>
+            <property name="text">
+             <string>Computed Logs</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>VSH</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PHIT</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PHIE</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>SW</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>SXO</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PERM</string>
+             </property>
+             <property name="text">
+              <string>mD</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>VWCL</string>
+             </property>
+             <property name="text">
+              <string>v/v</string>
+             </property>
+             <property name="text">
+              <string>Computed</string>
+             </property>
+            </item>
+           </item>
+           <item>
+            <property name="text">
+             <string>Flags</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Rock_Flag</string>
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="text">
+              <string>Flag</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pay_Flag</string>
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="text">
+              <string>Flag</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Net_Flag</string>
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="text">
+              <string>Flag</string>
+             </property>
+            </item>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="layoutCurveBtns">
+           <item><widget class="QPushButton" name="btnAddCurveFromBrowser"><property name="text"><string>+ Add</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnDeleteCurve"><property name="text"><string>Delete</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnCurveInfo"><property name="text"><string>Details</string></property></widget></item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- ZONES TAB -->
+       <widget class="QWidget" name="tabZones">
+        <attribute name="title"><string>Zones</string></attribute>
+        <layout class="QVBoxLayout" name="layoutZonesTab">
+         <property name="spacing"><number>4</number></property>
+         <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>2</y></rect></property>
+         <item>
+          <layout class="QHBoxLayout" name="layoutZoneHeader">
+           <item><widget class="QLabel" name="lblZoneWellSel"><property name="text"><string>Well:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboZoneWell">
+             <item><property name="text"><string>CHr-1</string></property></item>
+             <item><property name="text"><string>Tau-1</string></property></item>
+             <item><property name="text"><string>Experior</string></property></item>
+             <item><property name="text"><string>All Wells</string></property></item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="tableZones">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+           <property name="contextMenuPolicy"><enum>Qt::CustomContextMenu</enum></property>
+           <property name="rowCount"><number>6</number></property>
+           <property name="columnCount"><number>5</number></property>
+           <column><property name="text"><string>Zone Name</string></property></column>
+           <column><property name="text"><string>Top (ft)</string></property></column>
+           <column><property name="text"><string>Base (ft)</string></property></column>
+           <column><property name="text"><string>Thickness</string></property></column>
+           <column><property name="text"><string>Color</string></property></column>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="layoutZoneBtns">
+           <item><widget class="QPushButton" name="btnAddZone"><property name="text"><string>+ Zone</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnEditZone"><property name="text"><string>Edit</string></property></widget></item>
+           <item><widget class="QPushButton" name="btnDeleteZone"><property name="text"><string>Delete</string></property></widget></item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+
+  <!-- ======================== RIGHT DOCK: PROPERTIES ======================== -->
+  <widget class="QDockWidget" name="dockProperties">
+   <property name="windowTitle"><string>  Properties</string></property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetClosable</set>
+   </property>
+   <property name="minimumWidth"><number>240</number></property>
+   <attribute name="dockWidgetArea"><number>2</number></attribute>
+   <widget class="QWidget" name="dockPropertiesContents">
+    <layout class="QVBoxLayout" name="layoutPropertiesMain">
+     <property name="spacing"><number>4</number></property>
+     <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+     <item>
+      <widget class="QTabWidget" name="tabProperties">
+       <property name="tabPosition"><enum>QTabWidget::North</enum></property>
+
+       <!-- TRACK PROPERTIES -->
+       <widget class="QWidget" name="tabTrackProps">
+        <attribute name="title"><string>Track</string></attribute>
+        <layout class="QVBoxLayout" name="layoutTrackProps">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+         <item>
+          <widget class="QGroupBox" name="groupTrackGeneral">
+           <property name="title"><string>Track Settings</string></property>
+           <layout class="QFormLayout" name="formTrackGeneral">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblTrackName"><property name="text"><string>Track Name:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QLineEdit" name="lineEditTrackName"><property name="text"><string>Track 1</string></property></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblTrackWidth"><property name="text"><string>Width (px):</string></property></widget></item>
+            <item row="1" column="1"><widget class="QSpinBox" name="spinTrackWidth"><property name="minimum"><number>20</number></property><property name="maximum"><number>600</number></property><property name="value"><number>120</number></property></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblTrackBg"><property name="text"><string>Background:</string></property></widget></item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboTrackBg">
+              <item><property name="text"><string>White</string></property></item>
+              <item><property name="text"><string>Light Gray</string></property></item>
+              <item><property name="text"><string>Light Yellow</string></property></item>
+              <item><property name="text"><string>Light Blue</string></property></item>
+              <item><property name="text"><string>Custom...</string></property></item>
+             </widget>
+            </item>
+            <item row="3" column="0"><widget class="QLabel" name="lblTrackGrid"><property name="text"><string>Grid Lines:</string></property></widget></item>
+            <item row="3" column="1"><widget class="QCheckBox" name="checkTrackGrid"><property name="text"><string>Show Grid</string></property><property name="checked"><bool>true</bool></property></widget></item>
+            <item row="4" column="0"><widget class="QLabel" name="lblTrackDepthLabel"><property name="text"><string>Depth Labels:</string></property></widget></item>
+            <item row="4" column="1"><widget class="QCheckBox" name="checkTrackDepthLabel"><property name="text"><string>Show Labels</string></property><property name="checked"><bool>true</bool></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupTrackScale">
+           <property name="title"><string>Scale Settings</string></property>
+           <layout class="QFormLayout" name="formTrackScale">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblScaleType"><property name="text"><string>Scale Type:</string></property></widget></item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboScaleType">
+              <item><property name="text"><string>Linear</string></property></item>
+              <item><property name="text"><string>Logarithmic</string></property></item>
+             </widget>
+            </item>
+            <item row="1" column="0"><widget class="QLabel" name="lblScaleLeft"><property name="text"><string>Left Value:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinScaleLeft"><property name="decimals"><number>2</number></property><property name="minimum"><double>-9999.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>0.0</double></property></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblScaleRight"><property name="text"><string>Right Value:</string></property></widget></item>
+            <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinScaleRight"><property name="decimals"><number>2</number></property><property name="minimum"><double>-9999.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>150.0</double></property></widget></item>
+            <item row="3" column="0"><widget class="QLabel" name="lblGridDivs"><property name="text"><string>Divisions:</string></property></widget></item>
+            <item row="3" column="1"><widget class="QSpinBox" name="spinGridDivs"><property name="minimum"><number>1</number></property><property name="maximum"><number>20</number></property><property name="value"><number>5</number></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnApplyTrack">
+           <property name="text"><string>Apply Track Settings</string></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- CURVE PROPERTIES -->
+       <widget class="QWidget" name="tabCurveProps">
+        <attribute name="title"><string>Curve</string></attribute>
+        <layout class="QVBoxLayout" name="layoutCurveProps">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+         <item>
+          <widget class="QGroupBox" name="groupCurveIdent">
+           <property name="title"><string>Curve Identification</string></property>
+           <layout class="QFormLayout" name="formCurveIdent">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblCurveSel"><property name="text"><string>Curve:</string></property></widget></item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboCurveSelect">
+              <item><property name="text"><string>GR</string></property></item>
+              <item><property name="text"><string>SP</string></property></item>
+              <item><property name="text"><string>CALI</string></property></item>
+              <item><property name="text"><string>RHOB</string></property></item>
+              <item><property name="text"><string>NPHI</string></property></item>
+              <item><property name="text"><string>LLD</string></property></item>
+              <item><property name="text"><string>DT</string></property></item>
+              <item><property name="text"><string>VSH</string></property></item>
+              <item><property name="text"><string>PHIE</string></property></item>
+              <item><property name="text"><string>SW</string></property></item>
+              <item><property name="text"><string>PERM</string></property></item>
+             </widget>
+            </item>
+            <item row="1" column="0"><widget class="QLabel" name="lblCurveAlias"><property name="text"><string>Display Name:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QLineEdit" name="lineEditCurveAlias"></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblCurveUnits"><property name="text"><string>Units:</string></property></widget></item>
+            <item row="2" column="1"><widget class="QLineEdit" name="lineEditCurveUnits"><property name="text"><string>gAPI</string></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupCurveVis">
+           <property name="title"><string>Display Style</string></property>
+           <layout class="QFormLayout" name="formCurveVis">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblLineColor"><property name="text"><string>Line Color:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QPushButton" name="btnLineColor"><property name="text"><string>  Choose Color...</string></property></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblLineWidth"><property name="text"><string>Line Width:</string></property></widget></item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="spinLineWidth">
+              <property name="minimum"><number>1</number></property>
+              <property name="maximum"><number>8</number></property>
+              <property name="value"><number>1</number></property>
+             </widget>
+            </item>
+            <item row="2" column="0"><widget class="QLabel" name="lblLineStyle"><property name="text"><string>Line Style:</string></property></widget></item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboLineStyle">
+              <item><property name="text"><string>Solid</string></property></item>
+              <item><property name="text"><string>Dashed</string></property></item>
+              <item><property name="text"><string>Dotted</string></property></item>
+              <item><property name="text"><string>Dot-Dash</string></property></item>
+             </widget>
+            </item>
+            <item row="3" column="0"><widget class="QLabel" name="lblFillType"><property name="text"><string>Fill Type:</string></property></widget></item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="comboFillType">
+              <item><property name="text"><string>None</string></property></item>
+              <item><property name="text"><string>Left Solid</string></property></item>
+              <item><property name="text"><string>Right Solid</string></property></item>
+              <item><property name="text"><string>Color Fill</string></property></item>
+              <item><property name="text"><string>Dual Fill</string></property></item>
+             </widget>
+            </item>
+            <item row="4" column="0"><widget class="QLabel" name="lblFillColor"><property name="text"><string>Fill Color:</string></property></widget></item>
+            <item row="4" column="1"><widget class="QPushButton" name="btnFillColor"><property name="text"><string>  Choose Color...</string></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupCurveRange">
+           <property name="title"><string>Scale Range</string></property>
+           <layout class="QFormLayout" name="formCurveRange">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblCurveMin"><property name="text"><string>Min:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinCurveMin"><property name="decimals"><number>3</number></property><property name="minimum"><double>-99999.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>0.0</double></property></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblCurveMax"><property name="text"><string>Max:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinCurveMax"><property name="decimals"><number>3</number></property><property name="minimum"><double>-99999.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>150.0</double></property></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblCurveWrap"><property name="text"><string>Wrapping:</string></property></widget></item>
+            <item row="2" column="1"><widget class="QCheckBox" name="checkCurveWrap"><property name="text"><string>Enable Wrap</string></property></widget></item>
+            <item row="3" column="0"><widget class="QLabel" name="lblCurveClip"><property name="text"><string>Clip:</string></property></widget></item>
+            <item row="3" column="1"><widget class="QCheckBox" name="checkCurveClip"><property name="text"><string>Clip to Range</string></property><property name="checked"><bool>true</bool></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnApplyCurve">
+           <property name="text"><string>Apply Curve Settings</string></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- NET PAY / ZONE CRITERIA -->
+       <widget class="QWidget" name="tabZoneCriteria">
+        <attribute name="title"><string>Net Pay</string></attribute>
+        <layout class="QVBoxLayout" name="layoutZoneCriteria">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+         <item>
+          <widget class="QGroupBox" name="groupGrossCriteria">
+           <property name="title"><string>Gross Rock Criteria</string></property>
+           <layout class="QFormLayout" name="formGross">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblVshCutoff"><property name="text"><string>Vsh Cutoff:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinVshCutoff"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="singleStep"><double>0.05</double></property><property name="value"><double>0.4</double></property></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblVshCurve"><property name="text"><string>Vsh Curve:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QComboBox" name="comboVshCurve"><item><property name="text"><string>VSH</string></property></item><item><property name="text"><string>VWCL</string></property></item></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupNetCriteria">
+           <property name="title"><string>Net Reservoir Criteria</string></property>
+           <layout class="QFormLayout" name="formNet">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblPhiCutoff"><property name="text"><string>Phi Cutoff:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinPhiCutoff"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="singleStep"><double>0.01</double></property><property name="value"><double>0.05</double></property></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblPhiCurve"><property name="text"><string>Phi Curve:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QComboBox" name="comboPhiCurve"><item><property name="text"><string>PHIE</string></property></item><item><property name="text"><string>PHIT</string></property></item></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblPermCutoff"><property name="text"><string>Perm Cutoff (mD):</string></property></widget></item>
+            <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPermCutoff"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>10000.0</double></property><property name="singleStep"><double>0.1</double></property><property name="value"><double>0.1</double></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupPayCriteria">
+           <property name="title"><string>Net Pay Criteria</string></property>
+           <layout class="QFormLayout" name="formPay">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblSwCutoff"><property name="text"><string>Sw Cutoff:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinSwCutoff"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="singleStep"><double>0.05</double></property><property name="value"><double>0.65</double></property></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblSwCurve"><property name="text"><string>Sw Curve:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QComboBox" name="comboSwCurve"><item><property name="text"><string>SW</string></property></item><item><property name="text"><string>SXO</string></property></item></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblBVWCutoff"><property name="text"><string>BVW Cutoff:</string></property></widget></item>
+            <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinBVWCutoff"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="singleStep"><double>0.01</double></property><property name="value"><double>0.04</double></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnCalculateNetPay">
+           <property name="text"><string>Calculate Net Pay</string></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- WELL INFO -->
+       <widget class="QWidget" name="tabWellInfo">
+        <attribute name="title"><string>Well Info</string></attribute>
+        <layout class="QVBoxLayout" name="layoutWellInfo">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+         <item>
+          <widget class="QGroupBox" name="groupWellID">
+           <property name="title"><string>Well Identification</string></property>
+           <layout class="QFormLayout" name="formWellID">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblWellNameProp"><property name="text"><string>Well Name:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QLineEdit" name="lineEditWellName"></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblWellAPI"><property name="text"><string>API / UWI:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QLineEdit" name="lineEditWellAPI"></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblField"><property name="text"><string>Field:</string></property></widget></item>
+            <item row="2" column="1"><widget class="QLineEdit" name="lineEditField"></widget></item>
+            <item row="3" column="0"><widget class="QLabel" name="lblOperator"><property name="text"><string>Operator:</string></property></widget></item>
+            <item row="3" column="1"><widget class="QLineEdit" name="lineEditOperator"></widget></item>
+            <item row="4" column="0"><widget class="QLabel" name="lblSpudDate"><property name="text"><string>Spud Date:</string></property></widget></item>
+            <item row="4" column="1"><widget class="QLineEdit" name="lineEditSpudDate"></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupWellGeom">
+           <property name="title"><string>Geometry &amp; Location</string></property>
+           <layout class="QFormLayout" name="formWellGeom">
+            <property name="verticalSpacing"><number>6</number></property>
+            <item row="0" column="0"><widget class="QLabel" name="lblLatitude"><property name="text"><string>Latitude:</string></property></widget></item>
+            <item row="0" column="1"><widget class="QLineEdit" name="lineEditLatitude"></widget></item>
+            <item row="1" column="0"><widget class="QLabel" name="lblLongitude"><property name="text"><string>Longitude:</string></property></widget></item>
+            <item row="1" column="1"><widget class="QLineEdit" name="lineEditLongitude"></widget></item>
+            <item row="2" column="0"><widget class="QLabel" name="lblKB"><property name="text"><string>KB Elevation (ft):</string></property></widget></item>
+            <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinKB"><property name="decimals"><number>2</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property></widget></item>
+            <item row="3" column="0"><widget class="QLabel" name="lblTD"><property name="text"><string>TD (ft):</string></property></widget></item>
+            <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinTD"><property name="decimals"><number>2</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property></widget></item>
+            <item row="4" column="0"><widget class="QLabel" name="lblWellType"><property name="text"><string>Well Type:</string></property></widget></item>
+            <item row="4" column="1">
+             <widget class="QComboBox" name="comboWellType">
+              <item><property name="text"><string>Vertical</string></property></item>
+              <item><property name="text"><string>Deviated</string></property></item>
+              <item><property name="text"><string>Horizontal</string></property></item>
+              <item><property name="text"><string>S-Shaped</string></property></item>
+              <item><property name="text"><string>Multilateral</string></property></item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnSaveWellInfo">
+           <property name="text"><string>Save Well Information</string></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+
+  <!-- ======================== BOTTOM DOCK: CONSOLE ======================== -->
+  <widget class="QDockWidget" name="dockConsole">
+   <property name="windowTitle"><string>  Output Console, Statistics &amp; Data</string></property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetClosable</set>
+   </property>
+   <attribute name="dockWidgetArea"><number>8</number></attribute>
+   <widget class="QWidget" name="dockConsoleContents">
+    <layout class="QVBoxLayout" name="layoutConsoleMain">
+     <property name="spacing"><number>0</number></property>
+     <property name="contentsMargins"><rect><x>2</x><y>2</y><x>2</x><y>2</y></rect></property>
+     <item>
+      <widget class="QTabWidget" name="tabConsole">
+       <property name="tabPosition"><enum>QTabWidget::North</enum></property>
+
+       <!-- MESSAGES -->
+       <widget class="QWidget" name="tabMessages">
+        <attribute name="title"><string>Messages</string></attribute>
+        <layout class="QVBoxLayout" name="layoutMessages">
+         <property name="spacing"><number>4</number></property>
+         <property name="contentsMargins"><rect><x>3</x><y>3</y><x>3</x><y>3</y></rect></property>
+         <item>
+          <layout class="QHBoxLayout" name="layoutMsgFilter">
+           <item><widget class="QCheckBox" name="checkMsgInfo"><property name="text"><string>INFO</string></property><property name="checked"><bool>true</bool></property></widget></item>
+           <item><widget class="QCheckBox" name="checkMsgWarn"><property name="text"><string>WARN</string></property><property name="checked"><bool>true</bool></property></widget></item>
+           <item><widget class="QCheckBox" name="checkMsgError"><property name="text"><string>ERROR</string></property><property name="checked"><bool>true</bool></property></widget></item>
+           <item>
+            <spacer name="spacerMsgFilter">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+            </spacer>
+           </item>
+           <item><widget class="QPushButton" name="btnClearLog"><property name="text"><string>Clear</string></property><property name="maximumWidth"><number>65</number></property></widget></item>
+           <item><widget class="QPushButton" name="btnSaveLog"><property name="text"><string>Save Log</string></property><property name="maximumWidth"><number>75</number></property></widget></item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="textEditMessages">
+           <property name="readOnly"><bool>true</bool></property>
+           <property name="lineWrapMode"><enum>QPlainTextEdit::NoWrap</enum></property>
+           <property name="plainText"><string>[INFO]  PetroAnalyst Pro v1.0 initialized successfully.
+[INFO]  Project loaded: SandboxMay2016
+[INFO]  Wells loaded: CHr-1 (14 curves), Tau-1 (12 curves), Experior (18 curves)
+[INFO]  LAS files imported from: D:\SandboxMay2016\
+[INFO]  Core data loaded for CHr-1, Experior
+[INFO]  Ready. Welcome to PetroAnalyst Pro.</string></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- STATISTICS -->
+       <widget class="QWidget" name="tabStatistics">
+        <attribute name="title"><string>Statistics</string></attribute>
+        <layout class="QVBoxLayout" name="layoutStatistics">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>3</x><y>4</y><x>3</x><y>3</y></rect></property>
+         <item>
+          <layout class="QHBoxLayout" name="layoutStatsControls">
+           <item><widget class="QLabel" name="lblStatWell"><property name="text"><string>Well:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboStatWell">
+             <item><property name="text"><string>CHr-1</string></property></item>
+             <item><property name="text"><string>Tau-1</string></property></item>
+             <item><property name="text"><string>Experior</string></property></item>
+             <item><property name="text"><string>All Wells</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QLabel" name="lblStatCurve"><property name="text"><string>Curve:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboStatCurve">
+             <item><property name="text"><string>GR</string></property></item>
+             <item><property name="text"><string>RHOB</string></property></item>
+             <item><property name="text"><string>NPHI</string></property></item>
+             <item><property name="text"><string>PHIE</string></property></item>
+             <item><property name="text"><string>SW</string></property></item>
+             <item><property name="text"><string>PERM</string></property></item>
+             <item><property name="text"><string>VSH</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QLabel" name="lblStatZone"><property name="text"><string>Zone:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboStatZone">
+             <item><property name="text"><string>Whole Well</string></property></item>
+             <item><property name="text"><string>Zone 1</string></property></item>
+             <item><property name="text"><string>Zone 2</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QPushButton" name="btnCalcStats"><property name="text"><string>Calculate</string></property><property name="maximumWidth"><number>85</number></property></widget></item>
+           <item>
+            <spacer name="spacerStats">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="tableStatistics">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+           <property name="rowCount"><number>10</number></property>
+           <property name="columnCount"><number>4</number></property>
+           <column><property name="text"><string>Statistic</string></property></column>
+           <column><property name="text"><string>All Data</string></property></column>
+           <column><property name="text"><string>Reservoir</string></property></column>
+           <column><property name="text"><string>Unit</string></property></column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- DATA TABLE -->
+       <widget class="QWidget" name="tabDataTable">
+        <attribute name="title"><string>Data Table</string></attribute>
+        <layout class="QVBoxLayout" name="layoutDataTable">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>3</x><y>4</y><x>3</x><y>3</y></rect></property>
+         <item>
+          <layout class="QHBoxLayout" name="layoutDataTableControls">
+           <item><widget class="QLabel" name="lblDTWell"><property name="text"><string>Well:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboDTWell">
+             <item><property name="text"><string>CHr-1</string></property></item>
+             <item><property name="text"><string>Tau-1</string></property></item>
+             <item><property name="text"><string>Experior</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QLabel" name="lblDTFrom"><property name="text"><string>From (ft):</string></property></widget></item>
+           <item><widget class="QDoubleSpinBox" name="spinDTFrom"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>3000.0</double></property></widget></item>
+           <item><widget class="QLabel" name="lblDTTo"><property name="text"><string>To (ft):</string></property></widget></item>
+           <item><widget class="QDoubleSpinBox" name="spinDTTo"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>99999.0</double></property><property name="value"><double>4000.0</double></property></widget></item>
+           <item><widget class="QPushButton" name="btnLoadData"><property name="text"><string>Load</string></property><property name="maximumWidth"><number>60</number></property></widget></item>
+           <item><widget class="QPushButton" name="btnExportTable"><property name="text"><string>Export CSV</string></property><property name="maximumWidth"><number>90</number></property></widget></item>
+           <item>
+            <spacer name="spacerDT">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="tableData">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="rowCount"><number>0</number></property>
+           <property name="columnCount"><number>12</number></property>
+           <column><property name="text"><string>DEPTH</string></property></column>
+           <column><property name="text"><string>GR</string></property></column>
+           <column><property name="text"><string>SP</string></property></column>
+           <column><property name="text"><string>CALI</string></property></column>
+           <column><property name="text"><string>RHOB</string></property></column>
+           <column><property name="text"><string>NPHI</string></property></column>
+           <column><property name="text"><string>LLD</string></property></column>
+           <column><property name="text"><string>DT</string></property></column>
+           <column><property name="text"><string>VSH</string></property></column>
+           <column><property name="text"><string>PHIE</string></property></column>
+           <column><property name="text"><string>SW</string></property></column>
+           <column><property name="text"><string>PERM</string></property></column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- IMPORT STATUS -->
+       <widget class="QWidget" name="tabImport">
+        <attribute name="title"><string>Import</string></attribute>
+        <layout class="QVBoxLayout" name="layoutImport">
+         <property name="spacing"><number>6</number></property>
+         <property name="contentsMargins"><rect><x>4</x><y>5</y><x>4</x><y>4</y></rect></property>
+         <item>
+          <widget class="QGroupBox" name="groupImportFile">
+           <property name="title"><string>Import Well Data</string></property>
+           <layout class="QVBoxLayout" name="layoutImportFile">
+            <property name="spacing"><number>5</number></property>
+            <item>
+             <layout class="QHBoxLayout" name="layoutImportFormat">
+              <item><widget class="QLabel" name="lblImportFmt"><property name="text"><string>Format:</string></property></widget></item>
+              <item>
+               <widget class="QComboBox" name="comboImportFormat">
+                <item><property name="text"><string>LAS 2.0 (*.las)</string></property></item>
+                <item><property name="text"><string>LAS 3.0 (*.las)</string></property></item>
+                <item><property name="text"><string>DLIS (*.dlis *.dl)</string></property></item>
+                <item><property name="text"><string>LIS (*.lis)</string></property></item>
+                <item><property name="text"><string>ASCII / Text (*.txt *.dat *.asc)</string></property></item>
+                <item><property name="text"><string>CSV (*.csv)</string></property></item>
+                <item><property name="text"><string>Excel (*.xlsx *.xls)</string></property></item>
+                <item><property name="text"><string>WITSML (*.xml)</string></property></item>
+                <item><property name="text"><string>SEG-Y (*.sgy *.segy)</string></property></item>
+                <item><property name="text"><string>ODM / PPDM Database</string></property></item>
+                <item><property name="text"><string>JSON (*.json)</string></property></item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="layoutImportPath">
+              <item>
+               <widget class="QLineEdit" name="lineEditImportPath">
+                <property name="readOnly"><bool>true</bool></property>
+                <property name="placeholderText"><string>Select file(s) to import...</string></property>
+               </widget>
+              </item>
+              <item><widget class="QPushButton" name="btnBrowseImport"><property name="text"><string>Browse...</string></property><property name="maximumWidth"><number>90</number></property></widget></item>
+              <item><widget class="QPushButton" name="btnStartImport"><property name="text"><string>Import</string></property><property name="maximumWidth"><number>70</number></property></widget></item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progressImport">
+              <property name="value"><number>0</number></property>
+              <property name="maximum"><number>100</number></property>
+              <property name="textVisible"><bool>true</bool></property>
+              <property name="format"><string>%v%</string></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="tableImportStatus">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+           <property name="rowCount"><number>3</number></property>
+           <property name="columnCount"><number>6</number></property>
+           <column><property name="text"><string>File Name</string></property></column>
+           <column><property name="text"><string>Format</string></property></column>
+           <column><property name="text"><string>Well</string></property></column>
+           <column><property name="text"><string>Curves</string></property></column>
+           <column><property name="text"><string>Depth Range</string></property></column>
+           <column><property name="text"><string>Status</string></property></column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+       <!-- QUALITY CONTROL -->
+       <widget class="QWidget" name="tabQC">
+        <attribute name="title"><string>QC</string></attribute>
+        <layout class="QVBoxLayout" name="layoutQC">
+         <property name="spacing"><number>5</number></property>
+         <property name="contentsMargins"><rect><x>3</x><y>4</y><x>3</x><y>3</y></rect></property>
+         <item>
+          <layout class="QHBoxLayout" name="layoutQCControls">
+           <item><widget class="QLabel" name="lblQCWell"><property name="text"><string>Well:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboQCWell">
+             <item><property name="text"><string>CHr-1</string></property></item>
+             <item><property name="text"><string>Tau-1</string></property></item>
+             <item><property name="text"><string>Experior</string></property></item>
+             <item><property name="text"><string>All Wells</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QLabel" name="lblQCCurve"><property name="text"><string>Curve:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboQCCurve">
+             <item><property name="text"><string>GR</string></property></item>
+             <item><property name="text"><string>RHOB</string></property></item>
+             <item><property name="text"><string>NPHI</string></property></item>
+             <item><property name="text"><string>DT</string></property></item>
+             <item><property name="text"><string>LLD</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QLabel" name="lblQCTemplate"><property name="text"><string>Template:</string></property></widget></item>
+           <item>
+            <widget class="QComboBox" name="comboQCTemplate">
+             <item><property name="text"><string>Default</string></property></item>
+             <item><property name="text"><string>Petrophysics</string></property></item>
+             <item><property name="text"><string>Reservoir</string></property></item>
+            </widget>
+           </item>
+           <item><widget class="QPushButton" name="btnRunQC"><property name="text"><string>Run QC</string></property><property name="maximumWidth"><number>80</number></property></widget></item>
+           <item><widget class="QPushButton" name="btnExportQC"><property name="text"><string>Export</string></property><property name="maximumWidth"><number>80</number></property></widget></item>
+           <item>
+            <spacer name="spacerQC">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="tableQCResults">
+           <property name="alternatingRowColors"><bool>true</bool></property>
+           <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+           <property name="rowCount"><number>6</number></property>
+           <property name="columnCount"><number>4</number></property>
+           <column><property name="text"><string>Check</string></property></column>
+           <column><property name="text"><string>Status</string></property></column>
+           <column><property name="text"><string>Count</string></property></column>
+           <column><property name="text"><string>Details</string></property></column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+
+  <!-- ======================== STATUS BAR ======================== -->
+  <widget class="QStatusBar" name="statusBar">
+   <widget class="QLabel" name="lblStatusWell">
+    <property name="text"><string> Well: CHr-1 </string></property>
+    <property name="toolTip"><string>Currently active well</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusDepth">
+    <property name="text"><string> Depth: -- ft (MD) </string></property>
+    <property name="toolTip"><string>Cursor depth position</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusCurve">
+    <property name="text"><string> Curve: -- = -- </string></property>
+    <property name="toolTip"><string>Curve value at cursor</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusZone">
+    <property name="text"><string> Zone: -- </string></property>
+    <property name="toolTip"><string>Current zone at depth</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusScale">
+    <property name="text"><string> Scale: 1:200 </string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusReady">
+    <property name="text"><string>Ready</string></property>
+   </widget>
+  </widget>
+
+  <!-- ======================== ALL ACTIONS ======================== -->
+  <!-- File Actions -->
+  <action name="actionNewProject"><property name="text"><string>New Project</string></property><property name="toolTip"><string>Create a new petrophysics project (Ctrl+N)</string></property><property name="shortcut"><string>Ctrl+N</string></property></action>
+  <action name="actionOpenProject"><property name="text"><string>Open Project...</string></property><property name="toolTip"><string>Open an existing project (Ctrl+O)</string></property><property name="shortcut"><string>Ctrl+O</string></property></action>
+  <action name="actionSaveProject"><property name="text"><string>Save Project</string></property><property name="toolTip"><string>Save the current project (Ctrl+S)</string></property><property name="shortcut"><string>Ctrl+S</string></property></action>
+  <action name="actionSaveProjectAs"><property name="text"><string>Save Project As...</string></property><property name="shortcut"><string>Ctrl+Shift+S</string></property></action>
+  <action name="actionImportLAS"><property name="text"><string>Import LAS 2.0 / 3.0 File...</string></property><property name="toolTip"><string>Import well log data from LAS format (Ctrl+I)</string></property><property name="shortcut"><string>Ctrl+I</string></property></action>
+  <action name="actionImportDLIS"><property name="text"><string>Import DLIS File...</string></property></action>
+  <action name="actionImportLIS"><property name="text"><string>Import LIS File...</string></property></action>
+  <action name="actionImportASCII"><property name="text"><string>Import ASCII / Text File...</string></property></action>
+  <action name="actionImportCSV"><property name="text"><string>Import CSV File...</string></property></action>
+  <action name="actionImportExcel"><property name="text"><string>Import Excel Workbook...</string></property></action>
+  <action name="actionImportWITSML"><property name="text"><string>Import WITSML File...</string></property></action>
+  <action name="actionImportSEGY"><property name="text"><string>Import SEG-Y / SEG-Y Rev2...</string></property></action>
+  <action name="actionImportXML"><property name="text"><string>Import XML / JSON File...</string></property></action>
+  <action name="actionImportODM"><property name="text"><string>Import from ODM / PPDM Database...</string></property></action>
+  <action name="actionExportLAS"><property name="text"><string>Export as LAS 2.0...</string></property></action>
+  <action name="actionExportCSV"><property name="text"><string>Export as CSV...</string></property></action>
+  <action name="actionExportExcel"><property name="text"><string>Export as Excel (.xlsx)...</string></property></action>
+  <action name="actionExportPDF"><property name="text"><string>Export as PDF...</string></property><property name="toolTip"><string>Export current plot to PDF</string></property></action>
+  <action name="actionExportImageFile"><property name="text"><string>Export as Image (PNG/TIFF)...</string></property></action>
+  <action name="actionExportDatabase"><property name="text"><string>Export to Database...</string></property></action>
+  <action name="actionPrint"><property name="text"><string>Print...</string></property><property name="shortcut"><string>Ctrl+P</string></property></action>
+  <action name="actionPrintPreview"><property name="text"><string>Print Preview...</string></property><property name="shortcut"><string>Ctrl+Shift+P</string></property></action>
+  <action name="actionRecent1"><property name="text"><string>SandboxMay2016</string></property></action>
+  <action name="actionRecent2"><property name="text"><string>Field_A_EvalProject</string></property></action>
+  <action name="actionRecent3"><property name="text"><string>OffshoreBlock_7</string></property></action>
+  <action name="actionClearRecent"><property name="text"><string>Clear Recent</string></property></action>
+  <action name="actionExit"><property name="text"><string>Exit</string></property><property name="shortcut"><string>Alt+F4</string></property></action>
+  <!-- Edit Actions -->
+  <action name="actionUndo"><property name="text"><string>Undo</string></property><property name="toolTip"><string>Undo last action (Ctrl+Z)</string></property><property name="shortcut"><string>Ctrl+Z</string></property></action>
+  <action name="actionRedo"><property name="text"><string>Redo</string></property><property name="toolTip"><string>Redo last undone action (Ctrl+Y)</string></property><property name="shortcut"><string>Ctrl+Y</string></property></action>
+  <action name="actionCut"><property name="text"><string>Cut</string></property><property name="shortcut"><string>Ctrl+X</string></property></action>
+  <action name="actionCopy"><property name="text"><string>Copy</string></property><property name="shortcut"><string>Ctrl+C</string></property></action>
+  <action name="actionPaste"><property name="text"><string>Paste</string></property><property name="shortcut"><string>Ctrl+V</string></property></action>
+  <action name="actionDelete"><property name="text"><string>Delete</string></property><property name="shortcut"><string>Del</string></property></action>
+  <action name="actionSelectAll"><property name="text"><string>Select All</string></property><property name="shortcut"><string>Ctrl+A</string></property></action>
+  <action name="actionPreferences"><property name="text"><string>Preferences...</string></property><property name="shortcut"><string>Ctrl+,</string></property></action>
+  <!-- View Actions -->
+  <action name="actionZoomIn"><property name="text"><string>Zoom In</string></property><property name="toolTip"><string>Zoom into depth scale</string></property><property name="shortcut"><string>Ctrl++</string></property></action>
+  <action name="actionZoomOut"><property name="text"><string>Zoom Out</string></property><property name="toolTip"><string>Zoom out depth scale</string></property><property name="shortcut"><string>Ctrl+-</string></property></action>
+  <action name="actionZoomFit"><property name="text"><string>Fit to Window</string></property><property name="toolTip"><string>Fit to window</string></property><property name="shortcut"><string>Ctrl+0</string></property></action>
+  <action name="actionZoomReset"><property name="text"><string>Reset Zoom</string></property><property name="shortcut"><string>Ctrl+R</string></property></action>
+  <action name="actionDepthMD"><property name="text"><string>MD — Measured Depth</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionDepthTVD"><property name="text"><string>TVD — True Vertical Depth</string></property><property name="checkable"><bool>true</bool></property></action>
+  <action name="actionDepthTVDSS"><property name="text"><string>TVDSS — Sub-Sea</string></property><property name="checkable"><bool>true</bool></property></action>
+  <action name="actionShowGrid"><property name="text"><string>Show Grid Lines</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionShowDepthLabels"><property name="text"><string>Show Depth Labels</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionShowScaleBar"><property name="text"><string>Show Scale Bar</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionFullScreen"><property name="text"><string>Full Screen</string></property><property name="shortcut"><string>F11</string></property><property name="checkable"><bool>true</bool></property></action>
+  <action name="actionToggleMainToolbar"><property name="text"><string>Main Toolbar</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToggleWellToolbar"><property name="text"><string>Well Display Toolbar</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToggleAnalysisToolbar"><property name="text"><string>Analysis Toolbar</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToggleBrowser"><property name="text"><string>Project Browser</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToggleProperties"><property name="text"><string>Properties Panel</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToggleConsole"><property name="text"><string>Output Console</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+
+  <!-- Well Actions -->
+  <action name="actionAddWell"><property name="text"><string>Add New Well...</string></property><property name="toolTip"><string>Create a new well entry in the project</string></property></action>
+  <action name="actionWellProperties"><property name="text"><string>Well Properties...</string></property><property name="shortcut"><string>Alt+Return</string></property></action>
+  <action name="actionSetActiveWell"><property name="text"><string>Set as Active Well</string></property></action>
+  <action name="actionWellTops"><property name="text"><string>Well Tops / Horizons...</string></property></action>
+  <action name="actionWellTrajectory"><property name="text"><string>Well Trajectory / Survey...</string></property></action>
+  <action name="actionCasingCompletion"><property name="text"><string>Casing &amp; Completion...</string></property></action>
+  <action name="actionCoreData"><property name="text"><string>Core Data Manager...</string></property></action>
+  <action name="actionDSTData"><property name="text"><string>DST / Test Data...</string></property></action>
+  <action name="actionFluidAnalysis"><property name="text"><string>Fluid Sampling &amp; Analysis...</string></property></action>
+  <action name="actionMudLog"><property name="text"><string>Mud Log / Gas Shows...</string></property></action>
+  <action name="actionDeleteWell"><property name="text"><string>Delete Well from Project</string></property></action>
+
+  <!-- Plot Actions -->
+  <action name="actionNewLogPlot"><property name="text"><string>New Log Plot</string></property><property name="toolTip"><string>Open a new multi-track log plot window</string></property><property name="shortcut"><string>Ctrl+L</string></property></action>
+  <action name="actionNewCrossplot"><property name="text"><string>New Crossplot</string></property><property name="toolTip"><string>Open a new X-Y crossplot window</string></property><property name="shortcut"><string>Ctrl+X</string></property></action>
+  <action name="actionNewHistogram"><property name="text"><string>New Histogram</string></property><property name="toolTip"><string>Open a new histogram / frequency plot</string></property></action>
+  <action name="actionNewRoseDiagram"><property name="text"><string>New Rose Diagram</string></property></action>
+  <action name="actionNewTadpolePlot"><property name="text"><string>New Tadpole Plot</string></property><property name="toolTip"><string>Display dip azimuth tadpole plot from FMI/FMS</string></property></action>
+  <action name="actionNewStarPlot"><property name="text"><string>New Star / Spider Plot</string></property></action>
+  <action name="actionNewPolarPlot"><property name="text"><string>New Polar / Dip Polar Plot</string></property></action>
+  <action name="actionAddTrack"><property name="text"><string>Add Track</string></property><property name="toolTip"><string>Append a new track to the active log plot</string></property></action>
+  <action name="actionRemoveTrack"><property name="text"><string>Remove Track</string></property><property name="toolTip"><string>Remove the selected track from the log plot</string></property></action>
+  <action name="actionTrackProperties"><property name="text"><string>Track Properties...</string></property></action>
+  <action name="actionAddCurve"><property name="text"><string>Add Curve to Track</string></property><property name="toolTip"><string>Add a well log curve to the selected track</string></property></action>
+  <action name="actionCurveProperties"><property name="text"><string>Curve Properties...</string></property></action>
+  <action name="actionCurveFillOptions"><property name="text"><string>Curve Fill Options...</string></property></action>
+  <action name="actionSavePlotTemplate"><property name="text"><string>Save Plot as Template...</string></property></action>
+  <action name="actionLoadPlotTemplate"><property name="text"><string>Load Plot Template...</string></property></action>
+  <action name="actionManageTemplates"><property name="text"><string>Manage Templates...</string></property></action>
+
+  <!-- Interpretation Actions -->
+  <action name="actionShaleVolume"><property name="text"><string>Shale Volume (Vcl)...</string></property><property name="toolTip"><string>Compute shale volume from GR, SP, or neutron-density methods</string></property></action>
+  <action name="actionPorosityCalc"><property name="text"><string>Porosity Calculation...</string></property><property name="toolTip"><string>Compute total and effective porosity (PHIT / PHIE)</string></property></action>
+  <action name="actionWaterSaturation"><property name="text"><string>Water Saturation (Sw)...</string></property><property name="toolTip"><string>Archie, Simandoux, Indonesia, Waxman-Smits and more</string></property></action>
+  <action name="actionPermeability"><property name="text"><string>Permeability (K)...</string></property><property name="toolTip"><string>Timur-Coates, Kozeny-Carmen, Regression methods</string></property></action>
+  <action name="actionLithology"><property name="text"><string>Lithology Determination...</string></property></action>
+  <action name="actionRockTyping"><property name="text"><string>Rock Typing / FZI / RQI...</string></property></action>
+  <action name="actionNetPay"><property name="text"><string>Net Pay &amp; Cutoff Analysis...</string></property><property name="toolTip"><string>Apply gross, net reservoir and net pay cutoff criteria</string></property></action>
+  <action name="actionFluidSubstitution"><property name="text"><string>Fluid Substitution (Gassmann)...</string></property></action>
+  <action name="actionContactPicking"><property name="text"><string>Fluid Contact Picking...</string></property></action>
+  <action name="actionZoneDefinition"><property name="text"><string>Zone / Interval Definition...</string></property></action>
+  <action name="actionDepthShiftCorr"><property name="text"><string>Depth Shift Correction...</string></property></action>
+  <action name="actionSpliceCurves"><property name="text"><string>Splice / Merge Curves...</string></property></action>
+  <action name="actionQualityControl"><property name="text"><string>Quality Control (QC) Report...</string></property></action>
+
+  <!-- Calculation Actions -->
+  <action name="actionBasicArithmetic"><property name="text"><string>Basic Arithmetic Operations...</string></property></action>
+  <action name="actionRockPhysicsModels"><property name="text"><string>Rock Physics Models...</string></property></action>
+  <action name="actionFluidProperties"><property name="text"><string>Fluid Properties (PVT)...</string></property></action>
+  <action name="actionFormulaEditor"><property name="text"><string>Formula Editor...</string></property><property name="shortcut"><string>Ctrl+F</string></property></action>
+  <action name="actionCustomFormula"><property name="text"><string>Custom Formula Builder...</string></property></action>
+  <action name="actionNMRCalc"><property name="text"><string>NMR Processing &amp; Calculation...</string></property></action>
+  <action name="actionDielectricCalc"><property name="text"><string>Dielectric / EM Calculation...</string></property></action>
+  <action name="actionThermalCalc"><property name="text"><string>Thermal / Maturity Calculation...</string></property></action>
+  <action name="actionBatchProcess"><property name="text"><string>Batch Processing...</string></property><property name="toolTip"><string>Run calculations on multiple wells simultaneously</string></property></action>
+
+  <!-- Advanced Interpretation Actions -->
+  <action name="actionAdvRockPhysics"><property name="text"><string>Advanced Rock Physics...</string></property></action>
+  <action name="actionMultimineralAnalysis"><property name="text"><string>Multi-Mineral Analysis (ELAN)...</string></property></action>
+  <action name="actionNMRAnalysis"><property name="text"><string>NMR Interpretation...</string></property></action>
+  <action name="actionDielectricInterp"><property name="text"><string>Dielectric Interpretation...</string></property></action>
+  <action name="actionPressureAnalysis"><property name="text"><string>Formation Pressure Analysis...</string></property></action>
+  <action name="actionTemperatureGradient"><property name="text"><string>Temperature Gradient Analysis...</string></property></action>
+  <action name="actionFormationTesting"><property name="text"><string>Formation Testing (MDT/RDT)...</string></property></action>
+  <action name="actionSeismicPetro"><property name="text"><string>Seismic Petrophysics...</string></property></action>
+  <action name="actionAVOAnalysis"><property name="text"><string>AVO Analysis...</string></property></action>
+
+  <!-- Image Analysis Actions -->
+  <action name="actionBoreholeImage"><property name="text"><string>Borehole Image Display...</string></property></action>
+  <action name="actionFMIAnalysis"><property name="text"><string>FMI / FMS Analysis...</string></property><property name="toolTip"><string>Full bore micro-imager analysis and dip picking</string></property></action>
+  <action name="actionDipAnalysis"><property name="text"><string>Dip Analysis...</string></property></action>
+  <action name="actionTadpoleDisplay"><property name="text"><string>Tadpole Display Options...</string></property></action>
+  <action name="actionStaticNormalization"><property name="text"><string>Static Image Normalization...</string></property></action>
+  <action name="actionDynamicNormalization"><property name="text"><string>Dynamic Image Normalization...</string></property></action>
+  <action name="actionFractureDetection"><property name="text"><string>Fracture Detection...</string></property></action>
+  <action name="actionSedStructures"><property name="text"><string>Sedimentary Structures...</string></property></action>
+  <action name="actionStrikeAzimuth"><property name="text"><string>Strike / Azimuth Analysis...</string></property></action>
+
+  <!-- Geomechanics Actions -->
+  <action name="actionStressAnalysis"><property name="text"><string>In-Situ Stress Analysis...</string></property></action>
+  <action name="actionWellboreStability"><property name="text"><string>Wellbore Stability Analysis...</string></property></action>
+  <action name="actionFractureAnalysis"><property name="text"><string>Natural Fracture Analysis...</string></property></action>
+  <action name="actionPorePressure"><property name="text"><string>Pore Pressure Prediction...</string></property><property name="toolTip"><string>Eaton, Bowers, and other pore pressure methods</string></property></action>
+  <action name="actionUCS"><property name="text"><string>Unconfined Compressive Strength (UCS)...</string></property></action>
+  <action name="actionYoungsModulus"><property name="text"><string>Young's Modulus (E)...</string></property></action>
+  <action name="actionPoissonRatio"><property name="text"><string>Poisson's Ratio (ν)...</string></property></action>
+  <action name="actionBrittlenessIndex"><property name="text"><string>Brittleness Index...</string></property></action>
+  <action name="actionMudWeightWindow"><property name="text"><string>Mud Weight Window (Safe Drilling)...</string></property></action>
+
+  <!-- Multi-Well Actions -->
+  <action name="actionWellCorrelation"><property name="text"><string>Well Correlation Panel...</string></property><property name="toolTip"><string>Side-by-side multi-well log correlation</string></property></action>
+  <action name="actionCrossSection"><property name="text"><string>Cross Section Builder...</string></property></action>
+  <action name="actionFenceSection"><property name="text"><string>Fence / Panel Section...</string></property></action>
+  <action name="actionStatisticalAnalysis"><property name="text"><string>Multi-Well Statistical Analysis...</string></property></action>
+  <action name="actionWellComparison"><property name="text"><string>Well-to-Well Comparison...</string></property></action>
+  <action name="actionBasinAnalysis"><property name="text"><string>Basin Analysis...</string></property></action>
+  <action name="actionVolumetricsCalc"><property name="text"><string>Volumetrics Calculator (STOIIP / GIIP)...</string></property><property name="toolTip"><string>Compute stock tank oil initially in place and gas initially in place</string></property></action>
+
+  <!-- Tools Actions -->
+  <action name="actionUnitConverter"><property name="text"><string>Unit Converter...</string></property></action>
+  <action name="actionFormulaEditorTool"><property name="text"><string>Formula Editor...</string></property></action>
+  <action name="actionTemplateManager"><property name="text"><string>Template Manager...</string></property></action>
+  <action name="actionDatabaseManager"><property name="text"><string>Database Manager...</string></property></action>
+  <action name="actionCurveSmoother"><property name="text"><string>Curve Smoother / Filter...</string></property></action>
+  <action name="actionDepthShiftTool"><property name="text"><string>Depth Shift Tool...</string></property></action>
+  <action name="actionOutlierDetection"><property name="text"><string>Outlier Detection...</string></property></action>
+  <action name="actionDeSpikeTool"><property name="text"><string>De-Spike Tool...</string></property></action>
+  <action name="actionPythonConsole"><property name="text"><string>Python / Script Console...</string></property><property name="shortcut"><string>Ctrl+Shift+P</string></property></action>
+  <action name="actionMacroRecorder"><property name="text"><string>Macro Recorder...</string></property></action>
+  <action name="actionPluginManager"><property name="text"><string>Plugin Manager...</string></property></action>
+
+  <!-- Interaction Tool Actions (Well Display Toolbar) -->
+  <action name="actionToolSelect"><property name="text"><string>Select</string></property><property name="toolTip"><string>Selection tool — click items to select</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToolPan"><property name="text"><string>Pan</string></property><property name="toolTip"><string>Pan tool — drag to scroll depth</string></property><property name="checkable"><bool>true</bool></property></action>
+  <action name="actionToolMeasure"><property name="text"><string>Measure</string></property><property name="toolTip"><string>Measure depth interval between two picked points</string></property><property name="checkable"><bool>true</bool></property></action>
+  <action name="actionToolPick"><property name="text"><string>Pick</string></property><property name="toolTip"><string>Formation top / horizon picking tool</string></property><property name="checkable"><bool>true</bool></property></action>
+
+  <!-- Window Actions -->
+  <action name="actionTileWindows"><property name="text"><string>Tile Windows</string></property></action>
+  <action name="actionCascadeWindows"><property name="text"><string>Cascade Windows</string></property></action>
+  <action name="actionCloseAllWindows"><property name="text"><string>Close All Windows</string></property></action>
+  <action name="actionNextWindow"><property name="text"><string>Next Window</string></property><property name="shortcut"><string>Ctrl+Tab</string></property></action>
+  <action name="actionPrevWindow"><property name="text"><string>Previous Window</string></property><property name="shortcut"><string>Ctrl+Shift+Tab</string></property></action>
+
+  <!-- Help Actions -->
+  <action name="actionDocumentation"><property name="text"><string>PetroAnalyst Documentation...</string></property><property name="shortcut"><string>F1</string></property></action>
+  <action name="actionTutorials"><property name="text"><string>Tutorials &amp; Getting Started...</string></property></action>
+  <action name="actionVideoGuides"><property name="text"><string>Video Guides...</string></property></action>
+  <action name="actionKeyboardShortcuts"><property name="text"><string>Keyboard Shortcuts Reference...</string></property></action>
+  <action name="actionLicenseManager"><property name="text"><string>License Manager...</string></property></action>
+  <action name="actionCheckUpdates"><property name="text"><string>Check for Updates...</string></property></action>
+  <action name="actionAbout"><property name="text"><string>About PetroAnalyst Pro...</string></property></action>
+
+ </widget>
+
+ <!-- ======================== RESOURCES (placeholder) ======================== -->
+ <resources/>
+
+ <!-- ======================== CONNECTIONS ======================== -->
+ <connections>
+
+  <!-- File actions wired to status bar feedback placeholders -->
+  <connection>
+   <sender>actionSaveProject</sender>
+   <signal>triggered()</signal>
+   <receiver>lblStatusReady</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel"><x>-1</x><y>-1</y></hint>
+    <hint type="destinationlabel"><x>840</x><y>974</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Well selector combo → status bar well label -->
+  <connection>
+   <sender>comboActiveWell</sender>
+   <signal>currentTextChanged(const QString&amp;)</signal>
+   <receiver>lblStatusWell</receiver>
+   <slot>setText(const QString&amp;)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>200</x><y>38</y></hint>
+    <hint type="destinationlabel"><x>120</x><y>974</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Depth mode combo → status bar depth label -->
+  <connection>
+   <sender>comboDepthMode</sender>
+   <signal>currentTextChanged(const QString&amp;)</signal>
+   <receiver>lblStatusDepth</receiver>
+   <slot>setText(const QString&amp;)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>400</x><y>38</y></hint>
+    <hint type="destinationlabel"><x>300</x><y>974</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Track scale right spin → curve max spin mirror -->
+  <connection>
+   <sender>spinScaleRight</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>spinCurveMax</receiver>
+   <slot>setValue(double)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>1500</x><y>300</y></hint>
+    <hint type="destinationlabel"><x>1500</x><y>500</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Track scale left spin → curve min spin mirror -->
+  <connection>
+   <sender>spinScaleLeft</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>spinCurveMin</receiver>
+   <slot>setValue(double)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>1500</x><y>280</y></hint>
+    <hint type="destinationlabel"><x>1500</x><y>480</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Statistics well combo → data table well combo sync -->
+  <connection>
+   <sender>comboStatWell</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>comboDTWell</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>840</x><y>820</y></hint>
+    <hint type="destinationlabel"><x>840</x><y>860</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Project browser well combo → curve well combo sync -->
+  <connection>
+   <sender>comboActiveWell</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>comboCurveWell</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>200</x><y>38</y></hint>
+    <hint type="destinationlabel"><x>120</x><y>200</y></hint>
+   </hints>
+  </connection>
+
+  <!-- Zone well combo syncs to stat well combo -->
+  <connection>
+   <sender>comboZoneWell</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>comboStatZone</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel"><x>120</x><y>400</y></hint>
+    <hint type="destinationlabel"><x>840</x><y>825</y></hint>
+   </hints>
+  </connection>
+
+ </connections>
+
+ <!-- ======================== BUTTON GROUPS ======================== -->
+ <buttongroups>
+  <!-- Depth reference mutually exclusive toggle group -->
+  <buttongroup name="depthRefGroup">
+   <property name="exclusive"><bool>true</bool></property>
+  </buttongroup>
+  <!-- Interaction tool radio group -->
+  <buttongroup name="toolModeGroup">
+   <property name="exclusive"><bool>true</bool></property>
+  </buttongroup>
+ </buttongroups>
+
+</ui>
