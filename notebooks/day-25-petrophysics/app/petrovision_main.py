@@ -31,9 +31,16 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         """Replace the Data Info & Stats tab with the Data & Analysis dock contents."""
         data_tab = getattr(self, "tabDataInfoStats", None)
         dock = getattr(self, "dockData", None)
-        dock_contents = getattr(self, "dockDataContents", None)
+        if data_tab is None or dock is None:
+            return
 
-        if data_tab is None or dock_contents is None:
+        # If already embedded, skip.
+        existing_tab = getattr(self, "tabData", None)
+        if existing_tab is not None and existing_tab.parent() is data_tab:
+            return
+
+        dock_contents = dock.widget() or getattr(self, "dockDataContents", None)
+        if dock_contents is None:
             return
 
         # Clear existing widgets in the tab (keep the layout to avoid warnings)
@@ -49,11 +56,15 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             existing_layout.setContentsMargins(0, 0, 0, 0)
 
         # Detach contents from dock and hide the dock
-        if dock is not None:
+        if dock.widget() is dock_contents:
             dock.setWidget(None)
-            dock.hide()
+        dock.hide()
 
         dock_contents.setParent(data_tab)
+        dock_contents.setVisible(True)
+        dock_contents.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         existing_layout.setContentsMargins(0, 0, 0, 0)
         existing_layout.addWidget(dock_contents)
 
