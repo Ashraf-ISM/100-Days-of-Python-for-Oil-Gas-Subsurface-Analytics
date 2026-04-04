@@ -1962,20 +1962,1007 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
     </attribute>
     <layout class="QHBoxLayout" name="layoutFormationevaluation">
      <property name="spacing">
-      <number>4</number>
+      <number>8</number>
+     </property>
+     <property name="leftMargin">
+      <number>6</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>6</number>
+     </property>
+     <property name="bottomMargin">
+      <number>6</number>
      </property>
      <item>
-      <widget class="QFrame" name="frameformationevalCanvas">
+      <widget class="QFrame" name="frameFEControls">
+       <property name="minimumSize">
+        <size>
+         <width>260</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>320</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
+       <layout class="QVBoxLayout" name="layoutFEControls">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblFEControlsTitle">
+          <property name="styleSheet">
+           <string>font-size:16px;font-weight:700;color:#274B72;padding:2px 0;</string>
+          </property>
+          <property name="text">
+           <string>Input Parameters</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupFEWellSelection">
+          <property name="title">
+           <string>Well Selection</string>
+          </property>
+          <layout class="QVBoxLayout" name="layoutFEWellSelection">
+           <item>
+            <widget class="QLabel" name="lblFEWell">
+             <property name="text">
+              <string>Well</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboFeWell">
+             <item>
+              <property name="text">
+               <string>CHr-1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupFELogs">
+          <property name="title">
+           <string>Logs</string>
+          </property>
+          <layout class="QVBoxLayout" name="layoutFELogs">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="checkFEGR">
+             <property name="text">
+              <string>GR (Gamma Ray)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkFERHOB">
+             <property name="text">
+              <string>RHOB (Bulk Density)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkFENPHI">
+             <property name="text">
+              <string>NPHI (Neutron)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkFERT">
+             <property name="text">
+              <string>RT (Resistivity)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupFEVsh">
+          <property name="title">
+           <string>Parameters</string>
+          </property>
+          <layout class="QFormLayout" name="formFEVsh">
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="checkFEVsh">
+             <property name="text">
+              <string>Shale Volume (Vsh)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblFEGRMin">
+             <property name="text">
+              <string>GR Min</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinFEGRMin">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <double>500.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>50.000000000000000</double>
+             </property>
+             <property name="suffix">
+              <string> API</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lblFEGRMax">
+             <property name="text">
+              <string>GR Max</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="spinFEGRMax">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <double>500.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>120.000000000000000</double>
+             </property>
+             <property name="suffix">
+              <string> API</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupFEPorosity">
+          <property name="title">
+           <string>Porosity (phi)</string>
+          </property>
+          <layout class="QFormLayout" name="formFEPorosity">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblFERhoMa">
+             <property name="text">
+              <string>rho_ma</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="spinFERhoMa">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>5.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>2.650000000000000</double>
+             </property>
+             <property name="suffix">
+              <string> g/cc</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblFERhoF">
+             <property name="text">
+              <string>rho_f</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinFERhoF">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>5.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="suffix">
+              <string> g/cc</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupFESw">
+          <property name="title">
+           <string>Water Saturation (Sw)</string>
+          </property>
+          <layout class="QFormLayout" name="formFESw">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblFEArchieA">
+             <property name="text">
+              <string>a</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="spinFEArchieA">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>10.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblFEArchieM">
+             <property name="text">
+              <string>m</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinFEArchieM">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>10.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>2.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lblFEArchieN">
+             <property name="text">
+              <string>n</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="spinFEArchieN">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>10.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>2.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lblFERw">
+             <property name="text">
+              <string>Rw</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="spinFERw">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>10.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="suffix">
+              <string> ohm.m</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacerFEControls">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layoutFEActions">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="btnRunFE">
+            <property name="styleSheet">
+             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+            </property>
+            <property name="text">
+             <string>Run Evaluation</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnResetFE">
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frameFEWorkspace">
+       <property name="styleSheet">
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
        </property>
-       <layout class="QVBoxLayout"/>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutFEWorkspace">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QTabWidget" name="tabFEViews">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tabFELogTracks">
+           <attribute name="title">
+            <string>Log Tracks</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="layoutFELogTracks">
+            <property name="spacing">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QFrame" name="frameFETopControls">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <layout class="QHBoxLayout" name="layoutFETopControls">
+               <property name="leftMargin">
+                <number>12</number>
+               </property>
+               <property name="topMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>12</number>
+               </property>
+               <property name="bottomMargin">
+                <number>10</number>
+               </property>
+               <property name="spacing">
+                <number>8</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="lblFEDepthRange">
+                 <property name="text">
+                  <string>Depth Range</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="comboFEDepthPreset">
+                 <item>
+                  <property name="text">
+                   <string>Full Well</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Reservoir Window</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Custom</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="comboFEDepthUnit">
+                 <item>
+                  <property name="text">
+                   <string>m</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>ft</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblFEFrom">
+                 <property name="text">
+                  <string>From</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="spinFEFrom">
+                 <property name="decimals">
+                  <number>2</number>
+                 </property>
+                 <property name="maximum">
+                  <double>100000.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblFETo">
+                 <property name="text">
+                  <string>To</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="spinFETo">
+                 <property name="decimals">
+                  <number>2</number>
+                 </property>
+                 <property name="maximum">
+                  <double>100000.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="spacerFETopControls">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnFERender">
+                 <property name="styleSheet">
+                  <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>Render Plot</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="layoutFETrackRow">
+              <property name="spacing">
+               <number>8</number>
+              </property>
+              <item>
+               <widget class="QFrame" name="frameFEGammaTrack">
+                <property name="styleSheet">
+                 <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <layout class="QVBoxLayout" name="layoutFEGammaTrack">
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="lblFEGammaTitle">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#2A4E77;</string>
+                   </property>
+                   <property name="text">
+                    <string>Gamma Ray Track</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEGammaPlaceholder">
+                   <property name="styleSheet">
+                    <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+                   </property>
+                   <property name="text">
+                    <string>GR depth track and clean/shale baseline preview</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frameFEVshTrack">
+                <property name="styleSheet">
+                 <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <layout class="QVBoxLayout" name="layoutFEVshTrack">
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="lblFEVshTitle">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#2A4E77;</string>
+                   </property>
+                   <property name="text">
+                    <string>GR (Vsh)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEVshPlaceholder">
+                   <property name="styleSheet">
+                    <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+                   </property>
+                   <property name="text">
+                    <string>Computed Vsh curve with reservoir shading</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frameFEPorosityTrack">
+                <property name="styleSheet">
+                 <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <layout class="QVBoxLayout" name="layoutFEPorosityTrack">
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="lblFEPorosityTitle">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#2A4E77;</string>
+                   </property>
+                   <property name="text">
+                    <string>Porosity Track</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEPorosityPlaceholder">
+                   <property name="styleSheet">
+                    <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+                   </property>
+                   <property name="text">
+                    <string>PHIT / PHIE overlay from density-neutron response</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frameFESwTrack">
+                <property name="styleSheet">
+                 <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <layout class="QVBoxLayout" name="layoutFESwTrack">
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="lblFESwTitle">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#2A4E77;</string>
+                   </property>
+                   <property name="text">
+                    <string>Water Saturation Track</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFESwPlaceholder">
+                   <property name="styleSheet">
+                    <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+                   </property>
+                   <property name="text">
+                    <string>Archie Sw profile with pay-flag highlighting</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QFrame" name="frameFEPaySummary">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <layout class="QVBoxLayout" name="layoutFEPaySummary">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="topMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <property name="bottomMargin">
+                <number>10</number>
+               </property>
+               <property name="spacing">
+                <number>8</number>
+               </property>
+               <item>
+                <layout class="QHBoxLayout" name="layoutFESummaryHeader">
+                 <item>
+                  <widget class="QLabel" name="lblFEPaySummaryTitle">
+                   <property name="styleSheet">
+                    <string>font-size:15px;font-weight:700;color:#2A4E77;</string>
+                   </property>
+                   <property name="text">
+                    <string>Pay Summary</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="spacerFESummaryHeader">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFENetInterval">
+                   <property name="text">
+                    <string>Net:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFENetIntervalValue">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#2B6CB0;</string>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEAvgPhi">
+                   <property name="text">
+                    <string>Avg phi:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEAvgPhiValue">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#17A673;</string>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEAvgSw">
+                   <property name="text">
+                    <string>Avg Sw:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblFEAvgSwValue">
+                   <property name="styleSheet">
+                    <string>font-weight:700;color:#D97706;</string>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTableWidget" name="tableFEPaySummary">
+                 <property name="alternatingRowColors">
+                  <bool>true</bool>
+                 </property>
+                 <property name="rowCount">
+                  <number>0</number>
+                 </property>
+                 <property name="columnCount">
+                  <number>5</number>
+                 </property>
+                 <column>
+                  <property name="text">
+                   <string>Depth</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Vsh</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>phi</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Sw</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Flag</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frameFEPayChart">
+                 <property name="styleSheet">
+                  <string>background:#FFFFFF;border:1px solid #E3EBF4;border-radius:6px;</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="layoutFEPayChart">
+                  <property name="leftMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>8</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="lblFEPayChartTitle">
+                    <property name="styleSheet">
+                     <string>font-weight:700;color:#2A4E77;</string>
+                    </property>
+                    <property name="text">
+                     <string>Pay Flag Overview</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lblFEPayChartPlaceholder">
+                    <property name="styleSheet">
+                     <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+                    </property>
+                    <property name="text">
+                     <string>Net pay flag preview across the selected interval</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tabFEComputedLogs">
+           <attribute name="title">
+            <string>Computed Logs</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="layoutFEComputedLogs">
+            <item>
+             <widget class="QLabel" name="lblFEComputedPlaceholder">
+              <property name="styleSheet">
+               <string>color:#7B8FA6;font-size:13px;border:1px dashed #C8D7E8;border-radius:8px;background:#FFFFFF;padding:18px;</string>
+              </property>
+              <property name="text">
+               <string>Computed log cards will appear here for VSH, PHIT, SW, PERM and NET_PAY after running the evaluation.</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tabFECrossplots">
+           <attribute name="title">
+            <string>Crossplots</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="layoutFECrossplots">
+            <item>
+             <widget class="QLabel" name="lblFECrossplotPlaceholder">
+              <property name="styleSheet">
+               <string>color:#7B8FA6;font-size:13px;border:1px dashed #C8D7E8;border-radius:8px;background:#FFFFFF;padding:18px;</string>
+              </property>
+              <property name="text">
+               <string>Crossplot workspace reserved for phi-Vsh-Sw overlays and pay-zone diagnostics.</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
