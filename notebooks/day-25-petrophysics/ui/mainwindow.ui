@@ -2124,6 +2124,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            </item>
            <item row="1" column="1">
             <widget class="QDoubleSpinBox" name="spinFEGRMin">
+             <property name="suffix">
+              <string> API</string>
+             </property>
              <property name="decimals">
               <number>1</number>
              </property>
@@ -2132,9 +2135,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              </property>
              <property name="value">
               <double>50.000000000000000</double>
-             </property>
-             <property name="suffix">
-              <string> API</string>
              </property>
             </widget>
            </item>
@@ -2147,6 +2147,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            </item>
            <item row="2" column="1">
             <widget class="QDoubleSpinBox" name="spinFEGRMax">
+             <property name="suffix">
+              <string> API</string>
+             </property>
              <property name="decimals">
               <number>1</number>
              </property>
@@ -2155,9 +2158,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              </property>
              <property name="value">
               <double>120.000000000000000</double>
-             </property>
-             <property name="suffix">
-              <string> API</string>
              </property>
             </widget>
            </item>
@@ -2179,6 +2179,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            </item>
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="spinFERhoMa">
+             <property name="suffix">
+              <string> g/cc</string>
+             </property>
              <property name="decimals">
               <number>2</number>
              </property>
@@ -2187,9 +2190,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              </property>
              <property name="value">
               <double>2.650000000000000</double>
-             </property>
-             <property name="suffix">
-              <string> g/cc</string>
              </property>
             </widget>
            </item>
@@ -2202,6 +2202,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            </item>
            <item row="1" column="1">
             <widget class="QDoubleSpinBox" name="spinFERhoF">
+             <property name="suffix">
+              <string> g/cc</string>
+             </property>
              <property name="decimals">
               <number>2</number>
              </property>
@@ -2210,9 +2213,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              </property>
              <property name="value">
               <double>1.000000000000000</double>
-             </property>
-             <property name="suffix">
-              <string> g/cc</string>
              </property>
             </widget>
            </item>
@@ -2294,6 +2294,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            </item>
            <item row="3" column="1">
             <widget class="QDoubleSpinBox" name="spinFERw">
+             <property name="suffix">
+              <string> ohm.m</string>
+             </property>
              <property name="decimals">
               <number>3</number>
              </property>
@@ -2302,9 +2305,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              </property>
              <property name="value">
               <double>0.050000000000000</double>
-             </property>
-             <property name="suffix">
-              <string> ohm.m</string>
              </property>
             </widget>
            </item>
@@ -2332,7 +2332,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           <item>
            <widget class="QPushButton" name="btnRunFE">
             <property name="styleSheet">
-             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+             <string notr="true">background-color: rgb(38, 162, 105);</string>
             </property>
             <property name="text">
              <string>Run Evaluation</string>
@@ -2341,6 +2341,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           </item>
           <item>
            <widget class="QPushButton" name="btnResetFE">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(38, 162, 105);</string>
+            </property>
             <property name="text">
              <string>Reset</string>
             </property>
@@ -2397,6 +2400,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <enum>QFrame::StyledPanel</enum>
               </property>
               <layout class="QHBoxLayout" name="layoutFETopControls">
+               <property name="spacing">
+                <number>8</number>
+               </property>
                <property name="leftMargin">
                 <number>12</number>
                </property>
@@ -2408,9 +2414,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                </property>
                <property name="bottomMargin">
                 <number>10</number>
-               </property>
-               <property name="spacing">
-                <number>8</number>
                </property>
                <item>
                 <widget class="QLabel" name="lblFEDepthRange">
@@ -2728,6 +2731,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <enum>QFrame::StyledPanel</enum>
               </property>
               <layout class="QVBoxLayout" name="layoutFEPaySummary">
+               <property name="spacing">
+                <number>8</number>
+               </property>
                <property name="leftMargin">
                 <number>10</number>
                </property>
@@ -2739,9 +2745,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                </property>
                <property name="bottomMargin">
                 <number>10</number>
-               </property>
-               <property name="spacing">
-                <number>8</number>
                </property>
                <item>
                 <layout class="QHBoxLayout" name="layoutFESummaryHeader">
