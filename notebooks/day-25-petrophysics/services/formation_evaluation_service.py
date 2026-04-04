@@ -8,6 +8,7 @@ import pandas as pd
 from PyQt5 import QtWidgets
 
 from calculations import net_pay, permeability, porosity, saturation, vshale
+from calculations.vshale import VSH_METHOD_MAP
 
 
 class FormationEvaluationService:
@@ -94,7 +95,9 @@ class FormationEvaluationService:
         archie_n = self._spin_value("spinFEArchieN", 2.0)
         rw = self._spin_value("spinFERw", 0.05)
 
-        vsh = pd.Series(vshale.compute_vsh_gr(gr.to_numpy(dtype=float), gr_min=gr_min, gr_max=gr_max), index=df.index)
+        vsh_method_text = self._combo_text("vshTypeComboBox", "Linear")
+        vsh_method = VSH_METHOD_MAP.get(vsh_method_text, "linear")
+        vsh = pd.Series(vshale.compute_vsh_from_gr(gr.to_numpy(dtype=float), gr_min=gr_min, gr_max=gr_max, method=vsh_method), index=df.index)
         if nphi_name is not None and rhob_name is not None:
             phi = pd.Series(
                 porosity.compute_phi_combo(
@@ -408,6 +411,15 @@ class FormationEvaluationService:
         if diffs.empty:
             return 0.0
         return float(diffs.median())
+
+    def _combo_text(self, name: str, default: str = "") -> str:
+        widget = getattr(self.ui, name, None)
+        if widget is None:
+            return default
+        getter = getattr(widget, "currentText", None)
+        if callable(getter):
+            return getter() or default
+        return default
 
     def _spin_value(self, name: str, default=None):
         widget = getattr(self.ui, name, None)
