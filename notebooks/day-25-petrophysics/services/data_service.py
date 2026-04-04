@@ -161,6 +161,7 @@ class DataService:
             "comboStatWell",
             "comboDTWell",
             "comboQCWell",
+            "comboFeWell",
             "comboLVWell",
             "comboDISWell",
             "comboXplotWell",
@@ -268,6 +269,8 @@ class DataService:
                 for name, value in (
                     ("spinQCFrom", float(depth_values.min())),
                     ("spinQCTo", float(depth_values.max())),
+                    ("spinFEFrom", float(depth_values.min())),
+                    ("spinFETo", float(depth_values.max())),
                     ("spinLVQCFrom", float(depth_values.min())),
                     ("spinLVQCTo", float(depth_values.max())),
                 ):

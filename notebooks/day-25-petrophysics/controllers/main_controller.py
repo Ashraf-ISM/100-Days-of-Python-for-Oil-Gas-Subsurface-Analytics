@@ -8,6 +8,7 @@ from services.project_service import ProjectService
 from services.data_service import DataService
 from services.plot_service import PlotService
 from services.interpretation_service import InterpretationService
+from services.formation_evaluation_service import FormationEvaluationService
 from services.qc_service import QCService
 
 
@@ -18,6 +19,7 @@ class MainController:
         self.data = DataService(ui)
         self.plots = PlotService(ui, self.data)
         self.interp = InterpretationService(ui, self.data)
+        self.fe = FormationEvaluationService(ui, self.data)
         self.qc = QCService(ui, self.data)
         self.calculation_window: CalculationWindow | None = None
         self._wire_actions()
@@ -76,9 +78,15 @@ class MainController:
         self._connect_widget("comboDTWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboDISWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboQCWell", "currentTextChanged", self.data.set_current_well)
+        self._connect_widget("comboFeWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboCurveWell", "currentTextChanged", self.data.on_curve_well_changed)
         self._connect_widget("comboLVWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("btnDISRefresh", "clicked", self.data.load_data_view)
+
+        # Formation evaluation
+        self._connect_widget("btnRunFE", "clicked", self.fe.run_evaluation)
+        self._connect_widget("btnFERender", "clicked", self.fe.run_evaluation)
+        self._connect_widget("btnResetFE", "clicked", self.fe.reset_evaluation)
 
         # QC
         self._connect_widget("btnRunQC", "clicked", self.qc.run_qc)
