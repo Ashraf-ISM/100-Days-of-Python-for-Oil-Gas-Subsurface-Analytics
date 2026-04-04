@@ -474,7 +474,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>4</number>
    </property>
    <property name="documentMode">
     <bool>true</bool>
@@ -1956,161 +1956,16 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="tabHistogram">
+   <widget class="QWidget" name="tabFormationevaluation">
     <attribute name="title">
      <string>Histogram</string>
     </attribute>
-    <layout class="QHBoxLayout" name="layoutHistogram">
+    <layout class="QHBoxLayout" name="layoutFormationevaluation">
      <property name="spacing">
       <number>4</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupHistControls">
-       <property name="title">
-        <string>Histogram Settings</string>
-       </property>
-       <layout class="QFormLayout" name="formHist">
-        <item row="0" column="0">
-         <widget class="QLabel" name="auto_label_008">
-          <property name="text">
-           <string>Well:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboHistWell">
-          <item>
-           <property name="text">
-            <string>CHr-1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Tau-1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>All Wells</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="auto_label_009">
-          <property name="text">
-           <string>Curve:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboHistCurve">
-          <item>
-           <property name="text">
-            <string>GR</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>RHOB</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>NPHI</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>VSH</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>PHIE</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>SW</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="auto_label_010">
-          <property name="text">
-           <string>Bins:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="spinHistBins">
-          <property name="minimum">
-           <number>5</number>
-          </property>
-          <property name="maximum">
-           <number>200</number>
-          </property>
-          <property name="value">
-           <number>30</number>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="auto_label_011">
-          <property name="text">
-           <string>Normalize:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="checkHistNorm">
-          <property name="text">
-           <string>PDF</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QComboBox" name="comboHistZone">
-          <item>
-           <property name="text">
-            <string>Submit</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="lblHistPlaceholder">
-          <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
-          </property>
-          <property name="text">
-           <string>Histogram canvas</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QFrame" name="frameHistCanvas">
+      <widget class="QFrame" name="frameformationevalCanvas">
        <property name="styleSheet">
         <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
        </property>
