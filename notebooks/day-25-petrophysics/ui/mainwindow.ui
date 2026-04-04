@@ -1958,7 +1958,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
    </widget>
    <widget class="QWidget" name="tabFormationevaluation">
     <attribute name="title">
-     <string>Histogram</string>
+     <string>Formation Evaluation</string>
     </attribute>
     <layout class="QHBoxLayout" name="layoutFormationevaluation">
      <property name="spacing">
