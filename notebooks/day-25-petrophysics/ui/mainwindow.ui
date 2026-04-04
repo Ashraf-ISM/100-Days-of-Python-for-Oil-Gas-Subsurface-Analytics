@@ -474,7 +474,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>1</number>
    </property>
    <property name="documentMode">
     <bool>true</bool>
@@ -3369,6 +3369,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           </item>
           <item>
            <widget class="QPushButton" name="btnResetVsh">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(38, 162, 105);</string>
+            </property>
             <property name="text">
              <string>Reset</string>
             </property>
@@ -3885,6 +3888,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           </item>
           <item>
            <widget class="QPushButton" name="btnResetPhi">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(38, 162, 105);</string>
+            </property>
             <property name="text">
              <string>Reset</string>
             </property>
@@ -4642,6 +4648,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           </item>
           <item>
            <widget class="QPushButton" name="btnResetPerm">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(38, 162, 105);</string>
+            </property>
             <property name="text">
              <string>Reset</string>
             </property>
@@ -5135,6 +5144,9 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           </item>
           <item>
            <widget class="QPushButton" name="btnResetNetPay">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(38, 162, 105);</string>
+            </property>
             <property name="text">
              <string>Reset</string>
             </property>
