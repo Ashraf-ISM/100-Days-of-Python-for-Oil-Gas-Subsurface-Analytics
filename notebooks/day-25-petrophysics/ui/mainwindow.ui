@@ -4398,163 +4398,503 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
     </attribute>
     <layout class="QHBoxLayout" name="layoutPerm">
      <property name="spacing">
+      <number>8</number>
+     </property>
+     <property name="leftMargin">
+      <number>6</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>6</number>
+     </property>
+     <property name="bottomMargin">
       <number>6</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupPermParams">
-       <property name="title">
-        <string>Permeability Parameters</string>
+      <widget class="QFrame" name="framePermControls">
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
        </property>
-       <layout class="QFormLayout" name="formPerm">
-        <item row="0" column="0">
-         <widget class="QLabel" name="auto_label_038">
+       <property name="maximumSize">
+        <size>
+         <width>340</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutPermControls">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblPermTitle">
+          <property name="styleSheet">
+           <string>font-size:16px;font-weight:700;color:#274B72;padding:2px 0;</string>
+          </property>
           <property name="text">
-           <string>Well:</string>
+           <string>Permeability Inputs</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboPermWell">
+        <item>
+         <widget class="QGroupBox" name="groupPermParams">
+          <property name="title">
+           <string>Model Selection</string>
+          </property>
+          <layout class="QFormLayout" name="formPerm">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_038">
+             <property name="text">
+              <string>Well:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboPermWell">
+             <item>
+              <property name="text">
+               <string>CHr-1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_039">
+             <property name="text">
+              <string>Model:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboPermModel">
+             <item>
+              <property name="text">
+               <string>Timur (Coates)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Kozeny-Carman</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Wyllie-Rose</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Core Regression</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="auto_label_040">
+             <property name="text">
+              <string>PHIE Curve:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboPermPhie">
+             <item>
+              <property name="text">
+               <string>PHIE</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupPermCalibration">
+          <property name="title">
+           <string>Reservoir Parameters</string>
+          </property>
+          <layout class="QFormLayout" name="formPermCalibration">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_041">
+             <property name="text">
+              <string>Swi (irreducible):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="spinPermSwi">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.200000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_042">
+             <property name="text">
+              <string>Coeff C:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinPermC">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.031600000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="auto_label_043">
+             <property name="text">
+              <string>Output Name:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="linePermOutName">
+             <property name="text">
+              <string>PERM</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblPermHint">
+          <property name="styleSheet">
+           <string>color:#6C7E90;font-size:12px;line-height:1.4;</string>
+          </property>
+          <property name="text">
+           <string>Turn porosity and water saturation into permeability estimates, then compare the result against your net pay threshold.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacerPermControls">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layoutPermActions">
+          <property name="spacing">
+           <number>8</number>
+          </property>
           <item>
-           <property name="text">
-            <string>CHr-1</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="auto_label_039">
-          <property name="text">
-           <string>Model:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboPermModel">
-          <item>
-           <property name="text">
-            <string>Timur (Coates)</string>
-           </property>
+           <widget class="QPushButton" name="btnCalcPerm">
+            <property name="styleSheet">
+             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+            </property>
+            <property name="text">
+             <string>Run Permeability</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>Kozeny-Carman</string>
-           </property>
+           <widget class="QPushButton" name="btnResetPerm">
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <property name="text">
-            <string>Wyllie-Rose</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Core Regression</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="auto_label_040">
-          <property name="text">
-           <string>PHIE Curve:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="comboPermPhie">
-          <item>
-           <property name="text">
-            <string>PHIE</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="auto_label_041">
-          <property name="text">
-           <string>Swi (irreducible):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="spinPermSwi">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>0.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.200000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="auto_label_042">
-          <property name="text">
-           <string>Coeff C:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="spinPermC">
-          <property name="decimals">
-           <number>4</number>
-          </property>
-          <property name="minimum">
-           <double>0.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>100.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.031600000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="auto_label_043">
-          <property name="text">
-           <string>Output Name:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="linePermOutName">
-          <property name="text">
-           <string>PERM</string>
-          </property>
-         </widget>
+         </layout>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="framePermCanvas">
+      <widget class="QFrame" name="framePermWorkspace">
        <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout">
+       <layout class="QVBoxLayout" name="layoutPermWorkspace">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
         <item>
-         <widget class="QLabel" name="lblPermPlaceholder">
+         <layout class="QHBoxLayout" name="layoutPermCards">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="cardPermModel">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardPermModel">
+             <item>
+              <widget class="QLabel" name="lblPermModelTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Model</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblPermModelValue">
+               <property name="styleSheet">
+                <string>font-size:14px;font-weight:700;color:#2B6CB0;</string>
+               </property>
+               <property name="text">
+                <string>Timur</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardPermSwi">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardPermSwi">
+             <item>
+              <widget class="QLabel" name="lblPermSwiTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Swi</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblPermSwiValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#17A673;</string>
+               </property>
+               <property name="text">
+                <string>0.20</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardPermCoeff">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardPermCoeff">
+             <item>
+              <widget class="QLabel" name="lblPermCoeffTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Coeff C</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblPermCoeffValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#D97706;</string>
+               </property>
+               <property name="text">
+                <string>0.0316</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="framePermCanvas">
           <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
+           <string>background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;</string>
           </property>
-          <property name="text">
-           <string>Permeability preview log canvas</string>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
           </property>
+          <layout class="QVBoxLayout" name="layoutPermCanvas">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblPermPlotTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Permeability Track Preview</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblPermPlaceholder">
+             <property name="styleSheet">
+              <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+             </property>
+             <property name="text">
+              <string>Permeability preview log canvas showing model output and reservoir quality contrast</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="framePermSummary">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutPermSummary">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblPermSummaryTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Permeability Notes</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblPermSummaryText">
+             <property name="styleSheet">
+              <string>color:#6C7E90;font-size:12px;</string>
+             </property>
+             <property name="text">
+              <string>Review the permeability trend against pay cutoffs before finalizing net reservoir and net pay intervals.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -4568,156 +4908,487 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
     </attribute>
     <layout class="QHBoxLayout" name="layoutNetPay">
      <property name="spacing">
+      <number>8</number>
+     </property>
+     <property name="leftMargin">
+      <number>6</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>6</number>
+     </property>
+     <property name="bottomMargin">
       <number>6</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupNetPayParams">
-       <property name="title">
-        <string>Cutoff Criteria</string>
+      <widget class="QFrame" name="frameNetPayControls">
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
        </property>
-       <layout class="QFormLayout" name="formNetPay">
-        <item row="0" column="0">
-         <widget class="QLabel" name="auto_label_044">
+       <property name="maximumSize">
+        <size>
+         <width>340</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutNetPayControls">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblNetPayTitle">
+          <property name="styleSheet">
+           <string>font-size:16px;font-weight:700;color:#274B72;padding:2px 0;</string>
+          </property>
           <property name="text">
-           <string>Well:</string>
+           <string>Net Pay Inputs</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboNetPayWell">
+        <item>
+         <widget class="QGroupBox" name="groupNetPayParams">
+          <property name="title">
+           <string>Cutoff Criteria</string>
+          </property>
+          <layout class="QFormLayout" name="formNetPay">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_044">
+             <property name="text">
+              <string>Well:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboNetPayWell">
+             <item>
+              <property name="text">
+               <string>CHr-1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>All Wells</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_045">
+             <property name="text">
+              <string>Vcl Cutoff (max):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinNetPayVcl">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.400000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="auto_label_046">
+             <property name="text">
+              <string>PHIE Cutoff (min):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="spinNetPayPhi">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.080000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="auto_label_047">
+             <property name="text">
+              <string>Sw Cutoff (max):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="spinNetPaySw">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.650000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="auto_label_048">
+             <property name="text">
+              <string>Perm Cutoff (mD):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QDoubleSpinBox" name="spinNetPayPerm">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>10000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="auto_label_049">
+             <property name="text">
+              <string>Flag Output Name:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="lineNetPayOut">
+             <property name="text">
+              <string>Pay_Flag</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblNetPayHint">
+          <property name="styleSheet">
+           <string>color:#6C7E90;font-size:12px;line-height:1.4;</string>
+          </property>
+          <property name="text">
+           <string>Combine Vsh, effective porosity, Sw and permeability cutoffs to flag productive intervals across the selected well.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacerNetPayControls">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layoutNetPayActions">
+          <property name="spacing">
+           <number>8</number>
+          </property>
           <item>
-           <property name="text">
-            <string>CHr-1</string>
-           </property>
+           <widget class="QPushButton" name="btnCalcNetPay">
+            <property name="styleSheet">
+             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+            </property>
+            <property name="text">
+             <string>Run Net Pay</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>All Wells</string>
-           </property>
+           <widget class="QPushButton" name="btnResetNetPay">
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
           </item>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="auto_label_045">
-          <property name="text">
-           <string>Vcl Cutoff (max):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="spinNetPayVcl">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.400000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="auto_label_046">
-          <property name="text">
-           <string>PHIE Cutoff (min):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="spinNetPayPhi">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="maximum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.080000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="auto_label_047">
-          <property name="text">
-           <string>Sw Cutoff (max):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="spinNetPaySw">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.650000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="auto_label_048">
-          <property name="text">
-           <string>Perm Cutoff (mD):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="spinNetPayPerm">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <double>10000.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.100000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="auto_label_049">
-          <property name="text">
-           <string>Flag Output Name:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="lineNetPayOut">
-          <property name="text">
-           <string>Pay_Flag</string>
-          </property>
-         </widget>
+         </layout>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frameNetPayCanvas">
+      <widget class="QFrame" name="frameNetPayWorkspace">
        <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout">
+       <layout class="QVBoxLayout" name="layoutNetPayWorkspace">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
         <item>
-         <widget class="QLabel" name="lblNetPayPlaceholder">
+         <layout class="QHBoxLayout" name="layoutNetPayCards">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="cardNetPayVcl">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardNetPayVcl">
+             <item>
+              <widget class="QLabel" name="lblNetPayVclTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Vcl Cutoff</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblNetPayVclValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#2B6CB0;</string>
+               </property>
+               <property name="text">
+                <string>0.40</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardNetPayPhi">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardNetPayPhi">
+             <item>
+              <widget class="QLabel" name="lblNetPayPhiTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>PHIE Cutoff</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblNetPayPhiValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#17A673;</string>
+               </property>
+               <property name="text">
+                <string>0.08</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardNetPaySw">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardNetPaySw">
+             <item>
+              <widget class="QLabel" name="lblNetPaySwTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Sw Cutoff</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblNetPaySwValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#D97706;</string>
+               </property>
+               <property name="text">
+                <string>0.65</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameNetPayCanvas">
           <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
+           <string>background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;</string>
           </property>
-          <property name="text">
-           <string>Net Pay flag log canvas
-(results table will appear here)</string>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
           </property>
+          <layout class="QVBoxLayout" name="layoutNetPayCanvas">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblNetPayPlotTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Net Pay Flag Preview</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblNetPayPlaceholder">
+             <property name="styleSheet">
+              <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+             </property>
+             <property name="text">
+              <string>Net pay flag log canvas
+(results table or interval summary will appear here)</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameNetPaySummary">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutNetPaySummary">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblNetPaySummaryTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Cutoff Checklist</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblNetPaySummaryText">
+             <property name="styleSheet">
+              <string>color:#6C7E90;font-size:12px;</string>
+             </property>
+             <property name="text">
+              <string>Reservoir intervals typically pass when shale volume is low, porosity is above cutoff, water saturation is below cutoff and permeability stays productive.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
