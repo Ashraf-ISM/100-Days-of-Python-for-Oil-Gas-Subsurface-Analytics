@@ -1,0 +1,2088 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CalcToolsDialog</class>
+ <widget class="QDialog" name="CalcToolsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1160</width>
+    <height>820</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>PetroAnalyst Pro — Calculations &amp; Tools</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ============================================================
+   PETROANALYST PRO — CALCULATIONS &amp; TOOLS DIALOG
+   Inherits the main Light Professional Theme
+   ============================================================ */
+
+QDialog {
+    background-color: #EBF0F6;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+}
+
+/* ---- Header Banner ---- */
+#frameHeader {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #1D4A85, stop:0.5 #2A5C9E, stop:1 #3A72B5);
+    border-bottom: 2px solid #1A3F78;
+    min-height: 52px;
+    max-height: 52px;
+}
+#lblHeaderTitle {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+#lblHeaderSub {
+    color: rgba(210,230,255,0.85);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+/* ---- Navigation Tree ---- */
+#treeNav {
+    background-color: #F0F5FB;
+    border: none;
+    border-right: 1px solid #C2D0E0;
+    font-size: 12px;
+    outline: 0;
+    color: #1B2B40;
+    min-width: 210px;
+    max-width: 210px;
+}
+#treeNav::item {
+    padding: 5px 8px 5px 6px;
+    border-radius: 3px;
+    min-height: 22px;
+}
+#treeNav::item:hover {
+    background-color: #D6E5F5;
+}
+#treeNav::item:selected {
+    background-color: #3A72B5;
+    color: #FFFFFF;
+    border-radius: 3px;
+}
+#treeNav QHeaderView { height: 0px; }
+
+/* ---- Stacked Content Area ---- */
+#stackedContent {
+    background-color: #EBF0F6;
+}
+
+/* ---- Module Pages ---- */
+QGroupBox {
+    font-size: 11px;
+    font-weight: 700;
+    color: #2A5090;
+    border: 1px solid #C2D4E6;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+    background-color: #FAFCFF;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+    background-color: #FAFCFF;
+    color: #2A5090;
+}
+
+/* ---- Buttons ---- */
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #4A82C4, stop:1 #2A5C9E);
+    color: #FFFFFF;
+    border: 1px solid #1D4A85;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    min-height: 26px;
+}
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #5A92D4, stop:1 #3A6CAE);
+}
+QPushButton:pressed { background-color: #1D4A85; }
+QPushButton:disabled {
+    background-color: #C8D8E8;
+    color: #8898A8;
+    border-color: #B8C8D8;
+}
+QPushButton#btnClose {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #E0E8F0, stop:1 #C8D4E0);
+    color: #2B4A6E;
+    border-color: #AABBD0;
+}
+QPushButton#btnClose:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #D0DCE8, stop:1 #B8C8D8);
+}
+QPushButton#btnReset {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #F5E8D0, stop:1 #DFCAAA);
+    color: #6B4A1A;
+    border-color: #C8A870;
+}
+QPushButton#btnCalculate {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #3CB85A, stop:1 #259645);
+    color: #FFFFFF;
+    border-color: #1E7A38;
+    min-width: 110px;
+}
+QPushButton#btnCalculate:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #4CC86A, stop:1 #35A655);
+}
+
+/* ---- Form Controls ---- */
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #BFCFDF;
+    border-radius: 3px;
+    padding: 3px 7px;
+    color: #1B2B40;
+    font-size: 12px;
+    min-height: 22px;
+    selection-background-color: #3A72B5;
+    selection-color: white;
+}
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {
+    border-color: #3A72B5;
+    background-color: #F0F7FF;
+}
+QComboBox::drop-down { border: none; padding-right: 5px; width: 18px; }
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    border: 1px solid #BFCFDF;
+    selection-background-color: #3A72B5;
+    selection-color: white;
+    font-size: 12px;
+}
+QSpinBox::up-button, QDoubleSpinBox::up-button,
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    background-color: #E0EAF5; border: none; border-radius: 2px; width: 16px;
+}
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover,
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {
+    background-color: #3A72B5; color: white;
+}
+
+/* ---- CheckBox / RadioButton ---- */
+QCheckBox, QRadioButton {
+    font-size: 12px; color: #1B2B40; spacing: 5px;
+}
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 14px; height: 14px;
+    border: 1.5px solid #9BB0C6;
+    background-color: white;
+}
+QCheckBox::indicator { border-radius: 3px; }
+QRadioButton::indicator { border-radius: 7px; }
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #3A72B5; border-color: #2A5C9E;
+}
+
+/* ---- Table Widget ---- */
+QTableWidget, QTableView {
+    background-color: #FFFFFF;
+    alternate-background-color: #EFF5FC;
+    gridline-color: #D8E6F2;
+    border: 1px solid #C2D0E0;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #1B2B40;
+    selection-background-color: #3A72B5;
+    selection-color: white;
+}
+QHeaderView::section {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #EBF0F6, stop:1 #DDEAF5);
+    color: #2B4A6E;
+    border: none;
+    border-right: 1px solid #C8D8E8;
+    border-bottom: 1px solid #C8D8E8;
+    padding: 5px 8px;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* ---- Tab Widget ---- */
+QTabWidget::pane {
+    background-color: #FFFFFF;
+    border: 1px solid #C2D0E0;
+    border-radius: 0 4px 4px 4px;
+    top: -1px;
+}
+QTabBar::tab {
+    background-color: #D5E3F0;
+    color: #3A5878;
+    padding: 5px 12px;
+    border: 1px solid #BECFE6;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-right: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 48px;
+}
+QTabBar::tab:selected { background-color: #3A72B5; color: #FFFFFF; border-color: #2A5C9E; }
+QTabBar::tab:hover:!selected { background-color: #C0D5EC; color: #1B2B40; }
+
+/* ---- Labels ---- */
+QLabel { color: #1B2B40; font-size: 12px; }
+
+/* ---- Progress Bar ---- */
+QProgressBar {
+    background-color: #DCE9F5;
+    border: 1px solid #BFCFDF;
+    border-radius: 4px;
+    text-align: center;
+    color: #1B2B40;
+    font-size: 11px;
+    font-weight: 600;
+    max-height: 14px;
+}
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #3A72B5, stop:1 #56A0E0);
+    border-radius: 3px;
+}
+
+/* ---- Scroll Bars ---- */
+QScrollBar:vertical {
+    background-color: #EBF0F6; width: 12px; border-radius: 6px; margin: 0;
+}
+QScrollBar::handle:vertical {
+    background-color: #AABFD6; border-radius: 5px; min-height: 28px; margin: 2px;
+}
+QScrollBar::handle:vertical:hover { background-color: #3A72B5; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+QScrollBar:horizontal {
+    background-color: #EBF0F6; height: 12px; border-radius: 6px; margin: 0;
+}
+QScrollBar::handle:horizontal {
+    background-color: #AABFD6; border-radius: 5px; min-width: 28px; margin: 2px;
+}
+QScrollBar::handle:horizontal:hover { background-color: #3A72B5; }
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0; }
+
+/* ---- Tool Tips ---- */
+QToolTip {
+    background-color: #1D3A5E; color: #FFFFFF;
+    border: 1px solid #9BB8D5; border-radius: 4px;
+    padding: 5px 9px; font-size: 11px;
+}
+
+/* ---- Splitter ---- */
+QSplitter::handle { background-color: #C2D0E0; }
+QSplitter::handle:horizontal { width: 3px; }
+QSplitter::handle:hover { background-color: #3A72B5; }
+
+/* ---- Bottom Bar ---- */
+#frameBottomBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #E0E8F2, stop:1 #D0DCEC);
+    border-top: 1px solid #C2D0E0;
+    min-height: 46px;
+    max-height: 46px;
+}
+#lblStatusMsg {
+    color: #3A5878;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* ---- Canvas Frames ---- */
+#frameCanvas {
+    background: #FFFFFF;
+    border: 1px solid #C2D0E0;
+    border-radius: 4px;
+}
+
+/* ---- Welcome page ---- */
+#lblWelcomeTitle {
+    color: #2A5090;
+    font-size: 17px;
+    font-weight: 700;
+}
+#lblWelcomeSub {
+    color: #4A6A8A;
+    font-size: 12px;
+}
+
+/* ---- Section badge labels ---- */
+#lblSectionBadge {
+    background-color: #3A72B5;
+    color: #FFFFFF;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* ---- Formula TextEdit ---- */
+QTextEdit {
+    background-color: #F5F9FE;
+    color: #1B2B40;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 12px;
+    border: 1px solid #BFCFDF;
+    border-radius: 3px;
+    selection-background-color: #3A72B5;
+}
+QTextEdit:focus { border-color: #3A72B5; background-color: #F0F7FF; }
+
+/* ---- List Widget ---- */
+QListWidget {
+    background-color: #FFFFFF;
+    alternate-background-color: #F4F8FD;
+    border: 1px solid #CCDAEA;
+    border-radius: 3px;
+    color: #1B2B40;
+    font-size: 12px;
+    outline: 0;
+}
+QListWidget::item { padding: 3px 6px; border-radius: 2px; min-height: 20px; }
+QListWidget::item:hover { background-color: #E5EFF8; }
+QListWidget::item:selected { background-color: #3A72B5; color: #FFFFFF; }
+
+/* ---- Slider ---- */
+QSlider::groove:horizontal {
+    height: 4px; background-color: #C2D4E6; border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    width: 14px; height: 14px;
+    background-color: #3A72B5; border-radius: 7px;
+    margin: -5px 0; border: 1px solid #2A5C9E;
+}
+QSlider::sub-page:horizontal { background-color: #3A72B5; border-radius: 2px; }
+   </string>
+  </property>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN VERTICAL LAYOUT
+       ═══════════════════════════════════════════════════════════ -->
+  <layout class="QVBoxLayout" name="layoutMain">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+
+   <!-- ── HEADER BANNER ────────────────────────────────────── -->
+   <item>
+    <widget class="QFrame" name="frameHeader">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <layout class="QHBoxLayout" name="layoutHeader">
+      <property name="leftMargin"><number>18</number></property>
+      <property name="topMargin"><number>0</number></property>
+      <property name="rightMargin"><number>18</number></property>
+      <property name="bottomMargin"><number>0</number></property>
+      <property name="spacing"><number>12</number></property>
+      <item>
+       <layout class="QVBoxLayout">
+        <property name="spacing"><number>1</number></property>
+        <item>
+         <widget class="QLabel" name="lblHeaderTitle">
+          <property name="text"><string>Calculations &amp; Tools</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblHeaderSub">
+          <property name="text"><string>Petrophysics calculations, reservoir analysis and log-processing utilities</string></property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblHeaderWell">
+        <property name="styleSheet"><string>color:rgba(210,230,255,0.9);font-size:11px;</string></property>
+        <property name="text"><string>Active Well:  CHr-1</string></property>
+        <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <!-- ── SPLITTER: NAV TREE  |  CONTENT STACK ──────────────── -->
+   <item>
+    <widget class="QSplitter" name="splitterMain">
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+     <property name="handleWidth"><number>3</number></property>
+     <property name="childrenCollapsible"><bool>false</bool></property>
+
+     <!-- LEFT: Navigation Tree -->
+     <widget class="QTreeWidget" name="treeNav">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch><verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="alternatingRowColors"><bool>false</bool></property>
+      <property name="rootIsDecorated"><bool>true</bool></property>
+      <property name="itemsExpandable"><bool>true</bool></property>
+      <property name="headerHidden"><bool>true</bool></property>
+      <property name="expandsOnDoubleClick"><bool>false</bool></property>
+      <column><property name="text"><string>Module</string></property></column>
+
+      <!-- Category: Petrophysics Calculations -->
+      <item>
+       <property name="text">
+        <string>Petrophysics Calculations</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Shale Volume (Vcl)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Porosity (PHIT / PHIE)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Water Saturation (Sw)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Permeability (K)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Net Pay / Cutoff</string>
+        </property>
+       </item>
+      </item>
+
+      <!-- Category: Reservoir & Rock Physics -->
+      <item>
+       <property name="text">
+        <string>Reservoir &amp; Rock Physics</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Multimineral Inversion</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rock Physics Templates</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Fluid Substitution (Gassmann)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Volumetrics (OOIP / OGIP)</string>
+        </property>
+       </item>
+      </item>
+
+      <!-- Category: Tools & Utilities -->
+      <item>
+       <property name="text">
+        <string>Tools &amp; Utilities</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Unit Converter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Depth / Time Converter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Curve Math (Formula)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Log Normalization / QC</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Splice &amp; Merge Curves</string>
+        </property>
+       </item>
+      </item>
+     </widget>
+
+     <!-- RIGHT: Stacked Content -->
+     <widget class="QStackedWidget" name="stackedContent">
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 0 — WELCOME / OVERVIEW
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageWelcome">
+       <layout class="QVBoxLayout" name="layoutWelcome">
+        <property name="leftMargin"><number>30</number></property>
+        <property name="topMargin"><number>30</number></property>
+        <property name="rightMargin"><number>30</number></property>
+        <property name="bottomMargin"><number>30</number></property>
+        <item>
+         <spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblWelcomeTitle">
+          <property name="text"><string>Select a module from the navigation panel</string></property>
+          <property name="alignment"><set>Qt::AlignHCenter</set></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblWelcomeSub">
+          <property name="text"><string>Choose a calculation or tool from the left-hand tree to get started.
+All results are stored as new curves in your active well dataset.</string></property>
+          <property name="alignment"><set>Qt::AlignHCenter</set></property>
+          <property name="wordWrap"><bool>true</bool></property>
+         </widget>
+        </item>
+        <item>
+         <spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer>
+        </item>
+        <!-- Quick-launch cards row -->
+        <item>
+         <layout class="QHBoxLayout" name="layoutQuickCards">
+          <item>
+           <widget class="QGroupBox" name="cardCalcQuick">
+            <property name="title"><string>Quick Calculations</string></property>
+            <layout class="QVBoxLayout">
+             <item><widget class="QPushButton" name="btnQuickVcl"><property name="text"><string>Shale Volume (Vcl)</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickPhi"><property name="text"><string>Porosity (PHIE)</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickSw"><property name="text"><string>Water Saturation (Sw)</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickPerm"><property name="text"><string>Permeability (K)</string></property></widget></item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="cardRockQuick">
+            <property name="title"><string>Reservoir Analysis</string></property>
+            <layout class="QVBoxLayout">
+             <item><widget class="QPushButton" name="btnQuickMultimin"><property name="text"><string>Multimineral Inversion</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickGassmann"><property name="text"><string>Fluid Substitution</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickVolumetrics"><property name="text"><string>Volumetrics (OOIP)</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickNetPay"><property name="text"><string>Net Pay / Cutoff</string></property></widget></item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="cardToolsQuick">
+            <property name="title"><string>Tools &amp; Utilities</string></property>
+            <layout class="QVBoxLayout">
+             <item><widget class="QPushButton" name="btnQuickUnit"><property name="text"><string>Unit Converter</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickDepth"><property name="text"><string>Depth / Time Converter</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickFormula"><property name="text"><string>Curve Math (Formula)</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnQuickNorm"><property name="text"><string>Log Normalization</string></property></widget></item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 1 — SHALE VOLUME (Vcl)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageShaleVolume">
+       <layout class="QVBoxLayout" name="layoutPageVcl">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <!-- Page title -->
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel" name="lblVclPageTitle"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Shale Volume (Vcl) Calculation</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel" name="lblVclBadge"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>PETROPHYSICS</string></property></widget></item>
+         </layout>
+        </item>
+        <!-- Main content splitter -->
+        <item>
+         <widget class="QSplitter" name="splitterVcl">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <!-- Parameters panel -->
+          <widget class="QScrollArea" name="scrollVclParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollVclContents">
+            <layout class="QVBoxLayout">
+             <property name="spacing"><number>6</number></property>
+             <!-- Well & Zone -->
+             <item>
+              <widget class="QGroupBox" name="groupVclWell">
+               <property name="title"><string>Well &amp; Zone Selection</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Well:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboVcl2Well"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item><item><property name="text"><string>Experior</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Apply to Zone:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboVcl2Zone"><item><property name="text"><string>Entire Well</string></property></item><item><property name="text"><string>Zone A</string></property></item><item><property name="text"><string>Zone B</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Depth Range:</string></property></widget></item>
+                <item row="2" column="1">
+                 <layout class="QHBoxLayout">
+                  <item><widget class="QDoubleSpinBox" name="spinVcl2DepthTop"><property name="suffix"><string> m</string></property><property name="maximum"><double>9999.0</double></property><property name="value"><double>1000.0</double></property></widget></item>
+                  <item><widget class="QLabel"><property name="text"><string>to</string></property><property name="alignment"><set>Qt::AlignHCenter</set></property></widget></item>
+                  <item><widget class="QDoubleSpinBox" name="spinVcl2DepthBase"><property name="suffix"><string> m</string></property><property name="maximum"><double>9999.0</double></property><property name="value"><double>2500.0</double></property></widget></item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <!-- GR-Based method -->
+             <item>
+              <widget class="QGroupBox" name="groupVclGR">
+               <property name="title"><string>GR-Based Parameters</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>GR Curve:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboVcl2GR"><item><property name="text"><string>GR</string></property></item><item><property name="text"><string>CGR</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>GR Clean (min):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinVcl2GRmin"><property name="suffix"><string> API</string></property><property name="maximum"><double>300.0</double></property><property name="value"><double>15.0</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>GR Shale (max):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinVcl2GRmax"><property name="suffix"><string> API</string></property><property name="maximum"><double>300.0</double></property><property name="value"><double>120.0</double></property></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>Auto-detect GR min/max:</string></property></widget></item>
+                <item row="3" column="1"><widget class="QCheckBox" name="checkVclAutoGR"><property name="text"><string>Use P5 / P95 percentiles</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <!-- Method & Correction -->
+             <item>
+              <widget class="QGroupBox" name="groupVclMethod">
+               <property name="title"><string>Calculation Method</string></property>
+               <layout class="QVBoxLayout">
+                <item>
+                 <layout class="QFormLayout">
+                  <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Primary Method:</string></property></widget></item>
+                  <item row="0" column="1"><widget class="QComboBox" name="comboVcl2Method"><item><property name="text"><string>Linear GR Index</string></property></item><item><property name="text"><string>Larionov — Tertiary Rocks</string></property></item><item><property name="text"><string>Larionov — Older Rocks</string></property></item><item><property name="text"><string>Steiber</string></property></item><item><property name="text"><string>Clavier</string></property></item><item><property name="text"><string>Neutron-Density (N-D)</string></property></item><item><property name="text"><string>SP Curve</string></property></item></widget></item>
+                  <item row="1" column="0"><widget class="QLabel"><property name="text"><string>SP Curve (if used):</string></property></widget></item>
+                  <item row="1" column="1"><widget class="QComboBox" name="comboVcl2SP"><item><property name="text"><string>SP</string></property></item><item><property name="text"><string>N/A</string></property></item></widget></item>
+                  <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Cap Vcl at 1.0:</string></property></widget></item>
+                  <item row="2" column="1"><widget class="QCheckBox" name="checkVclCap"><property name="text"><string>Enabled</string></property><property name="checked"><bool>true</bool></property></widget></item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <!-- Output -->
+             <item>
+              <widget class="QGroupBox" name="groupVclOutput">
+               <property name="title"><string>Output</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Output Curve Name:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QLineEdit" name="lineVcl2OutName"><property name="text"><string>VSH</string></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Overwrite existing:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QCheckBox" name="checkVclOverwrite"><property name="text"><string>Yes</string></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Store in project:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QCheckBox" name="checkVclSaveProject"><property name="text"><string>Yes</string></property><property name="checked"><bool>true</bool></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <!-- Preview canvas -->
+          <widget class="QFrame" name="frameVcl2Canvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsVclResult">
+              <widget class="QWidget" name="tabVclPreview">
+               <attribute name="title"><string>Log Preview</string></attribute>
+               <layout class="QVBoxLayout">
+                <item><widget class="QLabel" name="lblVcl2Canvas"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Vcl preview log canvas
+(appears after Calculate)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tabVclStats">
+               <attribute name="title"><string>Statistics</string></attribute>
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QTableWidget" name="tableVclStats">
+                  <property name="alternatingRowColors"><bool>true</bool></property>
+                  <property name="rowCount"><number>6</number></property>
+                  <property name="columnCount"><number>2</number></property>
+                  <column><property name="text"><string>Parameter</string></property></column>
+                  <column><property name="text"><string>Value</string></property></column>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tabVclFormula">
+               <attribute name="title"><string>Formula Reference</string></attribute>
+               <layout class="QVBoxLayout">
+                <item><widget class="QLabel" name="lblVclFormula"><property name="styleSheet"><string>font-size:12px;color:#1B2B40;padding:10px;</string></property><property name="wordWrap"><bool>true</bool></property><property name="text"><string>&lt;b&gt;Linear GR Index:&lt;/b&gt;  IGR = (GR - GR_min) / (GR_max - GR_min)&lt;br&gt;&lt;br&gt;&lt;b&gt;Larionov (Tertiary):&lt;/b&gt;  Vcl = 0.083 × (2^(3.7×IGR) - 1)&lt;br&gt;&lt;b&gt;Larionov (Older Rocks):&lt;/b&gt;  Vcl = 0.33 × (2^(2×IGR) - 1)&lt;br&gt;&lt;b&gt;Steiber:&lt;/b&gt;  Vcl = IGR / (3 - 2×IGR)&lt;br&gt;&lt;b&gt;Clavier:&lt;/b&gt;  Vcl = 1.7 - √(3.38 - (IGR + 0.7)²)</string></property></widget></item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 2 — POROSITY (PHIT / PHIE)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pagePorosity">
+       <layout class="QVBoxLayout" name="layoutPagePhi">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Porosity Calculation (PHIT / PHIE)</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>PETROPHYSICS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterPhi">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollPhiParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollPhiContents">
+            <layout class="QVBoxLayout">
+             <property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox" name="groupPhi2Well">
+               <property name="title"><string>Well &amp; Zone</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Well:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPhi2Well"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Zone:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboPhi2Zone"><item><property name="text"><string>Entire Well</string></property></item><item><property name="text"><string>Zone A</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupPhi2Method">
+               <property name="title"><string>Porosity Method</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Primary Method:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPhi2Method"><item><property name="text"><string>Density (PHID)</string></property></item><item><property name="text"><string>Neutron (PHIN)</string></property></item><item><property name="text"><string>Sonic / DT (PHIS)</string></property></item><item><property name="text"><string>Neutron-Density Crossplot</string></property></item><item><property name="text"><string>Neutron-Density Average</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupPhi2DensParams">
+               <property name="title"><string>Density Parameters</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>RHOB Curve:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPhi2RHOB"><item><property name="text"><string>RHOB</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Matrix Density (ρma):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboPhi2RhoMa"><item><property name="text"><string>Sandstone — 2.65 g/cc</string></property></item><item><property name="text"><string>Limestone — 2.71 g/cc</string></property></item><item><property name="text"><string>Dolomite — 2.87 g/cc</string></property></item><item><property name="text"><string>Custom...</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Custom ρma (g/cc):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPhi2RhoMa"><property name="decimals"><number>3</number></property><property name="minimum"><double>2.0</double></property><property name="maximum"><double>3.5</double></property><property name="value"><double>2.650</double></property></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>Fluid Density (ρfl):</string></property></widget></item>
+                <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPhi2RhoFl"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.5</double></property><property name="maximum"><double>1.2</double></property><property name="value"><double>1.000</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupPhi2NeutParams">
+               <property name="title"><string>Neutron &amp; Sonic Parameters</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>NPHI Curve:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPhi2NPHI"><item><property name="text"><string>NPHI</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>DT Curve (sonic):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboPhi2DT"><item><property name="text"><string>DT</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>DTma (μs/ft):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPhi2DTma"><property name="decimals"><number>1</number></property><property name="minimum"><double>40.0</double></property><property name="maximum"><double>100.0</double></property><property name="value"><double>55.5</double></property></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>DTfl (μs/ft):</string></property></widget></item>
+                <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPhi2DTfl"><property name="decimals"><number>1</number></property><property name="minimum"><double>180.0</double></property><property name="maximum"><double>220.0</double></property><property name="value"><double>189.0</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupPhi2Correction">
+               <property name="title"><string>Corrections &amp; Output</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Vcl Curve (for PHIE):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPhi2Vcl"><item><property name="text"><string>VSH</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Shale Porosity (PHIsh):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinPhi2PHIsh"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>0.5</double></property><property name="value"><double>0.120</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>PHIT Output Name:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QLineEdit" name="linePhi2OutPHIT"><property name="text"><string>PHIT</string></property></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>PHIE Output Name:</string></property></widget></item>
+                <item row="3" column="1"><widget class="QLineEdit" name="linePhi2OutPHIE"><property name="text"><string>PHIE</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="framePhiCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsPhiResult">
+              <widget class="QWidget" name="tabPhiPreview"><attribute name="title"><string>Log Preview</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Porosity preview log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget" name="tabPhiCrossplot"><attribute name="title"><string>N-D Crossplot</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Neutron-Density crossplot canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget" name="tabPhiStats"><attribute name="title"><string>Statistics</string></attribute><layout class="QVBoxLayout"><item><widget class="QTableWidget" name="tablePhiStats"><property name="alternatingRowColors"><bool>true</bool></property><property name="rowCount"><number>8</number></property><property name="columnCount"><number>3</number></property><column><property name="text"><string>Curve</string></property></column><column><property name="text"><string>Mean</string></property></column><column><property name="text"><string>Std Dev</string></property></column></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 3 — WATER SATURATION (Sw)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageWaterSat">
+       <layout class="QVBoxLayout" name="layoutPageSw">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Water Saturation (Sw) Calculation</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>PETROPHYSICS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterSw">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollSwParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollSwContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox" name="groupSw2Well"><property name="title"><string>Well &amp; Zone</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Well:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboSw2Well"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupSw2Method"><property name="title"><string>Saturation Model</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Model:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboSw2Model"><item><property name="text"><string>Archie (Clean Sand)</string></property></item><item><property name="text"><string>Simandoux</string></property></item><item><property name="text"><string>Indonesia (Poupon-Leveaux)</string></property></item><item><property name="text"><string>Waxman-Smits</string></property></item><item><property name="text"><string>Dual-Water</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Rt Curve (deep res.):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboSw2Rt"><item><property name="text"><string>LLD</string></property></item><item><property name="text"><string>ILD</string></property></item><item><property name="text"><string>AT90</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>PHIE Curve:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboSw2PHIE"><item><property name="text"><string>PHIE</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupSw2ArchieParams"><property name="title"><string>Archie Parameters</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Rw (Ω·m):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinSw2Rw"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>10.0</double></property><property name="value"><double>0.0500</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>a — tortuosity:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinSw2A"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.1</double></property><property name="maximum"><double>2.0</double></property><property name="value"><double>1.000</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>m — cementation:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinSw2M"><property name="decimals"><number>3</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>3.0</double></property><property name="value"><double>2.000</double></property></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>n — saturation:</string></property></widget></item>
+                <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinSw2N"><property name="decimals"><number>3</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>3.0</double></property><property name="value"><double>2.000</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupSw2ShaleParams"><property name="title"><string>Shaly-Sand Parameters (Simandoux / Indonesia)</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Vcl Curve:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboSw2Vcl"><item><property name="text"><string>VSH</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Rsh (Ω·m):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinSw2Rsh"><property name="decimals"><number>2</number></property><property name="minimum"><double>0.1</double></property><property name="maximum"><double>50.0</double></property><property name="value"><double>2.00</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupSw2Output"><property name="title"><string>Output</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>SW Output Name:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QLineEdit" name="lineSw2Out"><property name="text"><string>SW</string></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Cap Sw [0–1]:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QCheckBox" name="checkSw2Cap"><property name="text"><string>Enabled</string></property><property name="checked"><bool>true</bool></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameSwCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsSwResult">
+              <widget class="QWidget" name="tabSwPreview"><attribute name="title"><string>Log Preview</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Sw preview log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget" name="tabSwPickett"><attribute name="title"><string>Pickett Plot</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Pickett plot canvas (Rt vs PHIE log-log)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget" name="tabSwSensitivity"><attribute name="title"><string>Parameter Sensitivity</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Sensitivity analysis chart (a, m, n vs Sw)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 4 — PERMEABILITY (K)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pagePermeability">
+       <layout class="QVBoxLayout" name="layoutPagePerm">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Permeability (K) Calculation</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>PETROPHYSICS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterPerm">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollPermParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollPermContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Well</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Well:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPerm2Well"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Model Selection</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Model:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboPerm2Model"><item><property name="text"><string>Timur / Coates (BVI)</string></property></item><item><property name="text"><string>Kozeny-Carman</string></property></item><item><property name="text"><string>Wyllie-Rose</string></property></item><item><property name="text"><string>Morris-Biggs (Gas)</string></property></item><item><property name="text"><string>Core Regression (Custom)</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>PHIE Curve:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboPerm2PHIE"><item><property name="text"><string>PHIE</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>BVI / Swi Curve:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboPerm2BVI"><item><property name="text"><string>SW</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Timur / Coates Coefficients</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Coefficient C:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinPerm2C"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>100.0</double></property><property name="value"><double>0.0316</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Swi — irreducible:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinPerm2Swi"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.200</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Exponent e (PHIE):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPerm2E"><property name="decimals"><number>2</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>8.0</double></property><property name="value"><double>4.50</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Core Regression (Custom)</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>log(K) = A × PHIE + B:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QLabel"><property name="text"><string></string></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Coefficient A:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinPerm2RegA"><property name="decimals"><number>3</number></property><property name="minimum"><double>-100.0</double></property><property name="maximum"><double>100.0</double></property><property name="value"><double>15.0</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Intercept B:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPerm2RegB"><property name="decimals"><number>3</number></property><property name="minimum"><double>-20.0</double></property><property name="maximum"><double>20.0</double></property><property name="value"><double>-2.5</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Output</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>K Output Name:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QLineEdit" name="linePerm2Out"><property name="text"><string>PERM</string></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Output units:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboPerm2Units"><item><property name="text"><string>mD (milliDarcy)</string></property></item><item><property name="text"><string>μD (microDarcy)</string></property></item><item><property name="text"><string>m² (SI)</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="framePerm2Canvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsPermResult">
+              <widget class="QWidget"><attribute name="title"><string>Log Preview</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Permeability log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Core vs Log</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Core-calibration crossplot canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 5 — NET PAY / CUTOFF
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageNetPay2">
+       <layout class="QVBoxLayout" name="layoutPageNP">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Net Pay &amp; Cutoff Analysis</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>PETROPHYSICS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterNP">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollNPParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollNPContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Well &amp; Zone</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Well:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboNP2Well"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>All Wells</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Zone:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboNP2Zone"><item><property name="text"><string>Entire Well</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Gross Rock Criteria</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Vcl Cutoff (max):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinNP2Vcl"><property name="decimals"><number>2</number></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.40</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Vcl Curve:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboNP2VclCurve"><item><property name="text"><string>VSH</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Reservoir Criteria</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>PHIE Cutoff (min):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinNP2PHIE"><property name="decimals"><number>3</number></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.080</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>PHIE Curve:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboNP2PHIECurve"><item><property name="text"><string>PHIE</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>K Cutoff (min, mD):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinNP2K"><property name="decimals"><number>2</number></property><property name="maximum"><double>10000.0</double></property><property name="value"><double>0.10</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Pay Criteria</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Sw Cutoff (max):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinNP2Sw"><property name="decimals"><number>2</number></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.65</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Sw Curve:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboNP2SwCurve"><item><property name="text"><string>SW</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Output Flags</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Gross Sand Flag:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QLineEdit" name="lineNP2Gross"><property name="text"><string>GrossFlag</string></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Reservoir Flag:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QLineEdit" name="lineNP2Res"><property name="text"><string>ResFlag</string></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Pay Flag:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QLineEdit" name="lineNP2Pay"><property name="text"><string>Pay_Flag</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameNP2Canvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsNPResult">
+              <widget class="QWidget"><attribute name="title"><string>Flag Log</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Pay / Reservoir / Gross flag log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Net Pay Summary</string></attribute>
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QTableWidget" name="tableNPSummary">
+                  <property name="alternatingRowColors"><bool>true</bool></property>
+                  <property name="rowCount"><number>5</number></property>
+                  <property name="columnCount"><number>4</number></property>
+                  <column><property name="text"><string>Zone</string></property></column>
+                  <column><property name="text"><string>Gross (m)</string></property></column>
+                  <column><property name="text"><string>Net Res (m)</string></property></column>
+                  <column><property name="text"><string>Net Pay (m)</string></property></column>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 6 — MULTIMINERAL INVERSION
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageMultimin">
+       <layout class="QVBoxLayout" name="layoutPageMM">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Multimineral Inversion</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>RESERVOIR</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterMM">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollMMParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollMMContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Input Log Curves</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>GR:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboMMGR"><item><property name="text"><string>GR</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>RHOB:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboMMRHOB"><item><property name="text"><string>RHOB</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>NPHI:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboMMNPHI"><item><property name="text"><string>NPHI</string></property></item></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>PE (photoelectric):</string></property></widget></item>
+                <item row="3" column="1"><widget class="QComboBox" name="comboMMPE"><item><property name="text"><string>PE</string></property></item><item><property name="text"><string>N/A</string></property></item></widget></item>
+                <item row="4" column="0"><widget class="QLabel"><property name="text"><string>DT (sonic):</string></property></widget></item>
+                <item row="4" column="1"><widget class="QComboBox" name="comboMMDT"><item><property name="text"><string>DT</string></property></item><item><property name="text"><string>N/A</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Mineral End-Points</string></property>
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QTableWidget" name="tableMMEndPoints">
+                  <property name="alternatingRowColors"><bool>true</bool></property>
+                  <property name="rowCount"><number>5</number></property>
+                  <property name="columnCount"><number>5</number></property>
+                  <column><property name="text"><string>Mineral</string></property></column>
+                  <column><property name="text"><string>ρ (g/cc)</string></property></column>
+                  <column><property name="text"><string>NPHI</string></property></column>
+                  <column><property name="text"><string>PE (b/e)</string></property></column>
+                  <column><property name="text"><string>GR (API)</string></property></column>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout">
+                  <item><widget class="QPushButton" name="btnMMAddMineral"><property name="text"><string>+ Add Mineral</string></property></widget></item>
+                  <item><widget class="QPushButton" name="btnMMRemoveMineral"><property name="text"><string>– Remove</string></property></widget></item>
+                  <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Solver Settings</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Method:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboMMSolver"><item><property name="text"><string>Weighted Least Squares</string></property></item><item><property name="text"><string>Non-negative Least Squares</string></property></item><item><property name="text"><string>Probabilistic (Monte Carlo)</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Constraint (sum=1):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QCheckBox" name="checkMMConstraint"><property name="text"><string>Enforce volume closure</string></property><property name="checked"><bool>true</bool></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameMMCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsMMResult">
+              <widget class="QWidget"><attribute name="title"><string>Mineral Volume Log</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Stacked mineral volume log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Goodness of Fit</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>GOF / error track canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 7 — ROCK PHYSICS TEMPLATES
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageRockPhysics">
+       <layout class="QVBoxLayout" name="layoutPageRP">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Rock Physics Templates</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>RESERVOIR</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterRP">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollRPParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollRPContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Template &amp; Curves</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>RPT Template:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboRPTemplate"><item><property name="text"><string>Vp/Vs vs AI (Castagna)</string></property></item><item><property name="text"><string>Vp vs Porosity (Han)</string></property></item><item><property name="text"><string>Vs vs Porosity</string></property></item><item><property name="text"><string>Lambda-Rho vs Mu-Rho</string></property></item><item><property name="text"><string>AI vs Vp/Vs</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Vp Curve:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboRPVp"><item><property name="text"><string>VP</string></property></item><item><property name="text"><string>DT (computed)</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Vs Curve:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboRPVs"><item><property name="text"><string>VS</string></property></item><item><property name="text"><string>DTS (computed)</string></property></item></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>RHOB Curve:</string></property></widget></item>
+                <item row="3" column="1"><widget class="QComboBox" name="comboRPRHOB"><item><property name="text"><string>RHOB</string></property></item></widget></item>
+                <item row="4" column="0"><widget class="QLabel" name="labelRPColorBy"><property name="text"><string>Colour by:</string></property></widget></item>
+                <item row="4" column="1"><widget class="QComboBox" name="comboRPColor"><item><property name="text"><string>VSH</string></property></item><item><property name="text"><string>SW</string></property></item><item><property name="text"><string>PHIE</string></property></item><item><property name="text"><string>Depth</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Derived Elastic Properties</string></property>
+               <layout class="QVBoxLayout">
+                <item><widget class="QCheckBox" name="checkRPCalcAI"><property name="text"><string>Compute Acoustic Impedance (AI)</string></property><property name="checked"><bool>true</bool></property></widget></item>
+                <item><widget class="QCheckBox" name="checkRPCalcVpVs"><property name="text"><string>Compute Vp/Vs ratio</string></property><property name="checked"><bool>true</bool></property></widget></item>
+                <item><widget class="QCheckBox" name="checkRPCalcPR"><property name="text"><string>Compute Poisson's Ratio (ν)</string></property></widget></item>
+                <item><widget class="QCheckBox" name="checkRPCalcLR"><property name="text"><string>Compute Lambda·Rho &amp; Mu·Rho</string></property></widget></item>
+                <item><widget class="QCheckBox" name="checkRPCalcE"><property name="text"><string>Compute Young's Modulus (E)</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameRPCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsRPResult">
+              <widget class="QWidget"><attribute name="title"><string>RPT Crossplot</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Rock Physics Template crossplot canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Elastic Log</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Derived elastic log canvas (AI, Vp/Vs, ν)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 8 — FLUID SUBSTITUTION (GASSMANN)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageGassmann">
+       <layout class="QVBoxLayout" name="layoutPageGass">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Fluid Substitution — Gassmann Equation</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>RESERVOIR</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterGass">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollGassParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollGassContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Input Curves</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Vp Curve:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboGassVp"><item><property name="text"><string>VP</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Vs Curve:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboGassVs"><item><property name="text"><string>VS</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>RHOB Curve:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboGassRHOB"><item><property name="text"><string>RHOB</string></property></item></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>PHIE Curve:</string></property></widget></item>
+                <item row="3" column="1"><widget class="QComboBox" name="comboGassPHIE"><item><property name="text"><string>PHIE</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Initial Fluid Properties</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Initial Fluid:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboGassFluid1"><item><property name="text"><string>Brine</string></property></item><item><property name="text"><string>Gas</string></property></item><item><property name="text"><string>Oil</string></property></item><item><property name="text"><string>Mixed (Sw)</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Kfl₁ (GPa):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinGassKfl1"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>5.0</double></property><property name="value"><double>2.500</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>ρfl₁ (g/cc):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinGassRhofl1"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>2.0</double></property><property name="value"><double>1.000</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Substituted Fluid Properties</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Substituted Fluid:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboGassFluid2"><item><property name="text"><string>Gas</string></property></item><item><property name="text"><string>Brine</string></property></item><item><property name="text"><string>Oil</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Kfl₂ (GPa):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinGassKfl2"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>5.0</double></property><property name="value"><double>0.022</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>ρfl₂ (g/cc):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinGassRhofl2"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>2.0</double></property><property name="value"><double>0.200</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Frame &amp; Mineral</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Mineral K₀ (GPa):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinGassK0"><property name="decimals"><number>2</number></property><property name="minimum"><double>10.0</double></property><property name="maximum"><double>100.0</double></property><property name="value"><double>36.6</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>ρmineral (g/cc):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinGassRhoMin"><property name="decimals"><number>3</number></property><property name="minimum"><double>2.0</double></property><property name="maximum"><double>4.0</double></property><property name="value"><double>2.650</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameGassCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsGassResult">
+              <widget class="QWidget"><attribute name="title"><string>Substituted Logs</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Original vs substituted Vp, Vs, RHOB log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Fluid Effect RPT</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>AI vs Vp/Vs: original vs substituted overlay</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 9 — VOLUMETRICS (OOIP / OGIP)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageVolumetrics">
+       <layout class="QVBoxLayout" name="layoutPageVol">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Volumetrics — OOIP / OGIP Estimation</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>RESERVOIR</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterVol">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollVolParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollVolContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Fluid Type</string></property>
+               <layout class="QVBoxLayout">
+                <item><widget class="QRadioButton" name="radioOil"><property name="text"><string>Oil Reservoir (OOIP)</string></property><property name="checked"><bool>true</bool></property></widget></item>
+                <item><widget class="QRadioButton" name="radioGas"><property name="text"><string>Gas Reservoir (OGIP)</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Reservoir Geometry</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Drainage Area (acres):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinVolArea"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.1</double></property><property name="maximum"><double>100000.0</double></property><property name="value"><double>500.0</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Net Pay (ft):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinVolNP"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>5000.0</double></property><property name="value"><double>50.0</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Petrophysical Parameters</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Porosity — φ (frac):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinVolPhi"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.001</double></property><property name="maximum"><double>0.5</double></property><property name="value"><double>0.180</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Sw — water sat. (frac):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinVolSw"><property name="decimals"><number>3</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.250</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Fluid &amp; Recovery</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Formation Vol. Factor (Bo):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinVolBo"><property name="decimals"><number>4</number></property><property name="minimum"><double>0.1</double></property><property name="maximum"><double>5.0</double></property><property name="value"><double>1.250</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Recovery Factor RF (frac):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinVolRF"><property name="decimals"><number>2</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.35</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>OGIP Bg (res ft³/scf):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinVolBg"><property name="decimals"><number>6</number></property><property name="minimum"><double>0.000001</double></property><property name="maximum"><double>1.0</double></property><property name="value"><double>0.005</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameVolCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QGroupBox" name="groupVolResults"><property name="title"><string>Calculation Results</string></property>
+              <layout class="QFormLayout">
+               <item row="0" column="0"><widget class="QLabel"><property name="styleSheet"><string>font-weight:700;</string></property><property name="text"><string>Gross Rock Volume (GRV):</string></property></widget></item>
+               <item row="0" column="1"><widget class="QLineEdit" name="lineVolGRV"><property name="readOnly"><bool>true</bool></property><property name="styleSheet"><string>background:#EBF4FF;font-weight:700;</string></property><property name="placeholderText"><string>— MMBBL</string></property></widget></item>
+               <item row="1" column="0"><widget class="QLabel"><property name="styleSheet"><string>font-weight:700;</string></property><property name="text"><string>Pore Volume (PV):</string></property></widget></item>
+               <item row="1" column="1"><widget class="QLineEdit" name="lineVolPV"><property name="readOnly"><bool>true</bool></property><property name="styleSheet"><string>background:#EBF4FF;font-weight:700;</string></property><property name="placeholderText"><string>— MMBBL</string></property></widget></item>
+               <item row="2" column="0"><widget class="QLabel"><property name="styleSheet"><string>font-weight:700;color:#1A6A30;</string></property><property name="text"><string>OOIP / OGIP:</string></property></widget></item>
+               <item row="2" column="1"><widget class="QLineEdit" name="lineVolOOIP"><property name="readOnly"><bool>true</bool></property><property name="styleSheet"><string>background:#E6F6EC;font-weight:700;color:#1A6A30;font-size:13px;</string></property><property name="placeholderText"><string>— MMBBL or Bcf</string></property></widget></item>
+               <item row="3" column="0"><widget class="QLabel"><property name="styleSheet"><string>font-weight:700;color:#2A5090;</string></property><property name="text"><string>Estimated Recoverable:</string></property></widget></item>
+               <item row="3" column="1"><widget class="QLineEdit" name="lineVolRecoverable"><property name="readOnly"><bool>true</bool></property><property name="styleSheet"><string>background:#EBF4FF;font-weight:700;color:#2A5090;font-size:13px;</string></property><property name="placeholderText"><string>— MMBBL or Bcf</string></property></widget></item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupVolSensitivity"><property name="title"><string>Sensitivity Tornado</string></property>
+              <layout class="QVBoxLayout">
+               <item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:12px;</string></property><property name="text"><string>Tornado chart canvas
+(OOIP sensitivity to φ, Sw, Net Pay, RF)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              </layout>
+             </widget>
+            </item>
+            <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 10 — UNIT CONVERTER
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageUnitConverter">
+       <layout class="QVBoxLayout" name="layoutPageUnit">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Unit Converter</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>TOOLS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupUnitCategory"><property name="title"><string>Conversion Category</string></property>
+          <layout class="QHBoxLayout">
+           <item><widget class="QComboBox" name="comboUnitCategory"><item><property name="text"><string>Pressure</string></property></item><item><property name="text"><string>Depth / Length</string></property></item><item><property name="text"><string>Temperature</string></property></item><item><property name="text"><string>Density</string></property></item><item><property name="text"><string>Resistivity</string></property></item><item><property name="text"><string>Velocity (Vp / Vs)</string></property></item><item><property name="text"><string>Permeability</string></property></item><item><property name="text"><string>Volume (reservoir)</string></property></item><item><property name="text"><string>Flow Rate</string></property></item><item><property name="text"><string>Viscosity</string></property></item></widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupUnitConvert"><property name="title"><string>Value Conversion</string></property>
+          <layout class="QGridLayout">
+           <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Input Value:</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinUnitInput"><property name="decimals"><number>6</number></property><property name="minimum"><double>-1e+09</double></property><property name="maximum"><double>1e+09</double></property><property name="value"><double>1.0</double></property></widget></item>
+           <item row="0" column="2"><widget class="QComboBox" name="comboUnitFrom"><item><property name="text"><string>psi</string></property></item><item><property name="text"><string>MPa</string></property></item><item><property name="text"><string>bar</string></property></item><item><property name="text"><string>atm</string></property></item><item><property name="text"><string>kPa</string></property></item></widget></item>
+           <item row="0" column="3"><widget class="QLabel"><property name="text"><string>→</string></property><property name="alignment"><set>Qt::AlignHCenter</set></property></widget></item>
+           <item row="0" column="4"><widget class="QLineEdit" name="lineUnitResult"><property name="readOnly"><bool>true</bool></property><property name="styleSheet"><string>background:#EBF4FF;font-weight:700;font-size:13px;</string></property></widget></item>
+           <item row="0" column="5"><widget class="QComboBox" name="comboUnitTo"><item><property name="text"><string>MPa</string></property></item><item><property name="text"><string>psi</string></property></item><item><property name="text"><string>bar</string></property></item><item><property name="text"><string>atm</string></property></item><item><property name="text"><string>kPa</string></property></item></widget></item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupUnitTable"><property name="title"><string>Quick Reference Table</string></property>
+          <layout class="QVBoxLayout">
+           <item>
+            <widget class="QTableWidget" name="tableUnitRef">
+             <property name="alternatingRowColors"><bool>true</bool></property>
+             <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+             <property name="rowCount"><number>12</number></property>
+             <property name="columnCount"><number>3</number></property>
+             <column><property name="text"><string>From Unit</string></property></column>
+             <column><property name="text"><string>To Unit</string></property></column>
+             <column><property name="text"><string>Factor</string></property></column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 11 — DEPTH / TIME CONVERTER
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageDepthTime">
+       <layout class="QVBoxLayout" name="layoutPageDT">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Depth / Time Domain Converter</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>TOOLS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterDT">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollDTParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollDTContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Conversion Direction</string></property>
+               <layout class="QVBoxLayout">
+                <item><widget class="QRadioButton" name="radioDT_D2T"><property name="text"><string>Depth → Two-Way Time (TWT)</string></property><property name="checked"><bool>true</bool></property></widget></item>
+                <item><widget class="QRadioButton" name="radioDT_T2D"><property name="text"><string>TWT → Depth</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Velocity Model</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Velocity Source:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboDTVelSource"><item><property name="text"><string>Constant Vint (m/s)</string></property></item><item><property name="text"><string>Interval Velocity Curve</string></property></item><item><property name="text"><string>Check-Shot Table</string></property></item><item><property name="text"><string>Seismic Velocity Field</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Constant Vint (m/s):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinDTVint"><property name="decimals"><number>0</number></property><property name="minimum"><double>1000.0</double></property><property name="maximum"><double>8000.0</double></property><property name="value"><double>2500.0</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Vel Curve (if used):</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboDTVelCurve"><item><property name="text"><string>VINT</string></property></item><item><property name="text"><string>VP</string></property></item></widget></item>
+                <item row="3" column="0"><widget class="QLabel"><property name="text"><string>Datum Correction:</string></property></widget></item>
+                <item row="3" column="1"><widget class="QCheckBox" name="checkDTDatum"><property name="text"><string>Apply KB elevation</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Check-Shot Editor</string></property>
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QTableWidget" name="tableCSTable">
+                  <property name="alternatingRowColors"><bool>true</bool></property>
+                  <property name="rowCount"><number>6</number></property>
+                  <property name="columnCount"><number>2</number></property>
+                  <column><property name="text"><string>Depth (m)</string></property></column>
+                  <column><property name="text"><string>TWT (ms)</string></property></column>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout">
+                  <item><widget class="QPushButton" name="btnCSAddRow"><property name="text"><string>+ Row</string></property></widget></item>
+                  <item><widget class="QPushButton" name="btnCSImport"><property name="text"><string>Import CSV…</string></property></widget></item>
+                  <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameDTCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsDTResult">
+              <widget class="QWidget"><attribute name="title"><string>Depth-Time Curve</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Depth vs TWT conversion curve canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Converted Log</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Converted log in new domain canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 12 — CURVE MATH (FORMULA EDITOR)
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageCurveMath">
+       <layout class="QVBoxLayout" name="layoutPageCM">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Curve Math — Formula Editor</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>TOOLS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterCM">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <!-- Formula editor panel -->
+          <widget class="QWidget" name="widgetCMEditor">
+           <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+            <item>
+             <widget class="QGroupBox"><property name="title"><string>Available Curves</string></property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QListWidget" name="listCMCurves">
+                 <item><property name="text"><string>GR (API)</string></property></item>
+                 <item><property name="text"><string>RHOB (g/cc)</string></property></item>
+                 <item><property name="text"><string>NPHI (frac)</string></property></item>
+                 <item><property name="text"><string>LLD (Ω·m)</string></property></item>
+                 <item><property name="text"><string>DT (μs/ft)</string></property></item>
+                 <item><property name="text"><string>VSH (frac)</string></property></item>
+                 <item><property name="text"><string>PHIE (frac)</string></property></item>
+                 <item><property name="text"><string>SW (frac)</string></property></item>
+                 <item><property name="text"><string>PERM (mD)</string></property></item>
+                </widget>
+               </item>
+               <item><widget class="QLabel"><property name="styleSheet"><string>color:#4A6A8A;font-size:11px;</string></property><property name="text"><string>Double-click a curve to insert it into the formula.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox"><property name="title"><string>Formula (NumPy expressions supported)</string></property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QTextEdit" name="textCMFormula">
+                 <property name="placeholderText"><string>Example:
+result = PHIE * (1 - SW)
+# Hydrocarbon Pore Volume
+
+# Available functions: np.log, np.log10, np.sqrt,
+# np.exp, np.where, np.clip, np.abs</string></property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout">
+                 <item><widget class="QPushButton" name="btnCMValidate"><property name="text"><string>Validate Formula</string></property></widget></item>
+                 <item><widget class="QPushButton" name="btnCMClear"><property name="text"><string>Clear</string></property></widget></item>
+                 <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox"><property name="title"><string>Output Curve</string></property>
+              <layout class="QFormLayout">
+               <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Output Name:</string></property></widget></item>
+               <item row="0" column="1"><widget class="QLineEdit" name="lineCMOutName"><property name="text"><string>CUSTOM_CURVE</string></property></widget></item>
+               <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Output Unit:</string></property></widget></item>
+               <item row="1" column="1"><widget class="QLineEdit" name="lineCMOutUnit"><property name="text"><string>frac</string></property></widget></item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <!-- Preview canvas -->
+          <widget class="QFrame" name="frameCMCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsCMResult">
+              <widget class="QWidget"><attribute name="title"><string>Result Log</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Custom formula result log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Console Output</string></attribute><layout class="QVBoxLayout"><item><widget class="QPlainTextEdit" name="textCMConsole"><property name="readOnly"><bool>true</bool></property><property name="placeholderText"><string>Formula validation and execution messages appear here…</string></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 13 — LOG NORMALIZATION / QC
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageNormalization">
+       <layout class="QVBoxLayout" name="layoutPageNorm">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Log Normalization &amp; QC</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>TOOLS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterNorm">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollNormParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollNormContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Curve &amp; Wells</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Curve to Normalize:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboNormCurve"><item><property name="text"><string>GR</string></property></item><item><property name="text"><string>RHOB</string></property></item><item><property name="text"><string>NPHI</string></property></item><item><property name="text"><string>DT</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Reference Well:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QComboBox" name="comboNormRefWell"><item><property name="text"><string>CHr-1</string></property></item><item><property name="text"><string>Tau-1</string></property></item></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Wells to Normalize:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QListWidget" name="listNormWells"><property name="selectionMode"><enum>QAbstractItemView::MultiSelection</enum></property><item><property name="text"><string>Tau-1</string></property></item><item><property name="text"><string>Experior</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Normalization Method</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Method:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboNormMethod"><item><property name="text"><string>Key-Bed Percentile (P5/P95)</string></property></item><item><property name="text"><string>Mean Shift</string></property></item><item><property name="text"><string>Linear Stretch</string></property></item><item><property name="text"><string>Histogram Matching</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Low percentile:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QSpinBox" name="spinNormLow"><property name="minimum"><number>1</number></property><property name="maximum"><number>49</number></property><property name="value"><number>5</number></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>High percentile:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QSpinBox" name="spinNormHigh"><property name="minimum"><number>51</number></property><property name="maximum"><number>99</number></property><property name="value"><number>95</number></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>QC Spike Filter</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Apply despiking:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QCheckBox" name="checkNormDespike"><property name="text"><string>Enabled</string></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Threshold (σ):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinNormSigma"><property name="decimals"><number>1</number></property><property name="minimum"><double>1.0</double></property><property name="maximum"><double>5.0</double></property><property name="value"><double>3.0</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Replace with:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QComboBox" name="comboNormSpikeReplace"><item><property name="text"><string>Running Median</string></property></item><item><property name="text"><string>Linear Interpolation</string></property></item><item><property name="text"><string>Null (NaN)</string></property></item></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameNormCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsNormResult">
+              <widget class="QWidget"><attribute name="title"><string>Before / After Histograms</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Overlaid histograms: reference (blue) vs to-normalize (orange) → normalized (green)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="wordWrap"><bool>true</bool></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Log Track Comparison</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Original vs normalized log track canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════
+           PAGE 14 — SPLICE & MERGE CURVES
+           ════════════════════════════════════════════════════ -->
+      <widget class="QWidget" name="pageSpliceMerge">
+       <layout class="QVBoxLayout" name="layoutPageSM">
+        <property name="leftMargin"><number>8</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>8</number></property>
+        <property name="bottomMargin"><number>4</number></property>
+        <property name="spacing"><number>6</number></property>
+        <item>
+         <layout class="QHBoxLayout">
+          <item><widget class="QLabel"><property name="styleSheet"><string>font-size:14px;font-weight:700;color:#2A5090;</string></property><property name="text"><string>Splice &amp; Merge Curves</string></property></widget></item>
+          <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QLabel"><property name="objectName"><string>lblSectionBadge</string></property><property name="text"><string>TOOLS</string></property></widget></item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitterSM">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <widget class="QScrollArea" name="scrollSMParams">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="scrollSMContents">
+            <layout class="QVBoxLayout"><property name="spacing"><number>6</number></property>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Operation</string></property>
+               <layout class="QVBoxLayout">
+                <item><widget class="QRadioButton" name="radioSplice"><property name="text"><string>Splice (depth-based join: tool replaces BHC)</string></property><property name="checked"><bool>true</bool></property></widget></item>
+                <item><widget class="QRadioButton" name="radioMerge"><property name="text"><string>Merge (fill nulls from backup curve)</string></property></widget></item>
+                <item><widget class="QRadioButton" name="radioAverage"><property name="text"><string>Weighted Average (blending)</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Primary Curve (A)</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Curve A:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboSMA"><item><property name="text"><string>DT</string></property></item><item><property name="text"><string>LLS</string></property></item><item><property name="text"><string>NPHI</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Use A from depth:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinSMAFrom"><property name="suffix"><string> m</string></property><property name="maximum"><double>9999.0</double></property><property name="value"><double>0.0</double></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Use A to depth:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinSMATo"><property name="suffix"><string> m</string></property><property name="maximum"><double>9999.0</double></property><property name="value"><double>1800.0</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Secondary Curve (B)</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Curve B:</string></property></widget></item>
+                <item row="0" column="1"><widget class="QComboBox" name="comboSMB"><item><property name="text"><string>DT_BHC</string></property></item><item><property name="text"><string>LLD</string></property></item><item><property name="text"><string>CALI</string></property></item></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Use B from depth:</string></property></widget></item>
+                <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinSMBFrom"><property name="suffix"><string> m</string></property><property name="maximum"><double>9999.0</double></property><property name="value"><double>1800.0</double></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox"><property name="title"><string>Blending / Taper</string></property>
+               <layout class="QFormLayout">
+                <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Taper Zone (m):</string></property></widget></item>
+                <item row="0" column="1"><widget class="QDoubleSpinBox" name="spinSMTaper"><property name="decimals"><number>1</number></property><property name="minimum"><double>0.0</double></property><property name="maximum"><double>200.0</double></property><property name="value"><double>10.0</double></property></widget></item>
+                <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Weight A (blend):</string></property></widget></item>
+                <item row="1" column="1"><widget class="QSlider" name="sliderSMWeight"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="minimum"><number>0</number></property><property name="maximum"><number>100</number></property><property name="value"><number>50</number></property></widget></item>
+                <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Output Curve Name:</string></property></widget></item>
+                <item row="2" column="1"><widget class="QLineEdit" name="lineSMOut"><property name="text"><string>DT_SPLICE</string></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QFrame" name="frameSMCanvas">
+           <property name="objectName"><string>frameCanvas</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout">
+            <item>
+             <widget class="QTabWidget" name="tabsSMResult">
+              <widget class="QWidget"><attribute name="title"><string>Splice Preview</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>Curve A / Curve B / Spliced result log canvas
+(shown in different colours per track)</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="wordWrap"><bool>true</bool></property></widget></item></layout></widget>
+              <widget class="QWidget"><attribute name="title"><string>Difference Track</string></attribute><layout class="QVBoxLayout"><item><widget class="QLabel"><property name="styleSheet"><string>color:#8898A8;font-size:13px;</string></property><property name="text"><string>A - B difference log canvas</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item></layout></widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+     </widget><!-- end stackedContent -->
+    </widget><!-- end splitterMain -->
+   </item>
+
+   <!-- ── BOTTOM ACTION BAR ────────────────────────────────── -->
+   <item>
+    <widget class="QFrame" name="frameBottomBar">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <layout class="QHBoxLayout" name="layoutBottomBar">
+      <property name="leftMargin"><number>12</number></property>
+      <property name="topMargin"><number>0</number></property>
+      <property name="rightMargin"><number>12</number></property>
+      <property name="bottomMargin"><number>0</number></property>
+      <property name="spacing"><number>8</number></property>
+      <!-- Status message -->
+      <item>
+       <widget class="QLabel" name="lblStatusMsg">
+        <property name="text"><string>Select a module to begin.</string></property>
+        <property name="minimumWidth"><number>200</number></property>
+       </widget>
+      </item>
+      <!-- Progress bar -->
+      <item>
+       <widget class="QProgressBar" name="progressCalc">
+        <property name="value"><number>0</number></property>
+        <property name="minimum"><number>0</number></property>
+        <property name="maximum"><number>100</number></property>
+        <property name="textVisible"><bool>false</bool></property>
+        <property name="minimumWidth"><number>160</number></property>
+        <property name="maximumWidth"><number>220</number></property>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+       </spacer>
+      </item>
+      <!-- Batch run toggle -->
+      <item>
+       <widget class="QCheckBox" name="checkBatchAllWells">
+        <property name="text"><string>Batch (All Wells)</string></property>
+       </widget>
+      </item>
+      <!-- Action buttons -->
+      <item>
+       <widget class="QPushButton" name="btnReset">
+        <property name="text"><string>Reset Defaults</string></property>
+        <property name="toolTip"><string>Restore all parameters to their default values</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnExport">
+        <property name="text"><string>Export Results…</string></property>
+        <property name="toolTip"><string>Export computed curves or results to CSV / LAS</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCalculate">
+        <property name="text"><string>▶  Calculate</string></property>
+        <property name="toolTip"><string>Run the selected calculation</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnClose">
+        <property name="text"><string>Close</string></property>
+        <property name="toolTip"><string>Close this dialog</string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <!-- Close button -->
+  <connection>
+   <sender>btnClose</sender>
+   <signal>clicked()</signal>
+   <receiver>CalcToolsDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel"><x>1100</x><y>800</y></hint>
+    <hint type="destinationlabel"><x>580</x><y>410</y></hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

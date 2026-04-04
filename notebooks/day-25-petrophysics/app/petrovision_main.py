@@ -94,6 +94,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_action("actionNewLogPlot", 1)
         connect_action("actiondatainfo", 2)
         connect_action("actionNewCrossplot", 3)
+        connect_action("actionQualityControl", 3)
         connect_action("actionNewHistogram", 4)
         connect_action("actionNewRoseDiagram", 5)
         connect_action("actionShaleVolume", 6)

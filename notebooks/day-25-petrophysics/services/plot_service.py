@@ -105,22 +105,45 @@ class PlotService:
         df = self._get_df()
         if df is None:
             return
-        # Use first two curves
-        cols = list(df.columns)
+        cols = self._curve_columns(df)
         if len(cols) < 2:
             return
-        fig = plot_tools.plot_crossplot(df, cols[0], cols[1], show=False)
-        self._render_plot(fig, f"Crossplot: {cols[0]} vs {cols[1]}")
+        x_curve = self._combo_text(("comboLVCrossX", "comboXplotX")) or cols[0]
+        y_curve = self._combo_text(("comboLVCrossY", "comboXplotY")) or cols[1]
+        color_curve = self._combo_text(("comboLVCrossColor", "comboXplotColor"))
+        if color_curve == "None":
+            color_curve = None
+        if x_curve not in df.columns or y_curve not in df.columns:
+            return
+        fig = plot_tools.plot_crossplot(df, x_curve, y_curve, color_curve=color_curve, show=False)
+        title = f"Crossplot: {x_curve} vs {y_curve}"
+        if color_curve:
+            title += f" | Color: {color_curve}"
+        self._render_plot(fig, title)
 
     def new_histogram(self):
         df = self._get_df()
         if df is None:
             return
-        cols = list(df.columns)
+        cols = self._curve_columns(df)
         if not cols:
             return
-        fig = plot_tools.plot_histogram(df, cols[0], show=False)
-        self._render_plot(fig, f"Histogram: {cols[0]}")
+        curve = self._combo_text(("comboLVHistCurve", "comboHistCurve")) or cols[0]
+        bins = self._spin_value("spinLVHistBins", default=40)
+        if curve not in df.columns:
+            return
+        fig = plot_tools.plot_histogram(df, curve, bins=bins, show=False)
+        self._render_plot(fig, f"Histogram: {curve}")
+
+    def new_pairplot(self):
+        df = self._get_df()
+        if df is None:
+            return
+        curves = self._get_selected_checkable_curves("pairplotcomboBox")
+        if len(curves) < 2:
+            curves = self._curve_columns(df)[: min(4, len(self._curve_columns(df)))]
+        fig = plot_tools.plot_pairplot(df, curves, show=False)
+        self._render_plot(fig, f"Pairplot: {', '.join(curves[:4])}")
 
     def new_triple_combo(self):
         df = self._get_df()
@@ -129,28 +152,13 @@ class PlotService:
         track1 = self._get_selected_track_curves("triplecombotrack1")
         track2 = self._get_selected_track_curves("triplecombotrack2")
         track3 = self._get_selected_track_curves("triplecombotrack3")
-        if track1 or track2 or track3:
-            fig = plot_tools.plot_triple_combo_tracks(
-                df, track1, track2, track3, show=False
-            )
-        else:
-            fig = plot_tools.plot_triple_combo_auto(df, show=False)
+        fig = plot_tools.plot_triple_combo_tracks(
+            df, track1, track2, track3, show=False
+        )
         self._render_plot(fig, "Triple Combo")
 
     def _get_selected_multitrack_curves(self):
-        combo = getattr(self.ui, "multitrackcomboBox", None)
-        if combo is None:
-            return None
-        model = combo.model()
-        if model is None:
-            return None
-        selected: list[str] = []
-        for i in range(model.rowCount()):
-            item = model.item(i)
-            if item is None:
-                continue
-            if item.checkState() == QtCore.Qt.Checked:
-                selected.append(item.text())
+        selected = self._get_selected_checkable_curves("multitrackcomboBox")
         return selected or None
 
     def _get_selected_track_curves(self, combo_name: str) -> list[str]:
@@ -168,3 +176,42 @@ class PlotService:
             if item.checkState() == QtCore.Qt.Checked:
                 selected.append(item.text())
         return selected
+
+    def _get_selected_checkable_curves(self, combo_name: str) -> list[str]:
+        combo = getattr(self.ui, combo_name, None)
+        if combo is None:
+            return []
+        model = combo.model()
+        if model is None:
+            return []
+        selected: list[str] = []
+        for i in range(model.rowCount()):
+            item = model.item(i)
+            if item is None:
+                continue
+            if item.checkState() == QtCore.Qt.Checked:
+                selected.append(item.text())
+        return selected
+
+    @staticmethod
+    def _curve_columns(df) -> list[str]:
+        return [str(column) for column in df.columns if str(column).upper() != "DEPTH"]
+
+    def _combo_text(self, names: tuple[str, ...]) -> str | None:
+        for name in names:
+            combo = getattr(self.ui, name, None)
+            if combo is None:
+                continue
+            text = combo.currentText().strip()
+            if text:
+                return text
+        return None
+
+    def _spin_value(self, name: str, default: int = 40) -> int:
+        widget = getattr(self.ui, name, None)
+        if widget is None:
+            return default
+        value_getter = getattr(widget, "value", None)
+        if callable(value_getter):
+            return int(value_getter())
+        return default

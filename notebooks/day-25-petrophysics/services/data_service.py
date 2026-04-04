@@ -101,40 +101,55 @@ class DataService:
         well = self._get_current_well()
         if not well:
             return
-    
+
         df = getattr(well, "data", None)
-        table = getattr(self.ui, "tableStatistics", None)
-    
-        if df is None or table is None:
+        if df is None:
             return
-    
+
         try:
             # Only numeric columns
             desc = df.describe().transpose()  # transpose for better UI
-    
-            rows = []
-            for col_name, row in desc.iterrows():
-                rows.append((
-                    col_name,
-                    round(row.get("count", 0), 3),
-                    round(row.get("mean", 0), 3),
-                    round(row.get("std", 0), 3),
-                    round(row.get("min", 0), 3),
-                    round(row.get("25%", 0), 3),
-                    round(row.get("50%", 0), 3),
-                    round(row.get("75%", 0), 3),
-                    round(row.get("max", 0), 3),
-                ))
-    
-            # Set headers manually (IMPORTANT)
-            table.setColumnCount(9)
-            table.setHorizontalHeaderLabels([
-                "Curve", "Count", "Mean", "Std",
-                "Min", "25%", "50%", "75%", "Max"
-            ])
-    
-            self._fill_table(table, rows)
-    
+
+            legacy_table = self._get_widget("tableStatistics")
+            if legacy_table is not None:
+                legacy_rows = []
+                for col_name, row in desc.iterrows():
+                    legacy_rows.append((
+                        col_name,
+                        round(row.get("count", 0), 3),
+                        round(row.get("mean", 0), 3),
+                        round(row.get("std", 0), 3),
+                        round(row.get("min", 0), 3),
+                        round(row.get("25%", 0), 3),
+                        round(row.get("50%", 0), 3),
+                        round(row.get("75%", 0), 3),
+                        round(row.get("max", 0), 3),
+                    ))
+                legacy_table.setColumnCount(9)
+                legacy_table.setHorizontalHeaderLabels([
+                    "Curve", "Count", "Mean", "Std",
+                    "Min", "25%", "50%", "75%", "Max"
+                ])
+                self._fill_table(legacy_table, legacy_rows)
+
+            summary_table = self._get_widget("tableDISSummary")
+            if summary_table is not None:
+                rows = []
+                for col_name, row in desc.iterrows():
+                    p10 = self._safe_number(row.get("10%", row.get("25%", 0)))
+                    p90 = self._safe_number(row.get("90%", row.get("75%", 0)))
+                    rows.append((
+                        col_name,
+                        self._safe_number(row.get("count", 0)),
+                        self._safe_number(row.get("min", 0)),
+                        self._safe_number(row.get("max", 0)),
+                        self._safe_number(row.get("mean", 0)),
+                        self._safe_number(row.get("50%", 0)),
+                        self._safe_number(row.get("std", 0)),
+                        f"{p10} / {p90}",
+                    ))
+                self._fill_table(summary_table, rows)
+
         except Exception as e:
             print("Stats Error:", e)
 
@@ -209,6 +224,7 @@ class DataService:
         self._update_plot_curve_combos(well)
         self._update_project_tree()
         self._update_curves_tree(well)
+        self.compute_stats()
 
     def _update_curve_lists(self, well):
         df = getattr(well, "data", None)
@@ -221,6 +237,45 @@ class DataService:
                 continue
             combo.clear()
             combo.addItems(curves)
+        for combo_name in (
+            "comboXplotX",
+            "comboXplotY",
+            "comboXplotColor",
+            "comboQCCurve",
+            "comboHistCurve",
+            "comboLVQCCurve",
+            "comboLVHistCurve",
+            "comboVclGR",
+        ):
+            combo = getattr(self.ui, combo_name, None)
+            if combo is None:
+                continue
+            current_text = combo.currentText()
+            combo.blockSignals(True)
+            combo.clear()
+            if combo_name in ("comboXplotColor", "comboLVCrossColor"):
+                combo.addItem("None")
+            combo.addItems(curves)
+            if current_text:
+                index = combo.findText(current_text)
+                if index >= 0:
+                    combo.setCurrentIndex(index)
+            combo.blockSignals(False)
+
+        if "DEPTH" in df.columns:
+            depth_values = df["DEPTH"].dropna()
+            if not depth_values.empty:
+                for name, value in (
+                    ("spinQCFrom", float(depth_values.min())),
+                    ("spinQCTo", float(depth_values.max())),
+                    ("spinLVQCFrom", float(depth_values.min())),
+                    ("spinLVQCTo", float(depth_values.max())),
+                ):
+                    spin = getattr(self.ui, name, None)
+                    if spin is not None:
+                        spin.blockSignals(True)
+                        spin.setValue(value)
+                        spin.blockSignals(False)
 
     def _update_plot_curve_combos(self, well):
         df = getattr(well, "data", None)
@@ -240,6 +295,16 @@ class DataService:
         combo_multi = getattr(self.ui, "multitrackcomboBox", None)
         if combo_multi is not None:
             self._set_checkable_combo(combo_multi, curves, set(), "Select curves...")
+
+        combo_pairplot = getattr(self.ui, "pairplotcomboBox", None)
+        if combo_pairplot is not None:
+            default_pair_curves = set(curves[: min(4, len(curves))])
+            self._set_checkable_combo(
+                combo_pairplot,
+                curves,
+                default_pair_curves,
+                "Select 2-4 curves...",
+            )
 
     def _set_checkable_combo(
         self,
@@ -263,66 +328,6 @@ class DataService:
             line_edit.setPlaceholderText(placeholder)
         model.itemChanged.connect(lambda _item, target=combo, text=placeholder: self._update_combo_display(target, text))
         self._update_combo_display(combo, placeholder)
-
-    @staticmethod
-    def _find_first(columns: list[str], candidates: list[str]) -> str | None:
-        upper_map = {c: c.upper() for c in columns}
-        for cand in candidates:
-            cand_upper = cand.upper()
-            for col, col_upper in upper_map.items():
-                if col_upper == cand_upper:
-                    return col
-        for cand in candidates:
-            cand_upper = cand.upper()
-            for col, col_upper in upper_map.items():
-                if cand_upper in col_upper:
-                    return col
-        return None
-
-    @staticmethod
-    def _find_all_matching(columns: list[str], tokens: list[str]) -> list[str]:
-        matches: list[str] = []
-        tokens_upper = [t.upper() for t in tokens]
-        for col in columns:
-            col_upper = col.upper()
-            if any(tok in col_upper for tok in tokens_upper):
-                matches.append(col)
-        return matches
-
-    def _select_triple_tracks(self, columns: list[str]):
-        gr = self._find_first(columns, ["GR", "GRC", "SGR", "CGR", "GRD", "GAMMA"])
-        cali = self._find_first(columns, ["CALI", "CAL", "HCAL", "CALD"])
-
-        resistivity = self._find_all_matching(
-            columns, ["RT", "RDEP", "RILD", "LLD", "LLS", "RXO", "RES", "ILD", "ILM", "RS"]
-        )
-        density = self._find_all_matching(columns, ["RHOB", "RHOZ", "RHO", "DEN", "DENB"])
-        porosity = self._find_all_matching(columns, ["NPHI", "PHI", "PHIE", "PHIT", "DPHI", "NPOR", "POR"])
-
-        track1 = [c for c in (gr, cali) if c]
-        track2 = resistivity[:]
-        track3 = density + porosity
-
-        used = set(track1 + track2 + track3)
-        if not track1:
-            for col in columns:
-                if col not in used:
-                    track1 = [col]
-                    used.add(col)
-                    break
-        if not track2:
-            for col in columns:
-                if col not in used:
-                    track2 = [col]
-                    used.add(col)
-                    break
-        if not track3:
-            for col in columns:
-                if col not in used:
-                    track3 = [col]
-                    used.add(col)
-                    break
-        return track1, track2, track3
 
     def _update_combo_display(
         self,
@@ -393,7 +398,7 @@ class DataService:
         return None
 
     def _populate_header_info(self, well):
-        table = getattr(self.ui, "tableHeaderInfo", None)
+        table = self._get_widget("tableDISHeader", "tableHeaderInfo")
         if table is None:
             return
         header = getattr(well, "header", {}) or {}
@@ -401,20 +406,53 @@ class DataService:
         for section, items in header.items():
             if isinstance(items, dict):
                 for key, val in items.items():
-                    rows.append((section, key, val.get("unit", "") if isinstance(val, dict) else "", val.get("value", val) if isinstance(val, dict) else val, val.get("desc", "") if isinstance(val, dict) else ""))
+                    if isinstance(val, dict):
+                        field_name = f"{section}.{key}"
+                        value = val.get("value", "")
+                        unit = val.get("unit", "")
+                        desc = val.get("desc", "")
+                    else:
+                        field_name = f"{section}.{key}"
+                        value = val
+                        unit = ""
+                        desc = ""
+                    rows.append((field_name, value, unit, desc))
             else:
-                rows.append((section, str(items), "", "", ""))
+                rows.append((str(section), str(items), "", ""))
+
+        if table.objectName() == "tableDISHeader":
+            table.setColumnCount(3)
+            table.setHorizontalHeaderLabels(["Field", "Value", "Unit"])
+            self._fill_table(table, [(field, value, unit) for field, value, unit, _desc in rows])
+            return
+
         self._fill_table(table, rows)
 
     def _populate_log_info(self, well):
-        table = getattr(self.ui, "tableLogInfo", None)
-        if table is None:
-            return
+        df = getattr(well, "data", None)
         log_info = getattr(well, "log_info", {}) or {}
+
+        legacy_table = self._get_widget("tableLogInfo")
+        if legacy_table is not None:
+            rows = []
+            for name, info in log_info.items():
+                rows.append((name, info.get("unit", ""), info.get("desc", ""), info.get("type", "")))
+            self._fill_table(legacy_table, rows)
+
+        curve_table = self._get_widget("tableDISCurveInfo")
+        if curve_table is None:
+            return
+
         rows = []
-        for name, info in log_info.items():
-            rows.append((name, info.get("unit", ""), info.get("desc", ""), info.get("type", "")))
-        self._fill_table(table, rows)
+        columns = list(getattr(df, "columns", [])) if df is not None else list(log_info.keys())
+        for name in columns:
+            series = df[name] if df is not None and name in df.columns else None
+            unit = ""
+            if name in log_info:
+                unit = log_info[name].get("unit", "")
+            min_val, max_val, mean_val, null_pct = self._series_summary(series)
+            rows.append((str(name), unit, min_val, max_val, mean_val, null_pct))
+        self._fill_table(curve_table, rows)
 
     def _populate_data_table(self, well):
         table = getattr(self.ui, "tableData", None)
@@ -452,7 +490,40 @@ class DataService:
 
     @staticmethod
     def _fill_table(table: QtWidgets.QTableWidget, rows: list[tuple]):
+        table.clearContents()
         table.setRowCount(len(rows))
         for r, row in enumerate(rows):
             for c, val in enumerate(row):
                 table.setItem(r, c, QtWidgets.QTableWidgetItem(str(val)))
+        table.resizeColumnsToContents()
+
+    def _get_widget(self, *names: str):
+        for name in names:
+            widget = getattr(self.ui, name, None)
+            if widget is not None:
+                return widget
+        return None
+
+    @staticmethod
+    def _safe_number(value):
+        try:
+            return round(float(value), 3)
+        except Exception:
+            return ""
+
+    def _series_summary(self, series):
+        if series is None:
+            return "", "", "", ""
+        try:
+            numeric = series.dropna()
+            null_pct = round(series.isna().mean() * 100, 2)
+            if numeric.empty:
+                return "", "", "", f"{null_pct}%"
+            return (
+                self._safe_number(numeric.min()),
+                self._safe_number(numeric.max()),
+                self._safe_number(numeric.mean()),
+                f"{null_pct}%",
+            )
+        except Exception:
+            return "", "", "", ""

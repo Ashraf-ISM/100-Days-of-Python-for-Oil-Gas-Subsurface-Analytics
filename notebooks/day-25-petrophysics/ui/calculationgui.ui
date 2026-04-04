@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CalculationDialog</class>
+ <widget class="QDialog" name="CalculationDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>820</width>
+    <height>560</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Calculation Workspace</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog {
+    background: #F4F7FB;
+}
+QFrame#headerFrame {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #214E84, stop:1 #3E79B8);
+    border-radius: 12px;
+}
+QFrame#summaryFrame, QFrame#previewFrame {
+    background: #FFFFFF;
+    border: 1px solid #D7E2EE;
+    border-radius: 12px;
+}
+QGroupBox {
+    font: 600 11pt &quot;Ubuntu&quot;;
+    color: #214E84;
+    border: 1px solid #D7E2EE;
+    border-radius: 10px;
+    margin-top: 14px;
+    background: #FFFFFF;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 4px;
+}
+QPushButton {
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    color: white;
+    background: #2B66A9;
+}
+QPushButton:hover {
+    background: #3A7BC5;
+}
+QPushButton:pressed {
+    background: #214E84;
+}
+QLineEdit, QComboBox, QPlainTextEdit {
+    min-height: 34px;
+    border: 1px solid #C9D7E6;
+    border-radius: 8px;
+    padding: 4px 8px;
+    background: #FFFFFF;
+}
+QLabel#titleLabel {
+    color: white;
+    font: 700 18pt &quot;Ubuntu&quot;;
+}
+QLabel#subtitleLabel {
+    color: #DCEAF7;
+    font: 10pt &quot;Ubuntu&quot;;
+}
+QLabel#badgeLabel {
+    color: #214E84;
+    background: #E9F2FB;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font: 600 10pt &quot;Ubuntu&quot;;
+}
+QLabel#summaryValueLabel {
+    color: #163759;
+    font: 700 14pt &quot;Ubuntu&quot;;
+}
+QLabel#summaryCaptionLabel {
+    color: #6682A3;
+    font: 9pt &quot;Ubuntu&quot;;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>14</number>
+   </property>
+   <property name="leftMargin">
+    <number>16</number>
+   </property>
+   <property name="topMargin">
+    <number>16</number>
+   </property>
+   <property name="rightMargin">
+    <number>16</number>
+   </property>
+   <property name="bottomMargin">
+    <number>16</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="headerFrame">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>18</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
+      </property>
+      <property name="bottomMargin">
+       <number>18</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="titleLabel">
+          <property name="text">
+           <string>Basic Arithmetic Calculation</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="subtitleLabel">
+          <property name="text">
+           <string>Open a dedicated workspace to combine two curves and generate a new derived result.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="badgeLabel">
+        <property name="text">
+         <string>Formula Builder</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="summaryFrame">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="leftMargin">
+       <number>18</number>
+      </property>
+      <property name="topMargin">
+       <number>14</number>
+      </property>
+      <property name="rightMargin">
+       <number>18</number>
+      </property>
+      <property name="bottomMargin">
+       <number>14</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="summaryValueLabel">
+          <property name="text">
+           <string>2 Curves</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="summaryCaptionLabel">
+          <property name="text">
+           <string>Input channels</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QLabel" name="summaryValueLabel_2">
+          <property name="styleSheet">
+           <string notr="true">color: #163759;
+font: 700 14pt &quot;Ubuntu&quot;;</string>
+          </property>
+          <property name="text">
+           <string>4 Operations</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="summaryCaptionLabel_2">
+          <property name="styleSheet">
+           <string notr="true">color: #6682A3;
+font: 9pt &quot;Ubuntu&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Add, subtract, multiply, divide</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="QLabel" name="summaryValueLabel_3">
+          <property name="styleSheet">
+           <string notr="true">color: #163759;
+font: 700 14pt &quot;Ubuntu&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Instant Preview</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="summaryCaptionLabel_3">
+          <property name="styleSheet">
+           <string notr="true">color: #6682A3;
+font: 9pt &quot;Ubuntu&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Review the generated expression before running it</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>14</number>
+     </property>
+     <item>
+      <widget class="QGroupBox" name="groupInputs">
+       <property name="title">
+        <string>Inputs</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="labelAlignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="horizontalSpacing">
+         <number>12</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>12</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelOutputCurve">
+          <property name="text">
+           <string>Output Curve</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lineOutputCurve">
+          <property name="placeholderText">
+           <string>Example: PHI_SUM</string>
+          </property>
+          <property name="text">
+           <string>CALC_RESULT</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelLeftCurve">
+          <property name="text">
+           <string>Curve A</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboLeftCurve"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="labelOperation">
+          <property name="text">
+           <string>Operation</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboOperation">
+          <item>
+           <property name="text">
+            <string>+</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>*</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>/</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="labelRightCurve">
+          <property name="text">
+           <string>Curve B</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="comboRightCurve"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="labelNotes">
+          <property name="text">
+           <string>Notes</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QPlainTextEdit" name="plainNotes">
+          <property name="placeholderText">
+           <string>Add assumptions, cut-offs, or context for this derived log.</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="previewFrame">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="leftMargin">
+         <number>18</number>
+        </property>
+        <property name="topMargin">
+         <number>18</number>
+        </property>
+        <property name="rightMargin">
+         <number>18</number>
+        </property>
+        <property name="bottomMargin">
+         <number>18</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="labelPreviewTitle">
+          <property name="styleSheet">
+           <string notr="true">font: 700 12pt &quot;Ubuntu&quot;;
+color: #214E84;</string>
+          </property>
+          <property name="text">
+           <string>Formula Preview</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelPreviewBody">
+          <property name="styleSheet">
+           <string notr="true">color: #6682A3;
+font: 10pt &quot;Ubuntu&quot;;</string>
+          </property>
+          <property name="text">
+           <string>This workspace is ready for arithmetic curve operations. Pick two inputs and review the generated expression.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="plainFormulaPreview">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnRunCalculation">
+          <property name="text">
+           <string>Run Calculation</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
