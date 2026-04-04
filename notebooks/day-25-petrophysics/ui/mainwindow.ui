@@ -2161,6 +2161,42 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              </property>
             </widget>
            </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="vshTypeLabel">
+             <property name="text">
+              <string>Vsh Type</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="vshTypeComboBox">
+             <item>
+              <property name="text">
+               <string>Linear</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Larionov (Tertiary Rocks)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Larionov (Older Rocks)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Clavier Model (Most Accurate)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Steiber Model</string>
+              </property>
+             </item>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -2381,7 +2417,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
         <item>
          <widget class="QTabWidget" name="tabFEViews">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tabFELogTracks">
            <attribute name="title">
@@ -3075,177 +3111,517 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
     </attribute>
     <layout class="QHBoxLayout" name="layoutVcl">
      <property name="spacing">
+      <number>8</number>
+     </property>
+     <property name="leftMargin">
+      <number>6</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>6</number>
+     </property>
+     <property name="bottomMargin">
       <number>6</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupVclParams">
-       <property name="title">
-        <string>Vcl Parameters</string>
+      <widget class="QFrame" name="frameVclControls">
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
        </property>
-       <layout class="QFormLayout" name="formVcl">
-        <item row="0" column="0">
-         <widget class="QLabel" name="auto_label_016">
+       <property name="maximumSize">
+        <size>
+         <width>340</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutVclControls">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblVclTitle">
+          <property name="styleSheet">
+           <string>font-size:16px;font-weight:700;color:#274B72;padding:2px 0;</string>
+          </property>
           <property name="text">
-           <string>Well:</string>
+           <string>Shale Volume Inputs</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboVclWell">
-          <item>
-           <property name="text">
-            <string>CHr-1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Tau-1</string>
-           </property>
-          </item>
+        <item>
+         <widget class="QGroupBox" name="groupVclParams">
+          <property name="title">
+           <string>Well &amp; Curve</string>
+          </property>
+          <layout class="QFormLayout" name="formVcl">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_016">
+             <property name="text">
+              <string>Well:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboVclWell">
+             <item>
+              <property name="text">
+               <string>CHr-1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tau-1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_017">
+             <property name="text">
+              <string>GR Curve:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboVclGR">
+             <item>
+              <property name="text">
+               <string>GR</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="auto_label_022">
+             <property name="text">
+              <string>Apply to Zone:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboVclZone">
+             <item>
+              <property name="text">
+               <string>Entire Well</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="auto_label_017">
+        <item>
+         <widget class="QGroupBox" name="groupVclCalibration">
+          <property name="title">
+           <string>Gamma Ray Calibration</string>
+          </property>
+          <layout class="QFormLayout" name="formVclCalibration">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_018">
+             <property name="text">
+              <string>GR Clean (min):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="spinVclGRmin">
+             <property name="maximum">
+              <double>300.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>15.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_019">
+             <property name="text">
+              <string>GR Shale (max):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinVclGRmax">
+             <property name="maximum">
+              <double>300.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>120.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="auto_label_020">
+             <property name="text">
+              <string>Method:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboVclMethod">
+             <item>
+              <property name="text">
+               <string>Linear GR</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Larionov (Tertiary)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Larionov (Older Rocks)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Steiber</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Clavier</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="auto_label_021">
+             <property name="text">
+              <string>Output Curve:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="lineVclOutName">
+             <property name="text">
+              <string>VSH</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblVclHint">
+          <property name="styleSheet">
+           <string>color:#6C7E90;font-size:12px;line-height:1.4;</string>
+          </property>
           <property name="text">
-           <string>GR Curve:</string>
+           <string>Estimate shale volume from the selected GR curve, then compare clean and shale baselines against the interpreted interval.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboVclGR">
+        <item>
+         <spacer name="spacerVclControls">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layoutVclActions">
+          <property name="spacing">
+           <number>8</number>
+          </property>
           <item>
-           <property name="text">
-            <string>GR</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="auto_label_018">
-          <property name="text">
-           <string>GR Clean (min):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="spinVclGRmin">
-          <property name="maximum">
-           <double>300.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>15.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="auto_label_019">
-          <property name="text">
-           <string>GR Shale (max):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="spinVclGRmax">
-          <property name="maximum">
-           <double>300.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>120.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="auto_label_020">
-          <property name="text">
-           <string>Method:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QComboBox" name="comboVclMethod">
-          <item>
-           <property name="text">
-            <string>Linear GR</string>
-           </property>
+           <widget class="QPushButton" name="btnCalcVsh">
+            <property name="styleSheet">
+             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+            </property>
+            <property name="text">
+             <string>Run Vsh</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>Larionov (Tertiary)</string>
-           </property>
+           <widget class="QPushButton" name="btnResetVsh">
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <property name="text">
-            <string>Larionov (Older Rocks)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Steiber</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Clavier</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="auto_label_021">
-          <property name="text">
-           <string>Output Curve Name:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="lineVclOutName">
-          <property name="text">
-           <string>VSH</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="auto_label_022">
-          <property name="text">
-           <string>Apply to Zone:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QComboBox" name="comboVclZone">
-          <item>
-           <property name="text">
-            <string>Entire Well</string>
-           </property>
-          </item>
-         </widget>
+         </layout>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frameVclCanvas">
+      <widget class="QFrame" name="frameVclWorkspace">
        <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout">
+       <layout class="QVBoxLayout" name="layoutVclWorkspace">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
         <item>
-         <widget class="QLabel" name="lblVclPlaceholder">
+         <layout class="QHBoxLayout" name="layoutVclCards">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="cardVclClean">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardVclClean">
+             <item>
+              <widget class="QLabel" name="lblVclCleanTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>GR Clean</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblVclCleanValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#2B6CB0;</string>
+               </property>
+               <property name="text">
+                <string>15</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardVclShale">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardVclShale">
+             <item>
+              <widget class="QLabel" name="lblVclShaleTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>GR Shale</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblVclShaleValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#17A673;</string>
+               </property>
+               <property name="text">
+                <string>120</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardVclMethod">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardVclMethod">
+             <item>
+              <widget class="QLabel" name="lblVclMethodTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Method</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblVclMethodValue">
+               <property name="styleSheet">
+                <string>font-size:14px;font-weight:700;color:#D97706;</string>
+               </property>
+               <property name="text">
+                <string>Linear GR</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameVclCanvas">
           <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
+           <string>background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;</string>
           </property>
-          <property name="text">
-           <string>Vcl preview log canvas</string>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
           </property>
+          <layout class="QVBoxLayout" name="layoutVclCanvas">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblVclPlotTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Vsh Track Preview</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblVclPlaceholder">
+             <property name="styleSheet">
+              <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+             </property>
+             <property name="text">
+              <string>Vcl preview log canvas with clean-sand and shale reference lines</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameVclSummary">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutVclSummary">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblVclSummaryTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Interpretation Notes</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblVclSummaryText">
+             <property name="styleSheet">
+              <string>color:#6C7E90;font-size:12px;</string>
+             </property>
+             <property name="text">
+              <string>Use this panel to compare GR-derived shale volume against reservoir zones before moving into porosity and water saturation calculations.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -3259,169 +3635,509 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
     </attribute>
     <layout class="QHBoxLayout" name="layoutPhi">
      <property name="spacing">
+      <number>8</number>
+     </property>
+     <property name="leftMargin">
+      <number>6</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>6</number>
+     </property>
+     <property name="bottomMargin">
       <number>6</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupPhiParams">
-       <property name="title">
-        <string>Porosity Parameters</string>
+      <widget class="QFrame" name="framePhiControls">
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
        </property>
-       <layout class="QFormLayout" name="formPhi">
-        <item row="0" column="0">
-         <widget class="QLabel" name="auto_label_023">
+       <property name="maximumSize">
+        <size>
+         <width>340</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutPhiControls">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblPhiTitle">
+          <property name="styleSheet">
+           <string>font-size:16px;font-weight:700;color:#274B72;padding:2px 0;</string>
+          </property>
           <property name="text">
-           <string>Well:</string>
+           <string>Porosity Inputs</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboPhiWell">
-          <item>
-           <property name="text">
-            <string>CHr-1</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Tau-1</string>
-           </property>
-          </item>
+        <item>
+         <widget class="QGroupBox" name="groupPhiParams">
+          <property name="title">
+           <string>Method &amp; Well</string>
+          </property>
+          <layout class="QFormLayout" name="formPhi">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_023">
+             <property name="text">
+              <string>Well:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboPhiWell">
+             <item>
+              <property name="text">
+               <string>CHr-1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tau-1</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_024">
+             <property name="text">
+              <string>Method:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboPhiMethod">
+             <item>
+              <property name="text">
+               <string>Density (PHID)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Neutron (PHIN)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sonic (DT)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Density-Neutron (PHIE)</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="auto_label_024">
+        <item>
+         <widget class="QGroupBox" name="groupPhiRockFluid">
+          <property name="title">
+           <string>Rock / Fluid Properties</string>
+          </property>
+          <layout class="QFormLayout" name="formPhiRockFluid">
+           <item row="0" column="0">
+            <widget class="QLabel" name="auto_label_025">
+             <property name="text">
+              <string>Matrix Density (g/cc):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="spinPhiRhoma">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>2.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>3.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>2.650000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="auto_label_026">
+             <property name="text">
+              <string>Fluid Density (g/cc):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spinPhiRhof">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>0.800000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1.200000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="auto_label_027">
+             <property name="text">
+              <string>Vcl Correction:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QCheckBox" name="checkPhiVclCorr">
+             <property name="text">
+              <string>Apply</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="auto_label_028">
+             <property name="text">
+              <string>Output Name:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="linePhiOutName">
+             <property name="text">
+              <string>PHIE</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblPhiHint">
+          <property name="styleSheet">
+           <string>color:#6C7E90;font-size:12px;line-height:1.4;</string>
+          </property>
           <property name="text">
-           <string>Method:</string>
+           <string>Compare density, neutron and corrected effective porosity in one place before feeding the output into Sw and permeability steps.</string>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboPhiMethod">
-          <item>
-           <property name="text">
-            <string>Density (PHID)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Neutron (PHIN)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Sonic (DT)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Density-Neutron (PHIE)</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="auto_label_025">
-          <property name="text">
-           <string>Matrix Density (g/cc):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="spinPhiRhoma">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>2.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>3.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>2.650000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="auto_label_026">
-          <property name="text">
-           <string>Fluid Density (g/cc):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="spinPhiRhof">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>0.800000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>1.200000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="auto_label_027">
-          <property name="text">
-           <string>Vcl Correction:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QCheckBox" name="checkPhiVclCorr">
-          <property name="text">
-           <string>Apply</string>
-          </property>
-          <property name="checked">
+          <property name="wordWrap">
            <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="auto_label_028">
-          <property name="text">
-           <string>Output Name:</string>
+        <item>
+         <spacer name="spacerPhiControls">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="linePhiOutName">
-          <property name="text">
-           <string>PHIE</string>
+        <item>
+         <layout class="QHBoxLayout" name="layoutPhiActions">
+          <property name="spacing">
+           <number>8</number>
           </property>
-         </widget>
+          <item>
+           <widget class="QPushButton" name="btnCalcPhi">
+            <property name="styleSheet">
+             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+            </property>
+            <property name="text">
+             <string>Run Porosity</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnResetPhi">
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="framePhiCanvas">
+      <widget class="QFrame" name="framePhiWorkspace">
        <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
+        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout">
+       <layout class="QVBoxLayout" name="layoutPhiWorkspace">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
         <item>
-         <widget class="QLabel" name="lblPhiPlaceholder">
+         <layout class="QHBoxLayout" name="layoutPhiCards">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="cardPhiMethod">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardPhiMethod">
+             <item>
+              <widget class="QLabel" name="lblPhiMethodTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>Method</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblPhiMethodValue">
+               <property name="styleSheet">
+                <string>font-size:14px;font-weight:700;color:#2B6CB0;</string>
+               </property>
+               <property name="text">
+                <string>Density-Neutron</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardPhiRhoma">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardPhiRhoma">
+             <item>
+              <widget class="QLabel" name="lblPhiRhomaTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>rho_ma</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblPhiRhomaValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#17A673;</string>
+               </property>
+               <property name="text">
+                <string>2.65</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardPhiRhof">
+            <property name="styleSheet">
+             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutCardPhiRhof">
+             <item>
+              <widget class="QLabel" name="lblPhiRhofTitle">
+               <property name="styleSheet">
+                <string>color:#61788F;font-size:10px;</string>
+               </property>
+               <property name="text">
+                <string>rho_f</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblPhiRhofValue">
+               <property name="styleSheet">
+                <string>font-size:16px;font-weight:700;color:#D97706;</string>
+               </property>
+               <property name="text">
+                <string>1.00</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="framePhiCanvas">
           <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
+           <string>background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;</string>
           </property>
-          <property name="text">
-           <string>Porosity preview log canvas</string>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
           </property>
+          <layout class="QVBoxLayout" name="layoutPhiCanvas">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblPhiPlotTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Porosity Track Preview</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblPhiPlaceholder">
+             <property name="styleSheet">
+              <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
+             </property>
+             <property name="text">
+              <string>Porosity preview log canvas showing PHID, PHIN and corrected effective porosity</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="framePhiSummary">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutPhiSummary">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblPhiSummaryTitle">
+             <property name="styleSheet">
+              <string>font-weight:700;color:#2A4E77;</string>
+             </property>
+             <property name="text">
+              <string>Calculation Guide</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblPhiSummaryText">
+             <property name="styleSheet">
+              <string>color:#6C7E90;font-size:12px;</string>
+             </property>
+             <property name="text">
+              <string>Use density-neutron porosity for a fast effective porosity estimate, then compare it to shale-corrected responses before water saturation.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
