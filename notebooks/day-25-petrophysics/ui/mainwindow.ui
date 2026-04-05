@@ -490,172 +490,690 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
      <string>⌂ Dashboard</string>
     </attribute>
     <layout class="QVBoxLayout" name="layoutDashboard">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>8</number>
+     </property>
+     <property name="topMargin">
+      <number>8</number>
+     </property>
+     <property name="rightMargin">
+      <number>8</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
      <item>
-      <widget class="QLabel" name="lblDashTitle">
+      <widget class="QFrame" name="frameProjectHeader">
        <property name="styleSheet">
-        <string>font-size:18px;font-weight:700;color:#2A5090;padding:20px 0 6px 0;</string>
+        <string>background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #3A72B5, stop:1 #2A5C9E);
+border-radius: 6px;
+color: white;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QHBoxLayout" name="layoutProjectHeader">
+        <property name="spacing">
+         <number>12</number>
+        </property>
+        <property name="leftMargin">
+         <number>16</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>16</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lblProjName">
+            <property name="styleSheet">
+             <string>font-size: 16px; font-weight: 700; color: white;</string>
+            </property>
+            <property name="text">
+             <string>Project: Gorgonichthys-1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblProjDetails">
+            <property name="styleSheet">
+             <string>font-size: 12px; color: #E0E8F5;</string>
+            </property>
+            <property name="text">
+             <string>Well: GOR-1  |  Depth Range: 1000 - 3500 m  |  Status: Logs Loaded ✓</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QPushButton" name="btnLoadProject">
+            <property name="text">
+             <string>Load Project</string>
+            </property>
+            <property name="styleSheet">
+             <string>background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 3px;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSaveProject">
+            <property name="text">
+             <string>Save Project</string>
+            </property>
+            <property name="styleSheet">
+             <string>background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 3px;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="layoutDashMain">
+       <property name="spacing">
+        <number>8</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="layoutDashLeft">
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupRecentProjects">
+           <property name="title">
+            <string>Recent Projects</string>
+           </property>
+           <layout class="QVBoxLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="btnDashRecent1">
+              <property name="minimumHeight">
+               <number>32</number>
+              </property>
+              <property name="text">
+               <string>📦 SandsBay-Aug16</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnDashRecent2">
+              <property name="minimumHeight">
+               <number>32</number>
+              </property>
+              <property name="text">
+               <string>📦 Field-A_PetProject</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnDashRecent3">
+              <property name="minimumHeight">
+               <number>32</number>
+              </property>
+              <property name="text">
+               <string>📦 OffshoreBlock-7</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupDataQuality">
+           <property name="title">
+            <string>Data Quality</string>
+           </property>
+           <layout class="QGridLayout" name="gridDataQuality">
+            <property name="spacing">
+             <number>8</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QFrame" name="cardQCGR">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>GR</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#1BA62A;</string>
+                 </property>
+                 <property name="text">
+                  <string>90%</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QFrame" name="cardQCRT">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>RT</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#1BA62A;</string>
+                 </property>
+                 <property name="text">
+                  <string>99%</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QFrame" name="cardQCRHOB">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>RHOB</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#1BA62A;</string>
+                 </property>
+                 <property name="text">
+                  <string>93%</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QFrame" name="cardQCCNL">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>CNL</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#F59E0B;</string>
+                 </property>
+                 <property name="text">
+                  <string>89%</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QFrame" name="cardQCCAL">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>CAL</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#F59E0B;</string>
+                 </property>
+                 <property name="text">
+                  <string>88%</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QFrame" name="cardQCNPHI">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>NPHI</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#F59E0B;</string>
+                 </property>
+                 <property name="text">
+                  <string>89%</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QFrame" name="cardQCCGR">
+              <property name="styleSheet">
+               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
+              </property>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
+                 </property>
+                 <property name="text">
+                  <string>CGR</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="styleSheet">
+                  <string>font-size:14px;font-weight:700;color:#EF4444;</string>
+                 </property>
+                 <property name="text">
+                  <string>92% ⚠</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="layoutDashRight">
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupAlerts">
+           <property name="title">
+            <string>Alerts</string>
+           </property>
+           <layout class="QVBoxLayout">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#DC2626;font-size:11px;padding:6px;</string>
+              </property>
+              <property name="text">
+               <string>⚠ Missing NPHI curve for [] GOR-1 — Replaced with synthetic NPHI (Fallback Method)</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#F59E0B;font-size:11px;padding:6px;</string>
+              </property>
+              <property name="text">
+               <string>⚠ Missing RHOB values in interval 2450 – 2600m — Estimated using linear interpolation</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#10B981;font-size:11px;padding:6px;</string>
+              </property>
+              <property name="text">
+               <string>✓ Synthetic NPHI, Density-Neutron crossplot generated</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupActivity">
+           <property name="title">
+            <string>Activity</string>
+           </property>
+           <layout class="QVBoxLayout">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
+              </property>
+              <property name="text">
+               <string>✓ LAS loaded for well GOR-1  —  14:32</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
+              </property>
+              <property name="text">
+               <string>✓ Vshale calculated for GOR-1  —  14:24</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
+              </property>
+              <property name="text">
+               <string>✓ Density-Neutron crossplot generated  —  14:20</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel">
+              <property name="styleSheet">
+               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
+              </property>
+              <property name="text">
+               <string>✓ Porosity calculation updated  —  14:15</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="lblModuleLaunchTitle">
+       <property name="styleSheet">
+        <string>font-size:12px;font-weight:700;color:#2A5090;</string>
        </property>
        <property name="text">
-        <string>PetroAnalyst Pro — Welcome</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+        <string>Module Launch</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lblDashSub">
-       <property name="styleSheet">
-        <string>font-size:13px;color:#4A6A8A;</string>
+      <layout class="QGridLayout" name="layoutModuleLaunch">
+       <property name="spacing">
+        <number>12</number>
        </property>
-       <property name="text">
-        <string>Open a project or import LAS data to begin.  Use the toolbar or menus above to open any analysis module.</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignHCenter</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="spacerDashV">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>60</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="layoutDashCards">
-       <item>
-        <widget class="QGroupBox" name="cardImport">
-         <property name="title">
-          <string>Quick Import</string>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="btnDashLoadLogs">
+         <property name="minimumHeight">
+          <number>60</number>
          </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QPushButton" name="btnDashImportLAS">
-            <property name="text">
-             <string>Import LAS File...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashImportCSV">
-            <property name="text">
-             <string>Import CSV / Excel...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashImportSEGY">
-            <property name="text">
-             <string>Import SEG-Y...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>📂 Load Well Logs</string>
+         </property>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="cardRecent">
-         <property name="title">
-          <string>Recent Projects</string>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="btnDashQualityAssess">
+         <property name="minimumHeight">
+          <number>60</number>
          </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QPushButton" name="btnDashRecent1">
-            <property name="text">
-             <string>SandboxMay2016</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashRecent2">
-            <property name="text">
-             <string>Field_A_EvalProject</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashRecent3">
-            <property name="text">
-             <string>OffshoreBlock_7</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>📊 Assess Data Quality</string>
+         </property>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="cardModules">
-         <property name="title">
-          <string>Open Module</string>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="btnDashViewEditLogs">
+         <property name="minimumHeight">
+          <number>60</number>
          </property>
-         <layout class="QGridLayout">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="btnDashLogView">
-            <property name="text">
-             <string>Log Viewer</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="btnDashXplot">
-            <property name="text">
-             <string>Crossplot</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="btnDashVsh">
-            <property name="text">
-             <string>Shale Volume</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="btnDashSw">
-            <property name="text">
-             <string>Water Saturation</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="btnDashGeo">
-            <property name="text">
-             <string>Geomechanics</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="btnDashCorr">
-            <property name="text">
-             <string>Well Correlation</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>📈 View/Edit Logs</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QPushButton" name="btnDashAnalyzeCrossplot">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>🔬 Analyze Crossplot</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QPushButton" name="btnDashNetPay">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>💰 Net Pay Evaluation</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="btnDashCalcVsh">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>📐 Calculate Vshale</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="btnDashCalcPorosity">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>🔷 Calculate Porosity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="btnDashCalcPorosity2">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>💧 Calculate Porosity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="btnDashCalcSaturation">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>💧 Calculate Water Saturation</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QPushButton" name="btnDashNetPayEval">
+         <property name="minimumHeight">
+          <number>60</number>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
+         </property>
+         <property name="text">
+          <string>💰 Net Pay Evaluation</string>
+         </property>
         </widget>
        </item>
       </layout>
      </item>
      <item>
-      <spacer name="spacerDashV2">
+      <spacer name="spacerDashEnd">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>0</height>
         </size>
        </property>
       </spacer>
