@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, QtCore, uic
 
 THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
@@ -16,7 +16,7 @@ from controllers.main_controller import MainController  # noqa: E402
 
 
 class PetroVisionMainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, project_path: str | None = None):
         super().__init__()
         ui_path = UI_DIR / UI_FILE
         uic.loadUi(str(ui_path), self)
@@ -26,6 +26,14 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_data_analysis_tab()
         self._connect_tab_switches()
         self.controller = MainController(self)
+        
+        # Set window geometry
+        self.setGeometry(100, 100, 1497, 893)
+        
+        # Load project if provided
+        if project_path and Path(project_path).exists():
+            QtCore.QTimer.singleShot(500, 
+                lambda p=project_path: self.controller.projects.load_project_from_path(p))
 
     def _embed_data_analysis_tab(self) -> None:
         """Replace the Data Info & Stats tab with the Data & Analysis dock contents."""
@@ -118,6 +126,30 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_action_to_tab("actionNetPay", "tabNetPay", 10)
         connect_action_to_tab("actionWellCorrelation", "tabWellCorrelation", 11)
         connect_action_to_tab("actionMultimineralAnalysis", "tabMultiMineral", 12)
+    
+    def closeEvent(self, event):
+        """Handle application close - prompt to save if modified.
+        
+        Args:
+            event: QCloseEvent
+        """
+        if self.controller.projects.is_project_modified():
+            reply = QtWidgets.QMessageBox.question(
+                self,
+                "Save Project?",
+                "Project has unsaved changes. Save before closing?",
+                QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel
+            )
+            
+            if reply == QtWidgets.QMessageBox.Save:
+                self.controller.projects.save_project()
+                event.accept()
+            elif reply == QtWidgets.QMessageBox.Discard:
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.accept()
         connect_action_to_tab("actionFMIAnalysis", "tabFMIAnalysis", 13)
         connect_action_to_tab("actionWellboreStability", "tabWellboreStability", 14)
         connect_action_to_tab("actionPorePressure", "tabPorePressure", 15)

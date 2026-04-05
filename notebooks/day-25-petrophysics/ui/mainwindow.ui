@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PetroAnalystMainWindow</class>
  <widget class="QMainWindow" name="PetroAnalystMainWindow">
@@ -27,7 +27,7 @@
 
 QMainWindow {
     background-color: #EBF0F6;
-    font-family: "Segoe UI", "Noto Sans", sans-serif;
+    font-family: &quot;Segoe UI&quot;, &quot;Noto Sans&quot;, sans-serif;
 }
 
 /* ---- Menu Bar ---- */
@@ -362,7 +362,7 @@ QMdiSubWindow::title {
 QPlainTextEdit {
     background-color: #F5F9FE;
     color: #1B2B40;
-    font-family: "Consolas", "Courier New", monospace;
+    font-family: &quot;Consolas&quot;, &quot;Courier New&quot;, monospace;
     font-size: 11px;
     border: none;
     border-radius: 0;
@@ -464,7 +464,7 @@ QSplitter::handle:vertical { height: 4px; }
 QSplitter::handle:hover { background-color: #3A72B5; }
 
 /* ---- Frame ---- */
-QFrame[frameShape="4"], QFrame[frameShape="5"] {
+QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     color: #C2D0E0;
 }
    </string>
@@ -474,7 +474,7 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="documentMode">
     <bool>true</bool>
@@ -490,693 +490,552 @@ QFrame[frameShape="4"], QFrame[frameShape="5"] {
      <string>⌂ Dashboard</string>
     </attribute>
     <layout class="QVBoxLayout" name="layoutDashboard">
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <property name="leftMargin">
-      <number>8</number>
-     </property>
-     <property name="topMargin">
-      <number>8</number>
-     </property>
-     <property name="rightMargin">
-      <number>8</number>
-     </property>
-     <property name="bottomMargin">
-      <number>8</number>
-     </property>
      <item>
-      <widget class="QFrame" name="frameProjectHeader">
+      <widget class="QLabel" name="lblDashTitle">
        <property name="styleSheet">
-        <string>background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #3A72B5, stop:1 #2A5C9E);
-border-radius: 6px;
-color: white;</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <layout class="QHBoxLayout" name="layoutProjectHeader">
-        <property name="spacing">
-         <number>12</number>
-        </property>
-        <property name="leftMargin">
-         <number>16</number>
-        </property>
-        <property name="topMargin">
-         <number>12</number>
-        </property>
-        <property name="rightMargin">
-         <number>16</number>
-        </property>
-        <property name="bottomMargin">
-         <number>12</number>
-        </property>
-        <item>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QLabel" name="lblProjName">
-            <property name="styleSheet">
-             <string>font-size: 16px; font-weight: 700; color: white;</string>
-            </property>
-            <property name="text">
-             <string>Project: Gorgonichthys-1</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="lblProjDetails">
-            <property name="styleSheet">
-             <string>font-size: 12px; color: #E0E8F5;</string>
-            </property>
-            <property name="text">
-             <string>Well: GOR-1  |  Depth Range: 1000 - 3500 m  |  Status: Logs Loaded ✓</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QPushButton" name="btnLoadProject">
-            <property name="text">
-             <string>Load Project</string>
-            </property>
-            <property name="styleSheet">
-             <string>background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 3px;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnSaveProject">
-            <property name="text">
-             <string>Save Project</string>
-            </property>
-            <property name="styleSheet">
-             <string>background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 3px;</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="layoutDashMain">
-       <property name="spacing">
-        <number>8</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" name="layoutDashLeft">
-         <property name="spacing">
-          <number>8</number>
-         </property>
-         <item>
-          <widget class="QGroupBox" name="groupRecentProjects">
-           <property name="title">
-            <string>Recent Projects</string>
-           </property>
-           <layout class="QVBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <item>
-             <widget class="QPushButton" name="btnDashRecent1">
-              <property name="minimumHeight">
-               <number>32</number>
-              </property>
-              <property name="text">
-               <string>📦 SandsBay-Aug16</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnDashRecent2">
-              <property name="minimumHeight">
-               <number>32</number>
-              </property>
-              <property name="text">
-               <string>📦 Field-A_PetProject</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnDashRecent3">
-              <property name="minimumHeight">
-               <number>32</number>
-              </property>
-              <property name="text">
-               <string>📦 OffshoreBlock-7</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupDataQuality">
-           <property name="title">
-            <string>Data Quality</string>
-           </property>
-           <layout class="QGridLayout" name="gridDataQuality">
-            <property name="spacing">
-             <number>8</number>
-            </property>
-            <item row="0" column="0">
-             <widget class="QFrame" name="cardQCGR">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>GR</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#1BA62A;</string>
-                 </property>
-                 <property name="text">
-                  <string>90%</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QFrame" name="cardQCRT">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>RT</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#1BA62A;</string>
-                 </property>
-                 <property name="text">
-                  <string>99%</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QFrame" name="cardQCRHOB">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>RHOB</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#1BA62A;</string>
-                 </property>
-                 <property name="text">
-                  <string>93%</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QFrame" name="cardQCCNL">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>CNL</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#F59E0B;</string>
-                 </property>
-                 <property name="text">
-                  <string>89%</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QFrame" name="cardQCCAL">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>CAL</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#F59E0B;</string>
-                 </property>
-                 <property name="text">
-                  <string>88%</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QFrame" name="cardQCNPHI">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>NPHI</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#F59E0B;</string>
-                 </property>
-                 <property name="text">
-                  <string>89%</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <widget class="QFrame" name="cardQCCGR">
-              <property name="styleSheet">
-               <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:6px;</string>
-              </property>
-              <layout class="QVBoxLayout">
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>color:#61788F;font-size:10px;font-weight:600;</string>
-                 </property>
-                 <property name="text">
-                  <string>CGR</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel">
-                 <property name="styleSheet">
-                  <string>font-size:14px;font-weight:700;color:#EF4444;</string>
-                 </property>
-                 <property name="text">
-                  <string>92% ⚠</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="layoutDashRight">
-         <property name="spacing">
-          <number>8</number>
-         </property>
-         <item>
-          <widget class="QGroupBox" name="groupAlerts">
-           <property name="title">
-            <string>Alerts</string>
-           </property>
-           <layout class="QVBoxLayout">
-            <property name="spacing">
-             <number>4</number>
-            </property>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#DC2626;font-size:11px;padding:6px;</string>
-              </property>
-              <property name="text">
-               <string>⚠ Missing NPHI curve for [] GOR-1 — Replaced with synthetic NPHI (Fallback Method)</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#F59E0B;font-size:11px;padding:6px;</string>
-              </property>
-              <property name="text">
-               <string>⚠ Missing RHOB values in interval 2450 – 2600m — Estimated using linear interpolation</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#10B981;font-size:11px;padding:6px;</string>
-              </property>
-              <property name="text">
-               <string>✓ Synthetic NPHI, Density-Neutron crossplot generated</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupActivity">
-           <property name="title">
-            <string>Activity</string>
-           </property>
-           <layout class="QVBoxLayout">
-            <property name="spacing">
-             <number>4</number>
-            </property>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
-              </property>
-              <property name="text">
-               <string>✓ LAS loaded for well GOR-1  —  14:32</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
-              </property>
-              <property name="text">
-               <string>✓ Vshale calculated for GOR-1  —  14:24</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
-              </property>
-              <property name="text">
-               <string>✓ Density-Neutron crossplot generated  —  14:20</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel">
-              <property name="styleSheet">
-               <string>color:#1B2B40;font-size:10px;padding:4px;</string>
-              </property>
-              <property name="text">
-               <string>✓ Porosity calculation updated  —  14:15</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="lblModuleLaunchTitle">
-       <property name="styleSheet">
-        <string>font-size:12px;font-weight:700;color:#2A5090;</string>
+        <string>font-size:18px;font-weight:700;color:#2A5090;padding:20px 0 6px 0;</string>
        </property>
        <property name="text">
-        <string>Module Launch</string>
+        <string>PetroAnalyst Pro — Welcome</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
        </property>
       </widget>
      </item>
      <item>
-      <layout class="QGridLayout" name="layoutModuleLaunch">
-       <property name="spacing">
-        <number>12</number>
+      <widget class="QLabel" name="lblDashSub">
+       <property name="styleSheet">
+        <string>font-size:13px;color:#4A6A8A;</string>
        </property>
-       <item row="0" column="0">
-        <widget class="QPushButton" name="btnDashLoadLogs">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>📂 Load Well Logs</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="btnDashQualityAssess">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>📊 Assess Data Quality</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="btnDashViewEditLogs">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>📈 View/Edit Logs</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QPushButton" name="btnDashAnalyzeCrossplot">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>🔬 Analyze Crossplot</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <widget class="QPushButton" name="btnDashNetPay">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>💰 Net Pay Evaluation</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="btnDashCalcVsh">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>📐 Calculate Vshale</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="btnDashCalcPorosity">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>🔷 Calculate Porosity</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="btnDashCalcPorosity2">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>💧 Calculate Porosity</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QPushButton" name="btnDashCalcSaturation">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>💧 Calculate Water Saturation</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QPushButton" name="btnDashNetPayEval">
-         <property name="minimumHeight">
-          <number>60</number>
-         </property>
-         <property name="styleSheet">
-          <string>background-color: #3A72B5; color: white; font-weight: 700; border-radius: 6px;</string>
-         </property>
-         <property name="text">
-          <string>💰 Net Pay Evaluation</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+       <property name="text">
+        <string>Open a project or import LAS data to begin.  Use the toolbar or menus above to open any analysis module.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
-      <spacer name="spacerDashEnd">
+      <spacer name="spacerDashV">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>0</height>
+         <height>60</height>
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="layoutDashCards">
+       <item>
+        <widget class="QGroupBox" name="cardImport">
+         <property name="title">
+          <string>Quick Import</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QPushButton" name="btnDashImportLAS">
+            <property name="text">
+             <string>Import LAS File...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashImportCSV">
+            <property name="text">
+             <string>Import CSV / Excel...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashImportSEGY">
+            <property name="text">
+             <string>Import SEG-Y...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="cardRecent">
+         <property name="title">
+          <string>Recent Projects</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QPushButton" name="btnDashRecent1">
+            <property name="text">
+             <string>SandboxMay2016</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashRecent2">
+            <property name="text">
+             <string>Field_A_EvalProject</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDashRecent3">
+            <property name="text">
+             <string>OffshoreBlock_7</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="cardModules">
+         <property name="title">
+          <string>Open Module</string>
+         </property>
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="btnDashLogView">
+            <property name="text">
+             <string>Log Viewer</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="btnDashXplot">
+            <property name="text">
+             <string>Crossplot</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="btnDashVsh">
+            <property name="text">
+             <string>Shale Volume</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="btnDashSw">
+            <property name="text">
+             <string>Water Saturation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="btnDashGeo">
+            <property name="text">
+             <string>Geomechanics</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="btnDashCorr">
+            <property name="text">
+             <string>Well Correlation</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="spacerDashV2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="tabLogViewer">
+    <attribute name="title">
+     <string>Well Log Plots</string>
+    </attribute>
+    <layout class="QVBoxLayout" name="layoutLogViewer">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="layoutLogViewerControls">
+       <item>
+        <widget class="QLabel" name="lblLVWell">
+         <property name="text">
+          <string>Well:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboLVWell">
+         <item>
+          <property name="text">
+           <string>CHr-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Tau-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Experior</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="triplecomboplot">
+         <property name="text">
+          <string>Triple combo plot</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="CheckableCombobox" name="triplecombotrack1">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::PreventContextMenu</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GR Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select GR Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="CheckableCombobox" name="triplecombotrack2">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resistivity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="CheckableCombobox" name="triplecombotrack3">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porosity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="plottriplecomboplot">
+         <property name="text">
+          <string> Plot Triple combo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Multitrackplot">
+         <property name="text">
+          <string>Multi-track plot</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="CheckableCombobox" name="multitrackcomboBox">
+         <property name="maximumSize">
+          <size>
+           <width>167717</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select curves&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="plotmutlitrack">
+         <property name="text">
+          <string>plot multitrack</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="spacerLV">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="layoutLVWorkspace">
+       <property name="spacing">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frameLVPlotModes">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>320</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>380</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string>background:#F8FBFE;border:1px solid #D5E1EC;border-radius:6px;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <layout class="QVBoxLayout" name="layoutLVPlotModes">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <property name="leftMargin">
+           <number>8</number>
+          </property>
+          <property name="topMargin">
+           <number>8</number>
+          </property>
+          <property name="rightMargin">
+           <number>8</number>
+          </property>
+          <property name="bottomMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QGroupBox" name="groupLVCrossplot">
+            <property name="title">
+             <string>Crossplot</string>
+            </property>
+            <layout class="QFormLayout" name="formLVCrossplot">
+             <property name="horizontalSpacing">
+              <number>8</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>6</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblLVCrossX">
+               <property name="text">
+                <string>X Curve:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboLVCrossX"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblLVCrossY">
+               <property name="text">
+                <string>Y Curve:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="comboLVCrossY"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="lblLVCrossColor">
+               <property name="text">
+                <string>Color By:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="comboLVCrossColor"/>
+             </item>
+             <item row="3" column="1">
+              <widget class="QPushButton" name="btnLVPlotCrossplot">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(26, 95, 180);</string>
+               </property>
+               <property name="text">
+                <string>Plot Crossplot</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupLVHistogram">
+            <property name="title">
+             <string>Histogram</string>
+            </property>
+            <layout class="QFormLayout" name="formLVHistogram">
+             <property name="horizontalSpacing">
+              <number>8</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>6</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblLVHistCurve">
+               <property name="text">
+                <string>Curve:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboLVHistCurve"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblLVHistBins">
+               <property name="text">
+                <string>Bins:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSpinBox" name="spinLVHistBins">
+               <property name="minimum">
+                <number>5</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>40</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="btnLVPlotHistogram">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(26, 95, 180);</string>
+               </property>
+               <property name="text">
+                <string>Plot Histogram</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupLVPairplot">
+            <property name="title">
+             <string>Pairplot</string>
+            </property>
+            <layout class="QFormLayout" name="formLVPairplot">
+             <property name="horizontalSpacing">
+              <number>8</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>6</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblLVPairCurves">
+               <property name="text">
+                <string>Curves:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="CheckableCombobox" name="pairplotcomboBox"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblLVPairHint">
+               <property name="text">
+                <string>Use 2-4 curves</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="btnLVPlotPairplot">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(53, 132, 228);
+background-color: rgb(26, 95, 180);</string>
+               </property>
+               <property name="text">
+                <string>Plot Pairplot</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spacerLVPlotModes">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frameLogViewerCanvas">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string>background-color:#FFFFFF;border:1px solid #C2D0E0;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lblLogViewerPlaceholder">
+            <property name="styleSheet">
+             <string>color:#8898A8;font-size:13px;</string>
+            </property>
+            <property name="text">
+             <string>Log viewer canvas — connect PyQtGraph / Matplotlib widget here.
+Use the controls above to select well, template and depth range, then click Render Plot.</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -1268,21 +1127,21 @@ color: white;</string>
            <property name="columnCount">
             <number>3</number>
            </property>
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
            <column>
             <property name="text">
              <string>Field</string>
@@ -1486,7 +1345,7 @@ color: white;</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboQCWell" />
+            <widget class="QComboBox" name="comboQCWell"/>
            </item>
            <item row="0" column="2">
             <widget class="QLabel" name="lblQCCurve">
@@ -1496,7 +1355,7 @@ color: white;</string>
             </widget>
            </item>
            <item row="0" column="3">
-            <widget class="QComboBox" name="comboQCCurve" />
+            <widget class="QComboBox" name="comboQCCurve"/>
            </item>
            <item row="0" column="4">
             <widget class="QLabel" name="lblQCMethod">
@@ -2097,383 +1956,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="tabLogViewer">
-    <attribute name="title">
-     <string>Well Log Plots</string>
-    </attribute>
-    <layout class="QVBoxLayout" name="layoutLogViewer">
-     <property name="spacing">
-      <number>4</number>
-     </property>
-     <item>
-      <layout class="QHBoxLayout" name="layoutLogViewerControls">
-       <item>
-        <widget class="QLabel" name="lblLVWell">
-         <property name="text">
-          <string>Well:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboLVWell">
-         <item>
-          <property name="text">
-           <string>CHr-1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Tau-1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Experior</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="triplecomboplot">
-         <property name="text">
-          <string>Triple combo plot</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="CheckableCombobox" name="triplecombotrack1">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="contextMenuPolicy">
-          <enum>Qt::PreventContextMenu</enum>
-         </property>
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GR Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="whatsThis">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select GR Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="CheckableCombobox" name="triplecombotrack2">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resistivity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="CheckableCombobox" name="triplecombotrack3">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porosity log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="plottriplecomboplot">
-         <property name="text">
-          <string> Plot Triple combo</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="Multitrackplot">
-         <property name="text">
-          <string>Multi-track plot</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="CheckableCombobox" name="multitrackcomboBox">
-         <property name="maximumSize">
-          <size>
-           <width>167717</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select curves&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="plotmutlitrack">
-         <property name="text">
-          <string>plot multitrack</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="spacerLV">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="layoutLVWorkspace">
-       <property name="spacing">
-        <number>8</number>
-       </property>
-       <item>
-        <widget class="QFrame" name="frameLVPlotModes">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>320</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>380</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string>background:#F8FBFE;border:1px solid #D5E1EC;border-radius:6px;</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <layout class="QVBoxLayout" name="layoutLVPlotModes">
-          <property name="spacing">
-           <number>8</number>
-          </property>
-          <property name="leftMargin">
-           <number>8</number>
-          </property>
-          <property name="topMargin">
-           <number>8</number>
-          </property>
-          <property name="rightMargin">
-           <number>8</number>
-          </property>
-          <property name="bottomMargin">
-           <number>8</number>
-          </property>
-          <item>
-           <widget class="QGroupBox" name="groupLVCrossplot">
-            <property name="title">
-             <string>Crossplot</string>
-            </property>
-            <layout class="QFormLayout" name="formLVCrossplot">
-             <property name="horizontalSpacing">
-              <number>8</number>
-             </property>
-             <property name="verticalSpacing">
-              <number>6</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="lblLVCrossX">
-               <property name="text">
-                <string>X Curve:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QComboBox" name="comboLVCrossX" />
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="lblLVCrossY">
-               <property name="text">
-                <string>Y Curve:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QComboBox" name="comboLVCrossY" />
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="lblLVCrossColor">
-               <property name="text">
-                <string>Color By:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QComboBox" name="comboLVCrossColor" />
-             </item>
-             <item row="3" column="1">
-              <widget class="QPushButton" name="btnLVPlotCrossplot">
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(26, 95, 180);</string>
-               </property>
-               <property name="text">
-                <string>Plot Crossplot</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupLVHistogram">
-            <property name="title">
-             <string>Histogram</string>
-            </property>
-            <layout class="QFormLayout" name="formLVHistogram">
-             <property name="horizontalSpacing">
-              <number>8</number>
-             </property>
-             <property name="verticalSpacing">
-              <number>6</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="lblLVHistCurve">
-               <property name="text">
-                <string>Curve:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QComboBox" name="comboLVHistCurve" />
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="lblLVHistBins">
-               <property name="text">
-                <string>Bins:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QSpinBox" name="spinLVHistBins">
-               <property name="minimum">
-                <number>5</number>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="value">
-                <number>40</number>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QPushButton" name="btnLVPlotHistogram">
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(26, 95, 180);</string>
-               </property>
-               <property name="text">
-                <string>Plot Histogram</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupLVPairplot">
-            <property name="title">
-             <string>Pairplot</string>
-            </property>
-            <layout class="QFormLayout" name="formLVPairplot">
-             <property name="horizontalSpacing">
-              <number>8</number>
-             </property>
-             <property name="verticalSpacing">
-              <number>6</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="lblLVPairCurves">
-               <property name="text">
-                <string>Curves:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="CheckableCombobox" name="pairplotcomboBox" />
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="lblLVPairHint">
-               <property name="text">
-                <string>Use 2-4 curves</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="btnLVPlotPairplot">
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(53, 132, 228);
-background-color: rgb(26, 95, 180);</string>
-               </property>
-               <property name="text">
-                <string>Plot Pairplot</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <spacer name="spacerLVPlotModes">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QFrame" name="frameLogViewerCanvas">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>1</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string>background-color:#FFFFFF;border:1px solid #C2D0E0;</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QLabel" name="lblLogViewerPlaceholder">
-            <property name="styleSheet">
-             <string>color:#8898A8;font-size:13px;</string>
-            </property>
-            <property name="text">
-             <string>Log viewer canvas — connect PyQtGraph / Matplotlib widget here.
-Use the controls above to select well, template and depth range, then click Render Plot.</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="tabFormationevaluation">
     <attribute name="title">
      <string>Formation Evaluation</string>
@@ -2935,7 +2417,7 @@ Use the controls above to select well, template and depth range, then click Rend
         <item>
          <widget class="QTabWidget" name="tabFEViews">
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tabFELogTracks">
            <attribute name="title">
@@ -6845,71 +6327,71 @@ Use the controls above to select well, template and depth range, then click Rend
      <property name="title">
       <string>Import Data</string>
      </property>
-     <addaction name="actionImportLAS" />
-     <addaction name="actionImportDLIS" />
-     <addaction name="actionImportLIS" />
-     <addaction name="separator" />
-     <addaction name="actionImportASCII" />
-     <addaction name="actionImportCSV" />
-     <addaction name="actionImportExcel" />
-     <addaction name="separator" />
-     <addaction name="actionImportWITSML" />
-     <addaction name="actionImportSEGY" />
-     <addaction name="actionImportXML" />
-     <addaction name="actionImportODM" />
+     <addaction name="actionImportLAS"/>
+     <addaction name="actionImportDLIS"/>
+     <addaction name="actionImportLIS"/>
+     <addaction name="separator"/>
+     <addaction name="actionImportASCII"/>
+     <addaction name="actionImportCSV"/>
+     <addaction name="actionImportExcel"/>
+     <addaction name="separator"/>
+     <addaction name="actionImportWITSML"/>
+     <addaction name="actionImportSEGY"/>
+     <addaction name="actionImportXML"/>
+     <addaction name="actionImportODM"/>
     </widget>
     <widget class="QMenu" name="menuExportData">
      <property name="title">
       <string>Export Data</string>
      </property>
-     <addaction name="actionExportLAS" />
-     <addaction name="actionExportCSV" />
-     <addaction name="actionExportExcel" />
-     <addaction name="separator" />
-     <addaction name="actionExportPDF" />
-     <addaction name="actionExportImageFile" />
-     <addaction name="actionExportDatabase" />
+     <addaction name="actionExportLAS"/>
+     <addaction name="actionExportCSV"/>
+     <addaction name="actionExportExcel"/>
+     <addaction name="separator"/>
+     <addaction name="actionExportPDF"/>
+     <addaction name="actionExportImageFile"/>
+     <addaction name="actionExportDatabase"/>
     </widget>
     <widget class="QMenu" name="menuRecentProjects">
      <property name="title">
       <string>Recent Projects</string>
      </property>
-     <addaction name="actionRecent1" />
-     <addaction name="actionRecent2" />
-     <addaction name="actionRecent3" />
-     <addaction name="separator" />
-     <addaction name="actionClearRecent" />
+     <addaction name="actionRecent1"/>
+     <addaction name="actionRecent2"/>
+     <addaction name="actionRecent3"/>
+     <addaction name="separator"/>
+     <addaction name="actionClearRecent"/>
     </widget>
-    <addaction name="actionNewProject" />
-    <addaction name="actionOpenProject" />
-    <addaction name="actionSaveProject" />
-    <addaction name="actionSaveProjectAs" />
-    <addaction name="separator" />
-    <addaction name="menuImportData" />
-    <addaction name="menuExportData" />
-    <addaction name="separator" />
-    <addaction name="actionPrint" />
-    <addaction name="actionPrintPreview" />
-    <addaction name="separator" />
-    <addaction name="menuRecentProjects" />
-    <addaction name="separator" />
-    <addaction name="actionExit" />
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionSaveProject"/>
+    <addaction name="actionSaveProjectAs"/>
+    <addaction name="separator"/>
+    <addaction name="menuImportData"/>
+    <addaction name="menuExportData"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="actionPrintPreview"/>
+    <addaction name="separator"/>
+    <addaction name="menuRecentProjects"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionUndo" />
-    <addaction name="actionRedo" />
-    <addaction name="separator" />
-    <addaction name="actionCut" />
-    <addaction name="actionCopy" />
-    <addaction name="actionPaste" />
-    <addaction name="actionDelete" />
-    <addaction name="separator" />
-    <addaction name="actionSelectAll" />
-    <addaction name="separator" />
-    <addaction name="actionPreferences" />
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -6919,245 +6401,245 @@ Use the controls above to select well, template and depth range, then click Rend
      <property name="title">
       <string>Depth Scale</string>
      </property>
-     <addaction name="actionDepthMD" />
-     <addaction name="actionDepthTVD" />
-     <addaction name="actionDepthTVDSS" />
+     <addaction name="actionDepthMD"/>
+     <addaction name="actionDepthTVD"/>
+     <addaction name="actionDepthTVDSS"/>
     </widget>
     <widget class="QMenu" name="menuToolbarsToggle">
      <property name="title">
       <string>Toolbars</string>
      </property>
-     <addaction name="actionToggleMainToolbar" />
-     <addaction name="actionToggleWellToolbar" />
-     <addaction name="actionToggleAnalysisToolbar" />
+     <addaction name="actionToggleMainToolbar"/>
+     <addaction name="actionToggleWellToolbar"/>
+     <addaction name="actionToggleAnalysisToolbar"/>
     </widget>
     <widget class="QMenu" name="menuPanelsToggle">
      <property name="title">
       <string>Panels</string>
      </property>
-     <addaction name="actionToggleBrowser" />
-     <addaction name="actionToggleProperties" />
-     <addaction name="actionToggleConsole" />
+     <addaction name="actionToggleBrowser"/>
+     <addaction name="actionToggleProperties"/>
+     <addaction name="actionToggleConsole"/>
     </widget>
-    <addaction name="actionZoomIn" />
-    <addaction name="actionZoomOut" />
-    <addaction name="actionZoomFit" />
-    <addaction name="actionZoomReset" />
-    <addaction name="separator" />
-    <addaction name="menuDepthScale" />
-    <addaction name="separator" />
-    <addaction name="actionShowGrid" />
-    <addaction name="actionShowDepthLabels" />
-    <addaction name="actionShowScaleBar" />
-    <addaction name="separator" />
-    <addaction name="menuToolbarsToggle" />
-    <addaction name="menuPanelsToggle" />
-    <addaction name="separator" />
-    <addaction name="actionFullScreen" />
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="actionZoomFit"/>
+    <addaction name="actionZoomReset"/>
+    <addaction name="separator"/>
+    <addaction name="menuDepthScale"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowGrid"/>
+    <addaction name="actionShowDepthLabels"/>
+    <addaction name="actionShowScaleBar"/>
+    <addaction name="separator"/>
+    <addaction name="menuToolbarsToggle"/>
+    <addaction name="menuPanelsToggle"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
    </widget>
    <widget class="QMenu" name="menuWell">
     <property name="title">
      <string>&amp;Well</string>
     </property>
-    <addaction name="actionAddWell" />
-    <addaction name="actionWellProperties" />
-    <addaction name="actionSetActiveWell" />
-    <addaction name="separator" />
-    <addaction name="actionWellTops" />
-    <addaction name="actionWellTrajectory" />
-    <addaction name="actionCasingCompletion" />
-    <addaction name="separator" />
-    <addaction name="actionCoreData" />
-    <addaction name="actionDSTData" />
-    <addaction name="actionFluidAnalysis" />
-    <addaction name="separator" />
-    <addaction name="actionMudLog" />
-    <addaction name="separator" />
-    <addaction name="actionDeleteWell" />
+    <addaction name="actionAddWell"/>
+    <addaction name="actionWellProperties"/>
+    <addaction name="actionSetActiveWell"/>
+    <addaction name="separator"/>
+    <addaction name="actionWellTops"/>
+    <addaction name="actionWellTrajectory"/>
+    <addaction name="actionCasingCompletion"/>
+    <addaction name="separator"/>
+    <addaction name="actionCoreData"/>
+    <addaction name="actionDSTData"/>
+    <addaction name="actionFluidAnalysis"/>
+    <addaction name="separator"/>
+    <addaction name="actionMudLog"/>
+    <addaction name="separator"/>
+    <addaction name="actionDeleteWell"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
     <property name="title">
      <string>&amp;Plot</string>
     </property>
-    <addaction name="actionNewLogPlot" />
-    <addaction name="actionNewCrossplot" />
-    <addaction name="actionNewHistogram" />
-    <addaction name="actionNewRoseDiagram" />
-    <addaction name="actionNewTadpolePlot" />
-    <addaction name="actionNewStarPlot" />
-    <addaction name="actionNewPolarPlot" />
-    <addaction name="separator" />
-    <addaction name="actiondatainfo" />
-    <addaction name="actionRemoveTrack" />
-    <addaction name="actionTrackProperties" />
-    <addaction name="separator" />
-    <addaction name="actionAddCurve" />
-    <addaction name="actionCurveProperties" />
-    <addaction name="actionCurveFillOptions" />
-    <addaction name="separator" />
-    <addaction name="actionSavePlotTemplate" />
-    <addaction name="actionLoadPlotTemplate" />
-    <addaction name="actionManageTemplates" />
+    <addaction name="actionNewLogPlot"/>
+    <addaction name="actionNewCrossplot"/>
+    <addaction name="actionNewHistogram"/>
+    <addaction name="actionNewRoseDiagram"/>
+    <addaction name="actionNewTadpolePlot"/>
+    <addaction name="actionNewStarPlot"/>
+    <addaction name="actionNewPolarPlot"/>
+    <addaction name="separator"/>
+    <addaction name="actiondatainfo"/>
+    <addaction name="actionRemoveTrack"/>
+    <addaction name="actionTrackProperties"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddCurve"/>
+    <addaction name="actionCurveProperties"/>
+    <addaction name="actionCurveFillOptions"/>
+    <addaction name="separator"/>
+    <addaction name="actionSavePlotTemplate"/>
+    <addaction name="actionLoadPlotTemplate"/>
+    <addaction name="actionManageTemplates"/>
    </widget>
    <widget class="QMenu" name="menuInterpretation">
     <property name="title">
      <string>&amp;Interpretation</string>
     </property>
-    <addaction name="actionShaleVolume" />
-    <addaction name="actionPorosityCalc" />
-    <addaction name="actionWaterSaturation" />
-    <addaction name="actionPermeability" />
-    <addaction name="separator" />
-    <addaction name="actionLithology" />
-    <addaction name="actionRockTyping" />
-    <addaction name="actionNetPay" />
-    <addaction name="separator" />
-    <addaction name="actionFluidSubstitution" />
-    <addaction name="actionContactPicking" />
-    <addaction name="separator" />
-    <addaction name="actionZoneDefinition" />
-    <addaction name="actionDepthShiftCorr" />
-    <addaction name="actionSpliceCurves" />
-    <addaction name="actionQualityControl" />
+    <addaction name="actionShaleVolume"/>
+    <addaction name="actionPorosityCalc"/>
+    <addaction name="actionWaterSaturation"/>
+    <addaction name="actionPermeability"/>
+    <addaction name="separator"/>
+    <addaction name="actionLithology"/>
+    <addaction name="actionRockTyping"/>
+    <addaction name="actionNetPay"/>
+    <addaction name="separator"/>
+    <addaction name="actionFluidSubstitution"/>
+    <addaction name="actionContactPicking"/>
+    <addaction name="separator"/>
+    <addaction name="actionZoneDefinition"/>
+    <addaction name="actionDepthShiftCorr"/>
+    <addaction name="actionSpliceCurves"/>
+    <addaction name="actionQualityControl"/>
    </widget>
    <widget class="QMenu" name="menuCalculation">
     <property name="title">
      <string>&amp;Calculation</string>
     </property>
-    <addaction name="actionBasicArithmetic" />
-    <addaction name="actionRockPhysicsModels" />
-    <addaction name="actionFluidProperties" />
-    <addaction name="separator" />
-    <addaction name="actionFormulaEditor" />
-    <addaction name="actionCustomFormula" />
-    <addaction name="separator" />
-    <addaction name="actionNMRCalc" />
-    <addaction name="actionDielectricCalc" />
-    <addaction name="actionThermalCalc" />
-    <addaction name="separator" />
-    <addaction name="actionBatchProcess" />
+    <addaction name="actionBasicArithmetic"/>
+    <addaction name="actionRockPhysicsModels"/>
+    <addaction name="actionFluidProperties"/>
+    <addaction name="separator"/>
+    <addaction name="actionFormulaEditor"/>
+    <addaction name="actionCustomFormula"/>
+    <addaction name="separator"/>
+    <addaction name="actionNMRCalc"/>
+    <addaction name="actionDielectricCalc"/>
+    <addaction name="actionThermalCalc"/>
+    <addaction name="separator"/>
+    <addaction name="actionBatchProcess"/>
    </widget>
    <widget class="QMenu" name="menuAdvancedInterp">
     <property name="title">
      <string>&amp;Advanced Interpretation</string>
     </property>
-    <addaction name="actionAdvRockPhysics" />
-    <addaction name="actionMultimineralAnalysis" />
-    <addaction name="actionNMRAnalysis" />
-    <addaction name="actionDielectricInterp" />
-    <addaction name="separator" />
-    <addaction name="actionPressureAnalysis" />
-    <addaction name="actionTemperatureGradient" />
-    <addaction name="actionFormationTesting" />
-    <addaction name="separator" />
-    <addaction name="actionSeismicPetro" />
-    <addaction name="actionAVOAnalysis" />
+    <addaction name="actionAdvRockPhysics"/>
+    <addaction name="actionMultimineralAnalysis"/>
+    <addaction name="actionNMRAnalysis"/>
+    <addaction name="actionDielectricInterp"/>
+    <addaction name="separator"/>
+    <addaction name="actionPressureAnalysis"/>
+    <addaction name="actionTemperatureGradient"/>
+    <addaction name="actionFormationTesting"/>
+    <addaction name="separator"/>
+    <addaction name="actionSeismicPetro"/>
+    <addaction name="actionAVOAnalysis"/>
    </widget>
    <widget class="QMenu" name="menuImageAnalysis">
     <property name="title">
      <string>Image &amp;Analysis</string>
     </property>
-    <addaction name="actionBoreholeImage" />
-    <addaction name="actionFMIAnalysis" />
-    <addaction name="actionDipAnalysis" />
-    <addaction name="actionTadpoleDisplay" />
-    <addaction name="separator" />
-    <addaction name="actionStaticNormalization" />
-    <addaction name="actionDynamicNormalization" />
-    <addaction name="separator" />
-    <addaction name="actionFractureDetection" />
-    <addaction name="actionSedStructures" />
-    <addaction name="actionStrikeAzimuth" />
+    <addaction name="actionBoreholeImage"/>
+    <addaction name="actionFMIAnalysis"/>
+    <addaction name="actionDipAnalysis"/>
+    <addaction name="actionTadpoleDisplay"/>
+    <addaction name="separator"/>
+    <addaction name="actionStaticNormalization"/>
+    <addaction name="actionDynamicNormalization"/>
+    <addaction name="separator"/>
+    <addaction name="actionFractureDetection"/>
+    <addaction name="actionSedStructures"/>
+    <addaction name="actionStrikeAzimuth"/>
    </widget>
    <widget class="QMenu" name="menuGeomechanics">
     <property name="title">
      <string>&amp;Geomechanics</string>
     </property>
-    <addaction name="actionStressAnalysis" />
-    <addaction name="actionWellboreStability" />
-    <addaction name="actionFractureAnalysis" />
-    <addaction name="actionPorePressure" />
-    <addaction name="separator" />
-    <addaction name="actionUCS" />
-    <addaction name="actionYoungsModulus" />
-    <addaction name="actionPoissonRatio" />
-    <addaction name="actionBrittlenessIndex" />
-    <addaction name="separator" />
-    <addaction name="actionMudWeightWindow" />
+    <addaction name="actionStressAnalysis"/>
+    <addaction name="actionWellboreStability"/>
+    <addaction name="actionFractureAnalysis"/>
+    <addaction name="actionPorePressure"/>
+    <addaction name="separator"/>
+    <addaction name="actionUCS"/>
+    <addaction name="actionYoungsModulus"/>
+    <addaction name="actionPoissonRatio"/>
+    <addaction name="actionBrittlenessIndex"/>
+    <addaction name="separator"/>
+    <addaction name="actionMudWeightWindow"/>
    </widget>
    <widget class="QMenu" name="menuMultiWell">
     <property name="title">
      <string>&amp;Multi-Well</string>
     </property>
-    <addaction name="actionWellCorrelation" />
-    <addaction name="actionCrossSection" />
-    <addaction name="actionFenceSection" />
-    <addaction name="separator" />
-    <addaction name="actionStatisticalAnalysis" />
-    <addaction name="actionWellComparison" />
-    <addaction name="actionBasinAnalysis" />
-    <addaction name="separator" />
-    <addaction name="actionVolumetricsCalc" />
+    <addaction name="actionWellCorrelation"/>
+    <addaction name="actionCrossSection"/>
+    <addaction name="actionFenceSection"/>
+    <addaction name="separator"/>
+    <addaction name="actionStatisticalAnalysis"/>
+    <addaction name="actionWellComparison"/>
+    <addaction name="actionBasinAnalysis"/>
+    <addaction name="separator"/>
+    <addaction name="actionVolumetricsCalc"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>&amp;Tools</string>
     </property>
-    <addaction name="actionUnitConverter" />
-    <addaction name="actionFormulaEditorTool" />
-    <addaction name="actionTemplateManager" />
-    <addaction name="actionDatabaseManager" />
-    <addaction name="separator" />
-    <addaction name="actionCurveSmoother" />
-    <addaction name="actionDepthShiftTool" />
-    <addaction name="actionOutlierDetection" />
-    <addaction name="actionDeSpikeTool" />
-    <addaction name="separator" />
-    <addaction name="actionPythonConsole" />
-    <addaction name="actionMacroRecorder" />
-    <addaction name="separator" />
-    <addaction name="actionPluginManager" />
+    <addaction name="actionUnitConverter"/>
+    <addaction name="actionFormulaEditorTool"/>
+    <addaction name="actionTemplateManager"/>
+    <addaction name="actionDatabaseManager"/>
+    <addaction name="separator"/>
+    <addaction name="actionCurveSmoother"/>
+    <addaction name="actionDepthShiftTool"/>
+    <addaction name="actionOutlierDetection"/>
+    <addaction name="actionDeSpikeTool"/>
+    <addaction name="separator"/>
+    <addaction name="actionPythonConsole"/>
+    <addaction name="actionMacroRecorder"/>
+    <addaction name="separator"/>
+    <addaction name="actionPluginManager"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
      <string>&amp;Window</string>
     </property>
-    <addaction name="actionTileWindows" />
-    <addaction name="actionCascadeWindows" />
-    <addaction name="actionCloseAllWindows" />
-    <addaction name="separator" />
-    <addaction name="actionNextWindow" />
-    <addaction name="actionPrevWindow" />
+    <addaction name="actionTileWindows"/>
+    <addaction name="actionCascadeWindows"/>
+    <addaction name="actionCloseAllWindows"/>
+    <addaction name="separator"/>
+    <addaction name="actionNextWindow"/>
+    <addaction name="actionPrevWindow"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionDocumentation" />
-    <addaction name="actionTutorials" />
-    <addaction name="actionVideoGuides" />
-    <addaction name="separator" />
-    <addaction name="actionKeyboardShortcuts" />
-    <addaction name="separator" />
-    <addaction name="actionLicenseManager" />
-    <addaction name="actionCheckUpdates" />
-    <addaction name="separator" />
-    <addaction name="actionAbout" />
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionTutorials"/>
+    <addaction name="actionVideoGuides"/>
+    <addaction name="separator"/>
+    <addaction name="actionKeyboardShortcuts"/>
+    <addaction name="separator"/>
+    <addaction name="actionLicenseManager"/>
+    <addaction name="actionCheckUpdates"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menuFile" />
-   <addaction name="menuEdit" />
-   <addaction name="menuView" />
-   <addaction name="menuWell" />
-   <addaction name="menuPlot" />
-   <addaction name="menuInterpretation" />
-   <addaction name="menuCalculation" />
-   <addaction name="menuAdvancedInterp" />
-   <addaction name="menuImageAnalysis" />
-   <addaction name="menuGeomechanics" />
-   <addaction name="menuMultiWell" />
-   <addaction name="menuTools" />
-   <addaction name="menuWindow" />
-   <addaction name="menuHelp" />
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuWell"/>
+   <addaction name="menuPlot"/>
+   <addaction name="menuInterpretation"/>
+   <addaction name="menuCalculation"/>
+   <addaction name="menuAdvancedInterp"/>
+   <addaction name="menuImageAnalysis"/>
+   <addaction name="menuGeomechanics"/>
+   <addaction name="menuMultiWell"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBarMain">
    <property name="windowTitle">
@@ -7178,17 +6660,17 @@ Use the controls above to select well, template and depth range, then click Rend
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionNewProject" />
-   <addaction name="actionOpenProject" />
-   <addaction name="actionSaveProject" />
-   <addaction name="separator" />
-   <addaction name="actionImportLAS" />
-   <addaction name="actionExportPDF" />
-   <addaction name="separator" />
-   <addaction name="actionUndo" />
-   <addaction name="actionRedo" />
-   <addaction name="separator" />
-   <addaction name="actionPrint" />
+   <addaction name="actionNewProject"/>
+   <addaction name="actionOpenProject"/>
+   <addaction name="actionSaveProject"/>
+   <addaction name="separator"/>
+   <addaction name="actionImportLAS"/>
+   <addaction name="actionExportPDF"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrint"/>
   </widget>
   <widget class="QToolBar" name="toolBarWellDisplay">
    <property name="windowTitle">
@@ -7209,23 +6691,23 @@ Use the controls above to select well, template and depth range, then click Rend
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator" />
-   <addaction name="actiondatainfo" />
-   <addaction name="actionRemoveTrack" />
-   <addaction name="actionAddCurve" />
-   <addaction name="separator" />
-   <addaction name="actionZoomIn" />
-   <addaction name="actionZoomOut" />
-   <addaction name="actionZoomFit" />
-   <addaction name="actionZoomReset" />
-   <addaction name="separator" />
-   <addaction name="actionToolSelect" />
-   <addaction name="actionToolPan" />
-   <addaction name="actionToolMeasure" />
-   <addaction name="actionToolPick" />
-   <addaction name="separator" />
-   <addaction name="separator" />
-   <addaction name="actionShowGrid" />
+   <addaction name="separator"/>
+   <addaction name="actiondatainfo"/>
+   <addaction name="actionRemoveTrack"/>
+   <addaction name="actionAddCurve"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoomIn"/>
+   <addaction name="actionZoomOut"/>
+   <addaction name="actionZoomFit"/>
+   <addaction name="actionZoomReset"/>
+   <addaction name="separator"/>
+   <addaction name="actionToolSelect"/>
+   <addaction name="actionToolPan"/>
+   <addaction name="actionToolMeasure"/>
+   <addaction name="actionToolPick"/>
+   <addaction name="separator"/>
+   <addaction name="separator"/>
+   <addaction name="actionShowGrid"/>
   </widget>
   <widget class="QDockWidget" name="dockBrowser">
    <property name="features">
@@ -7916,12 +7398,12 @@ Use the controls above to select well, template and depth range, then click Rend
            <property name="columnCount">
             <number>5</number>
            </property>
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
-           <row />
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
+           <row/>
            <column>
             <property name="text">
              <string>Zone Name</string>
@@ -9207,7 +8689,7 @@ Use the controls above to select well, template and depth range, then click Rend
    <header location="global">checkablecombobox.h</header>
   </customwidget>
  </customwidgets>
- <resources />
+ <resources/>
  <connections>
   <connection>
    <sender>actionNewLogPlot</sender>
