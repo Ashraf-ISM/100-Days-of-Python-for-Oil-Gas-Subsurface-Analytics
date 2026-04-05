@@ -15,6 +15,9 @@ class FormationEvaluationService:
         self.ui = ui
         self.data = data_service
         self._plot_hosts: dict[str, QtWidgets.QWidget] = {}
+        tab_views = getattr(self.ui, "tabFEViews", None)
+        if tab_views is not None:
+            tab_views.setCurrentIndex(0)
 
     def run_evaluation(self, *_args):
         result = self._build_result()
@@ -53,24 +56,26 @@ class FormationEvaluationService:
         if df is None or getattr(df, "empty", True):
             return None
 
+        use_vsh = self._is_checked("checkFEVsh", True)
+        use_gr = self._is_checked("checkFEGR", True) and use_vsh
+        use_rhob = self._is_checked("checkFERHOB", True)
+        use_nphi = self._is_checked("checkFENPHI", True)
+        use_rt = self._is_checked("checkFERT", True)
+
         depth_label, depth_series = self._depth_series(df)
         visible_mask = depth_series.notna()
-        start_depth = self._spin_value("spinFEFrom")
-        end_depth = self._spin_value("spinFETo")
-        if start_depth not in (None, 0):
-            visible_mask &= depth_series >= float(start_depth)
-        if end_depth not in (None, 0):
-            visible_mask &= depth_series <= float(end_depth)
+        visible_mask &= self._depth_mask(depth_series, well)
         if not visible_mask.any():
             QtWidgets.QMessageBox.information(self.ui, "Formation Evaluation", "No samples found in the selected depth range.")
             return None
 
-        gr_name = self._first_available_curve(df, ("GR", "SGR", "GAMMA"))
-        rhob_name = self._first_available_curve(df, ("RHOB", "RHOZ", "DEN"))
-        nphi_name = self._first_available_curve(df, ("NPHI", "NEU", "PHIN"))
-        rt_name = self._first_available_curve(df, ("RT", "LLD", "ILD", "RESD", "RDEP"))
+        gr_name_for_view = self._first_available_curve(df, ("GR", "SGR", "GAMMA"))
+        gr_name = gr_name_for_view if use_gr else None
+        rhob_name = self._first_available_curve(df, ("RHOB", "RHOZ", "DEN")) if use_rhob else None
+        nphi_name = self._first_available_curve(df, ("NPHI", "NEU", "PHIN")) if use_nphi else None
+        rt_name = self._first_available_curve(df, ("RT", "LLD", "ILD", "RESD", "RDEP")) if use_rt else None
 
-        if gr_name is None:
+        if use_vsh and gr_name is None:
             QtWidgets.QMessageBox.warning(self.ui, "Formation Evaluation", "A gamma ray curve is required to run formation evaluation.")
             return None
         if rhob_name is None and nphi_name is None:
@@ -80,7 +85,10 @@ class FormationEvaluationService:
             QtWidgets.QMessageBox.warning(self.ui, "Formation Evaluation", "A resistivity curve (RT/LLD/ILD) is required to estimate water saturation.")
             return None
 
-        gr = pd.to_numeric(df[gr_name], errors="coerce")
+        if gr_name_for_view is not None:
+            gr = pd.to_numeric(df[gr_name_for_view], errors="coerce")
+        else:
+            gr = pd.Series(np.nan, index=df.index)
         rhob = pd.to_numeric(df[rhob_name], errors="coerce") if rhob_name is not None else pd.Series(np.nan, index=df.index)
         nphi = pd.to_numeric(df[nphi_name], errors="coerce") if nphi_name is not None else pd.Series(np.nan, index=df.index)
         rt = pd.to_numeric(df[rt_name], errors="coerce")
@@ -93,8 +101,20 @@ class FormationEvaluationService:
         archie_m = self._spin_value("spinFEArchieM", 2.0)
         archie_n = self._spin_value("spinFEArchieN", 2.0)
         rw = self._spin_value("spinFERw", 0.05)
+        vsh_model = self._combo_text("vshTypeComboBox", "Linear")
 
-        vsh = pd.Series(vshale.compute_vsh_gr(gr.to_numpy(dtype=float), gr_min=gr_min, gr_max=gr_max), index=df.index)
+        if use_vsh:
+            vsh = pd.Series(
+                vshale.compute_vsh_gr(
+                    gr.to_numpy(dtype=float),
+                    gr_min=gr_min,
+                    gr_max=gr_max,
+                    model=vsh_model,
+                ),
+                index=df.index,
+            )
+        else:
+            vsh = pd.Series(0.0, index=df.index)
         if nphi_name is not None and rhob_name is not None:
             phi = pd.Series(
                 porosity.compute_phi_combo(
@@ -133,7 +153,7 @@ class FormationEvaluationService:
                 phi.to_numpy(dtype=float),
                 sw.to_numpy(dtype=float),
                 perm.to_numpy(dtype=float),
-                vsh_cut=0.40,
+                vsh_cut=0.40 if use_vsh else 1.0,
                 phi_cut=0.08,
                 sw_cut=0.65,
                 perm_cut=0.10,
@@ -160,10 +180,12 @@ class FormationEvaluationService:
         return {
             "depth_label": depth_label,
             "data": result.sort_values("depth"),
-            "gr_name": gr_name,
+            "gr_name": gr_name_for_view or "GR",
             "rhob_name": rhob_name or "",
             "nphi_name": nphi_name or "",
             "rt_name": rt_name,
+            "vsh_model": vsh_model,
+            "use_vsh": use_vsh,
         }
 
     def _update_summary(self, result) -> None:
@@ -291,10 +313,15 @@ class FormationEvaluationService:
 
     def _update_secondary_placeholders(self, result) -> None:
         data = result["data"]
+        vsh_suffix = (
+            f" ({result.get('vsh_model', 'Linear')})"
+            if result.get("use_vsh", True)
+            else " (disabled)"
+        )
         self._set_label(
             "lblFEComputedPlaceholder",
             (
-                f"Computed logs ready: VSH {data['VSH'].mean():.2f} avg, "
+                f"Computed logs ready: VSH{vsh_suffix} {data['VSH'].mean():.2f} avg, "
                 f"PHI {data['PHI'].mean():.2f} avg, "
                 f"SW {data['SW'].mean():.2f} avg, "
                 f"PERM {data['PERM'].median():.1f} median."
@@ -417,6 +444,78 @@ class FormationEvaluationService:
         if callable(getter):
             return getter()
         return default
+
+    def _combo_text(self, name: str, default: str = "") -> str:
+        widget = getattr(self.ui, name, None)
+        if widget is None:
+            return default
+        getter = getattr(widget, "currentText", None)
+        if callable(getter):
+            text = str(getter()).strip()
+            return text or default
+        return default
+
+    def _is_checked(self, name: str, default: bool = True) -> bool:
+        widget = getattr(self.ui, name, None)
+        if widget is None:
+            return default
+        getter = getattr(widget, "isChecked", None)
+        if callable(getter):
+            return bool(getter())
+        return default
+
+    def _depth_mask(self, depth_series: pd.Series, well) -> pd.Series:
+        mask = pd.Series(True, index=depth_series.index)
+        depth_controls = depth_series.copy()
+
+        selected_unit = self._combo_text("comboFEDepthUnit", "m").lower()
+        data_unit = self._infer_depth_unit(well)
+        if selected_unit.startswith("ft") and data_unit.startswith("m"):
+            depth_controls = depth_series * 3.28084
+        elif selected_unit.startswith("m") and data_unit.startswith("ft"):
+            depth_controls = depth_series / 3.28084
+
+        preset = self._combo_text("comboFEDepthPreset", "Custom").lower()
+        start_depth = self._spin_value("spinFEFrom")
+        end_depth = self._spin_value("spinFETo")
+
+        if "full" in preset:
+            start_depth = None
+            end_depth = None
+        elif "reservoir" in preset:
+            finite = depth_controls.dropna()
+            if not finite.empty:
+                start_depth = float(finite.quantile(0.25))
+                end_depth = float(finite.quantile(0.75))
+                for name, value in (("spinFEFrom", start_depth), ("spinFETo", end_depth)):
+                    spin = getattr(self.ui, name, None)
+                    if spin is not None:
+                        spin.blockSignals(True)
+                        spin.setValue(value)
+                        spin.blockSignals(False)
+
+        if start_depth not in (None, 0):
+            mask &= depth_controls >= float(start_depth)
+        if end_depth not in (None, 0):
+            mask &= depth_controls <= float(end_depth)
+        return mask
+
+    @staticmethod
+    def _infer_depth_unit(well) -> str:
+        header = getattr(well, "header", {}) or {}
+        well_header = header.get("WELL", {}) if isinstance(header, dict) else {}
+        if not isinstance(well_header, dict):
+            return "m"
+        for key in ("STRT", "STOP", "STEP", "DEPT", "DEPTH"):
+            value = well_header.get(key)
+            if not isinstance(value, dict):
+                continue
+            unit = str(value.get("unit", "")).strip().lower()
+            if "ft" in unit:
+                return "ft"
+            if unit in {"m", "meter", "meters", "metre", "metres"}:
+                return "m"
+        return "m"
 
     def _set_label(self, name: str, value: str) -> None:
         label = getattr(self.ui, name, None)

@@ -74,6 +74,14 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if tab_widget is None:
             return
 
+        def tab_index(tab_name: str, fallback: int | None = None) -> int | None:
+            tab = getattr(self, tab_name, None)
+            if tab is not None:
+                idx = tab_widget.indexOf(tab)
+                if idx >= 0:
+                    return idx
+            return fallback
+
         def connect_action(action_name: str, idx: int) -> None:
             action = getattr(self, action_name, None)
             if action is None:
@@ -90,23 +98,29 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 lambda checked=False, tab_idx=idx: tab_widget.setCurrentIndex(tab_idx)
             )
 
+        def connect_action_to_tab(action_name: str, tab_name: str, fallback_idx: int) -> None:
+            idx = tab_index(tab_name, fallback_idx)
+            if idx is not None:
+                connect_action(action_name, idx)
+
         # Toolbar / menu actions -> main tabs
-        connect_action("actionNewLogPlot", 1)
-        connect_action("actiondatainfo", 2)
-        connect_action("actionNewCrossplot", 3)
-        connect_action("actionQualityControl", 3)
-        connect_action("actionNewHistogram", 4)
-        connect_action("actionNewRoseDiagram", 5)
-        connect_action("actionShaleVolume", 6)
-        connect_action("actionPorosityCalc", 7)
-        connect_action("actionWaterSaturation", 8)
-        connect_action("actionPermeability", 9)
-        connect_action("actionNetPay", 10)
-        connect_action("actionWellCorrelation", 11)
-        connect_action("actionMultimineralAnalysis", 12)
-        connect_action("actionFMIAnalysis", 13)
-        connect_action("actionWellboreStability", 14)
-        connect_action("actionPorePressure", 15)
+        connect_action_to_tab("actionNewLogPlot", "tabLogViewer", 1)
+        connect_action_to_tab("actiondatainfo", "tabDataInfoStats", 2)
+        connect_action_to_tab("actionNewCrossplot", "tabLogViewer", 1)
+        connect_action_to_tab("actionNewHistogram", "tabLogViewer", 1)
+        connect_action_to_tab("actionQualityControl", "tabQualitycontrol", 3)
+        connect_action_to_tab("actionFormationTesting", "tabFormationevaluation", 4)
+        connect_action_to_tab("actionNewRoseDiagram", "tabRoseDiagram", 5)
+        connect_action_to_tab("actionShaleVolume", "tabShaleVolume", 6)
+        connect_action_to_tab("actionPorosityCalc", "tabPorosity", 7)
+        connect_action_to_tab("actionWaterSaturation", "tabWaterSaturation", 8)
+        connect_action_to_tab("actionPermeability", "tabPermeability", 9)
+        connect_action_to_tab("actionNetPay", "tabNetPay", 10)
+        connect_action_to_tab("actionWellCorrelation", "tabWellCorrelation", 11)
+        connect_action_to_tab("actionMultimineralAnalysis", "tabMultiMineral", 12)
+        connect_action_to_tab("actionFMIAnalysis", "tabFMIAnalysis", 13)
+        connect_action_to_tab("actionWellboreStability", "tabWellboreStability", 14)
+        connect_action_to_tab("actionPorePressure", "tabPorePressure", 15)
 
         # Geomechanics menu items -> Geomechanics Suite tab
         for name in (

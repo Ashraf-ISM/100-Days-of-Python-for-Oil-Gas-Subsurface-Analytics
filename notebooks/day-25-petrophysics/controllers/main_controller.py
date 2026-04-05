@@ -92,6 +92,7 @@ class MainController:
         self._connect_widget("btnRunFE", "clicked", self.fe.run_evaluation)
         self._connect_widget("btnFERender", "clicked", self.fe.run_evaluation)
         self._connect_widget("btnResetFE", "clicked", self.fe.reset_evaluation)
+        
 
         # QC
         self._connect_widget("btnRunQC", "clicked", self.qc.run_qc)
