@@ -963,24 +963,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
              <item row="0" column="1">
               <widget class="CheckableCombobox" name="pairplotcomboBox"/>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="lblLVPairHint">
-               <property name="text">
-                <string>Use 2-4 curves</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="btnLVPlotPairplot">
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(53, 132, 228);
-background-color: rgb(26, 95, 180);</string>
-               </property>
-               <property name="text">
-                <string>Plot Pairplot</string>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="0">
               <widget class="QLabel" name="colorbyLabel">
                <property name="text">
@@ -989,9 +971,27 @@ background-color: rgb(26, 95, 180);</string>
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QComboBox" name="pairplotcombocolorby"/>
+              <widget class="QLineEdit" name="pairplotcombocolorby"/>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnLVPlotPairplot">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(53, 132, 228);
+background-color: rgb(26, 95, 180);</string>
+            </property>
+            <property name="text">
+             <string>Plot Pairplot</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblLVPairHint">
+            <property name="text">
+             <string>Use 2-4 curves</string>
+            </property>
            </widget>
           </item>
           <item>
