@@ -241,44 +241,80 @@ class PlotService:
                 return text
 
         return None
-    
     def new_violinplot(self):
         df = self._get_df()
         if df is None:
             return
+    
         import matplotlib.pyplot as plt
         import numpy as np
         import pandas as pd
         import seaborn as sns
-
+        import math
+    
+        # -------------------------------
+        # Step 1: Get selected curves
+        # -------------------------------
         selected_curves = self._get_selected_checkable_curves("violinplotcomboBox")
+    
+        # If nothing selected → use all numeric curves
         if not selected_curves:
-            selected_curves = self._curve_columns(df)[: min(4, len(self._curve_columns(df)))]
-
+            selected_curves = self._curve_columns(df)
+    
         curves = [
-            curve
-            for curve in selected_curves
+            curve for curve in selected_curves
             if curve in df.columns and pd.api.types.is_numeric_dtype(df[curve])
         ]
-        if not curves:
+    
+        if len(curves) == 0:
             return
-
+    
+        # -------------------------------
+        # Step 2: Grid layout (AUTO)
+        # -------------------------------
+        n = len(curves)
+    
+        # Smart column selection
+        if n <= 2:
+            ncols = n
+        elif n <= 6:
+            ncols = 2
+        else:
+            ncols = 3
+    
+        nrows = math.ceil(n / ncols)
+    
         fig, axes = plt.subplots(
-            len(curves),
-            1,
-            figsize=(9, max(3.0, 2.8 * len(curves))),
+            nrows,
+            ncols,
+            figsize=(5 * ncols, 3.5 * nrows),
             constrained_layout=True,
         )
-        if len(curves) == 1:
+    
+        # Flatten axes safely
+        if isinstance(axes, np.ndarray):
+            axes = axes.flatten()
+        else:
             axes = [axes]
-
-        palette = sns.color_palette("tab10", n_colors=len(curves))
-        for axis, curve, color in zip(axes, curves, palette):
+    
+        # Color palette
+        palette = sns.color_palette("tab10", n_colors=n)
+    
+        # -------------------------------
+        # Step 3: Plot each curve
+        # -------------------------------
+        for i, (curve, color) in enumerate(zip(curves, palette)):
+            axis = axes[i]
+    
             series = df[curve].dropna()
+    
             if series.empty:
                 axis.set_axis_off()
                 continue
-
+    
+            # ---------------------------
+            # Violin plot
+            # ---------------------------
             sns.violinplot(
                 y=series,
                 ax=axis,
@@ -287,12 +323,20 @@ class PlotService:
                 cut=0,
                 linewidth=1.0,
             )
+    
+            # ---------------------------
+            # Half violin (clip right side)
+            # ---------------------------
             if axis.collections:
                 violin_body = axis.collections[0]
                 path = violin_body.get_paths()[0]
                 vertices = path.vertices
                 center = float(np.mean(vertices[:, 0]))
                 vertices[vertices[:, 0] > center, 0] = center
+    
+            # ---------------------------
+            # Boxplot overlay
+            # ---------------------------
             sns.boxplot(
                 y=series,
                 ax=axis,
@@ -301,12 +345,29 @@ class PlotService:
                 color="white",
                 linewidth=1.0,
             )
-            axis.set_title(f"Half Violin & Boxplot of {curve}", fontsize=12, fontweight="600")
+    
+            # ---------------------------
+            # Styling
+            # ---------------------------
+            axis.set_title(f"{curve}", fontsize=11, fontweight="600")
             axis.set_xlabel("")
-            axis.set_ylabel(curve)
+            axis.set_ylabel("")
             axis.grid(axis="y", alpha=0.15)
-
+    
+        # -------------------------------
+        # Step 4: Hide extra axes
+        # -------------------------------
+        for j in range(len(curves), len(axes)):
+            axes[j].set_visible(False)
+    
+        # -------------------------------
+        # Step 5: Global title
+        # -------------------------------
         fig.suptitle("Violin Plot", fontsize=14, fontweight="600")
+    
+        # -------------------------------
+        # Step 6: Render
+        # -------------------------------
         self._render_plot(fig, f"Violin Plot: {', '.join(curves[:4])}")
 
     def new_triple_combo(self):
