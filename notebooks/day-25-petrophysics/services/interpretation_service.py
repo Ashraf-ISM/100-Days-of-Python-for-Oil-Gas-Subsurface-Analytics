@@ -11,6 +11,11 @@ class InterpretationService:
     def __init__(self, ui: QtWidgets.QMainWindow, data_service):
         self.ui = ui
         self.data = data_service
+        self._vsh_track_host = None
+        self._vsh_hist_host = None
+        self._vsh_box_host = None
+        self._vsh_widgets: dict[str, QtWidgets.QWidget] = {}
+        self._build_vsh_workspace()
         self._net_pay_canvas = None
         self._net_pay_toolbar = None
         self._net_pay_plot_host = None
@@ -19,22 +24,134 @@ class InterpretationService:
         self._build_net_pay_workspace()
 
     def compute_vsh(self):
+        self.run_vsh_workflow()
+
+    def run_vsh_workflow(self):
         well = self.data._get_current_well()
         if not well:
             return
         df = getattr(well, "data", None)
+        if df is None:
+            return
+
+        method = self._combo_text("vshMethodComboBox") or self._combo_text("comboVclMethod") or "Linear"
         gr_curve = self._combo_text("comboVclGR") or "GR"
-        if df is None or gr_curve not in df.columns:
+        if gr_curve not in df.columns:
             QtWidgets.QMessageBox.warning(self.ui, "Calculations", "GR curve not found.")
             return
         gr_min = self._spin_value(("spinVclGRmin",), None)
         gr_max = self._spin_value(("spinVclGRmax",), None)
         out_name = self._line_text("lineVclOutName") or "VSH"
-        vsh = vshale.compute_vsh_gr(df[gr_curve].values, gr_min=gr_min, gr_max=gr_max)
+
+        vsh = self._compute_vsh_values(df[gr_curve].values, gr_min, gr_max, method)
         df["VSH"] = vsh
+        df["Vsh"] = vsh
         if out_name != "VSH":
             df[out_name] = vsh
+
+        visible = self.data._filtered_dataframe(well)
+        if visible is None or visible.empty:
+            visible = df.copy()
+
+        stats = self.compute_vsh_stats(visible)
+        self._update_vsh_kpis(gr_min, gr_max, method, stats)
+        self._plot_vsh_track(visible, gr_curve)
+        self._plot_vsh_distribution(visible)
+        interpretation = self.generate_vsh_interpretation(stats)
+        interp_widget = getattr(self.ui, "vshInterpretationText", None)
+        if interp_widget is not None:
+            interp_widget.setPlainText(interpretation)
+
         self.data._refresh_views()
+
+    def compute_vsh_stats(self, df):
+        import pandas as pd
+
+        vsh_series = pd.to_numeric(df.get("VSH", df.get("Vsh")), errors="coerce")
+        vsh_series = vsh_series.dropna()
+        if vsh_series.empty:
+            return {"mean": 0.0, "min": 0.0, "max": 0.0, "shale_percent": 0.0}
+
+        return {
+            "mean": float(vsh_series.mean()),
+            "min": float(vsh_series.min()),
+            "max": float(vsh_series.max()),
+            "shale_percent": float((vsh_series > 0.5).mean() * 100.0),
+        }
+
+    def generate_vsh_interpretation(self, stats):
+        lines = []
+        if stats["mean"] > 0.4:
+            lines.append("High shale content detected.")
+        else:
+            lines.append("Overall shale content is moderate to low.")
+
+        if stats["shale_percent"] > 50:
+            lines.append("Formation is predominantly shale.")
+            lines.append("Expect weaker reservoir quality in many intervals.")
+        else:
+            lines.append("Significant clean sand intervals present.")
+            lines.append("Reservoir-prone windows are available for downstream evaluation.")
+
+        lines.append("Recommended downstream checks: porosity filtering, Sw cutoffs, and net-pay refinement.")
+        return "\n".join(lines)
+
+    def reset_vsh_panel(self):
+        for name, value in (("spinVclGRmin", 15.0), ("spinVclGRmax", 120.0)):
+            widget = getattr(self.ui, name, None)
+            if widget is not None and hasattr(widget, "setValue"):
+                widget.setValue(value)
+
+        line = getattr(self.ui, "lineVclOutName", None)
+        if line is not None:
+            line.setText("VSH")
+
+        combo = getattr(self.ui, "vshMethodComboBox", None)
+        if combo is not None and hasattr(combo, "setCurrentIndex"):
+            combo.setCurrentIndex(0)
+
+        for name in ("grCleanLabel", "grShaleLabel", "methodLabel", "vshMeanLabel", "vshRangeLabel", "shalePercentLabel"):
+            self._set_label_text(name, "--")
+
+        text = getattr(self.ui, "vshInterpretationText", None)
+        if text is not None:
+            text.clear()
+
+        for host in (self._vsh_track_host, self._vsh_hist_host, self._vsh_box_host):
+            if host is None or host.layout() is None:
+                continue
+            layout = host.layout()
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                    widget.deleteLater()
+
+    def _compute_vsh_values(self, gr_values, gr_min, gr_max, method: str):
+        import numpy as np
+
+        gr = np.asarray(gr_values, dtype=float)
+        if gr_min is None:
+            gr_min = float(np.nanpercentile(gr, 5))
+        if gr_max is None:
+            gr_max = float(np.nanpercentile(gr, 95))
+
+        igr = (gr - float(gr_min)) / (float(gr_max) - float(gr_min) + 1e-9)
+        igr = np.clip(igr, 0.0, 1.0)
+        method_name = str(method or "Linear").strip().lower()
+
+        if "larionov" in method_name and "tertiary" in method_name:
+            vsh = 0.083 * (2 ** (3.7 * igr) - 1.0)
+        elif "larionov" in method_name:
+            vsh = 0.33 * (2 ** (2.0 * igr) - 1.0)
+        elif "clavier" in method_name:
+            inside = 3.38 - np.square(igr + 0.7)
+            vsh = 1.7 - np.sqrt(np.clip(inside, 0.0, None))
+        else:
+            vsh = igr
+
+        return np.clip(vsh, 0.0, 1.0)
 
     def compute_phi(self):
         well = self.data._get_current_well()
@@ -505,6 +622,317 @@ class InterpretationService:
         steps = steps[np.isfinite(steps) & (steps > 0)]
         step = float(np.nanmedian(steps)) if steps.size else 1.0
         return float(pay_mask.sum() * step)
+
+    def _build_vsh_workspace(self) -> None:
+        tab = getattr(self.ui, "tabShaleVolume", None)
+        if tab is None or getattr(self.ui, "_vsh_workspace_built", False):
+            return
+
+        layout = tab.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(tab)
+
+        preserve_names = {
+            "comboVclWell",
+            "comboVclGR",
+            "spinVclGRmin",
+            "spinVclGRmax",
+            "comboVclMethod",
+            "lineVclOutName",
+            "btnCalcVsh",
+            "btnResetVsh",
+        }
+        preserved_widgets = {}
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is None:
+                continue
+            if widget.objectName() in preserve_names:
+                widget.setParent(None)
+                preserved_widgets[widget.objectName()] = widget
+            else:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        for name, widget in preserved_widgets.items():
+            setattr(self.ui, name, widget)
+
+        if isinstance(layout, QtWidgets.QVBoxLayout):
+            main_layout = layout
+        else:
+            # The original tab ships with a horizontal layout; mount a vertical
+            # container so the rebuilt sections stack top-to-bottom.
+            container = QtWidgets.QWidget(tab)
+            main_layout = QtWidgets.QVBoxLayout(container)
+            main_layout.setContentsMargins(0, 0, 0, 0)
+            main_layout.setSpacing(10)
+            layout.addWidget(container)
+
+        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout.setSpacing(10)
+
+        # Top KPI cards
+        kpi_frame = QtWidgets.QFrame(tab)
+        kpi_frame.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:12px; }")
+        kpi_frame.setMaximumHeight(150)
+        kpi_layout = QtWidgets.QHBoxLayout(kpi_frame)
+        kpi_layout.setContentsMargins(10, 10, 10, 10)
+        kpi_layout.setSpacing(8)
+        for title, name in (
+            ("GR Clean", "grCleanLabel"),
+            ("GR Shale", "grShaleLabel"),
+            ("Method Used", "methodLabel"),
+            ("Vsh Mean", "vshMeanLabel"),
+            ("Vsh Min / Max", "vshRangeLabel"),
+            ("Shale % (Vsh > 0.5)", "shalePercentLabel"),
+        ):
+            card = QtWidgets.QFrame(kpi_frame)
+            card.setStyleSheet("QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:10px; }")
+            card_layout = QtWidgets.QVBoxLayout(card)
+            card_layout.setContentsMargins(8, 6, 8, 6)
+            card_layout.setSpacing(2)
+            title_lbl = QtWidgets.QLabel(title, card)
+            title_lbl.setStyleSheet("font-size:10px;color:#5C718A;font-weight:600;")
+            title_lbl.setWordWrap(True)
+            value_lbl = QtWidgets.QLabel("--", card)
+            value_lbl.setStyleSheet("font-size:16px;color:#1F4E79;font-weight:800;")
+            setattr(self.ui, name, value_lbl)
+            card_layout.addWidget(title_lbl)
+            card_layout.addWidget(value_lbl)
+            kpi_layout.addWidget(card)
+        main_layout.addWidget(kpi_frame)
+
+        # Main visualization row: left stacked distribution, right vertical track.
+        viz_row = QtWidgets.QHBoxLayout()
+        viz_row.setSpacing(10)
+
+        dist_col = QtWidgets.QVBoxLayout()
+        dist_col.setSpacing(10)
+
+        hist_frame = QtWidgets.QFrame(tab)
+        hist_frame.setStyleSheet("QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; }")
+        hist_layout = QtWidgets.QVBoxLayout(hist_frame)
+        hist_layout.setContentsMargins(10, 10, 10, 10)
+        hist_title = QtWidgets.QLabel("VSH Histogram", hist_frame)
+        hist_title.setStyleSheet("font-size:14px;font-weight:800;color:#24466B;")
+        self._vsh_hist_host = QtWidgets.QWidget(hist_frame)
+        self._vsh_hist_host.setLayout(QtWidgets.QVBoxLayout())
+        self._vsh_hist_host.layout().setContentsMargins(0, 0, 0, 0)
+        self.ui.vshHistCanvas = self._vsh_hist_host
+        hist_layout.addWidget(hist_title)
+        hist_layout.addWidget(self._vsh_hist_host, 1)
+        dist_col.addWidget(hist_frame, 1)
+
+        box_frame = QtWidgets.QFrame(tab)
+        box_frame.setStyleSheet("QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; }")
+        box_layout = QtWidgets.QVBoxLayout(box_frame)
+        box_layout.setContentsMargins(10, 10, 10, 10)
+        box_title = QtWidgets.QLabel("VSH Boxplot", box_frame)
+        box_title.setStyleSheet("font-size:14px;font-weight:800;color:#24466B;")
+        self._vsh_box_host = QtWidgets.QWidget(box_frame)
+        self._vsh_box_host.setLayout(QtWidgets.QVBoxLayout())
+        self._vsh_box_host.layout().setContentsMargins(0, 0, 0, 0)
+        self.ui.vshBoxCanvas = self._vsh_box_host
+        box_layout.addWidget(box_title)
+        box_layout.addWidget(self._vsh_box_host, 1)
+        dist_col.addWidget(box_frame, 1)
+
+        viz_row.addLayout(dist_col, 2)
+
+        track_frame = QtWidgets.QFrame(tab)
+        track_frame.setStyleSheet("QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; }")
+        track_layout = QtWidgets.QVBoxLayout(track_frame)
+        track_layout.setContentsMargins(10, 10, 10, 10)
+        track_layout.setSpacing(6)
+        track_title = QtWidgets.QLabel("VSH Track Visualization", track_frame)
+        track_title.setStyleSheet("font-size:14px;font-weight:800;color:#24466B;")
+        self._vsh_track_host = QtWidgets.QWidget(track_frame)
+        self._vsh_track_host.setLayout(QtWidgets.QVBoxLayout())
+        self._vsh_track_host.layout().setContentsMargins(0, 0, 0, 0)
+        self.ui.vshTrackCanvas = self._vsh_track_host
+        track_layout.addWidget(track_title)
+        track_layout.addWidget(self._vsh_track_host, 1)
+        viz_row.addWidget(track_frame, 3)
+
+        main_layout.addLayout(viz_row, 3)
+
+        interp_frame = QtWidgets.QFrame(tab)
+        interp_frame.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:12px; }")
+        interp_layout = QtWidgets.QVBoxLayout(interp_frame)
+        interp_layout.setContentsMargins(10, 10, 10, 10)
+        interp_layout.setSpacing(8)
+
+        method_label = QtWidgets.QLabel("Method Selection", interp_frame)
+        method_label.setStyleSheet("font-size:13px;font-weight:800;color:#24466B;")
+        method_combo = getattr(self.ui, "comboVclMethod", None)
+        if method_combo is None:
+            method_combo = QtWidgets.QComboBox(interp_frame)
+        method_combo.clear()
+        method_combo.addItems(["Linear", "Larionov Tertiary", "Larionov Older", "Clavier"])
+        self.ui.vshMethodComboBox = method_combo
+
+        interp_title = QtWidgets.QLabel("Interpretation", interp_frame)
+        interp_title.setStyleSheet("font-size:13px;font-weight:800;color:#24466B;")
+        interp_text = QtWidgets.QTextEdit(interp_frame)
+        interp_text.setReadOnly(True)
+        interp_text.setPlaceholderText("Interpretation summary will appear after running Vsh workflow.")
+        self.ui.vshInterpretationText = interp_text
+
+        controls_form = QtWidgets.QFormLayout()
+        controls_form.addRow("Well", getattr(self.ui, "comboVclWell", QtWidgets.QComboBox(interp_frame)))
+        controls_form.addRow("GR Curve", getattr(self.ui, "comboVclGR", QtWidgets.QComboBox(interp_frame)))
+        controls_form.addRow("GR Clean", getattr(self.ui, "spinVclGRmin", QtWidgets.QDoubleSpinBox(interp_frame)))
+        controls_form.addRow("GR Shale", getattr(self.ui, "spinVclGRmax", QtWidgets.QDoubleSpinBox(interp_frame)))
+        controls_form.addRow("Output", getattr(self.ui, "lineVclOutName", QtWidgets.QLineEdit(interp_frame)))
+
+        run_btn = getattr(self.ui, "btnCalcVsh", QtWidgets.QPushButton("Compute Vsh", interp_frame))
+        run_btn.setText("Compute Vsh")
+        self.ui.runVshBtn = run_btn
+        send_btn = QtWidgets.QPushButton("Use in Interpretation", interp_frame)
+        self.ui.sendToWorkflowBtn = send_btn
+        send_btn.clicked.connect(self._send_vsh_to_workflow)
+
+        buttons_row = QtWidgets.QHBoxLayout()
+        buttons_row.addWidget(run_btn)
+        buttons_row.addWidget(send_btn)
+
+        interp_layout.addLayout(controls_form)
+        interp_layout.addWidget(method_label)
+        interp_layout.addWidget(method_combo)
+        interp_layout.addWidget(interp_title)
+        interp_layout.addWidget(interp_text, 1)
+        interp_layout.addLayout(buttons_row)
+        main_layout.addWidget(interp_frame, 2)
+
+        self.ui.grCleanSpinBox = getattr(self.ui, "spinVclGRmin", None)
+        self.ui.grShaleSpinBox = getattr(self.ui, "spinVclGRmax", None)
+        self.ui._vsh_workspace_built = True
+
+    def _update_vsh_kpis(self, gr_clean, gr_shale, method: str, stats: dict) -> None:
+        self._set_label_text("grCleanLabel", self._format_value(gr_clean, "Depth"))
+        self._set_label_text("grShaleLabel", self._format_value(gr_shale, "Depth"))
+        self._set_label_text("methodLabel", method)
+        self._set_label_text("vshMeanLabel", f"{stats['mean']:.3f}")
+        self._set_label_text("vshRangeLabel", f"{stats['min']:.3f}-{stats['max']:.3f}")
+        self._set_label_text("shalePercentLabel", f"{stats['shale_percent']:.1f}%")
+
+    def _plot_vsh_track(self, df, gr_curve: str) -> None:
+        import pandas as pd
+        from matplotlib.figure import Figure
+
+        depth_col = self.data._depth_column(df)
+        if depth_col is None:
+            return
+
+        depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
+        vsh = pd.to_numeric(df.get("VSH", df.get("Vsh")), errors="coerce").to_numpy(dtype=float)
+        gr = pd.to_numeric(df.get(gr_curve), errors="coerce").to_numpy(dtype=float) if gr_curve in df.columns else None
+
+        mask = np.isfinite(depth) & np.isfinite(vsh)
+        if not np.any(mask):
+            return
+        depth = depth[mask]
+        vsh = vsh[mask]
+        if gr is not None:
+            gr = gr[mask]
+
+        fig = Figure(figsize=(6.0, 8.5), dpi=100)
+        ax = fig.add_subplot(1, 1, 1)
+        ax.plot(vsh, depth, color="#1F2937", linewidth=1.2, label="VSH")
+        ax.fill_betweenx(depth, 0, vsh, where=(vsh < 0.3), color="#16A34A", alpha=0.25)
+        ax.fill_betweenx(depth, 0, vsh, where=((vsh >= 0.3) & (vsh <= 0.5)), color="#EAB308", alpha=0.25)
+        ax.fill_betweenx(depth, 0, vsh, where=(vsh > 0.5), color="#DC2626", alpha=0.25)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(np.nanmax(depth), np.nanmin(depth))
+        ax.set_xlabel("Vsh", fontsize=9)
+        ax.set_ylabel(depth_col, fontsize=9)
+        ax.set_title("Vsh Track", fontsize=10)
+        ax.grid(True, linestyle="--", alpha=0.2)
+
+        if gr is not None:
+            ax2 = ax.twiny()
+            ax2.plot(gr, depth, color="#0EA5E9", linewidth=0.8, alpha=0.55, label="GR")
+            ax2.set_xlabel(gr_curve, fontsize=8)
+
+        fig.tight_layout()
+        self._render_figure_to_host(self._vsh_track_host, fig)
+
+    def _plot_vsh_distribution(self, df) -> None:
+        import pandas as pd
+        from matplotlib.figure import Figure
+
+        values = pd.to_numeric(df.get("VSH", df.get("Vsh")), errors="coerce").dropna().to_numpy(dtype=float)
+        if values.size == 0:
+            return
+
+        hist_fig = Figure(figsize=(4.2, 3.0), dpi=100)
+        ax_hist = hist_fig.add_subplot(1, 1, 1)
+        ax_hist.hist(values, bins=24, color="#3B82F6", alpha=0.8, edgecolor="#1D4ED8")
+        ax_hist.set_title("Vsh Histogram", fontsize=10)
+        ax_hist.set_xlabel("Vsh")
+        ax_hist.set_ylabel("Count")
+        ax_hist.grid(True, linestyle="--", alpha=0.2)
+        hist_fig.tight_layout()
+
+        box_fig = Figure(figsize=(4.2, 3.0), dpi=100)
+        ax_box = box_fig.add_subplot(1, 1, 1)
+        ax_box.boxplot(values, vert=False, patch_artist=True, boxprops={"facecolor": "#93C5FD", "edgecolor": "#1D4ED8"})
+        ax_box.set_title("Vsh Boxplot", fontsize=10)
+        ax_box.set_xlabel("Vsh")
+        ax_box.grid(True, axis="x", linestyle="--", alpha=0.2)
+        box_fig.tight_layout()
+
+        self._render_figure_to_host(self._vsh_hist_host, hist_fig)
+        self._render_figure_to_host(self._vsh_box_host, box_fig)
+
+    def _render_figure_to_host(self, host, fig) -> None:
+        if host is None:
+            return
+        try:
+            from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
+            from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar  # type: ignore
+        except Exception:
+            return
+
+        layout = host.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(host)
+            layout.setContentsMargins(0, 0, 0, 0)
+
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        canvas = FigureCanvas(fig)
+        toolbar = NavigationToolbar(canvas, host)
+        toolbar.setStyleSheet("QToolBar { background:#F8FBFE; border:0; border-bottom:1px solid #D7E2EE; }")
+        layout.addWidget(toolbar)
+        layout.addWidget(canvas, 1)
+        canvas.draw_idle()
+
+    def _send_vsh_to_workflow(self):
+        well = self.data._get_current_well()
+        if well is None:
+            return
+        df = getattr(well, "data", None)
+        if df is None or "VSH" not in df.columns:
+            QtWidgets.QMessageBox.information(self.ui, "Vsh Workflow", "Run Vsh first, then send to interpretation.")
+            return
+        QtWidgets.QMessageBox.information(
+            self.ui,
+            "Vsh Workflow",
+            "VSH is available for Porosity, Sw, and Net Pay workflows.",
+        )
+        tab_widget = getattr(self.ui, "centralTabWidget", None)
+        por_tab = getattr(self.ui, "tabPorosity", None)
+        if tab_widget is not None and por_tab is not None:
+            idx = tab_widget.indexOf(por_tab)
+            if idx >= 0:
+                tab_widget.setCurrentIndex(idx)
 
     def _combo_text(self, name: str) -> str:
         combo = getattr(self.ui, name, None)

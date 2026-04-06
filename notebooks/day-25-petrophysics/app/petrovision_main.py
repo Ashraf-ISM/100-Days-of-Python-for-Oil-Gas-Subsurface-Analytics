@@ -636,7 +636,9 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_action_to_tab("actionNewHistogram", "tabLogViewer", 1)
         connect_action_to_tab("actionQualityControl", "tabQualitycontrol", 3)
         connect_action_to_tab("actionFormationTesting", "tabFormationevaluation", 4)
-        connect_action_to_tab("actionNewRoseDiagram", "tabRoseDiagram", 5)
+        rose_idx = tab_index("tabRoseDiagram", None)
+        if rose_idx is not None:
+            connect_action("actionNewRoseDiagram", rose_idx)
         connect_action_to_tab("actionShaleVolume", "tabShaleVolume", 6)
         connect_action_to_tab("actionPorosityCalc", "tabPorosity", 7)
         connect_action_to_tab("actionWaterSaturation", "tabWaterSaturation", 8)
@@ -740,7 +742,10 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             ordered_widgets.append(widget)
             seen.add(widget)
 
+        rose_tab = getattr(self, "tabRoseDiagram", None)
         for widget, *_rest in tab_state:
+            if rose_tab is not None and widget is rose_tab:
+                continue
             if widget not in seen:
                 ordered_widgets.append(widget)
                 seen.add(widget)
