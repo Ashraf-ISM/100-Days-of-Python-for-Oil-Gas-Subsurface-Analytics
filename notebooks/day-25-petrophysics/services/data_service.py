@@ -14,6 +14,7 @@ class DataService:
         self._wells: dict[str, Any] = {}
         self._current_well: str | None = None
         self._rename_history: dict[str, list[list[str]]] = {}
+        self._depth_filter_initialized: set[str] = set()
         self._build_data_info_dashboard()
 
     def _build_data_info_dashboard(self) -> None:
@@ -292,6 +293,7 @@ class DataService:
         if not well:
             return
 
+        self._ensure_depth_filter_initialized(well)
         df = self._filtered_dataframe(well)
         if df is None:
             return
@@ -786,6 +788,50 @@ class DataService:
         depth_values = pd.to_numeric(df[depth_col], errors="coerce")
         filtered = df.loc[depth_values.between(low, high)].copy()
         return filtered if not filtered.empty else df.iloc[0:0].copy()
+
+    def _ensure_depth_filter_initialized(self, well) -> None:
+        """Seed the depth filter from the full dataset the first time a well is shown."""
+        well_name = getattr(well, "name", None)
+        if not well_name or well_name in self._depth_filter_initialized:
+            return
+
+        df = getattr(well, "data", None)
+        if df is None:
+            return
+
+        depth_col = self._depth_column(df)
+        if depth_col is None:
+            self._depth_filter_initialized.add(well_name)
+            return
+
+        import pandas as pd
+
+        depth_values = pd.to_numeric(df[depth_col], errors="coerce").dropna()
+        if depth_values.empty:
+            self._depth_filter_initialized.add(well_name)
+            return
+
+        spin_from = getattr(self.ui, "spinDISFromDepth", None)
+        spin_to = getattr(self.ui, "spinDISToDepth", None)
+        if spin_from is None or spin_to is None:
+            self._depth_filter_initialized.add(well_name)
+            return
+
+        current_low, current_high = sorted((float(spin_from.value()), float(spin_to.value())))
+        data_low = float(depth_values.min())
+        data_high = float(depth_values.max())
+
+        # The generated UI ships with placeholder values (0-7) that do not match real well depth.
+        # Seed the filter once so the first dashboard refresh uses the actual depth span.
+        if current_high < data_low or current_low > data_high or (current_low == 0.0 and current_high == 7.0):
+            spin_from.blockSignals(True)
+            spin_to.blockSignals(True)
+            spin_from.setValue(data_low)
+            spin_to.setValue(data_high)
+            spin_from.blockSignals(False)
+            spin_to.blockSignals(False)
+
+        self._depth_filter_initialized.add(well_name)
 
     def _depth_filter_values(self) -> tuple[float | None, float | None]:
         spin_from = getattr(self.ui, "spinDISFromDepth", None)
