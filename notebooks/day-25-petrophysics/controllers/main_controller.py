@@ -105,6 +105,7 @@ class MainController:
         self._connect_widget("btnResetRename", "clicked", self.data.reset_rename)
         self._connect_widget("btnUndoRename", "clicked", self.data.undo_rename)
         self._connect_widget("btnCalcStats", "clicked", self.data.compute_stats)
+        self._connect_widget("btnDISExport", "clicked", self.data.export_report)
         self._connect_widget("tabData", "currentChanged", self.data.on_data_tab_changed)
         self._connect_widget("comboDTWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboDISWell", "currentTextChanged", self.data.set_current_well)
