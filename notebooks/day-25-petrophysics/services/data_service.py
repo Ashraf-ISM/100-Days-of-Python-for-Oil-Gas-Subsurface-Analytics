@@ -312,6 +312,26 @@ class DataService:
                 "Select 2-4 curves...",
             )
 
+        pairplot_hue_widget = getattr(self.ui, "pairplotcombocolorby", None)
+        if pairplot_hue_widget is not None:
+            hue_choices = ["None"] + curves
+            # Support both combo and line-edit based UI variants.
+            if hasattr(pairplot_hue_widget, "clear") and hasattr(pairplot_hue_widget, "addItems"):
+                current_text = pairplot_hue_widget.currentText().strip()
+                pairplot_hue_widget.blockSignals(True)
+                pairplot_hue_widget.clear()
+                pairplot_hue_widget.addItems(hue_choices)
+                target_text = current_text if current_text in hue_choices else "None"
+                pairplot_hue_widget.setCurrentText(target_text)
+                pairplot_hue_widget.blockSignals(False)
+            else:
+                completer = QtWidgets.QCompleter(hue_choices, pairplot_hue_widget)
+                completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+                pairplot_hue_widget.setCompleter(completer)
+                if not pairplot_hue_widget.text().strip():
+                    pairplot_hue_widget.setText("None")
+                pairplot_hue_widget.setPlaceholderText("None or curve name")
+
         combo_violinplot = getattr(self.ui, "violinplotcomboBox", None)
         if combo_violinplot is not None:
             default_violin_curves = set(curves[: min(4, len(curves))])

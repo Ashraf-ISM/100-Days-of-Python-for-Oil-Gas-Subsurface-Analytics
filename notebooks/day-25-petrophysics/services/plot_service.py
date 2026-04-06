@@ -134,42 +134,114 @@ class PlotService:
             return
         fig = plot_tools.plot_histogram(df, curve, bins=bins, show=False)
         self._render_plot(fig, f"Histogram: {curve}")
-
     def new_pairplot(self):
         df = self._get_df()
         if df is None:
             return
+
         import pandas as pd
         import seaborn as sns
-
+        from PyQt5.QtWidgets import QMessageBox
+    
+        # -------------------------------
+        # Step 1: Get selected curves
+        # -------------------------------
         selected_curves = self._get_selected_checkable_curves("pairplotcomboBox")
-        if len(selected_curves) < 2:
-            selected_curves = self._curve_columns(df)[: min(4, len(self._curve_columns(df)))]
-
+    
+        # If nothing selected → take ALL numeric curves
+        if len(selected_curves) == 0:
+            selected_curves = self._curve_columns(df)
+    
         curves = [
-            curve
-            for curve in selected_curves
+            curve for curve in selected_curves
             if curve in df.columns and pd.api.types.is_numeric_dtype(df[curve])
         ]
+    
         if len(curves) < 2:
             return
-
+    
+        # -------------------------------
+        # ⚠️ Step 2: Performance control
+        # -------------------------------
+        MAX_CURVES = 8   # safe limit
+    
+        if len(curves) > MAX_CURVES:
+            reply = QMessageBox.question(
+                self.ui,
+                "Large Pairplot Warning",
+                f"You selected {len(curves)} curves.\n"
+                f"This will generate {len(curves)**2} plots and may be very slow.\n\n"
+                f"Do you want to continue?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+    
+            if reply == QMessageBox.No:
+                return
+    
+            # Optional: auto limit instead of crash
+            curves = curves[:MAX_CURVES]
+    
+        # -------------------------------
+        # Step 3: Color By (dynamic)
+        # -------------------------------
+        hue_name = self._pairplot_hue_name(df)
+    
+        # -------------------------------
+        # Step 4: Prepare data
+        # -------------------------------
         plot_df = df[curves].copy()
-        hue_name = None
-        if "Facies" in df.columns and "Facies" not in curves:
-            plot_df["Facies"] = df["Facies"]
-            hue_name = "Facies"
-
+    
+        if hue_name:
+            plot_df[hue_name] = df[hue_name]
+    
+        plot_df = plot_df.dropna()
+    
+        # Sampling for speed (VERY IMPORTANT)
+        if len(plot_df) > 2000:
+            plot_df = plot_df.sample(2000, random_state=42)
+    
+        # -------------------------------
+        # Step 5: Plot
+        # -------------------------------
         pairgrid = sns.pairplot(
             plot_df,
             vars=curves,
             hue=hue_name,
             palette="tab10" if hue_name else None,
-            diag_kind="kde",
+            diag_kind="kde"
         )
-        pairgrid.fig.suptitle("Pairplot", y=1.02, fontsize=14, fontweight="600")
+    
+        pairgrid.fig.suptitle(
+            f"Pairplot ({len(curves)} curves)",
+            y=1.02,
+            fontsize=14,
+            fontweight="600"
+        )
+    
         self._render_plot(pairgrid.fig, f"Pairplot: {', '.join(curves[:4])}")
 
+        def _pairplot_hue_name(self, df) -> str | None:
+            """Resolve the optional hue column for pairplot from UI controls."""
+            # Preferred control name in current UI.
+            widget = getattr(self.ui, "pairplotcombocolorby", None)
+            if widget is not None:
+                if hasattr(widget, "currentText"):
+                    text = widget.currentText().strip()
+                else:
+                    text = widget.text().strip()
+                if text and text.lower() != "none" and text in df.columns:
+                    return text
+
+            # Backward compatibility for older prototypes.
+            legacy_widget = getattr(self.ui, "colorByComboBox", None)
+            if legacy_widget is not None:
+                text = legacy_widget.currentText().strip()
+                if text and text.lower() != "none" and text in df.columns:
+                    return text
+
+            return None
+    
     def new_violinplot(self):
         df = self._get_df()
         if df is None:

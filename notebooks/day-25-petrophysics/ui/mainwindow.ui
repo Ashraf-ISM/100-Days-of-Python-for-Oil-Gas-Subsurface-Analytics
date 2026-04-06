@@ -474,7 +474,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>1</number>
    </property>
    <property name="documentMode">
     <bool>true</bool>
@@ -981,52 +981,62 @@ background-color: rgb(26, 95, 180);</string>
                </property>
               </widget>
              </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="colorbyLabel">
+               <property name="text">
+                <string>Colorby</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="pairplotcombocolorby"/>
+             </item>
             </layout>
            </widget>
           </item>
-                    <item>
-                     <widget class="QGroupBox" name="groupLVViolinplot">
-                        <property name="title">
-                         <string>Violin Plot</string>
-                        </property>
-                        <layout class="QFormLayout" name="formLVViolinplot">
-                         <property name="horizontalSpacing">
-                            <number>8</number>
-                         </property>
-                         <property name="verticalSpacing">
-                            <number>6</number>
-                         </property>
-                         <item row="0" column="0">
-                            <widget class="QLabel" name="lblLVViolinCurves">
-                             <property name="text">
-                                <string>Curves:</string>
-                             </property>
-                            </widget>
-                         </item>
-                         <item row="0" column="1">
-                            <widget class="CheckableCombobox" name="violinplotcomboBox"/>
-                         </item>
-                         <item row="1" column="0">
-                            <widget class="QLabel" name="lblLVViolinHint">
-                             <property name="text">
-                                <string>Use 1-4 curves</string>
-                             </property>
-                            </widget>
-                         </item>
-                         <item row="1" column="1">
-                            <widget class="QPushButton" name="btnLVPlotViolin">
-                             <property name="styleSheet">
-                                <string notr="true">background-color: rgb(53, 132, 228);
+          <item>
+           <widget class="QGroupBox" name="groupLVViolinplot">
+            <property name="title">
+             <string>Violin Plot</string>
+            </property>
+            <layout class="QFormLayout" name="formLVViolinplot">
+             <property name="horizontalSpacing">
+              <number>8</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>6</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblLVViolinCurves">
+               <property name="text">
+                <string>Curves:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="CheckableCombobox" name="violinplotcomboBox"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblLVViolinHint">
+               <property name="text">
+                <string>Use 1-4 curves</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="btnLVPlotViolin">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(53, 132, 228);
 background-color: rgb(26, 95, 180);</string>
-                             </property>
-                             <property name="text">
-                                <string>Plot Violin</string>
-                             </property>
-                            </widget>
-                         </item>
-                        </layout>
-                     </widget>
-                    </item>
+               </property>
+               <property name="text">
+                <string>Plot Violin</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item>
            <spacer name="spacerLVPlotModes">
             <property name="orientation">
