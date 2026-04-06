@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import numpy as np
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 from calculations import vshale, porosity, saturation, permeability, net_pay
 
@@ -11,6 +11,12 @@ class InterpretationService:
     def __init__(self, ui: QtWidgets.QMainWindow, data_service):
         self.ui = ui
         self.data = data_service
+        self._net_pay_canvas = None
+        self._net_pay_toolbar = None
+        self._net_pay_plot_host = None
+        self._net_pay_table = None
+        self._net_pay_summary_labels: dict[str, QtWidgets.QLabel] = {}
+        self._build_net_pay_workspace()
 
     def compute_vsh(self):
         well = self.data._get_current_well()

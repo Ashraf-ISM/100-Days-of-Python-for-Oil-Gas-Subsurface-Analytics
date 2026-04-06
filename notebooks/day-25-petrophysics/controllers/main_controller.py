@@ -98,6 +98,7 @@ class MainController:
         self._connect_widget("btnCalcSw", "clicked", self.interp.compute_sw)
         self._connect_widget("btnCalcPerm", "clicked", self.interp.compute_perm)
         self._connect_widget("btnCalcNetPay", "clicked", self.interp.compute_net_pay)
+        self._connect_widget("btnResetNetPay", "clicked", self.interp.reset_net_pay)
 
         # Data actions
         self._connect_widget("btnLoadData", "clicked", self.data.load_data_view)
