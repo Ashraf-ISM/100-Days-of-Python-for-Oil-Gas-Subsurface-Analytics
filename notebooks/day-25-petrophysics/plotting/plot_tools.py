@@ -234,7 +234,8 @@ def _plot_track_group(
     fill_first_curve: bool = False,
 ) -> int:
     valid_curves = [curve for curve in curves if curve in df.columns]
-    ax.set_title(track_title, fontsize=10, fontweight="bold", color="#486581", pad=18)
+    if track_title:
+        ax.set_title(track_title, fontsize=10, fontweight="bold", color="#486581", pad=18)
 
     if not valid_curves:
         _style_track_axis(
@@ -348,7 +349,6 @@ def plot_multitrack(
             use_log_scale=use_log_scale,
         )
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
-        ax.set_title(f"Track {index + 1}", fontsize=10, fontweight="bold", color="#486581", pad=18)
         ax.text(
             0.03,
             0.02,
@@ -412,7 +412,7 @@ def plot_triple_combo_tracks(
             df,
             depth,
             track1,
-            track_title="Track 1",
+            track_title="",
             depth_label=depth_label,
             show_ylabel=True,
             background=TRACK_BACKGROUNDS[0],
@@ -423,7 +423,7 @@ def plot_triple_combo_tracks(
             df,
             depth,
             track2,
-            track_title="Track 2",
+            track_title="",
             depth_label=depth_label,
             show_ylabel=False,
             background=TRACK_BACKGROUNDS[1],
@@ -434,7 +434,7 @@ def plot_triple_combo_tracks(
             df,
             depth,
             track3,
-            track_title="Track 3",
+            track_title="",
             depth_label=depth_label,
             show_ylabel=False,
             background=TRACK_BACKGROUNDS[2],
