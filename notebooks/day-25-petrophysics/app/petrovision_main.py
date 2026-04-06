@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PyQt5 import QtWidgets, QtCore, uic
+from PyQt5 import QtWidgets, QtCore, QtGui, uic
 
 THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
@@ -24,6 +24,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if tab_widget is not None:
             self.setCentralWidget(tab_widget)
         self._embed_data_analysis_tab()
+        self._reorder_tabs()
         self._connect_tab_switches()
         self.controller = MainController(self)
         
@@ -126,6 +127,35 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_action_to_tab("actionNetPay", "tabNetPay", 10)
         connect_action_to_tab("actionWellCorrelation", "tabWellCorrelation", 11)
         connect_action_to_tab("actionMultimineralAnalysis", "tabMultiMineral", 12)
+        connect_action_to_tab("actionFMIAnalysis", "tabFMIAnalysis", 13)
+        connect_action_to_tab("actionWellboreStability", "tabWellboreStability", 14)
+        connect_action_to_tab("actionPorePressure", "tabPorePressure", 15)
+
+        geo_idx = tab_index("tabGeomechanics", 16)
+        if geo_idx is not None:
+            for name in (
+                "actionStressAnalysis",
+                "actionWellboreStability",
+                "actionFractureAnalysis",
+                "actionPorePressure",
+                "actionUCS",
+                "actionYoungsModulus",
+                "actionPoissonRatio",
+                "actionBrittlenessIndex",
+                "actionMudWeightWindow",
+            ):
+                connect_action(name, geo_idx)
+
+            connect_button("btnDashGeo", geo_idx)
+        else:
+            connect_button("btnDashGeo", 16)
+
+        # Dashboard quick-launch buttons
+        connect_button("btnDashLogView", tab_index("tabLogViewer", 1) or 1)
+        connect_button("btnDashXplot", tab_index("tabLogViewer", 1) or 1)
+        connect_button("btnDashVsh", tab_index("tabShaleVolume", 6) or 6)
+        connect_button("btnDashSw", tab_index("tabWaterSaturation", 8) or 8)
+        connect_button("btnDashCorr", tab_index("tabWellCorrelation", 11) or 11)
     
     def closeEvent(self, event):
         """Handle application close - prompt to save if modified.
@@ -150,31 +180,73 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 event.ignore()
         else:
             event.accept()
-        connect_action_to_tab("actionFMIAnalysis", "tabFMIAnalysis", 13)
-        connect_action_to_tab("actionWellboreStability", "tabWellboreStability", 14)
-        connect_action_to_tab("actionPorePressure", "tabPorePressure", 15)
 
-        # Geomechanics menu items -> Geomechanics Suite tab
-        for name in (
-            "actionStressAnalysis",
-            "actionWellboreStability",
-            "actionFractureAnalysis",
-            "actionPorePressure",
-            "actionUCS",
-            "actionYoungsModulus",
-            "actionPoissonRatio",
-            "actionBrittlenessIndex",
-            "actionMudWeightWindow",
-        ):
-            connect_action(name, 16)
+    def _reorder_tabs(self) -> None:
+        """Put the main analysis tabs in a stable, user-friendly order."""
+        tab_widget = getattr(self, "centralTabWidget", None)
+        if tab_widget is None:
+            return
 
-        # Dashboard quick-launch buttons
-        connect_button("btnDashLogView", 1)
-        connect_button("btnDashXplot", 3)
-        connect_button("btnDashVsh", 6)
-        connect_button("btnDashSw", 8)
-        connect_button("btnDashGeo", 16)
-        connect_button("btnDashCorr", 11)
+        desired_order = [
+            "tabDashboard",
+            "tabDataInfoStats",
+            "tabLogViewer",
+            "tabQualitycontrol",
+            "tabFormationevaluation",
+        ]
+
+        current_tab = tab_widget.currentWidget()
+        tab_state: list[tuple[QtWidgets.QWidget, str, QtGui.QIcon, str, str]] = []
+        for index in range(tab_widget.count()):
+            widget = tab_widget.widget(index)
+            tab_state.append(
+                (
+                    widget,
+                    tab_widget.tabText(index),
+                    tab_widget.tabIcon(index),
+                    tab_widget.tabToolTip(index),
+                    tab_widget.tabWhatsThis(index),
+                )
+            )
+
+        lookup = {
+            widget: (text, icon, tooltip, whatsthis)
+            for widget, text, icon, tooltip, whatsthis in tab_state
+        }
+
+        ordered_widgets: list[QtWidgets.QWidget] = []
+        seen: set[QtWidgets.QWidget] = set()
+        for tab_name in desired_order:
+            widget = getattr(self, tab_name, None)
+            if widget is None or widget in seen or tab_widget.indexOf(widget) < 0:
+                continue
+            ordered_widgets.append(widget)
+            seen.add(widget)
+
+        for widget, *_rest in tab_state:
+            if widget not in seen:
+                ordered_widgets.append(widget)
+                seen.add(widget)
+
+        if [widget for widget, *_rest in tab_state] == ordered_widgets:
+            return
+
+        for index in reversed(range(tab_widget.count())):
+            tab_widget.removeTab(index)
+
+        for widget in ordered_widgets:
+            text, icon, tooltip, whatsthis = lookup[widget]
+            new_index = tab_widget.addTab(widget, icon, text)
+            if tooltip:
+                tab_widget.setTabToolTip(new_index, tooltip)
+            if whatsthis:
+                tab_widget.setTabWhatsThis(new_index, whatsthis)
+
+        dashboard = getattr(self, "tabDashboard", None)
+        if dashboard is not None and tab_widget.indexOf(dashboard) >= 0:
+            tab_widget.setCurrentWidget(dashboard)
+        elif current_tab is not None:
+            tab_widget.setCurrentWidget(current_tab)
 
 
 def main():
