@@ -175,6 +175,7 @@ class PlotService:
         if df is None:
             return
         import matplotlib.pyplot as plt
+        import numpy as np
         import pandas as pd
         import seaborn as sns
 
@@ -214,6 +215,12 @@ class PlotService:
                 cut=0,
                 linewidth=1.0,
             )
+            if axis.collections:
+                violin_body = axis.collections[0]
+                path = violin_body.get_paths()[0]
+                vertices = path.vertices
+                center = float(np.mean(vertices[:, 0]))
+                vertices[vertices[:, 0] > center, 0] = center
             sns.boxplot(
                 y=series,
                 ax=axis,
