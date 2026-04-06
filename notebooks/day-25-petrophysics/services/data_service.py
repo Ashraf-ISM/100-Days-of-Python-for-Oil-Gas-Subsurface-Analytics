@@ -597,6 +597,9 @@ th {{ background: #F8FBFE; }}
             "comboLVHistCurve",
             "comboVclGR",
             "comboDISDistCurve",
+            "comboGeoDT",
+            "comboGeoDTS",
+            "comboGeoRHOB",
         ):
             combo = getattr(self.ui, combo_name, None)
             if combo is None:

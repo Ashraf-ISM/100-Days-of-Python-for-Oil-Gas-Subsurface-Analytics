@@ -8,6 +8,7 @@ from services.project_service import ProjectService
 from services.data_service import DataService
 from services.plot_service import PlotService
 from services.interpretation_service import InterpretationService
+from services.geomechanics_service import GeomechanicsService
 from services.formation_evaluation_service import FormationEvaluationService
 from services.qc_service import QCService
 
@@ -19,6 +20,7 @@ class MainController:
         self.data = DataService(ui)
         self.plots = PlotService(ui, self.data)
         self.interp = InterpretationService(ui, self.data)
+        self.geo = GeomechanicsService(ui, self.data)
         self.fe = FormationEvaluationService(ui, self.data)
         self.qc = QCService(ui, self.data)
         self.calculation_window: CalculationWindow | None = None
@@ -122,6 +124,7 @@ class MainController:
         self._connect_widget("comboSwWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboPermWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboNetPayWell", "currentTextChanged", self.data.set_current_well)
+        self._connect_widget("comboGeoWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("comboCurveWell", "currentTextChanged", self.data.on_curve_well_changed)
         self._connect_widget("comboLVWell", "currentTextChanged", self.data.set_current_well)
         self._connect_widget("btnDISRefresh", "clicked", self.data.load_data_view)
