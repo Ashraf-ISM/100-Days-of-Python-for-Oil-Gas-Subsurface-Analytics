@@ -361,6 +361,134 @@ class DataService:
         except Exception as e:
             print("Stats Error:", e)
 
+    def export_report(self):
+        well = self._get_current_well()
+        if not well:
+            QtWidgets.QMessageBox.information(self.ui, "Export Report", "Load a well before exporting a report.")
+            return
+
+        df = self._filtered_dataframe(well)
+        if df is None or df.empty:
+            QtWidgets.QMessageBox.information(self.ui, "Export Report", "No data is available in the current depth range.")
+            return
+
+        path, selected_filter = QtWidgets.QFileDialog.getSaveFileName(
+            self.ui,
+            "Export Report",
+            f"{getattr(well, 'name', 'well')}_report.html",
+            "HTML Report (*.html);;CSV Summary (*.csv)",
+        )
+        if not path:
+            return
+
+        if path.lower().endswith(".csv") or ("CSV" in selected_filter and not path.lower().endswith((".html", ".htm"))):
+            if not path.lower().endswith(".csv"):
+                path = f"{path}.csv"
+            self._export_report_csv(well, df, path)
+        else:
+            if not path.lower().endswith((".html", ".htm")):
+                path = f"{path}.html"
+            self._export_report_html(well, df, path)
+
+    def _export_report_csv(self, well, df, path: str) -> None:
+        import pandas as pd
+
+        desc = df.describe().transpose() if not df.empty else df.head(0)
+        log_info = getattr(well, "log_info", {}) or {}
+        rows = []
+        for col_name, row in desc.iterrows():
+            unit = log_info.get(col_name, {}).get("unit", "") if isinstance(log_info, dict) else ""
+            series = df[col_name] if col_name in df.columns else None
+            null_pct = round(float(series.isna().mean() * 100), 2) if series is not None else 0.0
+            rows.append(
+                {
+                    "Curve": col_name,
+                    "Unit": unit,
+                    "Min": self._safe_number(row.get("min", 0)),
+                    "Max": self._safe_number(row.get("max", 0)),
+                    "Mean": self._safe_number(row.get("mean", 0)),
+                    "Std": self._safe_number(row.get("std", 0)),
+                    "Null %": f"{null_pct}%",
+                    "Count": self._safe_number(row.get("count", 0)),
+                }
+            )
+        pd.DataFrame(rows).to_csv(path, index=False)
+        QtWidgets.QMessageBox.information(self.ui, "Export Report", f"Report exported:\n{path}")
+
+    def _export_report_html(self, well, df, path: str) -> None:
+        import pandas as pd
+
+        overview_rows = []
+        depth_col = self._depth_column(df)
+        if depth_col is not None and depth_col in df.columns:
+            depth_values = df[depth_col].dropna()
+            if not depth_values.empty:
+                depth_range = f"{self._safe_number(depth_values.min())} to {self._safe_number(depth_values.max())} m"
+            else:
+                depth_range = "--"
+        else:
+            depth_range = "--"
+
+        overview_rows.append(("Well", getattr(well, "name", "Unknown")))
+        overview_rows.append(("Depth Range", depth_range))
+        overview_rows.append(("Total Samples", f"{len(df):,}"))
+        overview_rows.append(("Number of Curves", str(len([c for c in df.columns if c != depth_col]))))
+
+        desc = df.describe().transpose() if not df.empty else df.head(0)
+        log_info = getattr(well, "log_info", {}) or {}
+        summary_rows = []
+        for col_name, row in desc.iterrows():
+            unit = log_info.get(col_name, {}).get("unit", "") if isinstance(log_info, dict) else ""
+            series = df[col_name] if col_name in df.columns else None
+            null_pct = round(float(series.isna().mean() * 100), 2) if series is not None else 0.0
+            summary_rows.append(
+                {
+                    "Curve": col_name,
+                    "Unit": unit,
+                    "Min": self._safe_number(row.get("min", 0)),
+                    "Max": self._safe_number(row.get("max", 0)),
+                    "Mean": self._safe_number(row.get("mean", 0)),
+                    "Std": self._safe_number(row.get("std", 0)),
+                    "Null %": f"{null_pct}%",
+                    "Count": self._safe_number(row.get("count", 0)),
+                }
+            )
+
+        overview_html = "".join(
+            f"<tr><th>{label}</th><td>{value}</td></tr>" for label, value in overview_rows
+        )
+        summary_html = pd.DataFrame(summary_rows).to_html(index=False, escape=False) if summary_rows else "<p>No statistics available.</p>"
+
+        html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>PetroSight Report - {getattr(well, 'name', 'Well')}</title>
+<style>
+body {{ font-family: Arial, sans-serif; margin: 24px; color: #1E293B; }}
+h1 {{ color: #274B72; margin-bottom: 0; }}
+h2 {{ color: #274B72; margin-top: 28px; }}
+table {{ border-collapse: collapse; width: 100%; margin-top: 12px; }}
+th, td {{ border: 1px solid #D7E2EE; padding: 8px 10px; text-align: left; }}
+th {{ background: #F8FBFE; }}
+.meta {{ margin-top: 6px; color: #5C718A; }}
+</style>
+</head>
+<body>
+<h1>PetroSight Pro Report</h1>
+<div class='meta'>Generated for {getattr(well, 'name', 'Unknown well')}</div>
+<h2>Overview</h2>
+<table>{overview_html}</table>
+<h2>Curve Statistics</h2>
+{summary_html}
+</body>
+</html>"""
+
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(html)
+
+        QtWidgets.QMessageBox.information(self.ui, "Export Report", f"Report exported:\n{path}")
+
     def _update_well_lists(self):
         all_well_combos = (
             "comboActiveWell",
