@@ -140,7 +140,7 @@ class FormationEvaluationService:
             compare_frame,
         )
         self.lbl_fe_method_summary.setWordWrap(True)
-        self.lbl_fe_method_summary.setStyleSheet("color:#5C718A;font-size:12px;")
+        self.lbl_fe_method_summary.setStyleSheet("color:#334155;font-size:12px;")
         compare_layout.addWidget(self.lbl_fe_method_summary)
 
         self.check_fe_live_sensitivity = QtWidgets.QCheckBox("Live sensitivity update", compare_frame)
@@ -167,7 +167,7 @@ class FormationEvaluationService:
             custom_frame,
         )
         self.lbl_fe_custom_hint.setWordWrap(True)
-        self.lbl_fe_custom_hint.setStyleSheet("color:#5C718A;font-size:11px;")
+        self.lbl_fe_custom_hint.setStyleSheet("color:#475569;font-size:11px;")
 
         custom_layout.addWidget(self.line_fe_custom_name)
         custom_layout.addWidget(self.line_fe_custom_expr)
@@ -192,6 +192,66 @@ class FormationEvaluationService:
         self.btn_fe_export_logs.clicked.connect(self._export_computed_logs)
         self.btn_fe_save_project.clicked.connect(self._mark_project_modified)
         self.btn_fe_build_custom.clicked.connect(self._build_custom_log)
+
+        button_style = (
+            "QPushButton {"
+            "background:#2B6CB0;"
+            "color:#FFFFFF;"
+            "border:1px solid #1E4E86;"
+            "border-radius:6px;"
+            "padding:6px 10px;"
+            "font-size:12px;"
+            "font-weight:600;"
+            "}"
+            "QPushButton:hover { background:#245A96; }"
+        )
+        danger_style = (
+            "QPushButton {"
+            "background:#B94343;"
+            "color:#FFFFFF;"
+            "border:1px solid #933434;"
+            "border-radius:6px;"
+            "padding:6px 10px;"
+            "font-size:12px;"
+            "font-weight:600;"
+            "}"
+            "QPushButton:hover { background:#A63B3B; }"
+        )
+
+        for button in (
+            self.btn_fe_refresh_logs,
+            self.btn_fe_rename_log,
+            self.btn_fe_add_tracks,
+            self.btn_fe_export_logs,
+            self.btn_fe_save_project,
+            self.btn_fe_build_custom,
+        ):
+            button.setStyleSheet(button_style)
+        self.btn_fe_delete_log.setStyleSheet(danger_style)
+
+        field_style = (
+            "QLineEdit {"
+            "background:#FFFFFF;"
+            "color:#1E293B;"
+            "border:1px solid #CBD5E1;"
+            "border-radius:6px;"
+            "padding:6px 8px;"
+            "}"
+        )
+        self.line_fe_rename_from.setStyleSheet(field_style)
+        self.line_fe_rename_to.setStyleSheet(field_style)
+        self.line_fe_custom_name.setStyleSheet(field_style)
+        self.line_fe_custom_expr.setStyleSheet(field_style)
+
+        self.check_fe_live_sensitivity.setStyleSheet("color:#1E293B;font-size:12px;")
+        self.table_fe_computed_logs.setStyleSheet(
+            "QTableWidget { color:#1E293B; background:#FFFFFF; gridline-color:#D7E2EE; }"
+            "QHeaderView::section { background:#EEF4FB; color:#334155; font-weight:700; }"
+        )
+        self.table_fe_preview.setStyleSheet(
+            "QTableWidget { color:#1E293B; background:#FFFFFF; gridline-color:#D7E2EE; }"
+            "QHeaderView::section { background:#EEF4FB; color:#334155; font-weight:700; }"
+        )
 
     def _build_crossplot_workspace(self) -> None:
         page = getattr(self.ui, "tabFECrossplots", None)
@@ -237,7 +297,7 @@ class FormationEvaluationService:
 
         stats_row = QtWidgets.QHBoxLayout()
         self.lbl_fe_crossplot_stats = QtWidgets.QLabel("R²: -- | N: -- | slope: --")
-        self.lbl_fe_crossplot_stats.setStyleSheet("color:#5C718A;font-size:12px;")
+        self.lbl_fe_crossplot_stats.setStyleSheet("color:#334155;font-size:12px;font-weight:600;")
         stats_row.addWidget(self.lbl_fe_crossplot_stats)
         stats_row.addStretch(1)
 
@@ -258,6 +318,24 @@ class FormationEvaluationService:
         self.combo_fe_color.currentTextChanged.connect(lambda _text: self._on_live_crossplot())
         self.combo_fe_style.currentTextChanged.connect(lambda _text: self._on_live_crossplot())
         self.check_fe_trendline.toggled.connect(lambda _checked: self._on_live_crossplot())
+
+        control_style = (
+            "QComboBox {"
+            "background:#FFFFFF;"
+            "color:#1E293B;"
+            "border:1px solid #CBD5E1;"
+            "border-radius:6px;"
+            "padding:5px 8px;"
+            "}"
+            "QComboBox QAbstractItemView { color:#1E293B; background:#FFFFFF; }"
+        )
+        for combo in (self.combo_fe_x, self.combo_fe_y, self.combo_fe_color, self.combo_fe_style):
+            combo.setStyleSheet(control_style)
+        self.check_fe_trendline.setStyleSheet("color:#1E293B;font-size:12px;")
+        self.btn_fe_crossplot_update.setStyleSheet(
+            "QPushButton { background:#2B6CB0; color:#FFFFFF; border:1px solid #1E4E86; border-radius:6px; padding:6px 10px; font-weight:600; }"
+            "QPushButton:hover { background:#245A96; }"
+        )
 
     def _wire_sensitivity_controls(self) -> None:
         for name in (
