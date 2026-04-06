@@ -171,7 +171,7 @@ class InterpretationService:
             widget = item.widget()
             if widget is None:
                 continue
-            if widget.objectName() in {"spinNetPayVcl", "spinNetPayPhi", "spinNetPaySw", "lineNetPayOut", "btnCalcNetPay", "btnResetNetPay"}:
+            if widget.objectName() in {"comboNetPayWell", "spinNetPayVcl", "spinNetPayPhi", "spinNetPaySw", "lineNetPayOut", "btnCalcNetPay", "btnResetNetPay"}:
                 widget.setParent(None)
                 preserved_widgets[widget.objectName()] = widget
             else:
@@ -184,24 +184,6 @@ class InterpretationService:
         main_layout = layout
         main_layout.setContentsMargins(12, 12, 12, 12)
         main_layout.setSpacing(12)
-
-        header = QtWidgets.QFrame(tab)
-        header.setStyleSheet(
-            "QFrame { background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #214E78, stop:1 #3E7DB6); border-radius: 16px; }"
-        )
-        header_layout = QtWidgets.QVBoxLayout(header)
-        header_layout.setContentsMargins(18, 16, 18, 16)
-        title = QtWidgets.QLabel("Net Pay Evaluation", header)
-        title.setStyleSheet("color:#FFFFFF;font-size:22px;font-weight:800;")
-        subtitle = QtWidgets.QLabel(
-            "Single-well, non-zone-based pay flagging with live summary, depth-tracked results, and a pay interval plot.",
-            header,
-        )
-        subtitle.setStyleSheet("color:rgba(255,255,255,0.88);font-size:12px;")
-        subtitle.setWordWrap(True)
-        header_layout.addWidget(title)
-        header_layout.addWidget(subtitle)
-        main_layout.addWidget(header)
 
         top_row = QtWidgets.QHBoxLayout()
         top_row.setSpacing(12)
@@ -327,9 +309,9 @@ class InterpretationService:
         summary_layout.addWidget(summary_note)
         summary_layout.addStretch(1)
 
-        top_row.addWidget(controls_frame, 2)
-        top_row.addWidget(plot_frame, 3)
-        top_row.addWidget(summary_frame, 2)
+        top_row.addWidget(controls_frame, 1)
+        top_row.addWidget(plot_frame, 7)
+        top_row.addWidget(summary_frame, 1)
         main_layout.addLayout(top_row, 3)
 
         table_frame = QtWidgets.QFrame(tab)

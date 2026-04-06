@@ -518,18 +518,25 @@ th {{ background: #F8FBFE; }}
         wells_sorted = sorted(self._wells.keys())
         for combo_name in all_well_combos:
             combo = getattr(self.ui, combo_name, None)
-            if combo is None:
+            if combo is None or not self._is_live_widget(combo):
                 continue
-            combo.blockSignals(True)
-            combo.clear()
-            combo.addItems(wells_sorted)
-            if combo_name in combos_with_all:
-                combo.addItem("All Wells")
-            if self._current_well:
-                idx = combo.findText(self._current_well)
-                if idx >= 0:
-                    combo.setCurrentIndex(idx)
-            combo.blockSignals(False)
+            try:
+                combo.blockSignals(True)
+                combo.clear()
+                combo.addItems(wells_sorted)
+                if combo_name in combos_with_all:
+                    combo.addItem("All Wells")
+                if self._current_well:
+                    idx = combo.findText(self._current_well)
+                    if idx >= 0:
+                        combo.setCurrentIndex(idx)
+            except RuntimeError:
+                continue
+            finally:
+                try:
+                    combo.blockSignals(False)
+                except RuntimeError:
+                    pass
 
         # update curve list combos
         well = self._get_current_well()
@@ -981,6 +988,14 @@ th {{ background: #F8FBFE; }}
             if str(name).strip().upper() in {"DEPTH", "DEPT", "MD"}:
                 return name
         return None
+
+    @staticmethod
+    def _is_live_widget(widget) -> bool:
+        try:
+            widget.objectName()
+            return True
+        except RuntimeError:
+            return False
 
     def _numeric_curves(self, df) -> list[str]:
         import pandas as pd

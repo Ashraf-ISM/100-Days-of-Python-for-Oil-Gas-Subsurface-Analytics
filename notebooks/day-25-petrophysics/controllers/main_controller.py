@@ -81,6 +81,9 @@ class MainController:
         self._connect_widget("plotmutlitrack", "clicked", self.plots.new_log_plot)
 
         # Dashboard module launch buttons
+        self._connect_widget("btnDashImportLAS", "clicked", self.data.import_data)
+        self._connect_widget("btnDashImportCSV", "clicked", self.data.import_data)
+        self._connect_widget("btnDashImportSEGY", "clicked", self.data.import_data)
         self._connect_widget("btnDashLoadLogs", "clicked", self.data.import_data)
         self._connect_widget("btnDashQualityAssess", "clicked", self._go_to_qc_tab)
         self._connect_widget("btnDashViewEditLogs", "clicked", self._go_to_logviewer_tab)
@@ -91,6 +94,7 @@ class MainController:
         self._connect_widget("btnDashCalcPorosity2", "clicked", self.interp.compute_phi)
         self._connect_widget("btnDashCalcSaturation", "clicked", self.interp.compute_sw)
         self._connect_widget("btnDashNetPayEval", "clicked", self.interp.compute_net_pay)
+        self._connect_widget("btnDashGeo", "clicked", self._go_to_geomechanics_tab)
 
         # Calculations (buttons in tab)
         self._connect_widget("btnCalcVsh", "clicked", self.interp.compute_vsh)
@@ -210,6 +214,16 @@ class MainController:
             np_tab = getattr(self.ui, "tabNetPay", None)
             if np_tab is not None:
                 idx = tab_widget.indexOf(np_tab)
+                if idx >= 0:
+                    tab_widget.setCurrentIndex(idx)
+
+    def _go_to_geomechanics_tab(self) -> None:
+        """Switch to geomechanics tab."""
+        tab_widget = getattr(self.ui, "centralTabWidget", None)
+        if tab_widget is not None:
+            geo_tab = getattr(self.ui, "tabGeomechanics", None)
+            if geo_tab is not None:
+                idx = tab_widget.indexOf(geo_tab)
                 if idx >= 0:
                     tab_widget.setCurrentIndex(idx)
 
