@@ -110,7 +110,6 @@ class DataService:
         filter_row.addWidget(lbl_to, 0, 2)
         filter_row.addWidget(spin_to, 0, 3)
         filter_layout.addLayout(filter_row)
-        filter_section.layout().addWidget(filter_section.layout()) if False else None
         filter_layout.addWidget(QtWidgets.QLabel("All dashboard panels update dynamically when the depth range changes.", filter_section))
         content_layout.addWidget(filter_section)
 
@@ -339,6 +338,8 @@ class DataService:
                 rows = []
                 for col_name, row in desc.iterrows():
                     unit = log_info.get(col_name, {}).get("unit", "") if isinstance(log_info, dict) else ""
+                    series = df[col_name] if col_name in df.columns else None
+                    null_pct = round(float(series.isna().mean() * 100), 2) if series is not None else 0.0
                     rows.append((
                         col_name,
                         unit,
@@ -346,6 +347,7 @@ class DataService:
                         self._safe_number(row.get("max", 0)),
                         self._safe_number(row.get("mean", 0)),
                         self._safe_number(row.get("std", 0)),
+                        f"{null_pct}%",
                         self._safe_number(row.get("count", 0)),
                     ))
                 self._fill_table(summary_table, rows)
@@ -825,7 +827,7 @@ class DataService:
             if not depth_values.empty:
                 depth_range = f"{self._safe_number(depth_values.min())}–{self._safe_number(depth_values.max())} m"
 
-        curves = self._numeric_curves(df)
+        curves = [str(column) for column in df.columns if self._depth_column(df) != column]
         total_samples = len(df)
         avg_null = 0.0
         if curves:
