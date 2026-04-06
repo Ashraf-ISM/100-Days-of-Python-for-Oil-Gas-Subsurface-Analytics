@@ -34,6 +34,8 @@ class InterpretationService:
         if df is None:
             return
 
+        self._sync_gr_curve_line(df)
+
         methods = self._selected_vsh_methods()
         primary_method = methods[0]
         gr_curve = self._combo_text("comboVclGR") or self._line_text("gRCurveLineEdit") or "GR"
@@ -688,6 +690,11 @@ class InterpretationService:
         self.ui.grCleanSpinBox = getattr(self.ui, "spinVclGRmin", None)
         self.ui.grShaleSpinBox = getattr(self.ui, "spinVclGRmax", None)
 
+        well = self.data._get_current_well()
+        df = getattr(well, "data", None) if well is not None else None
+        if df is not None:
+            self._sync_gr_curve_line(df)
+
         self.ui._vsh_workspace_built = True
 
     def _update_vsh_kpis(self, gr_clean, gr_shale, method: str, stats: dict) -> None:
@@ -947,6 +954,39 @@ class InterpretationService:
             return float(text)
         except ValueError:
             return default
+
+    def _sync_gr_curve_line(self, df) -> None:
+        line_widget = getattr(self.ui, "gRCurveLineEdit", None)
+        if line_widget is None or not hasattr(line_widget, "setText"):
+            return
+
+        current = self._line_text("gRCurveLineEdit")
+        if current and current in getattr(df, "columns", []):
+            return
+
+        curve_name = self._pick_gr_curve_name(df)
+        if curve_name:
+            line_widget.setText(curve_name)
+
+    def _pick_gr_curve_name(self, df) -> str:
+        columns = [str(c) for c in getattr(df, "columns", [])]
+        if not columns:
+            return ""
+
+        upper = {c.upper(): c for c in columns}
+        if "GR" in upper:
+            return upper["GR"]
+
+        for candidate in ("GAMMARAY", "GAMMA_RAY", "GR_API"):
+            if candidate in upper:
+                return upper[candidate]
+
+        for col in columns:
+            c = col.upper()
+            if "GR" in c or "GAMMA" in c:
+                return col
+
+        return ""
 
     def _spin_value(self, names: tuple[str, ...], default):
         for name in names:

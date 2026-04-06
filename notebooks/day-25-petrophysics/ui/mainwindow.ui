@@ -3226,7 +3226,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                  <x>0</x>
                  <y>0</y>
                  <width>1186</width>
-                 <height>200</height>
+                 <height>211</height>
                 </rect>
                </property>
                <layout class="QFormLayout" name="formVshInputs">
@@ -3253,9 +3253,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="gRCurveLineEdit"/>
-                </item>
                 <item row="3" column="0">
                  <widget class="QLabel" name="lblVshGrClean">
                   <property name="text">
@@ -3277,6 +3274,16 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                  <widget class="QLabel" name="lblVshMethod">
                   <property name="text">
                    <string>Method:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QDoubleSpinBox" name="spinVclGRmin">
+                  <property name="maximum">
+                   <double>300.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>15.000000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -3304,15 +3311,8 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                   </item>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QDoubleSpinBox" name="spinVclGRmin">
-                  <property name="maximum">
-                   <double>300.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>15.000000000000000</double>
-                  </property>
-                 </widget>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="gRCurveLineEdit"/>
                 </item>
                </layout>
               </widget>
