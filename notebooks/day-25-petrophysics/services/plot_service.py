@@ -218,29 +218,29 @@ class PlotService:
             fontsize=14,
             fontweight="600"
         )
-    
+
         self._render_plot(pairgrid.fig, f"Pairplot: {', '.join(curves[:4])}")
 
-        def _pairplot_hue_name(self, df) -> str | None:
-            """Resolve the optional hue column for pairplot from UI controls."""
-            # Preferred control name in current UI.
-            widget = getattr(self.ui, "pairplotcombocolorby", None)
-            if widget is not None:
-                if hasattr(widget, "currentText"):
-                    text = widget.currentText().strip()
-                else:
-                    text = widget.text().strip()
-                if text and text.lower() != "none" and text in df.columns:
-                    return text
+    def _pairplot_hue_name(self, df) -> str | None:
+        """Resolve the optional hue column for pairplot from UI controls."""
+        # Preferred control name in current UI.
+        widget = getattr(self.ui, "pairplotcombocolorby", None)
+        if widget is not None:
+            if hasattr(widget, "currentText"):
+                text = widget.currentText().strip()
+            else:
+                text = widget.text().strip()
+            if text and text.lower() != "none" and text in df.columns:
+                return text
 
-            # Backward compatibility for older prototypes.
-            legacy_widget = getattr(self.ui, "colorByComboBox", None)
-            if legacy_widget is not None:
-                text = legacy_widget.currentText().strip()
-                if text and text.lower() != "none" and text in df.columns:
-                    return text
+        # Backward compatibility for older prototypes.
+        legacy_widget = getattr(self.ui, "colorByComboBox", None)
+        if legacy_widget is not None:
+            text = legacy_widget.currentText().strip()
+            if text and text.lower() != "none" and text in df.columns:
+                return text
 
-            return None
+        return None
     
     def new_violinplot(self):
         df = self._get_df()
