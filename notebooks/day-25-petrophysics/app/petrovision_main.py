@@ -124,10 +124,8 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         visual_grid.setSpacing(12)
         self._dashboard_hist_frame = self._make_chart_card("GR Distribution")
         self._dashboard_lith_frame = self._make_chart_card("Lithology Breakdown")
-        self._dashboard_depth_frame = self._make_chart_card("Depth vs. GR Preview", tall=True)
         visual_grid.addWidget(self._dashboard_hist_frame, 0, 0)
         visual_grid.addWidget(self._dashboard_lith_frame, 0, 1)
-        visual_grid.addWidget(self._dashboard_depth_frame, 1, 0, 1, 2)
         visual_section.layout().addLayout(visual_grid)
         left_col.addWidget(visual_section, 3)
 
@@ -236,10 +234,10 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         sample_count = len(df) if df is not None else 0
         data_quality = self._estimate_data_quality(df)
 
-        self._set_label_text("wells_loaded", str(wells_loaded))
-        self._set_label_text("curve_count", str(curve_count))
-        self._set_label_text("sample_count", f"{sample_count:,}")
-        self._set_label_text("data_quality", f"{data_quality:.0f}%")
+        self._set_metric_value("wells_loaded", str(wells_loaded))
+        self._set_metric_value("curve_count", str(curve_count))
+        self._set_metric_value("sample_count", f"{sample_count:,}")
+        self._set_metric_value("data_quality", f"{data_quality:.0f}%")
         self._set_label_text("_dashboard_badge_one", "Project Ready")
         self._set_label_text("_dashboard_badge_two", f"{wells_loaded} Wells")
 
@@ -360,6 +358,12 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         card._title_label = title_label  # type: ignore[attr-defined]
         return card
 
+    def _set_metric_value(self, key: str, text: str) -> None:
+        metrics = getattr(self, "_dashboard_metrics", {})
+        widget = metrics.get(key)
+        if widget is not None and hasattr(widget, "setText"):
+            widget.setText(text)
+
     def _set_label_text(self, attr_name: str, text: str) -> None:
         widget = getattr(self, attr_name, None)
         if widget is None:
@@ -434,7 +438,6 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if df is None or getattr(df, "empty", True):
             self._render_dashboard_message(self._dashboard_hist_frame, "No data loaded yet.")
             self._render_dashboard_message(self._dashboard_lith_frame, "No data loaded yet.")
-            self._render_dashboard_message(self._dashboard_depth_frame, "Load a well to see preview charts.")
             return
 
         import numpy as np
@@ -450,7 +453,6 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if not numeric_columns:
             self._render_dashboard_message(self._dashboard_hist_frame, "No numeric curves found.")
             self._render_dashboard_message(self._dashboard_lith_frame, "No numeric curves found.")
-            self._render_dashboard_message(self._dashboard_depth_frame, "No numeric curves found.")
             return
 
         gr_curve = None
@@ -463,7 +465,6 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
 
         self._render_histogram_chart(self._dashboard_hist_frame, df[gr_curve], gr_curve)
         self._render_lithology_chart(self._dashboard_lith_frame, df[gr_curve], gr_curve)
-        self._render_depth_preview(self._dashboard_depth_frame, df, depth_col, gr_curve)
 
     def _render_dashboard_message(self, frame: QtWidgets.QFrame, message: str) -> None:
         import matplotlib.pyplot as plt
@@ -514,34 +515,6 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         ax.pie(counts, startangle=90, colors=colors, wedgeprops={"width": 0.42, "edgecolor": "white"})
         ax.set_title(f"{curve_name} Breakdown", fontsize=12, fontweight="600")
         ax.legend(labels, loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=False, fontsize=8)
-        self._render_figure_to_frame(frame, fig)
-
-    def _render_depth_preview(self, frame: QtWidgets.QFrame, df, depth_col, curve_name: str) -> None:
-        import matplotlib.pyplot as plt
-        import pandas as pd
-
-        if depth_col is None or depth_col not in df.columns:
-            self._render_dashboard_message(frame, "No depth curve found for preview.")
-            return
-
-        depth = pd.to_numeric(df[depth_col], errors="coerce")
-        curve = pd.to_numeric(df[curve_name], errors="coerce")
-        valid = depth.notna() & curve.notna()
-        if not valid.any():
-            self._render_dashboard_message(frame, "Not enough numeric samples for preview.")
-            return
-
-        depth = depth.loc[valid]
-        curve = curve.loc[valid]
-        sample = slice(None, None, max(len(depth) // 250, 1))
-
-        fig, ax = plt.subplots(figsize=(9.5, 3.0), constrained_layout=True)
-        ax.plot(curve.iloc[sample], depth.iloc[sample], color="#3A72B5", linewidth=1.2)
-        ax.invert_yaxis()
-        ax.set_title(f"Depth vs. {curve_name}", fontsize=12, fontweight="600")
-        ax.set_xlabel(curve_name)
-        ax.set_ylabel(depth_col)
-        ax.grid(alpha=0.16)
         self._render_figure_to_frame(frame, fig)
 
     def _render_figure_to_frame(self, frame: QtWidgets.QFrame, fig) -> None:
