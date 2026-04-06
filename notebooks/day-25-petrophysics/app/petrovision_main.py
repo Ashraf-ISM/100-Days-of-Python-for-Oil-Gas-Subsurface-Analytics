@@ -27,6 +27,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_borehole_analysis_tab()
         self._reorder_tabs()
         self._connect_tab_switches()
+        self._connect_edit_actions()
         self.controller = MainController(self)
         self._build_dashboard()
         self.refresh_dashboard_tab()
@@ -691,6 +692,173 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_button("btnDashVsh", tab_index("tabShaleVolume", 6) or 6)
         connect_button("btnDashSw", tab_index("tabWaterSaturation", 8) or 8)
         connect_button("btnDashCorr", tab_index("tabWellCorrelation", 11) or 11)
+
+    def _connect_edit_actions(self) -> None:
+        action_map = {
+            "actionUndo": "undo",
+            "actionRedo": "redo",
+            "actionCut": "cut",
+            "actionCopy": "copy",
+            "actionPaste": "paste",
+            "actionDelete": "delete",
+            "actionSelectAll": "select_all",
+        }
+        for action_name, op_name in action_map.items():
+            action = getattr(self, action_name, None)
+            if action is None:
+                continue
+            action.triggered.connect(lambda checked=False, op=op_name: self._run_edit_operation(op))
+
+    def _run_edit_operation(self, op_name: str) -> None:
+        focus = QtWidgets.QApplication.focusWidget()
+        if focus is None:
+            return
+
+        if op_name == "copy" and self._copy_from_item_view(focus):
+            return
+        if op_name == "cut" and self._cut_from_item_view(focus):
+            return
+        if op_name == "paste" and self._paste_to_item_view(focus):
+            return
+        if op_name == "delete" and self._delete_from_item_view(focus):
+            return
+
+        for widget in self._focus_widget_chain(focus):
+            if op_name == "delete" and self._delete_text(widget):
+                return
+            method_name = "selectAll" if op_name == "select_all" else op_name
+            method = getattr(widget, method_name, None)
+            if callable(method):
+                method()
+                return
+
+        fallback_shortcuts = {
+            "undo": QtGui.QKeySequence.Undo,
+            "redo": QtGui.QKeySequence.Redo,
+            "cut": QtGui.QKeySequence.Cut,
+            "copy": QtGui.QKeySequence.Copy,
+            "paste": QtGui.QKeySequence.Paste,
+            "select_all": QtGui.QKeySequence.SelectAll,
+            "delete": QtGui.QKeySequence.Delete,
+        }
+        sequence = fallback_shortcuts.get(op_name)
+        if sequence is None:
+            return
+        key = sequence[0]
+        modifiers = QtCore.Qt.KeyboardModifiers(key & int(QtCore.Qt.KeyboardModifierMask))
+        key_code = key & ~int(QtCore.Qt.KeyboardModifierMask)
+        press = QtGui.QKeyEvent(QtCore.QEvent.KeyPress, key_code, modifiers)
+        release = QtGui.QKeyEvent(QtCore.QEvent.KeyRelease, key_code, modifiers)
+        QtWidgets.QApplication.sendEvent(focus, press)
+        QtWidgets.QApplication.sendEvent(focus, release)
+
+    def _focus_widget_chain(self, widget: QtWidgets.QWidget) -> list[QtWidgets.QWidget]:
+        chain: list[QtWidgets.QWidget] = []
+        current = widget
+        while current is not None:
+            chain.append(current)
+            current = current.parentWidget()
+        return chain
+
+    def _delete_text(self, widget: QtWidgets.QWidget) -> bool:
+        if hasattr(widget, "del_") and callable(getattr(widget, "del_")):
+            widget.del_()
+            return True
+
+        if isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            cursor = widget.textCursor()
+            if cursor.hasSelection():
+                cursor.removeSelectedText()
+            else:
+                cursor.deleteChar()
+            widget.setTextCursor(cursor)
+            return True
+        return False
+
+    def _copy_from_item_view(self, widget: QtWidgets.QWidget) -> bool:
+        view = self._as_item_view(widget)
+        if view is None:
+            return False
+        model = view.model()
+        if model is None:
+            return False
+
+        indexes = view.selectionModel().selectedIndexes() if view.selectionModel() is not None else []
+        if not indexes:
+            return False
+
+        rows = sorted({index.row() for index in indexes})
+        cols = sorted({index.column() for index in indexes})
+        selected = {(index.row(), index.column()): index for index in indexes}
+
+        lines: list[str] = []
+        for row in rows:
+            parts: list[str] = []
+            for col in cols:
+                index = selected.get((row, col))
+                text = "" if index is None else str(model.data(index, QtCore.Qt.DisplayRole) or "")
+                parts.append(text)
+            lines.append("\t".join(parts))
+
+        QtWidgets.QApplication.clipboard().setText("\n".join(lines))
+        return True
+
+    def _cut_from_item_view(self, widget: QtWidgets.QWidget) -> bool:
+        copied = self._copy_from_item_view(widget)
+        if not copied:
+            return False
+        return self._delete_from_item_view(widget)
+
+    def _paste_to_item_view(self, widget: QtWidgets.QWidget) -> bool:
+        view = self._as_item_view(widget)
+        if view is None:
+            return False
+        model = view.model()
+        if model is None:
+            return False
+
+        text = QtWidgets.QApplication.clipboard().text()
+        if not text:
+            return False
+
+        start = view.currentIndex()
+        if not start.isValid():
+            return False
+
+        rows = text.splitlines()
+        if not rows:
+            return False
+
+        for row_offset, row_text in enumerate(rows):
+            cells = row_text.split("\t")
+            for col_offset, cell_text in enumerate(cells):
+                index = model.index(start.row() + row_offset, start.column() + col_offset)
+                if not index.isValid():
+                    continue
+                model.setData(index, cell_text, QtCore.Qt.EditRole)
+        return True
+
+    def _delete_from_item_view(self, widget: QtWidgets.QWidget) -> bool:
+        view = self._as_item_view(widget)
+        if view is None:
+            return False
+        model = view.model()
+        if model is None:
+            return False
+
+        indexes = view.selectionModel().selectedIndexes() if view.selectionModel() is not None else []
+        if not indexes:
+            return False
+
+        for index in indexes:
+            model.setData(index, "", QtCore.Qt.EditRole)
+        return True
+
+    def _as_item_view(self, widget: QtWidgets.QWidget) -> QtWidgets.QAbstractItemView | None:
+        for candidate in self._focus_widget_chain(widget):
+            if isinstance(candidate, QtWidgets.QAbstractItemView):
+                return candidate
+        return None
     
     def closeEvent(self, event):
         """Handle application close - prompt to save if modified.

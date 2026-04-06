@@ -63,6 +63,7 @@ class MainController:
             "actionImportODM",
         ):
             self._connect_action(name, self._import_and_track)
+        self._connect_action("actionDeleteWell", self._delete_well_and_track)
 
         # Plotting
         self._connect_action("actionNewLogPlot", self.plots.new_log_plot)
@@ -171,8 +172,17 @@ class MainController:
 
     def _import_and_track(self) -> None:
         """Import data and mark project as modified."""
-        self.data.import_data()
-        self.projects.mark_modified()
+        imported = self.data.import_data()
+        if imported:
+            self.projects.mark_modified()
+
+    def _delete_well_and_track(self) -> None:
+        """Delete the active well and mark project as modified."""
+        before = len(getattr(self.data, "_wells", {}))
+        self.data.remove_current_well()
+        after = len(getattr(self.data, "_wells", {}))
+        if after < before:
+            self.projects.mark_modified()
 
     def _save_and_track(self) -> None:
         """Save project."""

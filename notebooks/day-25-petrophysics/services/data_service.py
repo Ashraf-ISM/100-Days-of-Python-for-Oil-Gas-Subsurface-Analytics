@@ -1,6 +1,7 @@
 """Data import + data views population (auto header/log info, rename with undo)."""
 from __future__ import annotations
 
+from types import SimpleNamespace
 from typing import Any
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -13,6 +14,7 @@ class DataService:
         self.ui = ui
         self._wells: dict[str, Any] = {}
         self._current_well: str | None = None
+        self._all_wells_mode = False
         self._rename_history: dict[str, list[list[str]]] = {}
         self._depth_filter_initialized: set[str] = set()
         self._build_data_info_dashboard()
@@ -207,33 +209,116 @@ class DataService:
         self.ui._data_info_dashboard_built = True
 
     def import_data(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+        paths, _ = QtWidgets.QFileDialog.getOpenFileNames(
             self.ui,
-            "Import Well Data",
+            "Import Well Data (Single or Multi-Well)",
             "",
             "Well Data (*.las *.laz *.dlis *.dl *.csv *.txt *.dat *.asc)",
         )
-        if not path:
-            return
-        well, msg = load_well(path, replace_nulls=True, depth_unit="m", depth_type="MD")
-        self._wells[well.name] = well
-        self._current_well = well.name
-        self._rename_history.setdefault(well.name, [])
+        if not paths:
+            return False
+
+        loaded = 0
+        failed = 0
+        loaded_messages: list[str] = []
+        for path in paths:
+            try:
+                well, msg = load_well(path, replace_nulls=True, depth_unit="m", depth_type="MD")
+            except Exception:
+                failed += 1
+                continue
+            self._register_well(well)
+            loaded += 1
+            loaded_messages.append(msg)
+
+        if loaded == 0:
+            QtWidgets.QMessageBox.warning(self.ui, "Import", "No wells were imported.")
+            return False
+
         self._update_well_lists()
         self._refresh_views()
-        QtWidgets.QMessageBox.information(self.ui, "Import", msg)
+
+        lines = [f"Imported {loaded} well(s)."]
+        for message in loaded_messages[:6]:
+            lines.append(f"- {message}")
+        if len(loaded_messages) > 6:
+            lines.append(f"...and {len(loaded_messages) - 6} more.")
+        if failed:
+            lines.append(f"Failed imports: {failed}")
+        QtWidgets.QMessageBox.information(self.ui, "Import", "\n".join(lines))
+        return True
+
+    def remove_current_well(self):
+        if not self._wells:
+            QtWidgets.QMessageBox.information(self.ui, "Delete Well", "No wells are loaded.")
+            return
+
+        target_name = self._current_well or sorted(self._wells.keys())[0]
+        reply = QtWidgets.QMessageBox.question(
+            self.ui,
+            "Delete Well",
+            f"Remove well '{target_name}' from this session?",
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+            QtWidgets.QMessageBox.No,
+        )
+        if reply != QtWidgets.QMessageBox.Yes:
+            return
+
+        self._wells.pop(target_name, None)
+        self._rename_history.pop(target_name, None)
+        self._depth_filter_initialized.discard(target_name)
+        self._depth_filter_initialized.discard("All Wells")
+        self._all_wells_mode = False
+
+        if self._wells:
+            self._current_well = sorted(self._wells.keys())[0]
+            self._update_well_lists()
+            self._refresh_views()
+            return
+
+        self._current_well = None
+        self._update_well_lists()
+        self._clear_views_without_well()
+
+    def _register_well(self, well) -> None:
+        requested_name = str(getattr(well, "name", "") or "Well")
+        unique_name = self._unique_well_name(requested_name)
+        well.name = unique_name
+        self._wells[unique_name] = well
+        self._current_well = unique_name
+        self._all_wells_mode = False
+        self._rename_history.setdefault(unique_name, [])
+        self._depth_filter_initialized.discard("All Wells")
+
+    def _unique_well_name(self, requested: str) -> str:
+        base = requested.strip() or "Well"
+        if base not in self._wells:
+            return base
+        suffix = 2
+        while True:
+            candidate = f"{base}_{suffix}"
+            if candidate not in self._wells:
+                return candidate
+            suffix += 1
 
     def load_data_view(self):
         self._refresh_views()
 
     def set_current_well(self, name: str):
-        if not name or name not in self._wells:
+        if not name:
             return
+        if name == "All Wells":
+            self._all_wells_mode = True
+            self.compute_stats()
+            return
+        if name not in self._wells:
+            return
+        self._all_wells_mode = False
         self._current_well = name
         self._refresh_views()
 
     def on_curve_well_changed(self, name: str):
-        if not name or name not in self._wells:
+        if not name or name == "All Wells" or name not in self._wells:
             return
         well = self._wells[name]
         self._update_curves_tree(well)
@@ -289,12 +374,11 @@ class DataService:
         self._refresh_views()
 
     def compute_stats(self):
-        well = self._get_current_well()
-        if not well:
+        target = self._get_active_analysis_target()
+        if target is None:
             return
 
-        self._ensure_depth_filter_initialized(well)
-        df = self._filtered_dataframe(well)
+        well, df = target
         if df is None:
             return
 
@@ -514,7 +598,7 @@ th {{ background: #F8FBFE; }}
             "comboPPWell",
             "comboGeoWell",
         )
-        combos_with_all = {"comboDISWell", "comboHistWell", "comboStatWell", "comboQCWell"}
+        combos_with_all = {"comboDISWell", "comboHistWell", "comboStatWell"}
         wells_sorted = sorted(self._wells.keys())
         for combo_name in all_well_combos:
             combo = getattr(self.ui, combo_name, None)
@@ -572,6 +656,75 @@ th {{ background: #F8FBFE; }}
         dashboard_refresh = getattr(self.ui, "refresh_dashboard_tab", None)
         if callable(dashboard_refresh):
             dashboard_refresh()
+
+    def _clear_views_without_well(self) -> None:
+        for table_name in (
+            "tableData",
+            "tableRenameColumns",
+            "tableDISCoreStats",
+            "tableDISCoverage",
+            "tableDISHeader",
+            "tableDISCurveInfo",
+            "tableStatistics",
+        ):
+            table = getattr(self.ui, table_name, None)
+            if table is not None:
+                table.clearContents()
+                table.setRowCount(0)
+
+        for combo_name in ("comboDISDistCurve", "comboStatCurve", "comboQCCurve"):
+            combo = getattr(self.ui, combo_name, None)
+            if combo is not None:
+                combo.clear()
+
+        for label_name in (
+            "lblDISDepthRangeValue",
+            "lblDISTotalSamplesValue",
+            "lblDISNumCurvesValue",
+            "lblDISAvgNullValue",
+            "lblDISInsights",
+        ):
+            label = getattr(self.ui, label_name, None)
+            if label is not None:
+                label.setText("--")
+
+        dashboard_refresh = getattr(self.ui, "refresh_dashboard_tab", None)
+        if callable(dashboard_refresh):
+            dashboard_refresh()
+
+    def _get_active_analysis_target(self):
+        if self._all_wells_mode:
+            merged = self._build_multiwell_dataframe()
+            if merged is None:
+                return None
+            pseudo_well = SimpleNamespace(name="All Wells", data=merged, log_info={})
+            self._ensure_depth_filter_initialized(pseudo_well)
+            filtered = self._filtered_dataframe(pseudo_well)
+            return pseudo_well, filtered
+
+        well = self._get_current_well()
+        if not well:
+            return None
+        self._ensure_depth_filter_initialized(well)
+        filtered = self._filtered_dataframe(well)
+        return well, filtered
+
+    def _build_multiwell_dataframe(self):
+        import pandas as pd
+
+        frames = []
+        for well_name in sorted(self._wells.keys()):
+            well = self._wells[well_name]
+            df = getattr(well, "data", None)
+            if df is None or getattr(df, "empty", True):
+                continue
+            tagged = df.copy()
+            tagged["WELL"] = well_name
+            frames.append(tagged)
+
+        if not frames:
+            return None
+        return pd.concat(frames, ignore_index=True, sort=False)
 
     def _update_curve_lists(self, well):
         df = getattr(well, "data", None)
