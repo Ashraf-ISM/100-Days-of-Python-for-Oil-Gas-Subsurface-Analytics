@@ -153,7 +153,15 @@ class GeomechanicsService:
                 widget.setParent(None)
                 widget.deleteLater()
 
-        main_layout = QtWidgets.QVBoxLayout(tab)
+        if isinstance(existing_layout, QtWidgets.QVBoxLayout):
+            main_layout = existing_layout
+        else:
+            container = QtWidgets.QWidget(tab)
+            main_layout = QtWidgets.QVBoxLayout(container)
+            main_layout.setContentsMargins(0, 0, 0, 0)
+            main_layout.setSpacing(8)
+            existing_layout.addWidget(container)
+
         main_layout.setContentsMargins(8, 8, 8, 8)
         main_layout.setSpacing(8)
 
@@ -305,6 +313,23 @@ class GeomechanicsService:
         e_norm = self._minmax_norm(young_gpa)
         nu_norm = self._minmax_norm(nu)
         return np.clip((e_norm + (1.0 - nu_norm)) / 2.0, 0.0, 1.0)
+
+    def _minmax_norm(self, values: np.ndarray) -> np.ndarray:
+        arr = np.asarray(values, dtype=float)
+        out = np.full(arr.shape, np.nan, dtype=float)
+        finite_mask = np.isfinite(arr)
+        if not np.any(finite_mask):
+            return np.nan_to_num(out, nan=0.0)
+
+        finite_vals = arr[finite_mask]
+        vmin = float(np.min(finite_vals))
+        vmax = float(np.max(finite_vals))
+        span = vmax - vmin
+        if span <= 1e-12:
+            out[finite_mask] = 0.5
+        else:
+            out[finite_mask] = (finite_vals - vmin) / span
+        return np.nan_to_num(out, nan=0.0)
 
     def _selected_tracks(self, df) -> list[tuple[str, str, np.ndarray]]:
         tracks: list[tuple[str, str, np.ndarray]] = []
