@@ -24,6 +24,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if tab_widget is not None:
             self.setCentralWidget(tab_widget)
         self._embed_data_analysis_tab()
+        self._embed_borehole_analysis_tab()
         self._reorder_tabs()
         self._connect_tab_switches()
         self.controller = MainController(self)
@@ -552,10 +553,25 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self.refresh_dashboard_tab()
         except Exception:
             pass
+    def _embed_borehole_analysis_tab(self) -> None:
+        """Embeds the new FMI/Borehole Image analysis module into the existing FMI tab."""
+        tab_fmi = getattr(self, "tabFMIAnalysis", None)
+        if tab_fmi is None:
+            return
+        layout = tab_fmi.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(tab_fmi)
+        self._clear_layout(layout)
+        
+        from borehole_image.image_analysis_tab import ImageAnalysisTab
+        self.borehole_analysis_widget = ImageAnalysisTab()
+        layout.addWidget(self.borehole_analysis_widget)
+
 
     def _embed_data_analysis_tab(self) -> None:
         """Replace the Data Info & Stats tab with the Data & Analysis dock contents."""
         data_tab = getattr(self, "tabDataInfoStats", None)
+
         dock = getattr(self, "dockData", None)
         if data_tab is None or dock is None:
             return

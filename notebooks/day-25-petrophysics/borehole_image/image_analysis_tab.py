@@ -1,6 +1,8 @@
 import os
 import sys
 import numpy as np
+import pandas as pd
+import lasio
 from pathlib import Path
 from PyQt5 import QtWidgets, QtCore, QtGui
 import pyqtgraph as pg
@@ -125,29 +127,60 @@ class ImageAnalysisTab(QtWidgets.QWidget):
     def prompt_load_image(self):
         options = QtWidgets.QFileDialog.Options()
         file_path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Load Borehole Image", "", "NumPy Arrays (*.npy);;Images (*.png *.jpg)", options=options
+            self, "Load Borehole Image", "", "LAS Files (*.las);;NumPy Arrays (*.npy);;Images (*.png *.jpg)", options=options
         )
         if file_path:
             self.status_lbl.setText(f"Loaded: {os.path.basename(file_path)}")
-            # For phase 1 demonstration, simulate a random dataset 
-            # (In production, load with standard cv2/PIL or numpy)
             try:
-                if file_path.endswith('.npy'):
+                if file_path.lower().endswith('.las'):
+                    las = lasio.read(file_path)
+                    df = las.df()
+                    
+                    # Checking if we have density or gamma ray logs
+                    azid_cols = [f'ABDC{i}M' for i in range(1, 17)]
+                    azig_cols = [f'GRAS{i}M' for i in range(0, 8)]
+                    
+                    available_images = []
+                    if all(c in df.columns for c in azid_cols):
+                        available_images.append("Azimuthal Density (16 sectors)")
+                    if all(c in df.columns for c in azig_cols):
+                        available_images.append("Azimuthal Gamma Ray (8 sectors)")
+                        
+                    if not available_images:
+                        raise ValueError("No recognizable LWD image sectors found in LAS file.")
+                    
+                    choice, ok = QtWidgets.QInputDialog.getItem(
+                        self, "Select Image Log", "Choose image to display:", available_images, 0, False
+                    )
+                    if not ok: return
+                    
+                    if "Density" in choice:
+                        img_df = df[azid_cols].dropna(how='all')
+                    else:
+                        img_df = df[azig_cols].dropna(how='all')
+                        
+                    depth_start = img_df.index.min()
+                    depth_end = img_df.index.max()
+                    data = img_df.values
+                    
+                elif file_path.endswith('.npy'):
                     data = np.load(file_path)
+                    depth_start, ok1 = QtWidgets.QInputDialog.getDouble(self, "Depth Start", "Enter Top Depth (MD):", 1000.0, 0, 10000)
+                    if not ok1: return
+                    depth_end, ok2 = QtWidgets.QInputDialog.getDouble(self, "Depth End", "Enter Bottom Depth (MD):", 1100.0, 0, 10000)
+                    if not ok2: return
                 else:
                     # dummy fallback for standard images
                     data = np.random.rand(1000, 360) * 255
-                
-                # Mock Depth dialog for phase 1
-                depth_start, ok1 = QtWidgets.QInputDialog.getDouble(self, "Depth Start", "Enter Top Depth (MD):", 1000.0, 0, 10000)
-                if not ok1: return
-                depth_end, ok2 = QtWidgets.QInputDialog.getDouble(self, "Depth End", "Enter Bottom Depth (MD):", 1100.0, 0, 10000)
-                if not ok2: return
+                    depth_start, ok1 = QtWidgets.QInputDialog.getDouble(self, "Depth Start", "Enter Top Depth (MD):", 1000.0, 0, 10000)
+                    if not ok1: return
+                    depth_end, ok2 = QtWidgets.QInputDialog.getDouble(self, "Depth End", "Enter Bottom Depth (MD):", 1100.0, 0, 10000)
+                    if not ok2: return
                 
                 self.viewer_engine.load_image(data, depth_start, depth_end)
-                self.lbl_info.setText(f"Depth: {depth_start} - {depth_end}\nShape: {data.shape}")
+                self.lbl_info.setText(f"Depth: {depth_start:.2f} - {depth_end:.2f}\\nShape: {data.shape}")
             except Exception as e:
-                QtWidgets.QMessageBox.critical(self, "Error", str(e))
+                QtWidgets.QMessageBox.critical(self, "Error", f"Failed to load image: {str(e)}")
                 
     def change_colormap(self, cmap_name):
         self.viewer_engine.set_colormap(cmap_name)
