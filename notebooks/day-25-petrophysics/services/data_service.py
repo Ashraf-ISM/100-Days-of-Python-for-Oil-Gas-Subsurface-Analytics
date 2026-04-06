@@ -616,6 +616,18 @@ th {{ background: #F8FBFE; }}
                     combo.setCurrentIndex(index)
             combo.blockSignals(False)
 
+        for combo_name, preferred in (
+            ("comboGeoDT", "DT"),
+            ("comboGeoDTS", "DTS"),
+            ("comboGeoRHOB", "RHOB"),
+        ):
+            combo = getattr(self.ui, combo_name, None)
+            if combo is None:
+                continue
+            idx = combo.findText(preferred)
+            if idx >= 0:
+                combo.setCurrentIndex(idx)
+
         if "DEPTH" in df.columns:
             depth_values = df["DEPTH"].dropna()
             if not depth_values.empty:
