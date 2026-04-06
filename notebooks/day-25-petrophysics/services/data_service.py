@@ -331,28 +331,32 @@ class DataService:
                 ])
                 self._fill_table(legacy_table, legacy_rows)
 
-            summary_table = self._get_widget("tableDISSummary")
-            if summary_table is not None:
-                summary_table.setColumnCount(8)
-                summary_table.setHorizontalHeaderLabels([
-                    "Curve", "Unit", "Min", "Max", "Mean", "Std", "Null %", "Count"
-                ])
-                rows = []
-                for col_name, row in desc.iterrows():
-                    unit = log_info.get(col_name, {}).get("unit", "") if isinstance(log_info, dict) else ""
-                    series = df[col_name] if col_name in df.columns else None
-                    null_pct = round(float(series.isna().mean() * 100), 2) if series is not None else 0.0
-                    rows.append((
-                        col_name,
-                        unit,
-                        self._safe_number(row.get("min", 0)),
-                        self._safe_number(row.get("max", 0)),
-                        self._safe_number(row.get("mean", 0)),
-                        self._safe_number(row.get("std", 0)),
-                        f"{null_pct}%",
-                        self._safe_number(row.get("count", 0)),
-                    ))
-                self._fill_table(summary_table, rows)
+            summary_rows = []
+            for col_name, row in desc.iterrows():
+                unit = log_info.get(col_name, {}).get("unit", "") if isinstance(log_info, dict) else ""
+                series = df[col_name] if col_name in df.columns else None
+                null_pct = round(float(series.isna().mean() * 100), 2) if series is not None else 0.0
+                summary_rows.append((
+                    col_name,
+                    unit,
+                    self._safe_number(row.get("min", 0)),
+                    self._safe_number(row.get("max", 0)),
+                    self._safe_number(row.get("mean", 0)),
+                    self._safe_number(row.get("std", 0)),
+                    f"{null_pct}%",
+                    self._safe_number(row.get("count", 0)),
+                ))
+
+            for summary_table in (
+                self._get_widget("tableDISCoreStats"),
+                self._get_widget("tableDISSummary"),
+            ):
+                if summary_table is not None:
+                    summary_table.setColumnCount(8)
+                    summary_table.setHorizontalHeaderLabels([
+                        "Curve", "Unit", "Min", "Max", "Mean", "Std", "Null %", "Count"
+                    ])
+                    self._fill_table(summary_table, summary_rows)
 
         except Exception as e:
             print("Stats Error:", e)
