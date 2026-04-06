@@ -139,11 +139,96 @@ class PlotService:
         df = self._get_df()
         if df is None:
             return
-        curves = self._get_selected_checkable_curves("pairplotcomboBox")
+        import pandas as pd
+        import seaborn as sns
+
+        selected_curves = self._get_selected_checkable_curves("pairplotcomboBox")
+        if len(selected_curves) < 2:
+            selected_curves = self._curve_columns(df)[: min(4, len(self._curve_columns(df)))]
+
+        curves = [
+            curve
+            for curve in selected_curves
+            if curve in df.columns and pd.api.types.is_numeric_dtype(df[curve])
+        ]
         if len(curves) < 2:
-            curves = self._curve_columns(df)[: min(4, len(self._curve_columns(df)))]
-        fig = plot_tools.plot_pairplot(df, curves, show=False)
-        self._render_plot(fig, f"Pairplot: {', '.join(curves[:4])}")
+            return
+
+        plot_df = df[curves].copy()
+        hue_name = None
+        if "Facies" in df.columns and "Facies" not in curves:
+            plot_df["Facies"] = df["Facies"]
+            hue_name = "Facies"
+
+        pairgrid = sns.pairplot(
+            plot_df,
+            vars=curves,
+            hue=hue_name,
+            palette="tab10" if hue_name else None,
+            diag_kind="kde",
+        )
+        pairgrid.fig.suptitle("Pairplot", y=1.02, fontsize=14, fontweight="600")
+        self._render_plot(pairgrid.fig, f"Pairplot: {', '.join(curves[:4])}")
+
+    def new_violinplot(self):
+        df = self._get_df()
+        if df is None:
+            return
+        import matplotlib.pyplot as plt
+        import pandas as pd
+        import seaborn as sns
+
+        selected_curves = self._get_selected_checkable_curves("violinplotcomboBox")
+        if not selected_curves:
+            selected_curves = self._curve_columns(df)[: min(4, len(self._curve_columns(df)))]
+
+        curves = [
+            curve
+            for curve in selected_curves
+            if curve in df.columns and pd.api.types.is_numeric_dtype(df[curve])
+        ]
+        if not curves:
+            return
+
+        fig, axes = plt.subplots(
+            len(curves),
+            1,
+            figsize=(9, max(3.0, 2.8 * len(curves))),
+            constrained_layout=True,
+        )
+        if len(curves) == 1:
+            axes = [axes]
+
+        palette = sns.color_palette("tab10", n_colors=len(curves))
+        for axis, curve, color in zip(axes, curves, palette):
+            series = df[curve].dropna()
+            if series.empty:
+                axis.set_axis_off()
+                continue
+
+            sns.violinplot(
+                y=series,
+                ax=axis,
+                color=color,
+                inner=None,
+                cut=0,
+                linewidth=1.0,
+            )
+            sns.boxplot(
+                y=series,
+                ax=axis,
+                width=0.18,
+                showfliers=False,
+                color="white",
+                linewidth=1.0,
+            )
+            axis.set_title(f"Half Violin & Boxplot of {curve}", fontsize=12, fontweight="600")
+            axis.set_xlabel("")
+            axis.set_ylabel(curve)
+            axis.grid(axis="y", alpha=0.15)
+
+        fig.suptitle("Violin Plot", fontsize=14, fontweight="600")
+        self._render_plot(fig, f"Violin Plot: {', '.join(curves[:4])}")
 
     def new_triple_combo(self):
         df = self._get_df()

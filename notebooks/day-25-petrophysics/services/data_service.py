@@ -312,6 +312,16 @@ class DataService:
                 "Select 2-4 curves...",
             )
 
+        combo_violinplot = getattr(self.ui, "violinplotcomboBox", None)
+        if combo_violinplot is not None:
+            default_violin_curves = set(curves[: min(4, len(curves))])
+            self._set_checkable_combo(
+                combo_violinplot,
+                curves,
+                default_violin_curves,
+                "Select 1-4 curves...",
+            )
+
     def _set_checkable_combo(
         self,
         combo: QtWidgets.QComboBox,
