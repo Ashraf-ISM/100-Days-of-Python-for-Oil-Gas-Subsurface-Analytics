@@ -562,6 +562,9 @@ th {{ background: #F8FBFE; }}
         self._update_project_tree()
         self._update_curves_tree(well)
         self.compute_stats()
+        dashboard_refresh = getattr(self.ui, "refresh_dashboard_tab", None)
+        if callable(dashboard_refresh):
+            dashboard_refresh()
 
     def _update_curve_lists(self, well):
         df = getattr(well, "data", None)

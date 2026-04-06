@@ -160,8 +160,15 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         quick_section = self._make_section("Quick Actions")
         quick_grid = QtWidgets.QGridLayout()
         quick_grid.setSpacing(10)
-        self._dashboard_action_buttons = [button for button in workflow_buttons[:6]]
-        for index, button in enumerate(self._dashboard_action_buttons):
+        self._dashboard_quick_buttons = [
+            self._make_launch_button("Import Data", lambda: self._trigger_widget_click("btnDashImportLAS"), "#2F6FB3"),
+            self._make_launch_button("Log Viewer", lambda: self._call_controller_action("_go_to_logviewer_tab"), "#1FA67A"),
+            self._make_launch_button("Crossplot", lambda: self._trigger_widget_click("btnDashXplot"), "#D48A1D"),
+            self._make_launch_button("Shale Volume", lambda: self._trigger_widget_click("btnDashVsh"), "#A354D0"),
+            self._make_launch_button("Water Saturation", lambda: self._trigger_widget_click("btnDashSw"), "#0F8B8D"),
+            self._make_launch_button("Well Correlation", lambda: self._trigger_widget_click("btnDashCorr"), "#7C5CFF"),
+        ]
+        for index, button in enumerate(self._dashboard_quick_buttons):
             row, column = divmod(index, 2)
             quick_grid.addWidget(button, row, column)
         quick_section.layout().addLayout(quick_grid)
@@ -297,6 +304,38 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         badge._label = label  # type: ignore[attr-defined]
         return badge
 
+    def _make_launch_button(self, text: str, handler, accent: str) -> QtWidgets.QPushButton:
+        button = QtWidgets.QPushButton(text, self)
+        button.setMinimumHeight(44)
+        button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        button.setStyleSheet(
+            "QPushButton {"
+            f"background:{accent};"
+            "color:#FFFFFF;"
+            "border:none;"
+            "border-radius:12px;"
+            "padding:10px 12px;"
+            "font-size:12px;font-weight:700;"
+            "text-align:left;"
+            "}"
+            "QPushButton:hover { background: #23588F; }"
+        )
+        button.clicked.connect(handler)
+        return button
+
+    def _trigger_widget_click(self, name: str) -> None:
+        widget = getattr(self, name, None)
+        if widget is not None and hasattr(widget, "click"):
+            widget.click()
+
+    def _call_controller_action(self, name: str) -> None:
+        controller = getattr(self, "controller", None)
+        if controller is None:
+            return
+        handler = getattr(controller, name, None)
+        if callable(handler):
+            handler()
+
     def _make_chart_card(self, title: str, tall: bool = False) -> QtWidgets.QFrame:
         card = QtWidgets.QFrame(self)
         card.setObjectName("dashCard")
@@ -327,6 +366,8 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             return
         if hasattr(widget, "setText"):
             widget.setText(text)
+        elif hasattr(widget, "_label") and hasattr(widget._label, "setText"):
+            widget._label.setText(text)
 
     def _update_recent_projects(self) -> None:
         from core.project_manager import get_recent_projects
