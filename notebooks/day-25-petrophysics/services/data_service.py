@@ -1107,7 +1107,7 @@ th {{ background: #F8FBFE; }}
             self._render_message_figure(frame, "Distribution Viewer", f"No valid numeric samples found for {curve}.")
             return
 
-        fig, axes = plt.subplots(2, 1, figsize=(8.5, 5.6), constrained_layout=True)
+        fig, axes = plt.subplots(1, 2, figsize=(11, 4.6), constrained_layout=True)
         axes[0].hist(series, bins=24, color="#2A6FD4", alpha=0.85, edgecolor="white")
         axes[0].set_title(f"Histogram of {curve}")
         axes[0].set_xlabel(curve)

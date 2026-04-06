@@ -1,0 +1,2720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BoreholeImageAnalysis</class>
+ <widget class="QMainWindow" name="BoreholeImageAnalysis">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1680</width>
+    <height>980</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PetroSight Pro — Borehole Image Analysis  |  v3.1.0</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ═══════════════════════════════════════════════
+   PETROSIGHT PRO — BOREHOLE IMAGE ANALYSIS THEME
+   Light / Professional Scientific Palette
+   ═══════════════════════════════════════════════ */
+
+/* ── Global Reset ── */
+QMainWindow, QDialog {
+    background-color: #F0F2F5;
+    color: #1A2332;
+    font-family: "Segoe UI", "SF Pro Text", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
+
+/* ── Menu Bar ── */
+QMenuBar {
+    background-color: #1C2B3A;
+    color: #D0DBE8;
+    padding: 2px 4px;
+    font-size: 12px;
+    spacing: 2px;
+}
+QMenuBar::item {
+    padding: 5px 12px;
+    border-radius: 4px;
+    background: transparent;
+}
+QMenuBar::item:selected,
+QMenuBar::item:pressed {
+    background-color: #2E4560;
+    color: #FFFFFF;
+}
+QMenu {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D0DA;
+    border-radius: 6px;
+    padding: 4px 0px;
+    color: #1A2332;
+}
+QMenu::item {
+    padding: 7px 28px 7px 16px;
+    font-size: 12px;
+}
+QMenu::item:selected {
+    background-color: #E8F0FE;
+    color: #1A73E8;
+}
+QMenu::separator {
+    height: 1px;
+    background: #E0E4EA;
+    margin: 4px 8px;
+}
+
+/* ── Main Tool Bar ── */
+QToolBar#mainToolBar {
+    background-color: #FFFFFF;
+    border-bottom: 2px solid #D6DDE8;
+    padding: 4px 8px;
+    spacing: 3px;
+}
+QToolBar#mainToolBar QToolButton {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: #2C3E50;
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 32px;
+    min-height: 28px;
+}
+QToolBar#mainToolBar QToolButton:hover {
+    background-color: #EBF3FD;
+    border-color: #AAC8F0;
+    color: #1A73E8;
+}
+QToolBar#mainToolBar QToolButton:pressed {
+    background-color: #D2E6FA;
+    border-color: #1A73E8;
+}
+QToolBar#mainToolBar QToolButton:checked {
+    background-color: #1A73E8;
+    border-color: #1558B0;
+    color: #FFFFFF;
+}
+QToolBar#mainToolBar QToolButton:checked:hover {
+    background-color: #1558B0;
+}
+QToolBar#subToolBar {
+    background-color: #F7F9FC;
+    border-bottom: 1px solid #DDE2EA;
+    padding: 3px 8px;
+    spacing: 2px;
+}
+QToolBar#subToolBar QToolButton {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 9px;
+    color: #3D5166;
+    font-size: 11px;
+    min-height: 24px;
+}
+QToolBar#subToolBar QToolButton:hover {
+    background-color: #E4EDF8;
+    border-color: #B0C8E8;
+}
+QToolBar#subToolBar QToolButton:checked {
+    background-color: #D0E4FA;
+    border-color: #1A73E8;
+    color: #1A73E8;
+}
+
+/* ── Tool Bar Separators ── */
+QToolBar::separator {
+    width: 1px;
+    background-color: #D6DDE8;
+    margin: 4px 6px;
+}
+
+/* ── Status Bar ── */
+QStatusBar {
+    background-color: #1C2B3A;
+    color: #8FA8C0;
+    font-size: 11px;
+    border-top: 1px solid #0F1A25;
+    padding: 2px 8px;
+}
+QStatusBar::item {
+    border: none;
+}
+QStatusBar QLabel {
+    color: #8FA8C0;
+    padding: 0 8px;
+    background: transparent;
+}
+
+/* ── Dock Widgets ── */
+QDockWidget {
+    titlebar-close-icon: none;
+    titlebar-normal-icon: none;
+    color: #1A2332;
+}
+QDockWidget::title {
+    background-color: #2C3E50;
+    color: #FFFFFF;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ── Panels / Frames ── */
+QFrame#leftPanel {
+    background-color: #FFFFFF;
+    border-right: 1px solid #D6DDE8;
+    min-width: 235px;
+    max-width: 270px;
+}
+QFrame#rightPanel {
+    background-color: #FFFFFF;
+    border-left: 1px solid #D6DDE8;
+    min-width: 230px;
+    max-width: 270px;
+}
+QFrame#centerPanel {
+    background-color: #F0F2F5;
+}
+QFrame#bottomPanel {
+    background-color: #FFFFFF;
+    border-top: 1px solid #D6DDE8;
+    min-height: 190px;
+    max-height: 280px;
+}
+QFrame#sectionHeader {
+    background-color: #EAF0F8;
+    border-bottom: 1px solid #C8D6E8;
+    border-top: 1px solid #C8D6E8;
+    padding: 0px;
+    max-height: 26px;
+    min-height: 26px;
+}
+QFrame#infoBar {
+    background-color: #1C2B3A;
+    min-height: 28px;
+    max-height: 28px;
+}
+QFrame#azimuthHeader {
+    background-color: #2C3E50;
+    min-height: 22px;
+    max-height: 22px;
+}
+QFrame#depthTrack {
+    background-color: #EEF2F7;
+    border-right: 1px solid #C8D0DA;
+    min-width: 58px;
+    max-width: 58px;
+}
+QFrame#canvasFrame {
+    background-color: #D8E0EA;
+}
+QFrame#roseDiagramFrame {
+    background-color: #F5F7FA;
+    border: 1px solid #D6DDE8;
+    border-radius: 4px;
+    min-height: 180px;
+    max-height: 200px;
+}
+QFrame#statCard {
+    background-color: #F5F7FA;
+    border: 1px solid #D6DDE8;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+/* ── Scroll Areas ── */
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+QScrollBar:vertical {
+    background-color: #F0F2F5;
+    width: 10px;
+    margin: 0px;
+    border-radius: 5px;
+}
+QScrollBar::handle:vertical {
+    background-color: #B0BEC8;
+    border-radius: 5px;
+    min-height: 24px;
+}
+QScrollBar::handle:vertical:hover {
+    background-color: #8FA0B0;
+}
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+QScrollBar:horizontal {
+    background-color: #F0F2F5;
+    height: 10px;
+    border-radius: 5px;
+}
+QScrollBar::handle:horizontal {
+    background-color: #B0BEC8;
+    border-radius: 5px;
+    min-width: 24px;
+}
+QScrollBar::handle:horizontal:hover {
+    background-color: #8FA0B0;
+}
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* ── Section Labels ── */
+QLabel#sectionLabel {
+    color: #2C3E50;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.0px;
+    text-transform: uppercase;
+    padding: 0 8px;
+    background: transparent;
+}
+QLabel#fieldLabel {
+    color: #546E7A;
+    font-size: 11px;
+    font-weight: 500;
+}
+QLabel#valueLabel {
+    color: #1A2332;
+    font-size: 11px;
+    font-weight: 600;
+}
+QLabel#depthIndicator {
+    color: #1A73E8;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
+    background-color: #E8F0FE;
+    border: 1px solid #A8C8F8;
+    border-radius: 4px;
+    padding: 3px 10px;
+}
+QLabel#coordinateLabel {
+    color: #A0B4C8;
+    font-size: 10px;
+    font-family: "JetBrains Mono", "Consolas", monospace;
+    padding: 0 6px;
+    background: transparent;
+}
+QLabel#azimuthCompassLabel {
+    color: #AAC0D0;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: transparent;
+}
+
+/* ── Group Boxes ── */
+QGroupBox {
+    background-color: transparent;
+    border: 1px solid #D0D8E4;
+    border-radius: 5px;
+    margin-top: 16px;
+    padding: 8px 6px 6px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #2C3E50;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    top: 2px;
+    padding: 0 4px;
+    background-color: #FFFFFF;
+    color: #34495E;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ── Line Edits ── */
+QLineEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D0DA;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #1A2332;
+    font-size: 11px;
+    selection-background-color: #1A73E8;
+    selection-color: #FFFFFF;
+}
+QLineEdit:focus {
+    border-color: #1A73E8;
+    background-color: #F8FBFF;
+}
+QLineEdit:read-only {
+    background-color: #F0F4F8;
+    color: #546E7A;
+    border-color: #D6DDE8;
+}
+
+/* ── Combo Boxes ── */
+QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D0DA;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #1A2332;
+    font-size: 11px;
+    min-height: 26px;
+}
+QComboBox:hover {
+    border-color: #7AAAD8;
+}
+QComboBox:focus {
+    border-color: #1A73E8;
+}
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+    padding-right: 4px;
+}
+QComboBox::down-arrow {
+    image: none;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid #7090A8;
+    border-bottom: 2px solid #7090A8;
+    transform: rotate(-45deg);
+    margin-right: 4px;
+}
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D0DA;
+    selection-background-color: #E8F0FE;
+    selection-color: #1A73E8;
+    outline: none;
+    padding: 2px;
+}
+
+/* ── Spin Boxes ── */
+QDoubleSpinBox, QSpinBox {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D0DA;
+    border-radius: 4px;
+    padding: 4px 6px;
+    color: #1A2332;
+    font-size: 11px;
+    min-height: 24px;
+}
+QDoubleSpinBox:focus, QSpinBox:focus {
+    border-color: #1A73E8;
+    background-color: #F8FBFF;
+}
+
+/* ── Sliders ── */
+QSlider::groove:horizontal {
+    height: 4px;
+    background-color: #D0DAE4;
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    background-color: #1A73E8;
+    border: 2px solid #FFFFFF;
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    margin: -5px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.20);
+}
+QSlider::sub-page:horizontal {
+    background-color: #1A73E8;
+    border-radius: 2px;
+}
+QSlider::groove:vertical {
+    width: 4px;
+    background-color: #D0DAE4;
+    border-radius: 2px;
+}
+QSlider::handle:vertical {
+    background-color: #1A73E8;
+    border: 2px solid #FFFFFF;
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    margin: 0 -5px;
+}
+QSlider::sub-page:vertical {
+    background-color: #1A73E8;
+    border-radius: 2px;
+}
+
+/* ── Check Boxes ── */
+QCheckBox {
+    color: #2C3E50;
+    font-size: 11px;
+    spacing: 6px;
+}
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid #B0BEC8;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+}
+QCheckBox::indicator:checked {
+    background-color: #1A73E8;
+    border-color: #1A73E8;
+}
+QCheckBox::indicator:hover {
+    border-color: #7AAAD8;
+}
+
+/* ── Radio Buttons ── */
+QRadioButton {
+    color: #2C3E50;
+    font-size: 11px;
+    spacing: 6px;
+}
+QRadioButton::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #B0BEC8;
+    border-radius: 7px;
+    background-color: #FFFFFF;
+}
+QRadioButton::indicator:checked {
+    background-color: #1A73E8;
+    border-color: #1A73E8;
+}
+
+/* ── Push Buttons ── */
+QPushButton {
+    background-color: #FFFFFF;
+    border: 1px solid #C0CCD8;
+    border-radius: 5px;
+    padding: 5px 14px;
+    color: #2C3E50;
+    font-size: 11px;
+    font-weight: 500;
+    min-height: 28px;
+}
+QPushButton:hover {
+    background-color: #EBF3FD;
+    border-color: #7AAAD8;
+    color: #1A73E8;
+}
+QPushButton:pressed {
+    background-color: #D2E6FA;
+    border-color: #1A73E8;
+}
+QPushButton#primaryBtn {
+    background-color: #1A73E8;
+    border-color: #1558B0;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+QPushButton#primaryBtn:hover {
+    background-color: #1558B0;
+    border-color: #0D4490;
+    color: #FFFFFF;
+}
+QPushButton#dangerBtn {
+    background-color: #FFFFFF;
+    border: 1px solid #E05252;
+    color: #C0392B;
+    font-weight: 500;
+}
+QPushButton#dangerBtn:hover {
+    background-color: #FDF0EE;
+    border-color: #C0392B;
+    color: #A93226;
+}
+QPushButton#accentBtn {
+    background-color: #27AE60;
+    border-color: #1E8449;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+QPushButton#accentBtn:hover {
+    background-color: #1E8449;
+    border-color: #196F3D;
+    color: #FFFFFF;
+}
+QPushButton#flatBtn {
+    background-color: transparent;
+    border: none;
+    color: #1A73E8;
+    font-size: 11px;
+    padding: 4px 8px;
+}
+QPushButton#flatBtn:hover {
+    background-color: #EBF3FD;
+    border-radius: 4px;
+}
+QPushButton#iconBtn {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px;
+    min-width: 26px;
+    max-width: 26px;
+    min-height: 26px;
+    max-height: 26px;
+}
+QPushButton#iconBtn:hover {
+    background-color: #EBF3FD;
+    border-color: #AAC8F0;
+}
+
+/* ── Graphics View ── */
+QGraphicsView {
+    background-color: #1A2332;
+    border: none;
+    selection-background-color: transparent;
+}
+QGraphicsView#depthTrackView {
+    background-color: #EEF2F7;
+    border: none;
+}
+
+/* ── Table Widget ── */
+QTableWidget {
+    background-color: #FFFFFF;
+    alternate-background-color: #F5F8FC;
+    gridline-color: #E4EAF2;
+    border: none;
+    color: #1A2332;
+    font-size: 11px;
+    selection-background-color: #D6E8FA;
+    selection-color: #1A2332;
+    outline: none;
+}
+QTableWidget::item {
+    padding: 4px 8px;
+    border: none;
+}
+QTableWidget::item:selected {
+    background-color: #D6E8FA;
+    color: #1A2332;
+}
+QHeaderView::section {
+    background-color: #2C3E50;
+    color: #C8D8E8;
+    padding: 6px 8px;
+    border: none;
+    border-right: 1px solid #3D5166;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+QHeaderView::section:hover {
+    background-color: #34495E;
+    color: #FFFFFF;
+}
+QHeaderView::section:checked {
+    background-color: #1A73E8;
+    color: #FFFFFF;
+}
+QTableWidget QTableCornerButton::section {
+    background-color: #2C3E50;
+    border: none;
+}
+
+/* ── Splitter ── */
+QSplitter::handle {
+    background-color: #D6DDE8;
+}
+QSplitter::handle:hover {
+    background-color: #7AAAD8;
+}
+QSplitter::handle:horizontal {
+    width: 3px;
+}
+QSplitter::handle:vertical {
+    height: 3px;
+}
+
+/* ── Progress Bar ── */
+QProgressBar {
+    background-color: #E4EAF2;
+    border: none;
+    border-radius: 3px;
+    height: 6px;
+    text-align: center;
+    font-size: 9px;
+    color: transparent;
+}
+QProgressBar::chunk {
+    background-color: #1A73E8;
+    border-radius: 3px;
+}
+
+/* ── Tab Widget ── */
+QTabWidget::pane {
+    border: 1px solid #D0D8E4;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+}
+QTabBar::tab {
+    background-color: #F0F2F5;
+    border: 1px solid #D0D8E4;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 5px 14px;
+    color: #546E7A;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 2px;
+}
+QTabBar::tab:selected {
+    background-color: #FFFFFF;
+    color: #1A73E8;
+    font-weight: 600;
+    border-color: #D0D8E4;
+}
+QTabBar::tab:hover {
+    background-color: #EBF3FD;
+    color: #1A73E8;
+}
+
+/* ── ToolTip ── */
+QToolTip {
+    background-color: #2C3E50;
+    color: #D0E0F0;
+    border: 1px solid #3D5166;
+    border-radius: 4px;
+    padding: 5px 9px;
+    font-size: 11px;
+}
+
+/* ── LCD Number ── */
+QLCDNumber {
+    background-color: #0F1A25;
+    color: #1A73E8;
+    border: 1px solid #2C3E50;
+    border-radius: 3px;
+}
+   </string>
+  </property>
+
+  <!-- ═══════════════════════════════
+       MENU BAR
+       ═══════════════════════════════ -->
+  <widget class="QMenuBar" name="menuBar">
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>File</string></property>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionSaveProject"/>
+    <addaction name="actionSaveProjectAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionImportLAS"/>
+    <addaction name="actionImportDLIS"/>
+    <addaction name="actionImportSEGY"/>
+    <addaction name="actionImportCSV"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportPicks"/>
+    <addaction name="actionExportReport"/>
+    <addaction name="actionExportImage"/>
+    <addaction name="separator"/>
+    <addaction name="actionRecentFiles"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title"><string>Edit</string></property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
+    <addaction name="actionDeleteSelected"/>
+    <addaction name="actionClearAllPicks"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title"><string>View</string></property>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="actionFitToWindow"/>
+    <addaction name="actionActualSize"/>
+    <addaction name="separator"/>
+    <addaction name="actionToggleDepthTrack"/>
+    <addaction name="actionToggleAzimuthHeader"/>
+    <addaction name="actionToggleStatisticsPanel"/>
+    <addaction name="actionTogglePicksTable"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
+   </widget>
+   <widget class="QMenu" name="menuAnalysis">
+    <property name="title"><string>Analysis</string></property>
+    <addaction name="actionAutoDetectBedding"/>
+    <addaction name="actionAutoDetectFractures"/>
+    <addaction name="actionRunMLPicking"/>
+    <addaction name="separator"/>
+    <addaction name="actionDipStatistics"/>
+    <addaction name="actionRoseDiagram"/>
+    <addaction name="actionStereonet"/>
+    <addaction name="actionFractureDensity"/>
+    <addaction name="separator"/>
+    <addaction name="actionCaliperCorrection"/>
+    <addaction name="actionSpeedCorrection"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title"><string>Tools</string></property>
+    <addaction name="actionDepthShift"/>
+    <addaction name="actionWellDeviation"/>
+    <addaction name="actionBHATVCorrection"/>
+    <addaction name="separator"/>
+    <addaction name="actionColorPalette"/>
+    <addaction name="actionScriptEditor"/>
+    <addaction name="actionBatchProcess"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title"><string>Help</string></property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionKeyboardShortcuts"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuAnalysis"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+
+  <!-- ═══════════════════════════════
+       MAIN TOOLBAR
+       ═══════════════════════════════ -->
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle"><string>Main Toolbar</string></property>
+   <property name="movable"><bool>false</bool></property>
+   <property name="floatable"><bool>false</bool></property>
+   <property name="iconSize">
+    <size><width>18</width><height>18</height></size>
+   </property>
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+
+   <!-- File Operations -->
+   <widget class="QToolButton" name="btnNewProject">
+    <property name="text"><string>⊕ New</string></property>
+    <property name="toolTip"><string>New Project (Ctrl+N)</string></property>
+    <property name="shortcut"><string>Ctrl+N</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnOpenProject">
+    <property name="text"><string>📂 Open</string></property>
+    <property name="toolTip"><string>Open Project (Ctrl+O)</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnSaveProject">
+    <property name="text"><string>💾 Save</string></property>
+    <property name="toolTip"><string>Save Project (Ctrl+S)</string></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Import -->
+   <widget class="QToolButton" name="btnImportLAS">
+    <property name="text"><string>↓ Import LAS</string></property>
+    <property name="toolTip"><string>Import LAS / LAS 3.0 File</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnImportDLIS">
+    <property name="text"><string>↓ Import DLIS</string></property>
+    <property name="toolTip"><string>Import DLIS Borehole Image File</string></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Colormap -->
+   <widget class="QLabel" name="lblColormapTB">
+    <property name="text"><string>Colormap:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 4px;</string></property>
+   </widget>
+   <widget class="QComboBox" name="cbColormap">
+    <property name="toolTip"><string>Image Colormap</string></property>
+    <property name="minimumWidth"><number>120</number></property>
+    <item><property name="text"><string>Rainbow (Standard)</string></property></item>
+    <item><property name="text"><string>Grayscale</string></property></item>
+    <item><property name="text"><string>Jet</string></property></item>
+    <item><property name="text"><string>Hot / Cool</string></property></item>
+    <item><property name="text"><string>Seismic</string></property></item>
+    <item><property name="text"><string>Viridis</string></property></item>
+    <item><property name="text"><string>Magma</string></property></item>
+    <item><property name="text"><string>Copper</string></property></item>
+    <item><property name="text"><string>Custom…</string></property></item>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Enhancement -->
+   <widget class="QLabel" name="lblEnhanceTB">
+    <property name="text"><string>Enhancement:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 4px;</string></property>
+   </widget>
+   <widget class="QComboBox" name="cbEnhancement">
+    <property name="toolTip"><string>Image Enhancement Algorithm</string></property>
+    <property name="minimumWidth"><number>140</number></property>
+    <item><property name="text"><string>None (Raw)</string></property></item>
+    <item><property name="text"><string>Histogram Equalization</string></property></item>
+    <item><property name="text"><string>CLAHE (Adaptive)</string></property></item>
+    <item><property name="text"><string>Gaussian Sharpening</string></property></item>
+    <item><property name="text"><string>Edge Enhancement</string></property></item>
+    <item><property name="text"><string>Median Smoothing</string></property></item>
+    <item><property name="text"><string>Dynamic Normalization</string></property></item>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Zoom / Navigation -->
+   <widget class="QToolButton" name="btnZoomIn">
+    <property name="text"><string>⊕ Zoom In</string></property>
+    <property name="toolTip"><string>Zoom In (Ctrl++)</string></property>
+    <property name="shortcut"><string>Ctrl++</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnZoomOut">
+    <property name="text"><string>⊖ Zoom Out</string></property>
+    <property name="toolTip"><string>Zoom Out (Ctrl+-)</string></property>
+    <property name="shortcut"><string>Ctrl+-</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnFitWindow">
+    <property name="text"><string>⊡ Fit</string></property>
+    <property name="toolTip"><string>Fit to Window (Ctrl+0)</string></property>
+    <property name="shortcut"><string>Ctrl+0</string></property>
+   </widget>
+
+   <!-- Depth Scale -->
+   <widget class="QLabel" name="lblDepthScaleTB">
+    <property name="text"><string>px/m:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 4px;</string></property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="sbPixelsPerMeter">
+    <property name="toolTip"><string>Pixels per Meter (Depth Scale)</string></property>
+    <property name="minimum"><double>5.0</double></property>
+    <property name="maximum"><double>500.0</double></property>
+    <property name="value"><double>50.0</double></property>
+    <property name="singleStep"><double>5.0</double></property>
+    <property name="decimals"><number>1</number></property>
+    <property name="minimumWidth"><number>70</number></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Picking Tools -->
+   <widget class="QToolButton" name="btnPan">
+    <property name="text"><string>✥ Pan</string></property>
+    <property name="toolTip"><string>Pan / Navigate (V)</string></property>
+    <property name="shortcut"><string>V</string></property>
+    <property name="checkable"><bool>true</bool></property>
+    <property name="checked"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnPickFracture">
+    <property name="text"><string>⟠ Fracture</string></property>
+    <property name="toolTip"><string>Pick Fracture (F)</string></property>
+    <property name="shortcut"><string>F</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnPickBedding">
+    <property name="text"><string>≡ Bedding</string></property>
+    <property name="toolTip"><string>Pick Bedding Plane (B)</string></property>
+    <property name="shortcut"><string>B</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnPickFault">
+    <property name="text"><string>⚡ Fault</string></property>
+    <property name="toolTip"><string>Pick Fault (T)</string></property>
+    <property name="shortcut"><string>T</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnPickVug">
+    <property name="text"><string>◉ Vug</string></property>
+    <property name="toolTip"><string>Pick Vug / Cavity (G)</string></property>
+    <property name="shortcut"><string>G</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnPickInduced">
+    <property name="text"><string>⟆ Induced</string></property>
+    <property name="toolTip"><string>Pick Induced Feature (I)</string></property>
+    <property name="shortcut"><string>I</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Units -->
+   <widget class="QLabel" name="lblUnitsTB">
+    <property name="text"><string>Units:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 4px;</string></property>
+   </widget>
+   <widget class="QComboBox" name="cbDepthUnits">
+    <property name="toolTip"><string>Depth Units</string></property>
+    <property name="minimumWidth"><number>68</number></property>
+    <item><property name="text"><string>m (MD)</string></property></item>
+    <item><property name="text"><string>ft (MD)</string></property></item>
+    <item><property name="text"><string>m (TVD)</string></property></item>
+    <item><property name="text"><string>ft (TVD)</string></property></item>
+   </widget>
+
+   <!-- Spacer -->
+   <widget class="QWidget" name="tbSpacer">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>1</horstretch><verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+   </widget>
+
+   <!-- Depth Readout -->
+   <widget class="QLabel" name="lblDepthIndicator">
+    <property name="objectName"><string>depthIndicator</string></property>
+    <property name="text"><string>  MD: —.—— m  </string></property>
+    <property name="toolTip"><string>Current cursor depth</string></property>
+    <property name="alignment"><set>AlignVCenter|AlignHCenter</set></property>
+   </widget>
+
+   <widget class="QFrame" name="tbVSep1">
+    <property name="frameShape"><enum>QFrame::VLine</enum></property>
+    <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+    <property name="styleSheet"><string>color:#C0CCD8;</string></property>
+   </widget>
+
+   <!-- Export -->
+   <widget class="QToolButton" name="btnExportReport">
+    <property name="text"><string>⬆ Export Report</string></property>
+    <property name="toolTip"><string>Generate PDF/Excel Report</string></property>
+    <property name="styleSheet"><string>
+     background-color:#1A73E8;border:1px solid #1558B0;
+     color:#FFFFFF;font-weight:600;border-radius:5px;
+     padding:5px 12px;
+    </string></property>
+   </widget>
+  </widget>
+
+  <!-- ═══════════════════════════════
+       SUB TOOLBAR (View Controls)
+       ═══════════════════════════════ -->
+  <widget class="QToolBar" name="subToolBar">
+   <property name="windowTitle"><string>View Toolbar</string></property>
+   <property name="movable"><bool>false</bool></property>
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+
+   <widget class="QLabel" name="lblViewMode">
+    <property name="text"><string>View:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 6px;</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnViewUnwrapped">
+    <property name="text"><string>Unwrapped</string></property>
+    <property name="toolTip"><string>Unwrapped 360° View</string></property>
+    <property name="checkable"><bool>true</bool></property>
+    <property name="checked"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnView3D">
+    <property name="text"><string>3D Cylinder</string></property>
+    <property name="toolTip"><string>3D Cylindrical View</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnViewCross">
+    <property name="text"><string>Cross-Section</string></property>
+    <property name="toolTip"><string>Cross-Section View</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <widget class="QLabel" name="lblOrientTB">
+    <property name="text"><string>Orientation:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 4px;</string></property>
+   </widget>
+   <widget class="QToolButton" name="btnOrientNorth">
+    <property name="text"><string>N-up</string></property>
+    <property name="toolTip"><string>North-up Orientation</string></property>
+    <property name="checkable"><bool>true</bool></property>
+    <property name="checked"><bool>true</bool></property>
+   </widget>
+   <widget class="QToolButton" name="btnOrientTop">
+    <property name="text"><string>Top-up</string></property>
+    <property name="toolTip"><string>Shallowest depth at top</string></property>
+    <property name="checkable"><bool>true</bool></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Image Channels -->
+   <widget class="QLabel" name="lblChannelTB">
+    <property name="text"><string>Channel:</string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:11px;padding:0 4px;</string></property>
+   </widget>
+   <widget class="QComboBox" name="cbImageChannel">
+    <property name="minimumWidth"><number>140</number></property>
+    <item><property name="text"><string>All Pads (Merged)</string></property></item>
+    <item><property name="text"><string>Pad 1 (000°)</string></property></item>
+    <item><property name="text"><string>Pad 2 (090°)</string></property></item>
+    <item><property name="text"><string>Pad 3 (180°)</string></property></item>
+    <item><property name="text"><string>Pad 4 (270°)</string></property></item>
+    <item><property name="text"><string>Amplitude</string></property></item>
+    <item><property name="text"><string>Phase</string></property></item>
+    <item><property name="text"><string>Coherence</string></property></item>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- Overlay Picks -->
+   <widget class="QCheckBox" name="chkShowPicks">
+    <property name="text"><string>Show Picks</string></property>
+    <property name="checked"><bool>true</bool></property>
+   </widget>
+   <widget class="QCheckBox" name="chkShowSinusoids">
+    <property name="text"><string>Sinusoids</string></property>
+    <property name="checked"><bool>true</bool></property>
+   </widget>
+   <widget class="QCheckBox" name="chkShowDepthGrid">
+    <property name="text"><string>Depth Grid</string></property>
+    <property name="checked"><bool>true</bool></property>
+   </widget>
+   <widget class="QCheckBox" name="chkShowAnnotations">
+    <property name="text"><string>Annotations</string></property>
+    <property name="checked"><bool>false</bool></property>
+   </widget>
+   <addaction name="separator"/>
+
+   <!-- ML Auto-Pick -->
+   <widget class="QToolButton" name="btnMLAutoPick">
+    <property name="text"><string>⚙ ML Auto-Pick</string></property>
+    <property name="toolTip"><string>Run machine-learning automatic feature detection</string></property>
+    <property name="styleSheet"><string>
+     color:#7B3FC4;border:1px solid #B07FE8;
+     background:#F5EEFE;border-radius:4px;font-weight:600;
+    </string></property>
+   </widget>
+
+   <!-- Spacer -->
+   <widget class="QWidget" name="subTBSpacer">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>1</horstretch><verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+   </widget>
+
+   <!-- Progress -->
+   <widget class="QProgressBar" name="pbProcessing">
+    <property name="visible"><bool>false</bool></property>
+    <property name="value"><number>0</number></property>
+    <property name="maximum"><number>100</number></property>
+    <property name="minimumWidth"><number>180</number></property>
+    <property name="maximumWidth"><number>220</number></property>
+    <property name="textVisible"><bool>false</bool></property>
+    <property name="toolTip"><string>Processing progress</string></property>
+   </widget>
+   <widget class="QLabel" name="lblProcessingStatus">
+    <property name="text"><string></string></property>
+    <property name="styleSheet"><string>color:#546E7A;font-size:10px;padding:0 6px;</string></property>
+   </widget>
+  </widget>
+
+  <!-- ═══════════════════════════════
+       STATUS BAR
+       ═══════════════════════════════ -->
+  <widget class="QStatusBar" name="statusBar">
+   <widget class="QLabel" name="lblStatusMsg">
+    <property name="text"><string>Ready</string></property>
+    <property name="styleSheet"><string>color:#8FA8C0;</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusDepth">
+    <property name="text"><string>Depth: —</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusAzimuth">
+    <property name="text"><string>Az: —°</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusDip">
+    <property name="text"><string>Dip: —°</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusPixel">
+    <property name="text"><string>Value: —</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusPicks">
+    <property name="text"><string>Picks: 0</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusZoom">
+    <property name="text"><string>Zoom: 100%</string></property>
+   </widget>
+   <widget class="QLabel" name="lblStatusWell">
+    <property name="text"><string>No well loaded</string></property>
+   </widget>
+  </widget>
+
+  <!-- ═══════════════════════════════
+       CENTRAL WIDGET + MAIN SPLITTER
+       ═══════════════════════════════ -->
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="mainVLayout">
+    <property name="spacing"><number>0</number></property>
+    <property name="contentsMargins">
+     <rect><x>0</x><y>0</y><width>0</width><height>0</height></rect>
+    </property>
+    <item>
+     <widget class="QSplitter" name="mainSplitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+      <property name="childrenCollapsible"><bool>false</bool></property>
+
+      <!-- ─────────────────────────────
+           LEFT PANEL
+           ───────────────────────────── -->
+      <widget class="QFrame" name="leftPanel">
+       <layout class="QVBoxLayout" name="leftVLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins">
+         <rect><x>0</x><y>0</y><width>0</width><height>0</height></rect>
+        </property>
+
+        <!-- Well Information -->
+        <item>
+         <widget class="QFrame" name="sectionHeaderWell">
+          <property name="objectName"><string>sectionHeader</string></property>
+          <layout class="QHBoxLayout" name="hdrWellLayout">
+           <property name="contentsMargins">
+            <rect><x>8</x><y>0</y><width>8</width><height>0</height></rect>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblSecWell">
+             <property name="objectName"><string>sectionLabel</string></property>
+             <property name="text"><string>WELL INFORMATION</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>0</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+        <item>
+         <widget class="QScrollArea" name="leftScrollArea">
+          <property name="widgetResizable"><bool>true</bool></property>
+          <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+          <widget class="QWidget" name="leftScrollContents">
+           <layout class="QVBoxLayout" name="leftContentLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins">
+             <rect><x>8</x><y>8</y><width>8</width><height>8</height></rect>
+            </property>
+
+            <!-- Well Info Group -->
+            <item>
+             <widget class="QGroupBox" name="gbWellInfo">
+              <property name="title"><string>Well Metadata</string></property>
+              <layout class="QFormLayout" name="frmWellInfo">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="fieldGrowthPolicy"><enum>QFormLayout::AllNonFixedFieldsGrow</enum></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblWellName">
+                 <property name="text"><string>Well Name:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="leWellName">
+                 <property name="placeholderText"><string>e.g. WELL-A-01</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblField">
+                 <property name="text"><string>Field:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="leField">
+                 <property name="placeholderText"><string>Field / Block</string></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblCountry">
+                 <property name="text"><string>Country:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="leCountry">
+                 <property name="placeholderText"><string>Country / Basin</string></property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="lblOperator">
+                 <property name="text"><string>Operator:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="leOperator">
+                 <property name="placeholderText"><string>Operating Company</string></property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="lblToolType">
+                 <property name="text"><string>Tool Type:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QComboBox" name="cbToolType">
+                 <item><property name="text"><string>FMI (Schlumberger)</string></property></item>
+                 <item><property name="text"><string>FMS (Schlumberger)</string></property></item>
+                 <item><property name="text"><string>OBMI (Schlumberger)</string></property></item>
+                 <item><property name="text"><string>STAR (Halliburton)</string></property></item>
+                 <item><property name="text"><string>XRMI (Halliburton)</string></property></item>
+                 <item><property name="text"><string>RAB / GVR</string></property></item>
+                 <item><property name="text"><string>ARI (Schlumberger)</string></property></item>
+                 <item><property name="text"><string>UBI (Schlumberger)</string></property></item>
+                 <item><property name="text"><string>Custom</string></property></item>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="lblRunDate">
+                 <property name="text"><string>Run Date:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="leRunDate">
+                 <property name="placeholderText"><string>YYYY-MM-DD</string></property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="lblBitSize">
+                 <property name="text"><string>Bit Size:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QDoubleSpinBox" name="sbBitSize">
+                 <property name="suffix"><string>" (in)</string></property>
+                 <property name="minimum"><double>3.0</double></property>
+                 <property name="maximum"><double>36.0</double></property>
+                 <property name="value"><double>8.5</double></property>
+                 <property name="singleStep"><double>0.5</double></property>
+                 <property name="decimals"><number>3</number></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Depth Range Group -->
+            <item>
+             <widget class="QGroupBox" name="gbDepthRange">
+              <property name="title"><string>Depth Navigation</string></property>
+              <layout class="QFormLayout" name="frmDepth">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblTopDepth">
+                 <property name="text"><string>Top Depth:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="sbTopDepth">
+                 <property name="suffix"><string> m</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>20000.0</double></property>
+                 <property name="value"><double>1000.0</double></property>
+                 <property name="decimals"><number>2</number></property>
+                 <property name="singleStep"><double>1.0</double></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblBottomDepth">
+                 <property name="text"><string>Base Depth:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="sbBottomDepth">
+                 <property name="suffix"><string> m</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>20000.0</double></property>
+                 <property name="value"><double>1100.0</double></property>
+                 <property name="decimals"><number>2</number></property>
+                 <property name="singleStep"><double>1.0</double></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblGotoDepth">
+                 <property name="text"><string>Go To:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <layout class="QHBoxLayout" name="hGotoLayout">
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sbGotoDepth">
+                   <property name="suffix"><string> m</string></property>
+                   <property name="minimum"><double>0.0</double></property>
+                   <property name="maximum"><double>20000.0</double></property>
+                   <property name="value"><double>1050.0</double></property>
+                   <property name="decimals"><number>2</number></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnGotoDepth">
+                   <property name="text"><string>Go</string></property>
+                   <property name="objectName"><string>primaryBtn</string></property>
+                   <property name="maximumWidth"><number>38</number></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="lblWindowSize">
+                 <property name="text"><string>Window:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDoubleSpinBox" name="sbWindowSize">
+                 <property name="suffix"><string> m</string></property>
+                 <property name="minimum"><double>1.0</double></property>
+                 <property name="maximum"><double>500.0</double></property>
+                 <property name="value"><double>20.0</double></property>
+                 <property name="decimals"><number>1</number></property>
+                 <property name="singleStep"><double>5.0</double></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Image Enhancement Group -->
+            <item>
+             <widget class="QGroupBox" name="gbEnhancement">
+              <property name="title"><string>Image Enhancement</string></property>
+              <layout class="QVBoxLayout" name="vEnhLayout">
+               <property name="spacing"><number>6</number></property>
+
+               <item>
+                <layout class="QFormLayout" name="frmEnhance">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lblBrightness">
+                   <property name="text"><string>Brightness:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSlider" name="slBrightness">
+                   <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   <property name="minimum"><number>-100</number></property>
+                   <property name="maximum"><number>100</number></property>
+                   <property name="value"><number>0</number></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="lblContrast">
+                   <property name="text"><string>Contrast:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSlider" name="slContrast">
+                   <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   <property name="minimum"><number>-100</number></property>
+                   <property name="maximum"><number>100</number></property>
+                   <property name="value"><number>0</number></property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="lblGamma">
+                   <property name="text"><string>Gamma:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSlider" name="slGamma">
+                   <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   <property name="minimum"><number>10</number></property>
+                   <property name="maximum"><number>300</number></property>
+                   <property name="value"><number>100</number></property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="lblSharpness">
+                   <property name="text"><string>Sharpness:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QSlider" name="slSharpness">
+                   <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   <property name="minimum"><number>0</number></property>
+                   <property name="maximum"><number>100</number></property>
+                   <property name="value"><number>0</number></property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="lblClipMin">
+                   <property name="text"><string>Clip Min %:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QDoubleSpinBox" name="sbClipMin">
+                   <property name="suffix"><string>%</string></property>
+                   <property name="minimum"><double>0.0</double></property>
+                   <property name="maximum"><double>10.0</double></property>
+                   <property name="value"><double>0.5</double></property>
+                   <property name="singleStep"><double>0.5</double></property>
+                   <property name="decimals"><number>1</number></property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="lblClipMax">
+                   <property name="text"><string>Clip Max %:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QDoubleSpinBox" name="sbClipMax">
+                   <property name="suffix"><string>%</string></property>
+                   <property name="minimum"><double>90.0</double></property>
+                   <property name="maximum"><double>100.0</double></property>
+                   <property name="value"><double>99.5</double></property>
+                   <property name="singleStep"><double>0.5</double></property>
+                   <property name="decimals"><number>1</number></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+
+               <item>
+                <widget class="QPushButton" name="btnResetEnhancement">
+                 <property name="text"><string>↺ Reset Enhancement</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Sinusoid Parameters -->
+            <item>
+             <widget class="QGroupBox" name="gbSinusoid">
+              <property name="title"><string>Sinusoid Overlay</string></property>
+              <layout class="QFormLayout" name="frmSinusoid">
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblDipAngle">
+                 <property name="text"><string>Dip Angle:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="sbDipAngle">
+                 <property name="suffix"><string>°</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>90.0</double></property>
+                 <property name="value"><double>25.0</double></property>
+                 <property name="decimals"><number>1</number></property>
+                 <property name="singleStep"><double>0.5</double></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblDipAzimuth">
+                 <property name="text"><string>Dip Azimuth:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="sbDipAzimuth">
+                 <property name="suffix"><string>°</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>359.9</double></property>
+                 <property name="value"><double>90.0</double></property>
+                 <property name="decimals"><number>1</number></property>
+                 <property name="singleStep"><double>1.0</double></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblSinLineColor">
+                 <property name="text"><string>Line Color:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="cbSinusoidColor">
+                 <item><property name="text"><string>Red</string></property></item>
+                 <item><property name="text"><string>Blue</string></property></item>
+                 <item><property name="text"><string>Green</string></property></item>
+                 <item><property name="text"><string>Yellow</string></property></item>
+                 <item><property name="text"><string>White</string></property></item>
+                 <item><property name="text"><string>Black</string></property></item>
+                 <item><property name="text"><string>Custom…</string></property></item>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="lblSinLineWidth">
+                 <property name="text"><string>Line Width:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDoubleSpinBox" name="sbSinusoidWidth">
+                 <property name="suffix"><string> px</string></property>
+                 <property name="minimum"><double>0.5</double></property>
+                 <property name="maximum"><double>5.0</double></property>
+                 <property name="value"><double>1.5</double></property>
+                 <property name="singleStep"><double>0.5</double></property>
+                 <property name="decimals"><number>1</number></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Track Configuration -->
+            <item>
+             <widget class="QGroupBox" name="gbTrackConfig">
+              <property name="title"><string>Track Configuration</string></property>
+              <layout class="QVBoxLayout" name="vTrackConfig">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <widget class="QCheckBox" name="chkShowDepthTrack">
+                 <property name="text"><string>Show Depth Track</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowCaliper">
+                 <property name="text"><string>Overlay Caliper</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowGR">
+                 <property name="text"><string>Overlay GR Curve</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowResistivity">
+                 <property name="text"><string>Overlay Resistivity</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowDeviation">
+                 <property name="text"><string>Show Well Deviation</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="frmTrackScale">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lblTrackDepthStep">
+                   <property name="text"><string>Depth Tick:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="sbDepthTickStep">
+                   <property name="suffix"><string> m</string></property>
+                   <property name="minimum"><double>0.1</double></property>
+                   <property name="maximum"><double>50.0</double></property>
+                   <property name="value"><double>1.0</double></property>
+                   <property name="decimals"><number>1</number></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Bottom Spacer -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property>
+             </spacer>
+            </item>
+
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <!-- END LEFT PANEL -->
+
+      <!-- ─────────────────────────────
+           CENTER PANEL (Canvas)
+           ───────────────────────────── -->
+      <widget class="QFrame" name="centerPanel">
+       <layout class="QVBoxLayout" name="centerVLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins">
+         <rect><x>0</x><y>0</y><width>0</width><height>0</height></rect>
+        </property>
+
+        <!-- Azimuth Header Bar -->
+        <item>
+         <widget class="QFrame" name="azimuthHeader">
+          <layout class="QHBoxLayout" name="azimuthHLayout">
+           <property name="contentsMargins">
+            <rect><x>58</x><y>0</y><width>8</width><height>0</height></rect>
+           </property>
+           <property name="spacing"><number>0</number></property>
+           <item>
+            <widget class="QLabel" name="lblAzN">
+             <property name="objectName"><string>azimuthCompassLabel</string></property>
+             <property name="text"><string>N  0°</string></property>
+             <property name="alignment"><set>AlignLeft|AlignVCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAzE">
+             <property name="objectName"><string>azimuthCompassLabel</string></property>
+             <property name="text"><string>E  90°</string></property>
+             <property name="alignment"><set>AlignHCenter|AlignVCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAzS">
+             <property name="objectName"><string>azimuthCompassLabel</string></property>
+             <property name="text"><string>S  180°</string></property>
+             <property name="alignment"><set>AlignHCenter|AlignVCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAzW">
+             <property name="objectName"><string>azimuthCompassLabel</string></property>
+             <property name="text"><string>W  270°</string></property>
+             <property name="alignment"><set>AlignHCenter|AlignVCenter</set></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAzN2">
+             <property name="objectName"><string>azimuthCompassLabel</string></property>
+             <property name="text"><string>N  360°</string></property>
+             <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+        <!-- Canvas Area: Depth Track + Image View -->
+        <item>
+         <widget class="QFrame" name="canvasFrame">
+          <layout class="QHBoxLayout" name="canvasHLayout">
+           <property name="spacing"><number>0</number></property>
+           <property name="contentsMargins">
+            <rect><x>0</x><y>0</y><width>0</width><height>0</height></rect>
+           </property>
+
+           <!-- Depth Track -->
+           <item>
+            <widget class="QGraphicsView" name="depthTrackView">
+             <property name="objectName"><string>depthTrackView</string></property>
+             <property name="toolTip"><string>Depth Track — shows MD, TVD, and deviation</string></property>
+             <property name="verticalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+             <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+             <property name="renderHints">
+              <set>QPainter::Antialiasing|QPainter::TextAntialiasing|QPainter::SmoothPixmapTransform</set>
+             </property>
+            </widget>
+           </item>
+
+           <!-- Main Image Log Canvas -->
+           <item>
+            <widget class="QGraphicsView" name="imageLogCanvas">
+             <property name="toolTip"><string>Borehole Image Canvas — scroll to navigate depth, drag to pan</string></property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>1</horstretch><verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="renderHints">
+              <set>QPainter::Antialiasing|QPainter::TextAntialiasing|QPainter::SmoothPixmapTransform</set>
+             </property>
+             <property name="dragMode"><enum>QGraphicsView::ScrollHandDrag</enum></property>
+             <property name="transformationAnchor"><enum>QGraphicsView::AnchorUnderMouse</enum></property>
+             <property name="resizeAnchor"><enum>QGraphicsView::AnchorViewCenter</enum></property>
+            </widget>
+           </item>
+
+          </layout>
+         </widget>
+        </item>
+
+        <!-- Info / Coordinate Bar -->
+        <item>
+         <widget class="QFrame" name="infoBar">
+          <layout class="QHBoxLayout" name="infoHLayout">
+           <property name="contentsMargins">
+            <rect><x>8</x><y>0</y><width>8</width><height>0</height></rect>
+           </property>
+           <property name="spacing"><number>0</number></property>
+           <item>
+            <widget class="QLabel" name="lblCoordMD">
+             <property name="objectName"><string>coordinateLabel</string></property>
+             <property name="text"><string>MD: —.—— m</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="infoSep1">
+             <property name="frameShape"><enum>QFrame::VLine</enum></property>
+             <property name="frameShaDow"><enum>QFrame::Sunken</enum></property>
+             <property name="styleSheet"><string>color:#2C3E50;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCoordTVD">
+             <property name="objectName"><string>coordinateLabel</string></property>
+             <property name="text"><string>TVD: —.—— m</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="infoSep2">
+             <property name="frameShape"><enum>QFrame::VLine</enum></property>
+             <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+             <property name="styleSheet"><string>color:#2C3E50;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCoordAzimuth">
+             <property name="objectName"><string>coordinateLabel</string></property>
+             <property name="text"><string>Az: —.—°</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="infoSep3">
+             <property name="frameShape"><enum>QFrame::VLine</enum></property>
+             <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+             <property name="styleSheet"><string>color:#2C3E50;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCoordResistivity">
+             <property name="objectName"><string>coordinateLabel</string></property>
+             <property name="text"><string>R: — Ω·m</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>40</width><height>0</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCursorPickType">
+             <property name="text"><string>Tool: Pan</string></property>
+             <property name="styleSheet"><string>
+              color:#27AE60;font-size:10px;font-weight:700;
+              font-family:'JetBrains Mono','Consolas',monospace;
+              padding:0 8px;
+             </string></property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+      <!-- END CENTER PANEL -->
+
+      <!-- ─────────────────────────────
+           RIGHT PANEL
+           ───────────────────────────── -->
+      <widget class="QFrame" name="rightPanel">
+       <layout class="QVBoxLayout" name="rightVLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins">
+         <rect><x>0</x><y>0</y><width>0</width><height>0</height></rect>
+        </property>
+
+        <!-- Pick Inspector Header -->
+        <item>
+         <widget class="QFrame" name="sectionHeaderInspector">
+          <property name="objectName"><string>sectionHeader</string></property>
+          <layout class="QHBoxLayout" name="hdrInspectorLayout">
+           <property name="contentsMargins">
+            <rect><x>8</x><y>0</y><width>8</width><height>0</height></rect>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblSecInspector">
+             <property name="objectName"><string>sectionLabel</string></property>
+             <property name="text"><string>PICK INSPECTOR</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+        <item>
+         <widget class="QScrollArea" name="rightScrollArea">
+          <property name="widgetResizable"><bool>true</bool></property>
+          <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+          <widget class="QWidget" name="rightScrollContents">
+           <layout class="QVBoxLayout" name="rightContentLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins">
+             <rect><x>8</x><y>8</y><width>8</width><height>8</height></rect>
+            </property>
+
+            <!-- Selected Pick Properties -->
+            <item>
+             <widget class="QGroupBox" name="gbPickProperties">
+              <property name="title"><string>Selected Pick</string></property>
+              <layout class="QFormLayout" name="frmPickProps">
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblPickID">
+                 <property name="text"><string>Pick ID:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="lePickID">
+                 <property name="readOnly"><bool>true</bool></property>
+                 <property name="placeholderText"><string>—</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblPickType">
+                 <property name="text"><string>Type:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="cbPickType">
+                 <item><property name="text"><string>Fracture — Open</string></property></item>
+                 <item><property name="text"><string>Fracture — Closed</string></property></item>
+                 <item><property name="text"><string>Fracture — Partial</string></property></item>
+                 <item><property name="text"><string>Fracture — Induced</string></property></item>
+                 <item><property name="text"><string>Bedding — Plane</string></property></item>
+                 <item><property name="text"><string>Bedding — Lamination</string></property></item>
+                 <item><property name="text"><string>Bedding — Cross-Bed</string></property></item>
+                 <item><property name="text"><string>Fault — Normal</string></property></item>
+                 <item><property name="text"><string>Fault — Reverse</string></property></item>
+                 <item><property name="text"><string>Fault — Strike-Slip</string></property></item>
+                 <item><property name="text"><string>Vug / Cavity</string></property></item>
+                 <item><property name="text"><string>Stylolite</string></property></item>
+                 <item><property name="text"><string>Unconformity</string></property></item>
+                 <item><property name="text"><string>Other</string></property></item>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblPickDepth">
+                 <property name="text"><string>Depth MD:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="sbPickDepth">
+                 <property name="suffix"><string> m</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>20000.0</double></property>
+                 <property name="decimals"><number>3</number></property>
+                 <property name="singleStep"><double>0.001</double></property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="lblPickDip">
+                 <property name="text"><string>Dip Angle:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDoubleSpinBox" name="sbPickDip">
+                 <property name="suffix"><string>°</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>90.0</double></property>
+                 <property name="decimals"><number>2</number></property>
+                 <property name="singleStep"><double>0.1</double></property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="lblPickAzimuth">
+                 <property name="text"><string>Azimuth:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDoubleSpinBox" name="sbPickAzimuth">
+                 <property name="suffix"><string>°</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>359.9</double></property>
+                 <property name="decimals"><number>2</number></property>
+                 <property name="singleStep"><double>1.0</double></property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="lblPickConfidence">
+                 <property name="text"><string>Confidence:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QComboBox" name="cbPickConfidence">
+                 <item><property name="text"><string>High</string></property></item>
+                 <item><property name="text"><string>Medium</string></property></item>
+                 <item><property name="text"><string>Low</string></property></item>
+                 <item><property name="text"><string>Uncertain</string></property></item>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="lblPickAperture">
+                 <property name="text"><string>Aperture:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QDoubleSpinBox" name="sbPickAperture">
+                 <property name="suffix"><string> mm</string></property>
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>500.0</double></property>
+                 <property name="value"><double>0.0</double></property>
+                 <property name="decimals"><number>2</number></property>
+                 <property name="singleStep"><double>0.1</double></property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="lblPickNotes">
+                 <property name="text"><string>Notes:</string></property>
+                 <property name="objectName"><string>fieldLabel</string></property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLineEdit" name="lePickNotes">
+                 <property name="placeholderText"><string>Optional observation…</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Interval Statistics -->
+            <item>
+             <widget class="QGroupBox" name="gbIntervalStats">
+              <property name="title"><string>Interval Statistics</string></property>
+              <layout class="QVBoxLayout" name="vStatLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <layout class="QFormLayout" name="frmIntervalRange">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lblStatFrom">
+                   <property name="text"><string>From:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="sbStatFrom">
+                   <property name="suffix"><string> m</string></property>
+                   <property name="minimum"><double>0.0</double></property>
+                   <property name="maximum"><double>20000.0</double></property>
+                   <property name="value"><double>1000.0</double></property>
+                   <property name="decimals"><number>2</number></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="lblStatTo">
+                   <property name="text"><string>To:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="sbStatTo">
+                   <property name="suffix"><string> m</string></property>
+                   <property name="minimum"><double>0.0</double></property>
+                   <property name="maximum"><double>20000.0</double></property>
+                   <property name="value"><double>1100.0</double></property>
+                   <property name="decimals"><number>2</number></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+
+               <!-- Stat Cards Grid -->
+               <item>
+                <widget class="QFrame" name="statCard">
+                 <layout class="QGridLayout" name="gridStatCards">
+                  <property name="spacing"><number>4</number></property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lblSCFractures">
+                    <property name="text"><string>Fractures:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="lblSCFractureCount">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lblSCBedding">
+                    <property name="text"><string>Bedding:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="lblSCBeddingCount">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="lblSCMeanDip">
+                    <property name="text"><string>Mean Dip:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QLabel" name="lblSCMeanDipVal">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="lblSCMeanAzimuth">
+                    <property name="text"><string>Mean Az:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QLabel" name="lblSCMeanAzimuthVal">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="lblSCP10">
+                    <property name="text"><string>P10 Dip:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QLabel" name="lblSCP10Val">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="lblSCP90">
+                    <property name="text"><string>P90 Dip:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QLabel" name="lblSCP90Val">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="lblSCFracDensity">
+                    <property name="text"><string>Frac Density:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="6" column="1">
+                   <widget class="QLabel" name="lblSCFracDensityVal">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—  /m</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                  <item row="7" column="0">
+                   <widget class="QLabel" name="lblSCImageIntensity">
+                    <property name="text"><string>Img Intensity:</string></property>
+                    <property name="objectName"><string>fieldLabel</string></property>
+                   </widget>
+                  </item>
+                  <item row="7" column="1">
+                   <widget class="QLabel" name="lblSCImageIntensityVal">
+                    <property name="objectName"><string>valueLabel</string></property>
+                    <property name="text"><string>—</string></property>
+                    <property name="alignment"><set>AlignRight|AlignVCenter</set></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+
+               <item>
+                <widget class="QPushButton" name="btnRefreshStats">
+                 <property name="text"><string>↻ Refresh Statistics</string></property>
+                 <property name="objectName"><string>primaryBtn</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Rose Diagram -->
+            <item>
+             <widget class="QGroupBox" name="gbRoseDiagram">
+              <property name="title"><string>Rose Diagram / Stereonet</string></property>
+              <layout class="QVBoxLayout" name="vRoseLayout">
+               <property name="spacing"><number>5</number></property>
+
+               <item>
+                <layout class="QHBoxLayout" name="hRoseControlLayout">
+                 <item>
+                  <widget class="QLabel" name="lblRoseType">
+                   <property name="text"><string>Type:</string></property>
+                   <property name="objectName"><string>fieldLabel</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="cbRoseType">
+                   <item><property name="text"><string>Frequency Rose</string></property></item>
+                   <item><property name="text"><string>Length-Weighted</string></property></item>
+                   <item><property name="text"><string>Stereonet (Schmidt)</string></property></item>
+                   <item><property name="text"><string>Stereonet (Wulff)</string></property></item>
+                   <item><property name="text"><string>Dip Histogram</string></property></item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+
+               <item>
+                <widget class="QFrame" name="roseDiagramFrame">
+                 <layout class="QVBoxLayout" name="vRoseFrameLayout">
+                  <property name="contentsMargins">
+                   <rect><x>4</x><y>4</y><width>4</width><height>4</height></rect>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="lblRosePlaceholder">
+                    <property name="text"><string>Rose Diagram / Stereonet renders here</string></property>
+                    <property name="alignment"><set>AlignCenter</set></property>
+                    <property name="styleSheet"><string>
+                     color:#8FA0B0;font-size:10px;
+                     font-style:italic;border:1px dashed #C0CCD8;
+                     border-radius:4px;padding:20px;
+                    </string></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+
+               <item>
+                <layout class="QHBoxLayout" name="hRoseBtnLayout">
+                 <item>
+                  <widget class="QPushButton" name="btnRefreshRose">
+                   <property name="text"><string>↻ Refresh</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnExpandRose">
+                   <property name="text"><string>⤢ Expand</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnExportRose">
+                   <property name="text"><string>⬆ Export</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Bottom Spacer -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property>
+             </spacer>
+            </item>
+
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <!-- END RIGHT PANEL -->
+
+     </widget>
+     <!-- END MAIN SPLITTER -->
+    </item>
+
+    <!-- ─────────────────────────────
+         BOTTOM PICKS TABLE PANEL
+         ───────────────────────────── -->
+    <item>
+     <widget class="QFrame" name="bottomPanel">
+      <layout class="QVBoxLayout" name="bottomVLayout">
+       <property name="spacing"><number>0</number></property>
+       <property name="contentsMargins">
+        <rect><x>0</x><y>0</y><width>0</width><height>0</height></rect>
+       </property>
+
+       <!-- Picks Table Header -->
+       <item>
+        <widget class="QFrame" name="sectionHeaderPicks">
+         <property name="objectName"><string>sectionHeader</string></property>
+         <layout class="QHBoxLayout" name="hdrPicksLayout">
+          <property name="contentsMargins">
+           <rect><x>8</x><y>0</y><width>8</width><height>0</height></rect>
+          </property>
+          <property name="spacing"><number>4</number></property>
+          <item>
+           <widget class="QLabel" name="lblSecPicks">
+            <property name="objectName"><string>sectionLabel</string></property>
+            <property name="text"><string>PICKS TABLE</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblPickCountBadge">
+            <property name="text"><string>0 picks</string></property>
+            <property name="styleSheet"><string>
+             background-color:#1A73E8;color:#FFFFFF;
+             font-size:9px;font-weight:700;
+             border-radius:8px;padding:1px 7px;
+            </string></property>
+           </widget>
+          </item>
+          <item>
+           <spacer>
+            <property name="orientation"><enum>Qt::Horizontal</enum></property>
+            <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+           </spacer>
+          </item>
+
+          <!-- Table Action Buttons -->
+          <item>
+           <widget class="QPushButton" name="btnAddPick">
+            <property name="text"><string>⊕ Add Pick</string></property>
+            <property name="toolTip"><string>Add new manual pick at current depth</string></property>
+            <property name="objectName"><string>primaryBtn</string></property>
+            <property name="maximumHeight"><number>22</number></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDeletePick">
+            <property name="text"><string>⊖ Delete</string></property>
+            <property name="toolTip"><string>Delete selected picks (Del)</string></property>
+            <property name="objectName"><string>dangerBtn</string></property>
+            <property name="maximumHeight"><number>22</number></property>
+            <property name="shortcut"><string>Del</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnClearAll">
+            <property name="text"><string>✕ Clear All</string></property>
+            <property name="toolTip"><string>Clear all picks in current interval</string></property>
+            <property name="objectName"><string>dangerBtn</string></property>
+            <property name="maximumHeight"><number>22</number></property>
+           </widget>
+          </item>
+
+          <item>
+           <widget class="QFrame" name="btnSep1">
+            <property name="frameShape"><enum>QFrame::VLine</enum></property>
+            <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+            <property name="styleSheet"><string>color:#C0CCD8;</string></property>
+            <property name="maximumWidth"><number>2</number></property>
+           </widget>
+          </item>
+
+          <!-- Filter -->
+          <item>
+           <widget class="QLabel" name="lblFilterType">
+            <property name="text"><string>Filter:</string></property>
+            <property name="styleSheet"><string>color:#546E7A;font-size:11px;</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cbTableFilter">
+            <property name="maximumHeight"><number>22</number></property>
+            <property name="minimumWidth"><number>130</number></property>
+            <item><property name="text"><string>All Types</string></property></item>
+            <item><property name="text"><string>Fractures Only</string></property></item>
+            <item><property name="text"><string>Bedding Only</string></property></item>
+            <item><property name="text"><string>Faults Only</string></property></item>
+            <item><property name="text"><string>High Confidence</string></property></item>
+            <item><property name="text"><string>Current View</string></property></item>
+           </widget>
+          </item>
+
+          <item>
+           <widget class="QFrame" name="btnSep2">
+            <property name="frameShape"><enum>QFrame::VLine</enum></property>
+            <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+            <property name="styleSheet"><string>color:#C0CCD8;</string></property>
+            <property name="maximumWidth"><number>2</number></property>
+           </widget>
+          </item>
+
+          <!-- Export -->
+          <item>
+           <widget class="QPushButton" name="btnExportCSV">
+            <property name="text"><string>⬆ CSV</string></property>
+            <property name="toolTip"><string>Export picks to CSV</string></property>
+            <property name="objectName"><string>accentBtn</string></property>
+            <property name="maximumHeight"><number>22</number></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnExportLAS">
+            <property name="text"><string>⬆ LAS</string></property>
+            <property name="toolTip"><string>Export picks to LAS format</string></property>
+            <property name="objectName"><string>accentBtn</string></property>
+            <property name="maximumHeight"><number>22</number></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnExportExcel">
+            <property name="text"><string>⬆ Excel</string></property>
+            <property name="toolTip"><string>Export picks to Excel workbook</string></property>
+            <property name="objectName"><string>accentBtn</string></property>
+            <property name="maximumHeight"><number>22</number></property>
+           </widget>
+          </item>
+
+         </layout>
+        </widget>
+       </item>
+
+       <!-- Picks Table -->
+       <item>
+        <widget class="QTableWidget" name="picksTable">
+         <property name="alternatingRowColors"><bool>true</bool></property>
+         <property name="selectionMode"><enum>QAbstractItemView::ExtendedSelection</enum></property>
+         <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+         <property name="sortingEnabled"><bool>true</bool></property>
+         <property name="showGrid"><bool>true</bool></property>
+         <property name="cornerButtonEnabled"><bool>false</bool></property>
+         <property name="editTriggers"><set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set></property>
+         <column>
+          <property name="text"><string>#</string></property>
+          <property name="toolTip"><string>Pick Index</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Depth MD (m)</string></property>
+          <property name="toolTip"><string>Measured Depth in meters</string></property>
+         </column>
+         <column>
+          <property name="text"><string>TVD (m)</string></property>
+          <property name="toolTip"><string>True Vertical Depth</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Type</string></property>
+          <property name="toolTip"><string>Feature Type</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Sub-Type</string></property>
+          <property name="toolTip"><string>Feature Sub-Classification</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Dip (°)</string></property>
+          <property name="toolTip"><string>Dip Angle in degrees</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Azimuth (°)</string></property>
+          <property name="toolTip"><string>Dip Azimuth in degrees (0–360)</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Aperture (mm)</string></property>
+          <property name="toolTip"><string>Fracture aperture (mm)</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Confidence</string></property>
+          <property name="toolTip"><string>Interpretation Confidence Level</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Interpreter</string></property>
+          <property name="toolTip"><string>Geologist / Interpreter ID</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Timestamp</string></property>
+          <property name="toolTip"><string>Pick creation date/time</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Notes</string></property>
+          <property name="toolTip"><string>Free-text observations</string></property>
+         </column>
+        </widget>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+    <!-- END BOTTOM PANEL -->
+
+   </layout>
+  </widget>
+  <!-- END CENTRAL WIDGET -->
+
+  <!-- ═══════════════════════════════
+       ACTIONS
+       ═══════════════════════════════ -->
+  <action name="actionNewProject">
+   <property name="text"><string>New Project</string></property>
+   <property name="shortcut"><string>Ctrl+N</string></property>
+  </action>
+  <action name="actionOpenProject">
+   <property name="text"><string>Open Project…</string></property>
+   <property name="shortcut"><string>Ctrl+O</string></property>
+  </action>
+  <action name="actionSaveProject">
+   <property name="text"><string>Save Project</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionSaveProjectAs">
+   <property name="text"><string>Save Project As…</string></property>
+   <property name="shortcut"><string>Ctrl+Shift+S</string></property>
+  </action>
+  <action name="actionImportLAS">
+   <property name="text"><string>Import LAS / LAS 3.0…</string></property>
+  </action>
+  <action name="actionImportDLIS">
+   <property name="text"><string>Import DLIS Image…</string></property>
+  </action>
+  <action name="actionImportSEGY">
+   <property name="text"><string>Import SEG-Y…</string></property>
+  </action>
+  <action name="actionImportCSV">
+   <property name="text"><string>Import CSV / Excel…</string></property>
+  </action>
+  <action name="actionExportPicks">
+   <property name="text"><string>Export Picks…</string></property>
+   <property name="shortcut"><string>Ctrl+E</string></property>
+  </action>
+  <action name="actionExportReport">
+   <property name="text"><string>Generate Report…</string></property>
+  </action>
+  <action name="actionExportImage">
+   <property name="text"><string>Export Image Snapshot…</string></property>
+  </action>
+  <action name="actionRecentFiles">
+   <property name="text"><string>Recent Files</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>Exit</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+  <action name="actionUndo">
+   <property name="text"><string>Undo</string></property>
+   <property name="shortcut"><string>Ctrl+Z</string></property>
+  </action>
+  <action name="actionRedo">
+   <property name="text"><string>Redo</string></property>
+   <property name="shortcut"><string>Ctrl+Y</string></property>
+  </action>
+  <action name="actionSelectAll">
+   <property name="text"><string>Select All Picks</string></property>
+   <property name="shortcut"><string>Ctrl+A</string></property>
+  </action>
+  <action name="actionDeleteSelected">
+   <property name="text"><string>Delete Selected</string></property>
+   <property name="shortcut"><string>Del</string></property>
+  </action>
+  <action name="actionClearAllPicks">
+   <property name="text"><string>Clear All Picks</string></property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text"><string>Preferences…</string></property>
+   <property name="shortcut"><string>Ctrl+,</string></property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="text"><string>Zoom In</string></property>
+   <property name="shortcut"><string>Ctrl++</string></property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="text"><string>Zoom Out</string></property>
+   <property name="shortcut"><string>Ctrl+-</string></property>
+  </action>
+  <action name="actionFitToWindow">
+   <property name="text"><string>Fit to Window</string></property>
+   <property name="shortcut"><string>Ctrl+0</string></property>
+  </action>
+  <action name="actionActualSize">
+   <property name="text"><string>Actual Size (100%)</string></property>
+   <property name="shortcut"><string>Ctrl+1</string></property>
+  </action>
+  <action name="actionToggleDepthTrack">
+   <property name="text"><string>Toggle Depth Track</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionToggleAzimuthHeader">
+   <property name="text"><string>Toggle Azimuth Header</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionToggleStatisticsPanel">
+   <property name="text"><string>Toggle Statistics Panel</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionTogglePicksTable">
+   <property name="text"><string>Toggle Picks Table</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="text"><string>Full Screen</string></property>
+   <property name="shortcut"><string>F11</string></property>
+  </action>
+  <action name="actionAutoDetectBedding">
+   <property name="text"><string>Auto-Detect Bedding Planes…</string></property>
+  </action>
+  <action name="actionAutoDetectFractures">
+   <property name="text"><string>Auto-Detect Fractures…</string></property>
+  </action>
+  <action name="actionRunMLPicking">
+   <property name="text"><string>Run ML Auto-Picking…</string></property>
+  </action>
+  <action name="actionDipStatistics">
+   <property name="text"><string>Dip Statistics Report…</string></property>
+  </action>
+  <action name="actionRoseDiagram">
+   <property name="text"><string>Rose Diagram…</string></property>
+  </action>
+  <action name="actionStereonet">
+   <property name="text"><string>Stereonet Plot…</string></property>
+  </action>
+  <action name="actionFractureDensity">
+   <property name="text"><string>Fracture Density Profile…</string></property>
+  </action>
+  <action name="actionCaliperCorrection">
+   <property name="text"><string>Caliper / Pad Correction…</string></property>
+  </action>
+  <action name="actionSpeedCorrection">
+   <property name="text"><string>Speed Correction…</string></property>
+  </action>
+  <action name="actionDepthShift">
+   <property name="text"><string>Depth Shift / Merge…</string></property>
+  </action>
+  <action name="actionWellDeviation">
+   <property name="text"><string>Well Deviation Survey…</string></property>
+  </action>
+  <action name="actionBHATVCorrection">
+   <property name="text"><string>BHTV Acoustic Correction…</string></property>
+  </action>
+  <action name="actionColorPalette">
+   <property name="text"><string>Color Palette Editor…</string></property>
+  </action>
+  <action name="actionScriptEditor">
+   <property name="text"><string>Script / Macro Editor…</string></property>
+  </action>
+  <action name="actionBatchProcess">
+   <property name="text"><string>Batch Processing…</string></property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="text"><string>Documentation</string></property>
+   <property name="shortcut"><string>F1</string></property>
+  </action>
+  <action name="actionKeyboardShortcuts">
+   <property name="text"><string>Keyboard Shortcuts</string></property>
+  </action>
+  <action name="actionAbout">
+   <property name="text"><string>About PetroSight Pro…</string></property>
+  </action>
+
+ </widget>
+
+ <!-- ═══════════════════════════════
+      RESOURCES &amp; CONNECTIONS
+      ═══════════════════════════════ -->
+ <resources/>
+ <connections/>
+
+ <!-- ═══════════════════════════════
+      DESIGNER LAYOUT HINTS
+      ═══════════════════════════════ -->
+ <slots>
+  <slot>onNewProject()</slot>
+  <slot>onOpenProject()</slot>
+  <slot>onSaveProject()</slot>
+  <slot>onImportLAS()</slot>
+  <slot>onImportDLIS()</slot>
+  <slot>onColormapChanged(int)</slot>
+  <slot>onEnhancementChanged(int)</slot>
+  <slot>onZoomIn()</slot>
+  <slot>onZoomOut()</slot>
+  <slot>onFitWindow()</slot>
+  <slot>onPixelsPerMeterChanged(double)</slot>
+  <slot>onPickingToolChanged(QToolButton*)</slot>
+  <slot>onGotoDepth()</slot>
+  <slot>onTopDepthChanged(double)</slot>
+  <slot>onBottomDepthChanged(double)</slot>
+  <slot>onBrightnessChanged(int)</slot>
+  <slot>onContrastChanged(int)</slot>
+  <slot>onGammaChanged(int)</slot>
+  <slot>onSharpnessChanged(int)</slot>
+  <slot>onResetEnhancement()</slot>
+  <slot>onDipAngleChanged(double)</slot>
+  <slot>onDipAzimuthChanged(double)</slot>
+  <slot>onPickTypeChanged(int)</slot>
+  <slot>onPickDepthChanged(double)</slot>
+  <slot>onPickDipChanged(double)</slot>
+  <slot>onPickAzimuthChanged(double)</slot>
+  <slot>onRefreshStats()</slot>
+  <slot>onRefreshRoseDiagram()</slot>
+  <slot>onExpandRoseDiagram()</slot>
+  <slot>onExportRoseDiagram()</slot>
+  <slot>onAddPick()</slot>
+  <slot>onDeletePick()</slot>
+  <slot>onClearAllPicks()</slot>
+  <slot>onTableFilterChanged(int)</slot>
+  <slot>onExportCSV()</slot>
+  <slot>onExportLAS()</slot>
+  <slot>onExportExcel()</slot>
+  <slot>onExportReport()</slot>
+  <slot>onMLAutoPick()</slot>
+  <slot>onPickSelected(int,int)</slot>
+  <slot>onCanvasMouseMove(QPoint)</slot>
+  <slot>onCanvasMousePress(QPoint)</slot>
+  <slot>onCanvasMouseRelease(QPoint)</slot>
+  <slot>onDepthScrolled(int)</slot>
+ </slots>
+
+</ui>
