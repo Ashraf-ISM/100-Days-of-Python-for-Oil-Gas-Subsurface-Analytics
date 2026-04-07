@@ -829,6 +829,10 @@ class InterpretationService:
 
         resistivity_frame = self._build_sw_group(left_panel, "Resistivity Curve")
         resistivity_layout = resistivity_frame.layout()
+        self.ui.comboSwRt = QtWidgets.QComboBox(resistivity_frame)
+        self.ui.comboSwRt.setStyleSheet(field_style)
+        resistivity_layout.addWidget(self._build_sw_field(resistivity_frame, "Rt Curve", self.ui.comboSwRt))
+
         self.ui.spinSwRw = QtWidgets.QDoubleSpinBox(resistivity_frame)
         self.ui.spinSwRw.setDecimals(5)
         self.ui.spinSwRw.setRange(0.001, 10.0)
@@ -878,6 +882,10 @@ class InterpretationService:
         self.ui.comboSwPhie = QtWidgets.QComboBox(por_frame)
         self.ui.comboSwPhie.setStyleSheet(field_style)
         por_layout.addWidget(self._build_sw_field(por_frame, "PHIE Curve", self.ui.comboSwPhie))
+        self.ui.lineSwOutName = QtWidgets.QLineEdit(por_frame)
+        self.ui.lineSwOutName.setText("SW")
+        self.ui.lineSwOutName.setStyleSheet(field_style)
+        por_layout.addWidget(self._build_sw_field(por_frame, "Output Curve", self.ui.lineSwOutName))
         left_layout.addWidget(por_frame)
 
         action_row = QtWidgets.QHBoxLayout()
@@ -2615,7 +2623,10 @@ class InterpretationService:
         combo = getattr(self.ui, name, None)
         if combo is None:
             return ""
-        return combo.currentText().strip()
+        try:
+            return combo.currentText().strip()
+        except RuntimeError:
+            return ""
 
     def _line_text(self, name: str) -> str:
         widget = getattr(self.ui, name, None)
@@ -2623,7 +2634,10 @@ class InterpretationService:
             return ""
         getter = getattr(widget, "text", None)
         if callable(getter):
-            return getter().strip()
+            try:
+                return getter().strip()
+            except RuntimeError:
+                return ""
         return ""
 
     def _line_float(self, name: str, default):
@@ -2675,7 +2689,10 @@ class InterpretationService:
                 continue
             getter = getattr(widget, "value", None)
             if callable(getter):
-                return getter()
+                try:
+                    return getter()
+                except RuntimeError:
+                    continue
         return default
 
     def _format_value(self, value, column_name: str) -> str:

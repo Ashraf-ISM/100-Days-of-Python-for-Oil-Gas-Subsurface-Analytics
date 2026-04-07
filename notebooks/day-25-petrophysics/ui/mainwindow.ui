@@ -3316,7 +3316,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                 </item>
                </layout>
               </widget>
-              <widget class="QWidget" name="">
+              <widget class="QWidget" name="layoutWidget">
                <property name="geometry">
                 <rect>
                  <x>10</x>
@@ -6832,43 +6832,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
    <addaction name="actionPrint"/>
-  </widget>
-  <widget class="QToolBar" name="toolBarWellDisplay">
-   <property name="windowTitle">
-    <string>Well Display Toolbar</string>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>22</width>
-     <height>22</height>
-    </size>
-   </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="separator"/>
-   <addaction name="actiondatainfo"/>
-   <addaction name="actionRemoveTrack"/>
-   <addaction name="actionAddCurve"/>
-   <addaction name="separator"/>
-   <addaction name="actionZoomIn"/>
-   <addaction name="actionZoomOut"/>
-   <addaction name="actionZoomFit"/>
-   <addaction name="actionZoomReset"/>
-   <addaction name="separator"/>
-   <addaction name="actionToolSelect"/>
-   <addaction name="actionToolPan"/>
-   <addaction name="actionToolMeasure"/>
-   <addaction name="actionToolPick"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="actionShowGrid"/>
   </widget>
   <widget class="QDockWidget" name="dockBrowser">
    <property name="features">
