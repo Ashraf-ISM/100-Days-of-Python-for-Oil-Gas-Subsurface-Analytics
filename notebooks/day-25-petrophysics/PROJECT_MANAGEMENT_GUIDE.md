@@ -1,5 +1,5 @@
 """
-PETROARX - PROJECT MANAGEMENT SYSTEM
+PETROARX - PROJECT MANAGEMENT SYSTEM 
 =============================================
 
 This document describes the complete project management system integration
@@ -9,7 +9,7 @@ for PetroARX, including how projects flow through the entire application.
 ARCHITECTURE OVERVIEW
 =====================
 
-The project management system consists of:
+The project management system consists of :
 
 1. Core Layer (core/project_manager.py)
    - ProjectData: In-memory project representation
