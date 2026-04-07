@@ -103,6 +103,7 @@ class MainController:
         self._connect_widget("btnCalcVsh", "clicked", self.interp.compute_vsh)
         self._connect_widget("btnResetVsh", "clicked", self.interp.reset_vsh_panel)
         self._connect_widget("btnCalcPhi", "clicked", self.interp.compute_phi)
+        self._connect_widget("btnResetPhi", "clicked", self.interp.reset_phi_panel)
         self._connect_widget("btnCalcSw", "clicked", self.interp.compute_sw)
         self._connect_widget("btnCalcPerm", "clicked", self.interp.compute_perm)
         self._connect_widget("btnCalcNetPay", "clicked", self.interp.compute_net_pay)

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import numpy as np
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from calculations import vshale, porosity, saturation, permeability, net_pay
 
@@ -22,6 +22,24 @@ class InterpretationService:
         self._net_pay_table = None
         self._net_pay_summary_labels: dict[str, QtWidgets.QLabel] = {}
         self._build_net_pay_workspace()
+        self._porosity_log_host = None
+        self._porosity_crossplot_host = None
+        self._porosity_hist_host = None
+        self._porosity_activity_list = None
+        self._porosity_kpi_labels: dict[str, QtWidgets.QLabel] = {}
+        self._porosity_quality_labels: dict[str, QtWidgets.QLabel] = {}
+        self._porosity_method_buttons: dict[str, QtWidgets.QPushButton] = {}
+        self._porosity_activity_items: list[str] = []
+        self._build_porosity_workspace()
+        self._sw_log_host = None
+        self._sw_crossplot_host = None
+        self._sw_qc_host = None
+        self._sw_activity_list = None
+        self._sw_kpi_labels: dict[str, QtWidgets.QLabel] = {}
+        self._sw_side_summary_labels: dict[str, QtWidgets.QLabel] = {}
+        self._sw_quality_labels: dict[str, QtWidgets.QLabel] = {}
+        self._sw_activity_items: list[str] = []
+        self._build_sw_workspace()
 
     def compute_vsh(self):
         self.run_vsh_workflow()
@@ -205,22 +223,113 @@ class InterpretationService:
         if out_name != "PHIT":
             df[out_name] = phi
         self.data._refresh_views()
+        self._append_porosity_activity("Porosity calculated")
+        self.refresh_porosity_workspace()
+
+    def reset_phi_panel(self):
+        well_combo = getattr(self.ui, "comboPhiWell", None)
+        if well_combo is not None and hasattr(well_combo, "currentText"):
+            current_well = well_combo.currentText().strip()
+            if current_well and current_well in getattr(self.data, "_wells", {}):
+                self.data.set_current_well(current_well)
+
+        method_combo = getattr(self.ui, "comboPhiMethod", None)
+        if method_combo is not None:
+            target_text = "Density-Neutron (PHIE)"
+            index = method_combo.findText(target_text)
+            if index >= 0:
+                method_combo.setCurrentIndex(index)
+
+        for name, value in (("spinPhiRhoma", 2.65), ("spinPhiRhof", 1.0)):
+            widget = getattr(self.ui, name, None)
+            if widget is not None and hasattr(widget, "setValue"):
+                widget.setValue(value)
+
+        vcl_widget = getattr(self.ui, "checkPhiVclCorr", None)
+        if vcl_widget is not None and hasattr(vcl_widget, "setChecked"):
+            vcl_widget.setChecked(True)
+
+        out_widget = getattr(self.ui, "linePhiOutName", None)
+        if out_widget is not None and hasattr(out_widget, "setText"):
+            out_widget.setText("PHIE")
+
+        self._sync_porosity_method_cards()
+        self._append_porosity_activity("Porosity panel reset")
+        self.refresh_porosity_workspace()
 
     def compute_sw(self):
+        import pandas as pd
+
         well = self.data._get_current_well()
         if not well:
             return
         df = getattr(well, "data", None)
         if df is None:
             return
-        if "PHIT" not in df.columns:
+
+        rt_curve = self._combo_text("comboSwRt")
+        if not rt_curve or rt_curve not in df.columns:
+            rt_curve = "LLD" if "LLD" in df.columns else ("ILD" if "ILD" in df.columns else "")
+
+        phi_curve = self._combo_text("comboSwPhie")
+        if not phi_curve or phi_curve not in df.columns:
+            for candidate in ("PHIE", "PHIT", "PHI"):
+                if candidate in df.columns:
+                    phi_curve = candidate
+                    break
+
+        if not phi_curve or phi_curve not in df.columns:
             self.compute_phi()
-        if "LLD" in df.columns:
-            df["SW"] = saturation.compute_sw_archie(df["PHIT"].values, df["LLD"].values)
-        else:
-            QtWidgets.QMessageBox.warning(self.ui, "Calculations", "Resistivity (LLD) not found.")
+            if "PHIT" in df.columns:
+                phi_curve = "PHIT"
+
+        if not rt_curve or rt_curve not in df.columns:
+            QtWidgets.QMessageBox.warning(self.ui, "Calculations", "Resistivity curve not found for Sw calculation.")
             return
+
+        if not phi_curve or phi_curve not in df.columns:
+            QtWidgets.QMessageBox.warning(self.ui, "Calculations", "Porosity curve not found for Sw calculation.")
+            return
+
+        rw = self._spin_value(("spinSwRw",), 0.05) or 0.05
+        a_val = self._spin_value(("spinSwA",), 1.0) or 1.0
+        m_val = self._slider_or_spin_value("sliderSwM", ("spinSwM",), 2.0)
+        n_val = self._slider_or_spin_value("sliderSwN", ("spinSwN",), 2.0)
+
+        phi_values = pd.to_numeric(df[phi_curve], errors="coerce").to_numpy(dtype=float)
+        rt_values = pd.to_numeric(df[rt_curve], errors="coerce").to_numpy(dtype=float)
+
+        sw_values = saturation.compute_sw_archie(phi_values, rt_values, rw=rw, a=a_val, m=m_val, n=n_val)
+        df["SW"] = sw_values
+        out_name = self._line_text("lineSwOutName") or "SW"
+        if out_name != "SW":
+            df[out_name] = sw_values
+
         self.data._refresh_views()
+        self._append_sw_activity("Compute Sw")
+        self.refresh_sw_workspace()
+
+    def reset_sw_panel(self):
+        combo = getattr(self.ui, "comboSwMethod", None)
+        if combo is not None and hasattr(combo, "setCurrentText"):
+            combo.setCurrentText("Archie")
+
+        for name, value in (("spinSwRw", 0.05), ("spinSwA", 1.0)):
+            widget = getattr(self.ui, name, None)
+            if widget is not None and hasattr(widget, "setValue"):
+                widget.setValue(value)
+
+        for name, value in (("sliderSwM", 200), ("sliderSwN", 200), ("sliderSwFormM", 200), ("sliderSwFormN", 200)):
+            widget = getattr(self.ui, name, None)
+            if widget is not None and hasattr(widget, "setValue"):
+                widget.setValue(value)
+
+        line = getattr(self.ui, "lineSwOutName", None)
+        if line is not None and hasattr(line, "setText"):
+            line.setText("SW")
+
+        self._append_sw_activity("Sw panel reset")
+        self.refresh_sw_workspace()
 
     def compute_perm(self):
         well = self.data._get_current_well()
@@ -644,6 +753,1533 @@ class InterpretationService:
         steps = steps[np.isfinite(steps) & (steps > 0)]
         step = float(np.nanmedian(steps)) if steps.size else 1.0
         return float(pay_mask.sum() * step)
+
+    def _build_sw_workspace(self) -> None:
+        if getattr(self.ui, "_sw_workspace_built", False):
+            return
+
+        tab = getattr(self.ui, "tabWaterSaturation", None)
+        if tab is None:
+            return
+
+        layout = tab.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(tab)
+
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(12)
+
+        panel_style = "QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; }"
+        soft_style = "QFrame { background:#F7FAFD; border:1px solid #D7E2EE; border-radius:10px; }"
+        field_style = "QLineEdit, QComboBox, QDoubleSpinBox { background:#FFFFFF; border:1px solid #C9D7E6; border-radius:8px; padding:5px 8px; min-height:26px; }"
+
+        main_row = QtWidgets.QHBoxLayout()
+        main_row.setSpacing(12)
+
+        left_panel = QtWidgets.QFrame(tab)
+        left_panel.setMinimumWidth(320)
+        left_panel.setMaximumWidth(360)
+        left_panel.setStyleSheet(panel_style)
+        left_layout = QtWidgets.QVBoxLayout(left_panel)
+        left_layout.setContentsMargins(10, 10, 10, 10)
+        left_layout.setSpacing(10)
+
+        left_header = QtWidgets.QLabel("Archie Parameters", left_panel)
+        left_header.setStyleSheet("background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #2F6FB3, stop:1 #4A8ACE);color:#FFFFFF;border-radius:8px;padding:8px 10px;font-size:16px;font-weight:800;")
+        left_layout.addWidget(left_header)
+
+        self.ui.comboSwWell = QtWidgets.QComboBox(left_panel)
+        self.ui.comboSwWell.setStyleSheet(field_style)
+        left_layout.addWidget(self._build_sw_field(left_panel, "Well", self.ui.comboSwWell))
+
+        self.ui.comboSwMethod = QtWidgets.QComboBox(left_panel)
+        self.ui.comboSwMethod.setStyleSheet(field_style)
+        self.ui.comboSwMethod.addItems(["Archie"])
+        left_layout.addWidget(self._build_sw_field(left_panel, "Method", self.ui.comboSwMethod))
+
+        resistivity_frame = self._build_sw_group(left_panel, "Resistivity Curve")
+        resistivity_layout = resistivity_frame.layout()
+        self.ui.spinSwRw = QtWidgets.QDoubleSpinBox(resistivity_frame)
+        self.ui.spinSwRw.setDecimals(5)
+        self.ui.spinSwRw.setRange(0.001, 10.0)
+        self.ui.spinSwRw.setValue(0.05000)
+        self.ui.spinSwRw.setStyleSheet(field_style)
+        resistivity_layout.addWidget(self._build_sw_field(resistivity_frame, "Rw (ohm.m)", self.ui.spinSwRw))
+
+        a_row = QtWidgets.QWidget(resistivity_frame)
+        a_layout = QtWidgets.QHBoxLayout(a_row)
+        a_layout.setContentsMargins(0, 0, 0, 0)
+        a_layout.setSpacing(6)
+        self.ui.spinSwA = QtWidgets.QDoubleSpinBox(a_row)
+        self.ui.spinSwA.setDecimals(3)
+        self.ui.spinSwA.setRange(0.1, 3.0)
+        self.ui.spinSwA.setValue(1.0)
+        self.ui.spinSwA.setStyleSheet(field_style)
+        clear_a_btn = QtWidgets.QToolButton(a_row)
+        clear_a_btn.setText("x")
+        clear_a_btn.setToolTip("Reset a to default")
+        clear_a_btn.clicked.connect(lambda: self.ui.spinSwA.setValue(1.0))
+        a_layout.addWidget(self.ui.spinSwA, 1)
+        a_layout.addWidget(clear_a_btn, 0)
+        resistivity_layout.addWidget(self._build_sw_field(resistivity_frame, "a (Tortuosity)", a_row))
+
+        m_widget, self.ui.sliderSwM = self._build_sw_slider(resistivity_frame, 2.0)
+        resistivity_layout.addWidget(self._build_sw_field(resistivity_frame, "m (Cementation)", m_widget))
+        n_widget, self.ui.sliderSwN = self._build_sw_slider(resistivity_frame, 2.0)
+        resistivity_layout.addWidget(self._build_sw_field(resistivity_frame, "n (Saturation)", n_widget))
+        left_layout.addWidget(resistivity_frame)
+
+        formation_frame = self._build_sw_group(left_panel, "Formation Properties")
+        formation_layout = formation_frame.layout()
+        self.ui.spinSwFormRw = QtWidgets.QDoubleSpinBox(formation_frame)
+        self.ui.spinSwFormRw.setDecimals(3)
+        self.ui.spinSwFormRw.setRange(0.001, 10.0)
+        self.ui.spinSwFormRw.setValue(1.000)
+        self.ui.spinSwFormRw.setStyleSheet(field_style)
+        formation_layout.addWidget(self._build_sw_field(formation_frame, "Rw (ohm.m)", self.ui.spinSwFormRw))
+        form_m_widget, self.ui.sliderSwFormM = self._build_sw_slider(formation_frame, 2.0)
+        formation_layout.addWidget(self._build_sw_field(formation_frame, "m (Cementation)", form_m_widget))
+        form_n_widget, self.ui.sliderSwFormN = self._build_sw_slider(formation_frame, 2.0)
+        formation_layout.addWidget(self._build_sw_field(formation_frame, "n (Saturation)", form_n_widget))
+        left_layout.addWidget(formation_frame)
+
+        por_frame = self._build_sw_group(left_panel, "Porosity")
+        por_layout = por_frame.layout()
+        self.ui.comboSwPhie = QtWidgets.QComboBox(por_frame)
+        self.ui.comboSwPhie.setStyleSheet(field_style)
+        por_layout.addWidget(self._build_sw_field(por_frame, "PHIE Curve", self.ui.comboSwPhie))
+        left_layout.addWidget(por_frame)
+
+        action_row = QtWidgets.QHBoxLayout()
+        self.ui.btnCalcSw = QtWidgets.QPushButton("Compute Sw", left_panel)
+        self.ui.btnCalcSw.setMinimumHeight(38)
+        self.ui.btnCalcSw.setStyleSheet("QPushButton { background:#2B6CB0; color:#FFFFFF; border:none; border-radius:9px; font-weight:800; } QPushButton:hover { background:#245C96; }")
+        self.ui.btnResetSw = QtWidgets.QPushButton("Reset", left_panel)
+        self.ui.btnResetSw.setMinimumHeight(38)
+        self.ui.btnResetSw.setStyleSheet("QPushButton { background:#EDF3FA; color:#355C7D; border:1px solid #C9D7E6; border-radius:9px; font-weight:700; }")
+        self.ui.btnResetSw.clicked.connect(self.reset_sw_panel)
+        action_row.addWidget(self.ui.btnCalcSw, 2)
+        action_row.addWidget(self.ui.btnResetSw, 1)
+        left_layout.addLayout(action_row)
+
+        activity_frame = QtWidgets.QFrame(left_panel)
+        activity_frame.setStyleSheet(soft_style)
+        activity_layout = QtWidgets.QVBoxLayout(activity_frame)
+        activity_layout.setContentsMargins(8, 8, 8, 8)
+        activity_layout.setSpacing(6)
+        activity_title = QtWidgets.QLabel("Activity", activity_frame)
+        activity_title.setStyleSheet("font-size:12px;font-weight:800;color:#355C7D;")
+        self._sw_activity_list = QtWidgets.QListWidget(activity_frame)
+        self._sw_activity_list.setStyleSheet("QListWidget { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:8px; } QListWidget::item { padding:6px 4px; }")
+        activity_layout.addWidget(activity_title)
+        activity_layout.addWidget(self._sw_activity_list)
+        left_layout.addWidget(activity_frame, 1)
+
+        right_col = QtWidgets.QVBoxLayout()
+        right_col.setSpacing(10)
+
+        kpi_frame = QtWidgets.QFrame(tab)
+        kpi_frame.setStyleSheet(panel_style)
+        kpi_layout = QtWidgets.QHBoxLayout(kpi_frame)
+        kpi_layout.setContentsMargins(10, 10, 10, 10)
+        kpi_layout.setSpacing(8)
+        self._sw_kpi_labels = {}
+        for key, title, value, color in (
+            ("avg", "Sw Avg", "0.42", "#2B6CB0"),
+            ("min", "Sw Min", "0.18", "#0F8B8D"),
+            ("max", "Sw Max", "0.85", "#117A65"),
+            ("net", "Net Pay", "38 m", "#2E8B57"),
+        ):
+            card = QtWidgets.QFrame(kpi_frame)
+            card.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; }")
+            card_layout = QtWidgets.QVBoxLayout(card)
+            card_layout.setContentsMargins(10, 8, 10, 8)
+            card_layout.setSpacing(2)
+            title_label = QtWidgets.QLabel(title, card)
+            title_label.setStyleSheet("font-size:12px;color:#5C718A;font-weight:700;")
+            value_label = QtWidgets.QLabel(value, card)
+            value_label.setStyleSheet(f"font-size:28px;color:{color};font-weight:900;")
+            self._sw_kpi_labels[key] = value_label
+            card_layout.addWidget(title_label)
+            card_layout.addWidget(value_label)
+            kpi_layout.addWidget(card)
+        right_col.addWidget(kpi_frame, 0)
+
+        body_row = QtWidgets.QHBoxLayout()
+        body_row.setSpacing(10)
+
+        plots_frame = QtWidgets.QFrame(tab)
+        plots_frame.setStyleSheet(panel_style)
+        plots_layout = QtWidgets.QVBoxLayout(plots_frame)
+        plots_layout.setContentsMargins(10, 10, 10, 10)
+        plots_layout.setSpacing(8)
+        self.ui.tabsSw = QtWidgets.QTabWidget(plots_frame)
+        self.ui.tabsSw.setStyleSheet(
+            "QTabWidget::pane { border:1px solid #D7E2EE; border-radius:10px; background:#FFFFFF; }"
+            "QTabBar::tab { background:#EDF3FA; color:#4D6680; padding:8px 14px; margin-right:4px; border-top-left-radius:8px; border-top-right-radius:8px; }"
+            "QTabBar::tab:selected { background:#2B6CB0; color:#FFFFFF; font-weight:700; }"
+        )
+        self.ui.tabSwLog = QtWidgets.QWidget(self.ui.tabsSw)
+        self.ui.tabSwCrossplot = QtWidgets.QWidget(self.ui.tabsSw)
+        self.ui.tabSwQC = QtWidgets.QWidget(self.ui.tabsSw)
+        self.ui.tabsSw.addTab(self.ui.tabSwLog, "Log View")
+        self.ui.tabsSw.addTab(self.ui.tabSwCrossplot, "Crossplot (Rn vs PHIE)")
+        self.ui.tabsSw.addTab(self.ui.tabSwQC, "QC")
+        for page_name, page_widget in (("log", self.ui.tabSwLog), ("cross", self.ui.tabSwCrossplot), ("qc", self.ui.tabSwQC)):
+            page_layout = QtWidgets.QVBoxLayout(page_widget)
+            page_layout.setContentsMargins(0, 0, 0, 0)
+            page_layout.setSpacing(0)
+            host = QtWidgets.QFrame(page_widget)
+            host.setStyleSheet(soft_style)
+            host.setMinimumHeight(420)
+            page_layout.addWidget(host)
+            if page_name == "log":
+                self._sw_log_host = host
+            elif page_name == "cross":
+                self._sw_crossplot_host = host
+            else:
+                self._sw_qc_host = host
+        plots_layout.addWidget(self.ui.tabsSw, 1)
+
+        bottom_bar = QtWidgets.QFrame(plots_frame)
+        bottom_bar.setStyleSheet("QFrame { background:#F7FAFD; border:1px solid #D7E2EE; border-radius:10px; }")
+        bottom_layout = QtWidgets.QHBoxLayout(bottom_bar)
+        bottom_layout.setContentsMargins(10, 8, 10, 8)
+        bottom_layout.setSpacing(8)
+        self.ui.btnSwComputeBottom = QtWidgets.QPushButton("Compute Sw", bottom_bar)
+        self.ui.btnSwComputeBottom.setMinimumHeight(34)
+        self.ui.btnSwComputeBottom.setStyleSheet("QPushButton { background:#2B6CB0; color:#FFFFFF; border:none; border-radius:8px; font-weight:800; }")
+        self.ui.btnSwComputeBottom.clicked.connect(self.compute_sw)
+        self.ui.btnSaveSw = QtWidgets.QPushButton("Save Curve", bottom_bar)
+        self.ui.btnSaveSw.setMinimumHeight(34)
+        self.ui.btnSaveSw.setStyleSheet("QPushButton { background:#FFFFFF; color:#355C7D; border:1px solid #C9D7E6; border-radius:8px; font-weight:700; }")
+        self.ui.btnExportSw = QtWidgets.QPushButton("Export Results", bottom_bar)
+        self.ui.btnExportSw.setMinimumHeight(34)
+        self.ui.btnExportSw.setStyleSheet("QPushButton { background:#FFFFFF; color:#355C7D; border:1px solid #C9D7E6; border-radius:8px; font-weight:700; }")
+        self.ui.btnSaveSw.clicked.connect(lambda: QtWidgets.QMessageBox.information(self.ui, "Sw", "Curve saved to current well dataset."))
+        self.ui.btnExportSw.clicked.connect(lambda: QtWidgets.QMessageBox.information(self.ui, "Sw", "Export is ready for integration."))
+        bottom_layout.addWidget(self.ui.btnSwComputeBottom)
+        bottom_layout.addWidget(self.ui.btnSaveSw)
+        bottom_layout.addWidget(self.ui.btnExportSw)
+        bottom_layout.addStretch(1)
+        plots_layout.addWidget(bottom_bar, 0)
+
+        side_frame = QtWidgets.QFrame(tab)
+        side_frame.setMinimumWidth(260)
+        side_frame.setStyleSheet(panel_style)
+        side_layout = QtWidgets.QVBoxLayout(side_frame)
+        side_layout.setContentsMargins(10, 10, 10, 10)
+        side_layout.setSpacing(8)
+        side_title = QtWidgets.QLabel("Water Saturation (Sw)", side_frame)
+        side_title.setStyleSheet("font-size:18px;font-weight:900;color:#24466B;")
+        side_layout.addWidget(side_title)
+
+        mini_summary = QtWidgets.QFrame(side_frame)
+        mini_summary.setStyleSheet(soft_style)
+        mini_layout = QtWidgets.QHBoxLayout(mini_summary)
+        mini_layout.setContentsMargins(8, 8, 8, 8)
+        mini_layout.setSpacing(8)
+        self._sw_side_summary_labels = {}
+        for key, title in (("avg", "Sw Avg"), ("min", "Sw Min"), ("max", "N-O Max")):
+            block = QtWidgets.QFrame(mini_summary)
+            block.setStyleSheet("QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:8px; }")
+            block_layout = QtWidgets.QVBoxLayout(block)
+            block_layout.setContentsMargins(8, 6, 8, 6)
+            block_layout.setSpacing(2)
+            t = QtWidgets.QLabel(title, block)
+            t.setStyleSheet("font-size:10px;color:#6C7E90;font-weight:700;")
+            v = QtWidgets.QLabel("--", block)
+            v.setStyleSheet("font-size:26px;color:#1F4E79;font-weight:900;")
+            self._sw_side_summary_labels[key] = v
+            block_layout.addWidget(t)
+            block_layout.addWidget(v)
+            mini_layout.addWidget(block)
+        side_layout.addWidget(mini_summary)
+
+        quality_box = QtWidgets.QFrame(side_frame)
+        quality_box.setStyleSheet(soft_style)
+        quality_layout = QtWidgets.QVBoxLayout(quality_box)
+        quality_layout.setContentsMargins(8, 8, 8, 8)
+        quality_layout.setSpacing(6)
+        quality_title = QtWidgets.QLabel("Data Quality", quality_box)
+        quality_title.setStyleSheet("font-size:16px;font-weight:900;color:#24466B;")
+        quality_layout.addWidget(quality_title)
+        self._sw_quality_labels = {}
+        for key, text in (("rt", "Rt available"), ("phi", "PHIE available"), ("rw", "Formation Rw constant assumption"), ("unc", "High uncertainty zone detected")):
+            label = QtWidgets.QLabel(text, quality_box)
+            label.setStyleSheet("font-size:12px;color:#355C7D;")
+            quality_layout.addWidget(label)
+            self._sw_quality_labels[key] = label
+        side_layout.addWidget(quality_box)
+        side_layout.addStretch(1)
+
+        body_row.addWidget(plots_frame, 1)
+        body_row.addWidget(side_frame, 0)
+        right_col.addLayout(body_row, 1)
+
+        main_row.addWidget(left_panel, 0)
+        main_row.addLayout(right_col, 1)
+        layout.addLayout(main_row)
+
+        self.ui.comboSwWell.currentTextChanged.connect(lambda *_: self.refresh_sw_workspace())
+        self.ui.comboSwRt.currentTextChanged.connect(lambda *_: self.refresh_sw_workspace())
+        self.ui.comboSwPhie.currentTextChanged.connect(lambda *_: self.refresh_sw_workspace())
+        self.ui.refresh_sw_tab = self.refresh_sw_workspace
+
+        if not self._sw_activity_items:
+            self._sw_activity_items = [
+                "LAS loaded for well GOR-1",
+                "PHIE curve selected",
+                "Formation Rw constant assumption",
+            ]
+
+        self.ui._sw_workspace_built = True
+        self._populate_sw_wells()
+        self.refresh_sw_workspace()
+
+    def _build_sw_group(self, parent, title: str) -> QtWidgets.QFrame:
+        frame = QtWidgets.QFrame(parent)
+        frame.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; }")
+        layout = QtWidgets.QVBoxLayout(frame)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(6)
+        title_label = QtWidgets.QLabel(title, frame)
+        title_label.setStyleSheet("font-size:14px;font-weight:800;color:#274B72;")
+        layout.addWidget(title_label)
+        return frame
+
+    def _build_sw_field(self, parent, label_text: str, widget: QtWidgets.QWidget) -> QtWidgets.QWidget:
+        row = QtWidgets.QWidget(parent)
+        row_layout = QtWidgets.QHBoxLayout(row)
+        row_layout.setContentsMargins(0, 0, 0, 0)
+        row_layout.setSpacing(8)
+        label = QtWidgets.QLabel(label_text, row)
+        label.setStyleSheet("color:#355C7D;font-weight:700;")
+        row_layout.addWidget(label, 1)
+        row_layout.addWidget(widget, 2)
+        return row
+
+    def _build_sw_slider(self, parent, value: float) -> tuple[QtWidgets.QWidget, QtWidgets.QSlider]:
+        row = QtWidgets.QWidget(parent)
+        layout = QtWidgets.QHBoxLayout(row)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(6)
+        slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, row)
+        slider.setRange(100, 300)
+        slider.setValue(int(value * 100.0))
+        slider.setSingleStep(1)
+        value_label = QtWidgets.QLabel(f"{value:.3f}", row)
+        value_label.setFixedWidth(48)
+        value_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        value_label.setStyleSheet("color:#355C7D;font-weight:700;")
+        slider.valueChanged.connect(lambda val, lbl=value_label: lbl.setText(f"{val / 100.0:.3f}"))
+        layout.addWidget(slider, 1)
+        layout.addWidget(value_label, 0)
+        return row, slider
+
+    def _slider_or_spin_value(self, slider_name: str, spin_names: tuple[str, ...], default: float) -> float:
+        slider = getattr(self.ui, slider_name, None)
+        if slider is not None and hasattr(slider, "value"):
+            try:
+                return float(slider.value()) / 100.0
+            except Exception:
+                pass
+        value = self._spin_value(spin_names, default)
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return float(default)
+
+    def _populate_sw_wells(self) -> None:
+        combo = getattr(self.ui, "comboSwWell", None)
+        if combo is None:
+            return
+
+        current_text = combo.currentText().strip()
+        wells = sorted(getattr(self.data, "_wells", {}).keys())
+        combo.blockSignals(True)
+        combo.clear()
+        if wells:
+            combo.addItems(wells)
+            target = current_text if current_text in wells else getattr(self.data, "_current_well", None)
+            if target in wells:
+                combo.setCurrentText(target)
+            elif combo.count():
+                combo.setCurrentIndex(0)
+        else:
+            combo.addItem("No wells loaded")
+        combo.blockSignals(False)
+
+    def _populate_sw_curve_selectors(self, df) -> None:
+        rt_combo = getattr(self.ui, "comboSwRt", None)
+        phi_combo = getattr(self.ui, "comboSwPhie", None)
+        if rt_combo is None or phi_combo is None:
+            return
+
+        columns = [str(c) for c in getattr(df, "columns", [])]
+        rt_candidates = [c for c in columns if any(token in c.upper() for token in ("LLD", "ILD", "RT", "RES"))]
+        phi_candidates = [c for c in columns if any(token in c.upper() for token in ("PHIE", "PHIT", "PHI"))]
+
+        current_rt = rt_combo.currentText().strip()
+        current_phi = phi_combo.currentText().strip()
+
+        rt_combo.blockSignals(True)
+        rt_combo.clear()
+        rt_combo.addItems(rt_candidates or ["LLD"])
+        if current_rt in rt_candidates:
+            rt_combo.setCurrentText(current_rt)
+        rt_combo.blockSignals(False)
+
+        phi_combo.blockSignals(True)
+        phi_combo.clear()
+        phi_combo.addItems(phi_candidates or ["PHIE"])
+        if current_phi in phi_candidates:
+            phi_combo.setCurrentText(current_phi)
+        phi_combo.blockSignals(False)
+
+    def refresh_sw_workspace(self) -> None:
+        import pandas as pd
+
+        if not getattr(self.ui, "_sw_workspace_built", False):
+            return
+
+        self._populate_sw_wells()
+        well = self.data._get_current_well()
+        if well is None:
+            self._show_sw_placeholder(self._sw_log_host, "Log View", "Load a well to display water saturation diagnostics.")
+            self._show_sw_placeholder(self._sw_crossplot_host, "Crossplot", "Load a well to display Rt vs PHIE crossplot.")
+            self._show_sw_placeholder(self._sw_qc_host, "QC", "Quality summary will appear after loading curves.")
+            self._refresh_sw_activity_log()
+            return
+
+        df = getattr(well, "data", None)
+        if df is None or getattr(df, "empty", True):
+            self._show_sw_placeholder(self._sw_log_host, "Log View", "No usable well data found.")
+            self._show_sw_placeholder(self._sw_crossplot_host, "Crossplot", "No usable well data found.")
+            self._show_sw_placeholder(self._sw_qc_host, "QC", "No usable well data found.")
+            self._refresh_sw_activity_log()
+            return
+
+        self._populate_sw_curve_selectors(df)
+
+        visible = self.data._filtered_dataframe(well)
+        if visible is None or getattr(visible, "empty", True):
+            visible = df.copy()
+
+        depth_col = self.data._depth_column(visible)
+        rt_col = self._combo_text("comboSwRt")
+        phi_col = self._combo_text("comboSwPhie")
+
+        sw_col = self._line_text("lineSwOutName") or "SW"
+        if sw_col in visible.columns:
+            sw_series = pd.to_numeric(visible[sw_col], errors="coerce")
+        elif "SW" in visible.columns:
+            sw_series = pd.to_numeric(visible["SW"], errors="coerce")
+        elif rt_col in visible.columns and phi_col in visible.columns:
+            rw = self._spin_value(("spinSwRw",), 0.05) or 0.05
+            a_val = self._spin_value(("spinSwA",), 1.0) or 1.0
+            m_val = self._slider_or_spin_value("sliderSwM", ("spinSwM",), 2.0)
+            n_val = self._slider_or_spin_value("sliderSwN", ("spinSwN",), 2.0)
+            sw_values = saturation.compute_sw_archie(
+                pd.to_numeric(visible[phi_col], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(visible[rt_col], errors="coerce").to_numpy(dtype=float),
+                rw=rw,
+                a=a_val,
+                m=m_val,
+                n=n_val,
+            )
+            sw_series = pd.Series(sw_values, index=visible.index)
+        else:
+            sw_series = pd.Series(dtype=float)
+
+        self._set_sw_kpis(visible, sw_series, depth_col, phi_col)
+        self._set_sw_quality(visible, rt_col, phi_col)
+        self._render_sw_log_view(visible, depth_col, rt_col, sw_series, phi_col)
+        self._render_sw_crossplot(visible, rt_col, phi_col, sw_series)
+        self._render_sw_qc_panel(visible, rt_col, phi_col, sw_series)
+        self._refresh_sw_activity_log()
+
+    def _set_sw_kpis(self, df, sw_series, depth_col: str | None, phi_col: str) -> None:
+        import pandas as pd
+
+        if sw_series is None or getattr(sw_series, "empty", True):
+            for label in self._sw_kpi_labels.values():
+                label.setText("--")
+            for label in self._sw_side_summary_labels.values():
+                label.setText("--")
+            return
+
+        valid_sw = pd.to_numeric(sw_series, errors="coerce").dropna()
+        if valid_sw.empty:
+            for label in self._sw_kpi_labels.values():
+                label.setText("--")
+            for label in self._sw_side_summary_labels.values():
+                label.setText("--")
+            return
+
+        if depth_col and depth_col in df.columns:
+            depth = pd.to_numeric(df[depth_col], errors="coerce")
+        else:
+            depth = pd.Series(np.arange(len(df), dtype=float), index=df.index)
+
+        phi_series = pd.to_numeric(df[phi_col], errors="coerce") if phi_col in df.columns else pd.Series(np.nan, index=df.index)
+        pay_mask = (pd.to_numeric(sw_series, errors="coerce") <= 0.60) & (phi_series >= 0.10)
+        thickness = self._estimate_thickness(depth.to_numpy(dtype=float), pay_mask.fillna(False).to_numpy(dtype=bool))
+
+        self._sw_kpi_labels["avg"].setText(f"{valid_sw.mean():.2f}")
+        self._sw_kpi_labels["min"].setText(f"{valid_sw.min():.2f}")
+        self._sw_kpi_labels["max"].setText(f"{valid_sw.max():.2f}")
+        self._sw_kpi_labels["net"].setText(f"{thickness:.0f} m")
+
+        if "avg" in self._sw_side_summary_labels:
+            self._sw_side_summary_labels["avg"].setText(f"{valid_sw.mean():.2f}")
+        if "min" in self._sw_side_summary_labels:
+            self._sw_side_summary_labels["min"].setText(f"{valid_sw.min():.2f}")
+        if "max" in self._sw_side_summary_labels:
+            self._sw_side_summary_labels["max"].setText(f"{valid_sw.max():.2f}")
+
+    def _set_sw_quality(self, df, rt_col: str, phi_col: str) -> None:
+        import pandas as pd
+
+        rt_ok = rt_col in df.columns and pd.to_numeric(df[rt_col], errors="coerce").dropna().size > 0
+        phi_ok = phi_col in df.columns and pd.to_numeric(df[phi_col], errors="coerce").dropna().size > 0
+
+        if "rt" in self._sw_quality_labels:
+            self._sw_quality_labels["rt"].setText(("✔ " if rt_ok else "⚠ ") + "Rt available" if rt_ok else "⚠ Rt missing")
+        if "phi" in self._sw_quality_labels:
+            self._sw_quality_labels["phi"].setText(("✔ " if phi_ok else "⚠ ") + "PHIE available" if phi_ok else "⚠ PHIE missing")
+        if "rw" in self._sw_quality_labels:
+            self._sw_quality_labels["rw"].setText("⚠ Formation Rw constant assumption set")
+        if "unc" in self._sw_quality_labels:
+            self._sw_quality_labels["unc"].setText("⚠ High uncertainty zone detected" if rt_ok and phi_ok else "⚠ Uncertainty elevated due to missing curves")
+
+    def _show_sw_placeholder(self, host, title: str, message: str) -> None:
+        if host is None:
+            return
+        layout = host.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(host)
+            layout.setContentsMargins(8, 8, 8, 8)
+        self._clear_layout(layout)
+        label = QtWidgets.QLabel(f"{title}\n\n{message}", host)
+        label.setWordWrap(True)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setStyleSheet("background:#F8FBFE;border:1px dashed #C9D7E6;border-radius:10px;color:#6C7E90;padding:16px;")
+        layout.addWidget(label, 1)
+
+    def _refresh_sw_activity_log(self) -> None:
+        if self._sw_activity_list is None:
+            return
+        if not self._sw_activity_items:
+            self._sw_activity_items = ["LAS loaded", "PHIE selected", "Rw assumption active"]
+        self._sw_activity_list.clear()
+        for item in self._sw_activity_items[-8:]:
+            self._sw_activity_list.addItem(item)
+
+    def _append_sw_activity(self, message: str) -> None:
+        text = message.strip()
+        if not text:
+            return
+        self._sw_activity_items.append(text)
+        self._sw_activity_items = self._sw_activity_items[-8:]
+        self._refresh_sw_activity_log()
+
+    def _render_sw_log_view(self, df, depth_col: str | None, rt_col: str, sw_series, phi_col: str) -> None:
+        import numpy as np
+        import pandas as pd
+
+        if depth_col is None or depth_col not in df.columns:
+            self._show_sw_placeholder(self._sw_log_host, "Log View", "Depth curve is required for Sw log rendering.")
+            return
+
+        depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
+        gr_col = self._pick_gr_curve_name(df)
+        gr = pd.to_numeric(df[gr_col], errors="coerce").to_numpy(dtype=float) if gr_col and gr_col in df.columns else None
+        rt = pd.to_numeric(df[rt_col], errors="coerce").to_numpy(dtype=float) if rt_col in df.columns else None
+        phi = pd.to_numeric(df[phi_col], errors="coerce").to_numpy(dtype=float) if phi_col in df.columns else None
+        sw = pd.to_numeric(sw_series, errors="coerce").to_numpy(dtype=float) if sw_series is not None else np.array([])
+
+        mask = np.isfinite(depth)
+        if gr is not None:
+            mask &= np.isfinite(gr)
+        if rt is not None:
+            mask &= np.isfinite(rt)
+        if sw.size:
+            mask &= np.isfinite(sw)
+        if not np.any(mask):
+            self._show_sw_placeholder(self._sw_log_host, "Log View", "No valid samples available for Sw track rendering.")
+            return
+
+        depth = depth[mask]
+        if gr is not None:
+            gr = gr[mask]
+        if rt is not None:
+            rt = rt[mask]
+        if phi is not None:
+            phi = phi[mask]
+        if sw.size:
+            sw = sw[mask]
+
+        try:
+            from matplotlib.figure import Figure
+        except Exception:
+            self._show_sw_placeholder(self._sw_log_host, "Log View", "Matplotlib is unavailable in this environment.")
+            return
+
+        fig = Figure(figsize=(11.0, 6.2), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("white")
+        axes = fig.subplots(1, 3, sharey=True)
+        if not isinstance(axes, (list, tuple, np.ndarray)):
+            axes = [axes]
+        ax_gr, ax_rt, ax_sw = axes
+
+        if gr is not None:
+            ax_gr.plot(gr, depth, color="#D4A72C", linewidth=1.1)
+            ax_gr.fill_betweenx(depth, np.nanmin(gr), gr, color="#F5E9BF", alpha=0.45)
+        ax_gr.set_title("Gamma Ray", fontsize=10, color="#24466B")
+        ax_gr.set_xlabel("GR", fontsize=9)
+        ax_gr.grid(True, linestyle="--", alpha=0.18)
+
+        if rt is not None:
+            positive = np.where(rt > 0, rt, np.nan)
+            ax_rt.plot(positive, depth, color="#2563EB", linewidth=1.1)
+            if np.isfinite(positive).sum() > 3:
+                ax_rt.set_xscale("log")
+        ax_rt.set_title("Resistivity", fontsize=10, color="#24466B")
+        ax_rt.set_xlabel(rt_col or "Rt", fontsize=9)
+        ax_rt.grid(True, linestyle=":", alpha=0.22)
+
+        if sw.size:
+            ax_sw.plot(sw, depth, color="#0F8B8D", linewidth=1.2)
+            ax_sw.fill_betweenx(depth, 0, sw, color="#C7F1EB", alpha=0.6)
+            pay_mask = sw <= 0.60
+            if phi is not None:
+                pay_mask &= np.nan_to_num(phi, nan=0.0) >= 0.10
+            starts = np.where(np.diff(np.r_[False, pay_mask, False].astype(int)) == 1)[0]
+            ends = np.where(np.diff(np.r_[False, pay_mask, False].astype(int)) == -1)[0]
+            for start, end in zip(starts, ends):
+                y0 = depth[start]
+                y1 = depth[end - 1]
+                for ax in axes:
+                    ax.axhspan(min(y0, y1), max(y0, y1), color="#D8F0D6", alpha=0.18)
+        ax_sw.set_xlim(0, 1)
+        ax_sw.set_title("Water Saturation (Sw)", fontsize=10, color="#24466B")
+        ax_sw.set_xlabel("Sw", fontsize=9)
+        ax_sw.grid(True, linestyle="--", alpha=0.18)
+
+        for ax in axes:
+            ax.invert_yaxis()
+            ax.set_ylabel(depth_col, fontsize=9)
+
+        self._render_figure_to_host(self._sw_log_host, fig)
+
+    def _render_sw_crossplot(self, df, rt_col: str, phi_col: str, sw_series) -> None:
+        import pandas as pd
+
+        if rt_col not in df.columns or phi_col not in df.columns or sw_series is None:
+            self._show_sw_placeholder(self._sw_crossplot_host, "Crossplot", "Rt and PHIE curves are required for crossplot diagnostics.")
+            return
+
+        rt = pd.to_numeric(df[rt_col], errors="coerce")
+        phi = pd.to_numeric(df[phi_col], errors="coerce")
+        sw = pd.to_numeric(sw_series, errors="coerce")
+        mask = rt.notna() & phi.notna() & sw.notna() & (rt > 0)
+        if not mask.any():
+            self._show_sw_placeholder(self._sw_crossplot_host, "Crossplot", "No valid Rt/PHIE/Sw points for crossplot.")
+            return
+
+        try:
+            from matplotlib.figure import Figure
+        except Exception:
+            self._show_sw_placeholder(self._sw_crossplot_host, "Crossplot", "Matplotlib is unavailable in this environment.")
+            return
+
+        fig = Figure(figsize=(7.8, 5.8), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("white")
+        ax = fig.add_subplot(1, 1, 1)
+        sc = ax.scatter(phi[mask] * 100.0, rt[mask], c=sw[mask], cmap="YlGnBu_r", s=16, alpha=0.86, edgecolors="none")
+        ax.set_yscale("log")
+        ax.set_title("Crossplot (Rn vs PHIE)", fontsize=11, color="#24466B")
+        ax.set_xlabel("PHIE %", fontsize=9)
+        ax.set_ylabel(rt_col, fontsize=9)
+        ax.grid(True, linestyle=":", alpha=0.22)
+        fig.colorbar(sc, ax=ax, shrink=0.82, label="Sw")
+        self._render_figure_to_host(self._sw_crossplot_host, fig)
+
+    def _render_sw_qc_panel(self, df, rt_col: str, phi_col: str, sw_series) -> None:
+        import pandas as pd
+
+        if self._sw_qc_host is None:
+            return
+
+        layout = self._sw_qc_host.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(self._sw_qc_host)
+            layout.setContentsMargins(8, 8, 8, 8)
+        self._clear_layout(layout)
+
+        rt_ok = rt_col in df.columns and pd.to_numeric(df[rt_col], errors="coerce").dropna().size > 0
+        phi_ok = phi_col in df.columns and pd.to_numeric(df[phi_col], errors="coerce").dropna().size > 0
+        sw_ok = sw_series is not None and pd.to_numeric(sw_series, errors="coerce").dropna().size > 0
+
+        panel = QtWidgets.QFrame(self._sw_qc_host)
+        panel.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; }")
+        panel_layout = QtWidgets.QVBoxLayout(panel)
+        panel_layout.setContentsMargins(12, 12, 12, 12)
+        panel_layout.setSpacing(8)
+        title = QtWidgets.QLabel("Data Quality", panel)
+        title.setStyleSheet("font-size:16px;font-weight:900;color:#24466B;")
+        panel_layout.addWidget(title)
+
+        entries = [
+            ("✔" if rt_ok else "⚠", "Rt available" if rt_ok else "Rt missing"),
+            ("✔" if phi_ok else "⚠", "PHIE available" if phi_ok else "PHIE missing"),
+            ("⚠", "Formation Rw constant assumption set"),
+            ("✔" if sw_ok else "⚠", "Sw curve computed" if sw_ok else "Sw not computed"),
+        ]
+        for icon, text in entries:
+            row = QtWidgets.QLabel(f"{icon}  {text}", panel)
+            row.setStyleSheet("font-size:13px;color:#355C7D;")
+            panel_layout.addWidget(row)
+
+        panel_layout.addStretch(1)
+        layout.addWidget(panel, 1)
+
+    def _build_porosity_workspace(self) -> None:
+        if getattr(self.ui, "_porosity_workspace_built", False):
+            return
+
+        tab = getattr(self.ui, "tabPorosity", None)
+        if tab is None:
+            return
+
+        layout = tab.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(tab)
+
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        scroll_area = QtWidgets.QScrollArea(tab)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
+        scroll_area.setStyleSheet("border:0;background:transparent;")
+
+        content = QtWidgets.QWidget(scroll_area)
+        content_layout = QtWidgets.QVBoxLayout(content)
+        content_layout.setContentsMargins(14, 14, 14, 14)
+        content_layout.setSpacing(14)
+
+        panel_style = "QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:16px; }"
+        soft_panel_style = "QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:14px; }"
+        field_style = (
+            "QLineEdit, QComboBox, QDoubleSpinBox { background:#FFFFFF; border:1px solid #C9D7E6; border-radius:8px; padding:6px 10px; min-height:26px; }"
+            "QCheckBox { spacing:8px; color:#274B72; font-weight:600; }"
+        )
+        tab_style = (
+            "QTabWidget::pane { border:1px solid #D7E2EE; border-radius:14px; background:#FFFFFF; }"
+            "QTabBar::tab { background:#EEF4FA; color:#56708A; padding:9px 16px; margin-right:6px; border-top-left-radius:10px; border-top-right-radius:10px; min-width:88px; }"
+            "QTabBar::tab:selected { background:#FFFFFF; color:#1F4E79; font-weight:700; }"
+        )
+
+        def clear_layout(target_layout):
+            while target_layout.count():
+                item = target_layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                    widget.deleteLater()
+
+        def build_card(parent, title: str, value: str, accent: str) -> tuple[QtWidgets.QFrame, QtWidgets.QLabel]:
+            card = QtWidgets.QFrame(parent)
+            card.setStyleSheet(panel_style)
+            card_layout = QtWidgets.QVBoxLayout(card)
+            card_layout.setContentsMargins(12, 10, 12, 10)
+            card_layout.setSpacing(4)
+            title_label = QtWidgets.QLabel(title, card)
+            title_label.setStyleSheet("font-size:11px;color:#5C718A;font-weight:700;letter-spacing:0.2px;")
+            value_label = QtWidgets.QLabel(value, card)
+            value_label.setStyleSheet(f"font-size:20px;font-weight:800;color:{accent};")
+            value_label.setWordWrap(True)
+            card_layout.addWidget(title_label)
+            card_layout.addWidget(value_label)
+            return card, value_label
+
+        def build_info_button(parent, tooltip: str) -> QtWidgets.QToolButton:
+            button = QtWidgets.QToolButton(parent)
+            button.setAutoRaise(True)
+            button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            button.setToolTip(tooltip)
+            button.setIcon(self.ui.style().standardIcon(QtWidgets.QStyle.SP_MessageBoxInformation))
+            button.setIconSize(QtCore.QSize(16, 16))
+            button.setFixedSize(22, 22)
+            return button
+
+        def build_field_row(parent, label_text: str, widget: QtWidgets.QWidget, tooltip: str) -> QtWidgets.QWidget:
+            row = QtWidgets.QWidget(parent)
+            row_layout = QtWidgets.QHBoxLayout(row)
+            row_layout.setContentsMargins(0, 0, 0, 0)
+            row_layout.setSpacing(8)
+            label = QtWidgets.QLabel(label_text, row)
+            label.setStyleSheet("color:#355C7D;font-weight:700;")
+            info = build_info_button(row, tooltip)
+            row_layout.addWidget(label, 0)
+            row_layout.addStretch(1)
+            row_layout.addWidget(widget, 0)
+            row_layout.addWidget(info, 0)
+            return row
+
+        def build_section(parent, title: str, body_text: str | None = None) -> tuple[QtWidgets.QFrame, QtWidgets.QVBoxLayout]:
+            frame = QtWidgets.QFrame(parent)
+            frame.setStyleSheet(panel_style)
+            frame_layout = QtWidgets.QVBoxLayout(frame)
+            frame_layout.setContentsMargins(14, 14, 14, 14)
+            frame_layout.setSpacing(10)
+            title_label = QtWidgets.QLabel(title, frame)
+            title_label.setStyleSheet("font-size:15px;font-weight:800;color:#24466B;")
+            frame_layout.addWidget(title_label)
+            if body_text:
+                info_label = QtWidgets.QLabel(body_text, frame)
+                info_label.setWordWrap(True)
+                info_label.setStyleSheet("color:#6C7E90;font-size:12px;line-height:1.4;")
+                frame_layout.addWidget(info_label)
+            return frame, frame_layout
+
+        def style_method_button(button: QtWidgets.QPushButton, selected: bool) -> None:
+            if selected:
+                button.setStyleSheet(
+                    "QPushButton { background:#EAF2FF; border:1px solid #2B6CB0; border-radius:12px; color:#1F4E79; font-weight:800; padding:10px 12px; text-align:left; }"
+                )
+            else:
+                button.setStyleSheet(
+                    "QPushButton { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; color:#355C7D; font-weight:700; padding:10px 12px; text-align:left; }"
+                    "QPushButton:hover { border-color:#9BB8D9; background:#F8FBFE; }"
+                )
+
+        hero_frame = QtWidgets.QFrame(content)
+        hero_frame.setStyleSheet(
+            "QFrame { background:qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #FFFFFF, stop:1 #F5F9FD); border:1px solid #D7E2EE; border-radius:18px; }"
+        )
+        hero_layout = QtWidgets.QHBoxLayout(hero_frame)
+        hero_layout.setContentsMargins(18, 16, 18, 16)
+        hero_layout.setSpacing(14)
+
+        hero_icon = QtWidgets.QLabel("PHIE", hero_frame)
+        hero_icon.setAlignment(QtCore.Qt.AlignCenter)
+        hero_icon.setFixedSize(58, 58)
+        hero_icon.setStyleSheet(
+            "background:#EAF2FF;color:#1F4E79;border:1px solid #BFD2EA;border-radius:14px;font-size:15px;font-weight:900;"
+        )
+        hero_layout.addWidget(hero_icon, 0)
+
+        hero_text = QtWidgets.QVBoxLayout()
+        hero_title = QtWidgets.QLabel("Porosity Calculation", hero_frame)
+        hero_title.setStyleSheet("font-size:24px;font-weight:900;color:#173A5E;")
+        hero_subtitle = QtWidgets.QLabel(
+            "Density-neutron centered porosity workspace for interpretation, preview, and quick quality review.",
+            hero_frame,
+        )
+        hero_subtitle.setWordWrap(True)
+        hero_subtitle.setStyleSheet("color:#5C718A;font-size:12px;")
+        hero_text.addWidget(hero_title)
+        hero_text.addWidget(hero_subtitle)
+        hero_text.addStretch(1)
+        hero_layout.addLayout(hero_text, 1)
+        content_layout.addWidget(hero_frame)
+
+        workspace_row = QtWidgets.QHBoxLayout()
+        workspace_row.setSpacing(14)
+
+        controls_frame = QtWidgets.QFrame(content)
+        controls_frame.setMinimumWidth(340)
+        controls_frame.setMaximumWidth(380)
+        controls_frame.setStyleSheet(panel_style)
+        controls_layout = QtWidgets.QVBoxLayout(controls_frame)
+        controls_layout.setContentsMargins(14, 14, 14, 14)
+        controls_layout.setSpacing(12)
+
+        controls_title = QtWidgets.QLabel("Porosity Inputs", controls_frame)
+        controls_title.setStyleSheet("font-size:18px;font-weight:900;color:#24466B;")
+        controls_layout.addWidget(controls_title)
+
+        well_combo = QtWidgets.QComboBox(controls_frame)
+        well_combo.setStyleSheet(field_style)
+        well_combo.setMinimumHeight(34)
+        self.ui.comboPhiWell = well_combo
+        controls_layout.addWidget(build_field_row(controls_frame, "Well", well_combo, "Choose the active well used for porosity preview and calculation."))
+
+        method_group = QtWidgets.QFrame(controls_frame)
+        method_group.setStyleSheet(soft_panel_style)
+        method_layout = QtWidgets.QVBoxLayout(method_group)
+        method_layout.setContentsMargins(12, 12, 12, 12)
+        method_layout.setSpacing(8)
+        method_header = QtWidgets.QHBoxLayout()
+        method_title = QtWidgets.QLabel("Method", method_group)
+        method_title.setStyleSheet("font-size:13px;font-weight:800;color:#355C7D;")
+        method_header.addWidget(method_title)
+        method_header.addStretch(1)
+        method_header.addWidget(build_info_button(method_group, "Method cards stay synchronized with the calculation engine."))
+        method_layout.addLayout(method_header)
+
+        method_combo = QtWidgets.QComboBox(method_group)
+        method_combo.addItems(["Density-Neutron (PHIE)", "Sonic (DT)", "Neutron (PHIN)"])
+        method_combo.hide()
+        self.ui.comboPhiMethod = method_combo
+
+        method_buttons = QtWidgets.QVBoxLayout()
+        method_buttons.setSpacing(8)
+        self._porosity_method_buttons = {}
+        method_specs = [
+            ("Density-Neutron (PHIE)", "Density-Neutron\nPHIE"),
+            ("Sonic (DT)", "Sonic\nDT"),
+            ("Neutron (PHIN)", "Neutron\nPHIN"),
+        ]
+        for method_text, button_text in method_specs:
+            button = QtWidgets.QPushButton(button_text, method_group)
+            button.setCheckable(True)
+            button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            button.setMinimumHeight(56)
+            button.setProperty("methodText", method_text)
+            style_method_button(button, method_text == "Density-Neutron (PHIE)")
+            button.clicked.connect(lambda _checked=False, target=method_text: self._select_porosity_method(target))
+            self._porosity_method_buttons[method_text] = button
+            method_buttons.addWidget(button)
+        method_layout.addLayout(method_buttons)
+        controls_layout.addWidget(method_group)
+
+        rock_frame, rock_layout = build_section(controls_frame, "Rock Properties")
+        rho_ma_spin = QtWidgets.QDoubleSpinBox(rock_frame)
+        rho_ma_spin.setDecimals(3)
+        rho_ma_spin.setMinimum(2.0)
+        rho_ma_spin.setMaximum(3.5)
+        rho_ma_spin.setSingleStep(0.01)
+        rho_ma_spin.setValue(2.65)
+        rho_ma_spin.setStyleSheet(field_style)
+        self.ui.spinPhiRhoma = rho_ma_spin
+        rock_layout.addWidget(build_field_row(rock_frame, "Matrix Density (g/cc)", rho_ma_spin, "Typical limestone matrix density used for density-neutron porosity calculations."))
+        controls_layout.addWidget(rock_frame)
+
+        fluid_frame, fluid_layout = build_section(controls_frame, "Fluid Properties")
+        rho_f_spin = QtWidgets.QDoubleSpinBox(fluid_frame)
+        rho_f_spin.setDecimals(3)
+        rho_f_spin.setMinimum(0.80)
+        rho_f_spin.setMaximum(1.20)
+        rho_f_spin.setSingleStep(0.01)
+        rho_f_spin.setValue(1.00)
+        rho_f_spin.setStyleSheet(field_style)
+        self.ui.spinPhiRhof = rho_f_spin
+        fluid_layout.addWidget(build_field_row(fluid_frame, "Fluid Density (g/cc)", rho_f_spin, "Base fluid density used to convert RHOB into porosity."))
+        controls_layout.addWidget(fluid_frame)
+
+        correction_frame, correction_layout = build_section(controls_frame, "Corrections")
+        correction_row = QtWidgets.QWidget(correction_frame)
+        correction_row_layout = QtWidgets.QVBoxLayout(correction_row)
+        correction_row_layout.setContentsMargins(0, 0, 0, 0)
+        correction_row_layout.setSpacing(8)
+
+        vcl_toggle_row = QtWidgets.QHBoxLayout()
+        vcl_label = QtWidgets.QLabel("Vcl Correction", correction_row)
+        vcl_label.setStyleSheet("color:#355C7D;font-weight:700;")
+        vcl_toggle = QtWidgets.QCheckBox("Apply shale correction", correction_row)
+        vcl_toggle.setChecked(True)
+        vcl_toggle.setStyleSheet("color:#274B72;font-weight:600;")
+        vcl_toggle_row.addWidget(vcl_label)
+        vcl_toggle_row.addStretch(1)
+        vcl_toggle_row.addWidget(vcl_toggle)
+        correction_row_layout.addLayout(vcl_toggle_row)
+        self.ui.checkPhiVclCorr = vcl_toggle
+
+        out_name = QtWidgets.QLineEdit(correction_row)
+        out_name.setText("PHIE")
+        out_name.setStyleSheet(field_style)
+        self.ui.linePhiOutName = out_name
+        correction_row_layout.addWidget(build_field_row(correction_row, "Output Curve", out_name, "Name of the output porosity curve written back into the selected well."))
+        correction_layout.addWidget(correction_row)
+        controls_layout.addWidget(correction_frame)
+
+        hint = QtWidgets.QLabel(
+            "Density-neutron porosity is the default preview. Switch methods to compare alternative porosity estimates before export.",
+            controls_frame,
+        )
+        hint.setWordWrap(True)
+        hint.setStyleSheet("background:#F8FBFE;border:1px solid #D7E2EE;border-radius:10px;padding:10px;color:#5C718A;font-size:12px;")
+        controls_layout.addWidget(hint)
+        controls_layout.addStretch(1)
+
+        action_row = QtWidgets.QHBoxLayout()
+        action_row.setSpacing(10)
+        calc_btn = QtWidgets.QPushButton("Run Interpretation", controls_frame)
+        calc_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        calc_btn.setMinimumHeight(42)
+        calc_btn.setStyleSheet(
+            "QPushButton { background:#2B6CB0; color:#FFFFFF; border:none; border-radius:10px; font-size:13px; font-weight:800; }"
+            "QPushButton:hover { background:#245C96; }"
+        )
+        reset_btn = QtWidgets.QPushButton("Reset", controls_frame)
+        reset_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        reset_btn.setMinimumHeight(42)
+        reset_btn.setStyleSheet(
+            "QPushButton { background:#EEF4FA; color:#355C7D; border:1px solid #C9D7E6; border-radius:10px; font-size:13px; font-weight:800; }"
+            "QPushButton:hover { background:#E2EDF7; }"
+        )
+        action_row.addWidget(calc_btn)
+        action_row.addWidget(reset_btn)
+        controls_layout.addLayout(action_row)
+        self.ui.btnCalcPhi = calc_btn
+        self.ui.btnResetPhi = reset_btn
+
+        right_panel = QtWidgets.QVBoxLayout()
+        right_panel.setSpacing(14)
+
+        kpi_frame = QtWidgets.QFrame(content)
+        kpi_frame.setStyleSheet(panel_style)
+        kpi_layout = QtWidgets.QVBoxLayout(kpi_frame)
+        kpi_layout.setContentsMargins(14, 14, 14, 14)
+        kpi_layout.setSpacing(10)
+        kpi_header = QtWidgets.QHBoxLayout()
+        kpi_title = QtWidgets.QLabel("Porosity Summary", kpi_frame)
+        kpi_title.setStyleSheet("font-size:16px;font-weight:900;color:#24466B;")
+        kpi_header.addWidget(kpi_title)
+        kpi_header.addStretch(1)
+        kpi_header.addWidget(build_info_button(kpi_frame, "These values follow the active well and depth filter."))
+        kpi_layout.addLayout(kpi_header)
+        kpi_cards = QtWidgets.QHBoxLayout()
+        kpi_cards.setSpacing(10)
+        self._porosity_kpi_labels = {}
+        for title, key, value, accent in (
+            ("Average Porosity", "avg", "--", "#1F4E79"),
+            ("Max Porosity", "max", "--", "#0F8B8D"),
+            ("Min Porosity", "min", "--", "#D97706"),
+            ("Net Reservoir Thickness", "thickness", "--", "#2B6CB0"),
+        ):
+            card, value_label = build_card(kpi_frame, title, value, accent)
+            self._porosity_kpi_labels[key] = value_label
+            kpi_cards.addWidget(card)
+        kpi_layout.addLayout(kpi_cards)
+        right_panel.addWidget(kpi_frame, 0)
+
+        body_row = QtWidgets.QHBoxLayout()
+        body_row.setSpacing(14)
+
+        plot_frame = QtWidgets.QFrame(content)
+        plot_frame.setStyleSheet(panel_style)
+        plot_layout = QtWidgets.QVBoxLayout(plot_frame)
+        plot_layout.setContentsMargins(14, 14, 14, 14)
+        plot_layout.setSpacing(10)
+
+        tabs_header = QtWidgets.QHBoxLayout()
+        tabs_title = QtWidgets.QLabel("Log View", plot_frame)
+        tabs_title.setStyleSheet("font-size:16px;font-weight:900;color:#24466B;")
+        tabs_header.addWidget(tabs_title)
+        tabs_header.addStretch(1)
+        tabs_header.addWidget(build_info_button(plot_frame, "Use the tabs to inspect log view, crossplot, and histogram previews."))
+        plot_layout.addLayout(tabs_header)
+
+        tab_widget = QtWidgets.QTabWidget(plot_frame)
+        tab_widget.setStyleSheet(tab_style)
+        tab_widget.setDocumentMode(True)
+        self.ui.tabPhiLogView = QtWidgets.QWidget(tab_widget)
+        self.ui.tabPhiCrossplot = QtWidgets.QWidget(tab_widget)
+        self.ui.tabPhiHistogram = QtWidgets.QWidget(tab_widget)
+        tab_widget.addTab(self.ui.tabPhiLogView, "Log View")
+        tab_widget.addTab(self.ui.tabPhiCrossplot, "Crossplot")
+        tab_widget.addTab(self.ui.tabPhiHistogram, "Histogram")
+
+        for page_name, page_widget in (
+            ("log", self.ui.tabPhiLogView),
+            ("crossplot", self.ui.tabPhiCrossplot),
+            ("histogram", self.ui.tabPhiHistogram),
+        ):
+            page_layout = QtWidgets.QVBoxLayout(page_widget)
+            page_layout.setContentsMargins(0, 0, 0, 0)
+            page_layout.setSpacing(0)
+            host = QtWidgets.QFrame(page_widget)
+            host.setStyleSheet(soft_panel_style)
+            host.setMinimumHeight(340)
+            host_layout = QtWidgets.QVBoxLayout(host)
+            host_layout.setContentsMargins(10, 10, 10, 10)
+            host_layout.setSpacing(0)
+            page_layout.addWidget(host)
+            if page_name == "log":
+                self._porosity_log_host = host
+            elif page_name == "crossplot":
+                self._porosity_crossplot_host = host
+            else:
+                self._porosity_hist_host = host
+
+        plot_layout.addWidget(tab_widget, 1)
+        self.ui.framePhiPlotTabs = tab_widget
+
+        quality_frame, quality_layout = build_section(
+            content,
+            "Data Quality",
+            "Indicator cards summarize the active log coverage and missing curve handling for the current well.",
+        )
+        quality_frame.setMinimumWidth(260)
+        self._porosity_quality_labels = {}
+        for title, key, icon_pixmap in (
+            ("RHOB", "rhob", QtWidgets.QStyle.SP_DialogApplyButton),
+            ("NPHI", "nphi", QtWidgets.QStyle.SP_MessageBoxWarning),
+        ):
+            row = QtWidgets.QFrame(quality_frame)
+            row.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; }")
+            row_layout = QtWidgets.QHBoxLayout(row)
+            row_layout.setContentsMargins(10, 10, 10, 10)
+            row_layout.setSpacing(10)
+            icon_label = QtWidgets.QLabel(row)
+            icon_label.setPixmap(self.ui.style().standardIcon(icon_pixmap).pixmap(16, 16))
+            text_box = QtWidgets.QVBoxLayout()
+            label = QtWidgets.QLabel(title, row)
+            label.setStyleSheet("font-size:12px;font-weight:900;color:#355C7D;")
+            value = QtWidgets.QLabel("--", row)
+            value.setWordWrap(True)
+            value.setStyleSheet("font-size:12px;color:#5C718A;")
+            text_box.addWidget(label)
+            text_box.addWidget(value)
+            row_layout.addWidget(icon_label, 0)
+            row_layout.addLayout(text_box, 1)
+            quality_layout.addWidget(row)
+            self._porosity_quality_labels[key] = value
+        quality_note = QtWidgets.QLabel("Missing curves are highlighted so you can see whether interpolation or fallback logic is being used.", quality_frame)
+        quality_note.setWordWrap(True)
+        quality_note.setStyleSheet("color:#5C718A;font-size:12px;")
+        quality_layout.addWidget(quality_note)
+
+        body_row.addWidget(plot_frame, 1)
+        body_row.addWidget(quality_frame, 0)
+        right_panel.addLayout(body_row, 1)
+
+        activity_frame, activity_layout = build_section(content, "Activity Log", "Recent porosity workflow events are kept in a compact desktop-style feed.")
+        activity_list = QtWidgets.QListWidget(activity_frame)
+        activity_list.setAlternatingRowColors(True)
+        activity_list.setStyleSheet(
+            "QListWidget { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; padding:6px; }"
+            "QListWidget::item { padding:8px 6px; }"
+        )
+        activity_layout.addWidget(activity_list)
+        self._porosity_activity_list = activity_list
+        right_panel.addWidget(activity_frame, 0)
+
+        workspace_row.addWidget(controls_frame, 0)
+        workspace_row.addLayout(right_panel, 1)
+        content_layout.addLayout(workspace_row, 1)
+
+        content_layout.addStretch(1)
+        scroll_area.setWidget(content)
+        layout.addWidget(scroll_area)
+
+        self.ui.comboPhiMethod.currentTextChanged.connect(lambda *_: self._sync_porosity_method_cards())
+        self.ui.comboPhiWell.currentTextChanged.connect(lambda *_: self.refresh_porosity_workspace())
+        self.ui.refresh_porosity_tab = self.refresh_porosity_workspace
+
+        self._populate_porosity_wells()
+        self._sync_porosity_method_cards()
+        if not self._porosity_activity_items:
+            self._porosity_activity_items = ["LAS loaded", "Porosity calculated", "Crossplot generated"]
+        self.ui._porosity_workspace_built = True
+        self.refresh_porosity_workspace()
+
+    def refresh_porosity_workspace(self) -> None:
+        if not getattr(self.ui, "_porosity_workspace_built", False):
+            return
+
+        self._populate_porosity_wells()
+        self._sync_porosity_method_cards()
+
+        well = self.data._get_current_well()
+        if well is None:
+            self._set_porosity_kpis(None, None)
+            self._set_porosity_quality(None)
+            self._show_porosity_placeholder(self._porosity_log_host, "Log View", "Load a well to preview the porosity track layout.")
+            self._show_porosity_placeholder(self._porosity_crossplot_host, "Crossplot", "Density vs neutron scatter will appear here once data is available.")
+            self._show_porosity_placeholder(self._porosity_hist_host, "Histogram", "PHIE distribution will appear here once porosity is calculated.")
+            self._refresh_porosity_activity_log()
+            return
+
+        df = getattr(well, "data", None)
+        if df is None or getattr(df, "empty", True):
+            self._set_porosity_kpis(None, None)
+            self._set_porosity_quality(None)
+            self._show_porosity_placeholder(self._porosity_log_host, "Log View", "The active well does not have usable log data yet.")
+            self._show_porosity_placeholder(self._porosity_crossplot_host, "Crossplot", "No data available for density-neutron crossplot preview.")
+            self._show_porosity_placeholder(self._porosity_hist_host, "Histogram", "No porosity samples available for histogram preview.")
+            self._refresh_porosity_activity_log()
+            return
+
+        visible = self.data._filtered_dataframe(well)
+        if visible is None or getattr(visible, "empty", True):
+            visible = df.copy()
+
+        depth_col = self.data._depth_column(visible) or self.data._depth_column(df)
+        phi_series, phi_label = self._porosity_preview_series(visible)
+
+        self._set_porosity_kpis(visible, phi_series)
+        self._set_porosity_quality(visible)
+        self._render_porosity_log_view(visible, depth_col, phi_series, phi_label)
+        self._render_porosity_crossplot(visible, depth_col)
+        self._render_porosity_histogram(visible, depth_col, phi_series, phi_label)
+        self._refresh_porosity_activity_log()
+
+    def _populate_porosity_wells(self) -> None:
+        combo = getattr(self.ui, "comboPhiWell", None)
+        if combo is None:
+            return
+
+        current_text = combo.currentText().strip()
+        combo.blockSignals(True)
+        combo.clear()
+        wells = sorted(getattr(self.data, "_wells", {}).keys())
+        if wells:
+            combo.addItems(wells)
+            target = current_text if current_text in wells else getattr(self.data, "_current_well", None)
+            if target in wells:
+                combo.setCurrentText(target)
+            elif combo.count():
+                combo.setCurrentIndex(0)
+        else:
+            combo.addItem("No wells loaded")
+        combo.blockSignals(False)
+
+    def _select_porosity_method(self, method_text: str) -> None:
+        combo = getattr(self.ui, "comboPhiMethod", None)
+        if combo is not None:
+            index = combo.findText(method_text)
+            if index >= 0:
+                combo.setCurrentIndex(index)
+        self._sync_porosity_method_cards()
+
+    def _sync_porosity_method_cards(self) -> None:
+        combo = getattr(self.ui, "comboPhiMethod", None)
+        if combo is None:
+            return
+
+        current_text = combo.currentText().strip()
+        for method_text, button in self._porosity_method_buttons.items():
+            selected = method_text == current_text
+            button.blockSignals(True)
+            button.setChecked(selected)
+            button.blockSignals(False)
+            if selected:
+                button.setStyleSheet(
+                    "QPushButton { background:#EAF2FF; border:1px solid #2B6CB0; border-radius:12px; color:#1F4E79; font-weight:800; padding:10px 12px; text-align:left; }"
+                )
+            else:
+                button.setStyleSheet(
+                    "QPushButton { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; color:#355C7D; font-weight:700; padding:10px 12px; text-align:left; }"
+                    "QPushButton:hover { border-color:#9BB8D9; background:#F8FBFE; }"
+                )
+
+    def _porosity_preview_series(self, df):
+        import pandas as pd
+
+        output_name = self._line_text("linePhiOutName") or "PHIE"
+        candidates = [output_name, "PHIE", "PHIT", "PHI"]
+        for candidate in candidates:
+            if candidate in df.columns:
+                series = pd.to_numeric(df[candidate], errors="coerce")
+                return series, candidate
+
+        method = self._combo_text("comboPhiMethod")
+        rho_ma = self._spin_value(("spinPhiRhoma",), 2.65) or 2.65
+        rho_f = self._spin_value(("spinPhiRhof",), 1.0) or 1.0
+
+        if method == "Neutron (PHIN)" and "NPHI" in df.columns:
+            series = pd.to_numeric(df["NPHI"], errors="coerce").clip(0.0, 1.0)
+            return series, "NPHI"
+        if method == "Sonic (DT)" and "DT" in df.columns:
+            import numpy as np
+
+            dt = pd.to_numeric(df["DT"], errors="coerce").to_numpy(dtype=float)
+            values = np.clip((dt - 55.5) / (189.0 - 55.5 + 1e-9), 0.0, 1.0)
+            return pd.Series(values, index=df.index), "DT"
+        if "NPHI" in df.columns and "RHOB" in df.columns:
+            values = porosity.compute_phi_combo(df["NPHI"].values, df["RHOB"].values, rho_ma=rho_ma, rho_f=rho_f)
+            return pd.Series(values, index=df.index), "Density-Neutron"
+        if "RHOB" in df.columns:
+            values = porosity.compute_phi_from_density(df["RHOB"].values, rho_ma=rho_ma, rho_f=rho_f)
+            return pd.Series(values, index=df.index), "Density"
+        if "NPHI" in df.columns:
+            series = pd.to_numeric(df["NPHI"], errors="coerce").clip(0.0, 1.0)
+            return series, "NPHI"
+
+        return pd.Series(dtype=float), ""
+
+    def _set_porosity_kpis(self, df, phi_series) -> None:
+        import numpy as np
+        import pandas as pd
+
+        if df is None or phi_series is None or getattr(phi_series, "empty", True):
+            for key in self._porosity_kpi_labels:
+                self._porosity_kpi_labels[key].setText("--")
+            return
+
+        valid_phi = pd.to_numeric(phi_series, errors="coerce").dropna()
+        if valid_phi.empty:
+            for key in self._porosity_kpi_labels:
+                self._porosity_kpi_labels[key].setText("--")
+            return
+
+        depth_col = self.data._depth_column(df)
+        if depth_col is not None and depth_col in df.columns:
+            depth = pd.to_numeric(df[depth_col], errors="coerce")
+        else:
+            depth = pd.Series(np.arange(len(df), dtype=float), index=df.index)
+
+        phi_mask = pd.to_numeric(phi_series, errors="coerce") >= 0.10
+        thickness = self._estimate_thickness(depth.to_numpy(dtype=float), phi_mask.fillna(False).to_numpy(dtype=bool))
+
+        self._porosity_kpi_labels["avg"].setText(f"{valid_phi.mean() * 100.0:.1f}%")
+        self._porosity_kpi_labels["max"].setText(f"{valid_phi.max() * 100.0:.1f}%")
+        self._porosity_kpi_labels["min"].setText(f"{valid_phi.min() * 100.0:.1f}%")
+        self._porosity_kpi_labels["thickness"].setText(f"{thickness:.1f} m")
+
+    def _set_porosity_quality(self, df) -> None:
+        import pandas as pd
+
+        if df is None or getattr(df, "empty", True):
+            if "rhob" in self._porosity_quality_labels:
+                self._porosity_quality_labels["rhob"].setText("No well loaded")
+            if "nphi" in self._porosity_quality_labels:
+                self._porosity_quality_labels["nphi"].setText("No well loaded")
+            return
+
+        rhob_ok = "RHOB" in df.columns and pd.to_numeric(df["RHOB"], errors="coerce").dropna().size > 0
+        nphi_present = "NPHI" in df.columns and pd.to_numeric(df["NPHI"], errors="coerce").dropna().size > 0
+
+        rhob_message = "Available" if rhob_ok else "Missing"
+        nphi_message = "Available" if nphi_present else "Missing (interpolated)"
+
+        if "rhob" in self._porosity_quality_labels:
+            self._porosity_quality_labels["rhob"].setText(rhob_message)
+        if "nphi" in self._porosity_quality_labels:
+            self._porosity_quality_labels["nphi"].setText(nphi_message)
+
+    def _show_porosity_placeholder(self, host, title: str, message: str) -> None:
+        if host is None:
+            return
+
+        layout = host.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(host)
+            layout.setContentsMargins(0, 0, 0, 0)
+
+        self._clear_layout(layout)
+        label = QtWidgets.QLabel(f"{title}\n\n{message}", host)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setWordWrap(True)
+        label.setStyleSheet(
+            "background:#F8FBFE;border:1px dashed #C9D7E6;border-radius:10px;padding:18px;color:#6C7E90;font-size:12px;"
+        )
+        layout.addWidget(label, 1)
+
+    def _refresh_porosity_activity_log(self) -> None:
+        if self._porosity_activity_list is None:
+            return
+
+        if not self._porosity_activity_items:
+            self._porosity_activity_items = ["LAS loaded", "Porosity calculated", "Crossplot generated"]
+
+        self._porosity_activity_list.clear()
+        for message in self._porosity_activity_items[-8:]:
+            self._porosity_activity_list.addItem(message)
+
+    def _append_porosity_activity(self, message: str) -> None:
+        text = message.strip()
+        if not text:
+            return
+        self._porosity_activity_items.append(text)
+        self._porosity_activity_items = self._porosity_activity_items[-8:]
+        self._refresh_porosity_activity_log()
+
+    def _clear_layout(self, layout) -> None:
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+    def _render_porosity_log_view(self, df, depth_col: str | None, phi_series, phi_label: str) -> None:
+        import numpy as np
+        import pandas as pd
+
+        if depth_col is None or depth_col not in df.columns:
+            self._show_porosity_placeholder(self._porosity_log_host, "Log View", "A depth curve is required to render the multi-track porosity preview.")
+            return
+
+        depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
+        gr_col = self._pick_gr_curve_name(df)
+        gr = pd.to_numeric(df[gr_col], errors="coerce").to_numpy(dtype=float) if gr_col and gr_col in df.columns else None
+        rhob = pd.to_numeric(df["RHOB"], errors="coerce").to_numpy(dtype=float) if "RHOB" in df.columns else None
+        nphi = pd.to_numeric(df["NPHI"], errors="coerce").to_numpy(dtype=float) if "NPHI" in df.columns else None
+        phi = pd.to_numeric(phi_series, errors="coerce").to_numpy(dtype=float) if phi_series is not None else np.array([])
+
+        mask = np.isfinite(depth)
+        if gr is not None:
+            mask &= np.isfinite(gr)
+        if rhob is not None:
+            mask &= np.isfinite(rhob)
+        if nphi is not None:
+            mask &= np.isfinite(nphi)
+        if phi.size:
+            mask &= np.isfinite(phi)
+
+        if not np.any(mask):
+            self._show_porosity_placeholder(self._porosity_log_host, "Log View", "The current selection does not contain enough valid samples to draw the track preview.")
+            return
+
+        depth = depth[mask]
+        if gr is not None:
+            gr = gr[mask]
+        if rhob is not None:
+            rhob = rhob[mask]
+        if nphi is not None:
+            nphi = nphi[mask]
+        if phi.size:
+            phi = phi[mask]
+
+        try:
+            from matplotlib.figure import Figure
+        except Exception:
+            self._show_porosity_placeholder(self._porosity_log_host, "Log View", "Matplotlib is not available in the current environment.")
+            return
+
+        fig = Figure(figsize=(9.2, 6.2), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("white")
+        axes = fig.subplots(1, 3, sharey=True)
+        if not isinstance(axes, (list, tuple, np.ndarray)):
+            axes = [axes]
+
+        ax_gr, ax_rho, ax_phi = axes
+
+        if gr is not None:
+            ax_gr.plot(gr, depth, color="#E97A16", linewidth=1.1)
+            ax_gr.fill_betweenx(depth, gr.min(), gr, color="#FDE7C8", alpha=0.6)
+        else:
+            ax_gr.text(0.5, 0.5, "GR unavailable", transform=ax_gr.transAxes, ha="center", va="center", color="#7B8FA6")
+        ax_gr.set_title("Track 1  Gamma Ray", fontsize=10, color="#24466B")
+        ax_gr.set_xlabel("GR", fontsize=9)
+        ax_gr.grid(True, linestyle="--", alpha=0.18)
+
+        if rhob is not None:
+            ax_rho.plot(rhob, depth, color="#2563EB", linewidth=1.1)
+            ax_rho.set_xlabel("RHOB", fontsize=9, color="#2563EB")
+            ax_rho.tick_params(axis="x", colors="#2563EB")
+            ax_rho.grid(True, linestyle="--", alpha=0.18)
+            twin = ax_rho.twiny()
+            if nphi is not None:
+                twin.plot(nphi, depth, color="#F97316", linewidth=1.0)
+                twin.set_xlabel("NPHI", fontsize=9, color="#F97316")
+                twin.tick_params(axis="x", colors="#F97316")
+        else:
+            ax_rho.text(0.5, 0.5, "Density-Neutron overlay", transform=ax_rho.transAxes, ha="center", va="center", color="#7B8FA6")
+        ax_rho.set_title("Track 2  Density / Neutron", fontsize=10, color="#24466B")
+
+        if phi.size:
+            ax_phi.plot(phi * 100.0, depth, color="#0F8B8D", linewidth=1.2)
+            ax_phi.fill_betweenx(depth, 0, phi * 100.0, where=phi >= 0.10, color="#B7ECEA", alpha=0.6)
+            ax_phi.set_xlabel("PHIE %", fontsize=9, color="#0F8B8D")
+            ax_phi.tick_params(axis="x", colors="#0F8B8D")
+            ax_phi.grid(True, linestyle="--", alpha=0.18)
+        else:
+            ax_phi.text(0.5, 0.5, "Effective porosity preview", transform=ax_phi.transAxes, ha="center", va="center", color="#7B8FA6")
+        ax_phi.set_title(f"Track 3  Effective Porosity ({phi_label or 'PHIE'})", fontsize=10, color="#24466B")
+
+        for axis in axes:
+            axis.invert_yaxis()
+            axis.set_ylabel(depth_col, fontsize=9, color="#24466B")
+
+        self._render_figure_to_host(self._porosity_log_host, fig)
+
+    def _render_porosity_crossplot(self, df, depth_col: str | None) -> None:
+        import pandas as pd
+
+        if "RHOB" not in df.columns or "NPHI" not in df.columns:
+            self._show_porosity_placeholder(self._porosity_crossplot_host, "Crossplot", "Density vs neutron scatter requires both RHOB and NPHI curves.")
+            return
+
+        phi_series, _ = self._porosity_preview_series(df)
+        if phi_series is None or getattr(phi_series, "empty", True):
+            self._show_porosity_placeholder(self._porosity_crossplot_host, "Crossplot", "Porosity values are needed before the density-neutron scatter can be drawn.")
+            return
+
+        rhob = pd.to_numeric(df["RHOB"], errors="coerce")
+        nphi = pd.to_numeric(df["NPHI"], errors="coerce")
+        phi = pd.to_numeric(phi_series, errors="coerce")
+
+        mask = rhob.notna() & nphi.notna() & phi.notna()
+        if not mask.any():
+            self._show_porosity_placeholder(self._porosity_crossplot_host, "Crossplot", "No valid RHOB / NPHI samples were found for the preview.")
+            return
+
+        try:
+            from matplotlib.figure import Figure
+        except Exception:
+            self._show_porosity_placeholder(self._porosity_crossplot_host, "Crossplot", "Matplotlib is not available in the current environment.")
+            return
+
+        fig = Figure(figsize=(7.4, 6.0), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("white")
+        ax = fig.add_subplot(1, 1, 1)
+        scatter = ax.scatter(
+            nphi[mask] * 100.0,
+            rhob[mask],
+            c=phi[mask] * 100.0,
+            cmap="viridis",
+            s=16,
+            alpha=0.86,
+            edgecolors="none",
+        )
+        ax.set_title("Density vs Neutron Scatter", fontsize=11, color="#24466B")
+        ax.set_xlabel("NPHI %", fontsize=9)
+        ax.set_ylabel("RHOB", fontsize=9)
+        ax.grid(True, linestyle="--", alpha=0.18)
+        ax.tick_params(labelsize=8)
+        fig.colorbar(scatter, ax=ax, shrink=0.82, label="PHIE %")
+        self._render_figure_to_host(self._porosity_crossplot_host, fig)
+
+    def _render_porosity_histogram(self, df, depth_col: str | None, phi_series, phi_label: str) -> None:
+        import pandas as pd
+
+        if phi_series is None or getattr(phi_series, "empty", True):
+            self._show_porosity_placeholder(self._porosity_hist_host, "Histogram", "Porosity samples are required to build the distribution preview.")
+            return
+
+        phi = pd.to_numeric(phi_series, errors="coerce").dropna()
+        if phi.empty:
+            self._show_porosity_placeholder(self._porosity_hist_host, "Histogram", "No porosity samples were found for the current interval.")
+            return
+
+        try:
+            from matplotlib.figure import Figure
+        except Exception:
+            self._show_porosity_placeholder(self._porosity_hist_host, "Histogram", "Matplotlib is not available in the current environment.")
+            return
+
+        fig = Figure(figsize=(7.4, 5.8), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("white")
+        ax = fig.add_subplot(1, 1, 1)
+        ax.hist(phi * 100.0, bins=24, color="#2B6CB0", alpha=0.86, edgecolor="#1F4E79")
+        ax.set_title(f"Porosity Distribution ({phi_label or 'PHIE'})", fontsize=11, color="#24466B")
+        ax.set_xlabel("Porosity %", fontsize=9)
+        ax.set_ylabel("Count", fontsize=9)
+        ax.grid(True, axis="y", linestyle="--", alpha=0.18)
+        ax.tick_params(labelsize=8)
+        self._render_figure_to_host(self._porosity_hist_host, fig)
 
     def _build_vsh_workspace(self) -> None:
         if getattr(self.ui, "_vsh_workspace_built", False):

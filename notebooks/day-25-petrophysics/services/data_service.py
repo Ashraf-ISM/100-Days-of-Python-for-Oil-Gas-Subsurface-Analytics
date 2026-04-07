@@ -656,6 +656,9 @@ th {{ background: #F8FBFE; }}
         dashboard_refresh = getattr(self.ui, "refresh_dashboard_tab", None)
         if callable(dashboard_refresh):
             dashboard_refresh()
+        porosity_refresh = getattr(self.ui, "refresh_porosity_tab", None)
+        if callable(porosity_refresh):
+            porosity_refresh()
 
     def _clear_views_without_well(self) -> None:
         for table_name in (
@@ -691,6 +694,9 @@ th {{ background: #F8FBFE; }}
         dashboard_refresh = getattr(self.ui, "refresh_dashboard_tab", None)
         if callable(dashboard_refresh):
             dashboard_refresh()
+        porosity_refresh = getattr(self.ui, "refresh_porosity_tab", None)
+        if callable(porosity_refresh):
+            porosity_refresh()
 
     def _get_active_analysis_target(self):
         if self._all_wells_mode:
