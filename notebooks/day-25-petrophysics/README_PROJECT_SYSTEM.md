@@ -1,5 +1,5 @@
 """
-PETROARX - INTEGRATED PROJECT MANAGEMENT SYSTEM
+PETROARX -INTEGRATED PROJECT MANAGEMENT SYSTEM
 ========================================================
 
 Complete project management solution with full app integration.
