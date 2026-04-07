@@ -162,7 +162,7 @@ HOW TO SAVE:
 """
 PROJECT FILE FORMAT (.pproj):
 
-File extension: .pproj
+File extension:.pproj
 File type: JSON (text-based)
 Stored location: User selects during save
 
