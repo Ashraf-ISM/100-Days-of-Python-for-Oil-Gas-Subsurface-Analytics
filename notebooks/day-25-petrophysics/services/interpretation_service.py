@@ -295,18 +295,41 @@ class InterpretationService:
         a_val = self._spin_value(("spinSwA",), 1.0) or 1.0
         m_val = self._slider_or_spin_value("sliderSwM", ("spinSwM",), 2.0)
         n_val = self._slider_or_spin_value("sliderSwN", ("spinSwN",), 2.0)
-
+        method = (self._combo_text("comboSwMethod") or "Archie").strip()
+        rsh_val = self._spin_value(("spinSwFormRw",), 2.0) or 2.0
         phi_values = pd.to_numeric(df[phi_curve], errors="coerce").to_numpy(dtype=float)
         rt_values = pd.to_numeric(df[rt_curve], errors="coerce").to_numpy(dtype=float)
 
-        sw_values = saturation.compute_sw_archie(phi_values, rt_values, rw=rw, a=a_val, m=m_val, n=n_val)
+        if method == "Archie":
+            sw_values = saturation.compute_sw_archie(phi_values, rt_values, rw=rw, a=a_val, m=m_val, n=n_val)
+        else:
+            if "VSH" not in df.columns and "Vsh" not in df.columns:
+                self.compute_vsh()
+            vsh_col = "VSH" if "VSH" in df.columns else ("Vsh" if "Vsh" in df.columns else "")
+            if not vsh_col:
+                QtWidgets.QMessageBox.warning(self.ui, "Calculations", "VSH curve is required for the selected Sw method.")
+                return
+            vsh_values = pd.to_numeric(df[vsh_col], errors="coerce").to_numpy(dtype=float)
+            if method == "Simandoux":
+                sw_values = saturation.compute_sw_simandoux(
+                    phi_values, rt_values, vsh_values, rw=rw, rsh=rsh_val, a=a_val, m=m_val, n=n_val
+                )
+            elif method == "Modified Simandoux":
+                sw_values = saturation.compute_sw_modified_simandoux(
+                    phi_values, rt_values, vsh_values, rw=rw, rsh=rsh_val, a=a_val, m=m_val, n=n_val
+                )
+            else:
+                sw_values = saturation.compute_sw_indonesia(
+                    phi_values, rt_values, vsh_values, rw=rw, rsh=rsh_val, a=a_val, m=m_val, n=n_val
+                )
+
         df["SW"] = sw_values
         out_name = self._line_text("lineSwOutName") or "SW"
         if out_name != "SW":
             df[out_name] = sw_values
 
         self.data._refresh_views()
-        self._append_sw_activity("Compute Sw")
+        self._append_sw_activity(f"Compute Sw ({method})")
         self.refresh_sw_workspace()
 
     def reset_sw_panel(self):
@@ -801,7 +824,7 @@ class InterpretationService:
 
         self.ui.comboSwMethod = QtWidgets.QComboBox(left_panel)
         self.ui.comboSwMethod.setStyleSheet(field_style)
-        self.ui.comboSwMethod.addItems(["Archie"])
+        self.ui.comboSwMethod.addItems(["Archie", "Simandoux", "Modified Simandoux", "Indonesia"])
         left_layout.addWidget(self._build_sw_field(left_panel, "Method", self.ui.comboSwMethod))
 
         resistivity_frame = self._build_sw_group(left_panel, "Resistivity Curve")
@@ -1187,14 +1210,30 @@ class InterpretationService:
             a_val = self._spin_value(("spinSwA",), 1.0) or 1.0
             m_val = self._slider_or_spin_value("sliderSwM", ("spinSwM",), 2.0)
             n_val = self._slider_or_spin_value("sliderSwN", ("spinSwN",), 2.0)
-            sw_values = saturation.compute_sw_archie(
-                pd.to_numeric(visible[phi_col], errors="coerce").to_numpy(dtype=float),
-                pd.to_numeric(visible[rt_col], errors="coerce").to_numpy(dtype=float),
-                rw=rw,
-                a=a_val,
-                m=m_val,
-                n=n_val,
-            )
+            method = (self._combo_text("comboSwMethod") or "Archie").strip()
+            rsh_val = self._spin_value(("spinSwFormRw",), 2.0) or 2.0
+            phi_vals = pd.to_numeric(visible[phi_col], errors="coerce").to_numpy(dtype=float)
+            rt_vals = pd.to_numeric(visible[rt_col], errors="coerce").to_numpy(dtype=float)
+            if method == "Archie":
+                sw_values = saturation.compute_sw_archie(phi_vals, rt_vals, rw=rw, a=a_val, m=m_val, n=n_val)
+            else:
+                vsh_col = "VSH" if "VSH" in visible.columns else ("Vsh" if "Vsh" in visible.columns else "")
+                if vsh_col:
+                    vsh_vals = pd.to_numeric(visible[vsh_col], errors="coerce").to_numpy(dtype=float)
+                    if method == "Simandoux":
+                        sw_values = saturation.compute_sw_simandoux(
+                            phi_vals, rt_vals, vsh_vals, rw=rw, rsh=rsh_val, a=a_val, m=m_val, n=n_val
+                        )
+                    elif method == "Modified Simandoux":
+                        sw_values = saturation.compute_sw_modified_simandoux(
+                            phi_vals, rt_vals, vsh_vals, rw=rw, rsh=rsh_val, a=a_val, m=m_val, n=n_val
+                        )
+                    else:
+                        sw_values = saturation.compute_sw_indonesia(
+                            phi_vals, rt_vals, vsh_vals, rw=rw, rsh=rsh_val, a=a_val, m=m_val, n=n_val
+                        )
+                else:
+                    sw_values = saturation.compute_sw_archie(phi_vals, rt_vals, rw=rw, a=a_val, m=m_val, n=n_val)
             sw_series = pd.Series(sw_values, index=visible.index)
         else:
             sw_series = pd.Series(dtype=float)
@@ -1296,10 +1335,12 @@ class InterpretationService:
         import pandas as pd
 
         if depth_col is None or depth_col not in df.columns:
-            self._show_sw_placeholder(self._sw_log_host, "Log View", "Depth curve is required for Sw log rendering.")
-            return
+            depth = np.arange(len(df), dtype=float)
+            depth_label = "Index"
+        else:
+            depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
+            depth_label = depth_col
 
-        depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
         gr_col = self._pick_gr_curve_name(df)
         gr = pd.to_numeric(df[gr_col], errors="coerce").to_numpy(dtype=float) if gr_col and gr_col in df.columns else None
         rt = pd.to_numeric(df[rt_col], errors="coerce").to_numpy(dtype=float) if rt_col in df.columns else None
@@ -1307,12 +1348,11 @@ class InterpretationService:
         sw = pd.to_numeric(sw_series, errors="coerce").to_numpy(dtype=float) if sw_series is not None else np.array([])
 
         mask = np.isfinite(depth)
-        if gr is not None:
-            mask &= np.isfinite(gr)
         if rt is not None:
             mask &= np.isfinite(rt)
         if sw.size:
             mask &= np.isfinite(sw)
+
         if not np.any(mask):
             self._show_sw_placeholder(self._sw_log_host, "Log View", "No valid samples available for Sw track rendering.")
             return
@@ -1326,6 +1366,10 @@ class InterpretationService:
             phi = phi[mask]
         if sw.size:
             sw = sw[mask]
+
+        if sw.size == 0:
+            self._show_sw_placeholder(self._sw_log_host, "Log View", "Sw has not been computed for the current selection.")
+            return
 
         try:
             from matplotlib.figure import Figure
@@ -1376,7 +1420,7 @@ class InterpretationService:
 
         for ax in axes:
             ax.invert_yaxis()
-            ax.set_ylabel(depth_col, fontsize=9)
+            ax.set_ylabel(depth_label, fontsize=9)
 
         self._render_figure_to_host(self._sw_log_host, fig)
 
