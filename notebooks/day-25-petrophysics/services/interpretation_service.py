@@ -269,14 +269,11 @@ class InterpretationService:
 
         rt_curve = self._combo_text("comboSwRt")
         if not rt_curve or rt_curve not in df.columns:
-            rt_curve = "LLD" if "LLD" in df.columns else ("ILD" if "ILD" in df.columns else "")
+            rt_curve = self._pick_rt_curve_name(df)
 
         phi_curve = self._combo_text("comboSwPhie")
         if not phi_curve or phi_curve not in df.columns:
-            for candidate in ("PHIE", "PHIT", "PHI"):
-                if candidate in df.columns:
-                    phi_curve = candidate
-                    break
+            phi_curve = self._pick_phi_curve_name(df)
 
         if not phi_curve or phi_curve not in df.columns:
             self.compute_phi()
@@ -1155,24 +1152,31 @@ class InterpretationService:
             return
 
         columns = [str(c) for c in getattr(df, "columns", [])]
-        rt_candidates = [c for c in columns if any(token in c.upper() for token in ("LLD", "ILD", "RT", "RES"))]
-        phi_candidates = [c for c in columns if any(token in c.upper() for token in ("PHIE", "PHIT", "PHI"))]
+        rt_candidates = [c for c in columns if any(token in c.upper() for token in ("LLD", "ILD", "RT", "RES", "AT", "RDEEP"))]
+        phi_candidates = [c for c in columns if any(token in c.upper() for token in ("PHIE", "PHIT", "PHI", "NPHI"))]
 
         current_rt = rt_combo.currentText().strip()
         current_phi = phi_combo.currentText().strip()
 
+        preferred_rt = self._pick_rt_curve_name(df)
+        preferred_phi = self._pick_phi_curve_name(df)
+
         rt_combo.blockSignals(True)
         rt_combo.clear()
-        rt_combo.addItems(rt_candidates or ["LLD"])
+        rt_combo.addItems(rt_candidates or ([preferred_rt] if preferred_rt else ["LLD"]))
         if current_rt in rt_candidates:
             rt_combo.setCurrentText(current_rt)
+        elif preferred_rt and preferred_rt in rt_candidates:
+            rt_combo.setCurrentText(preferred_rt)
         rt_combo.blockSignals(False)
 
         phi_combo.blockSignals(True)
         phi_combo.clear()
-        phi_combo.addItems(phi_candidates or ["PHIE"])
+        phi_combo.addItems(phi_candidates or ([preferred_phi] if preferred_phi else ["PHIE"]))
         if current_phi in phi_candidates:
             phi_combo.setCurrentText(current_phi)
+        elif preferred_phi and preferred_phi in phi_candidates:
+            phi_combo.setCurrentText(preferred_phi)
         phi_combo.blockSignals(False)
 
     def refresh_sw_workspace(self) -> None:
@@ -1207,6 +1211,10 @@ class InterpretationService:
         depth_col = self.data._depth_column(visible)
         rt_col = self._combo_text("comboSwRt")
         phi_col = self._combo_text("comboSwPhie")
+        if not rt_col or rt_col not in visible.columns:
+            rt_col = self._pick_rt_curve_name(visible)
+        if not phi_col or phi_col not in visible.columns:
+            phi_col = self._pick_phi_curve_name(visible)
 
         sw_col = self._line_text("lineSwOutName") or "SW"
         if sw_col in visible.columns:
@@ -2680,6 +2688,40 @@ class InterpretationService:
             if "GR" in c or "GAMMA" in c:
                 return col
 
+        return ""
+
+    def _pick_rt_curve_name(self, df) -> str:
+        columns = [str(c) for c in getattr(df, "columns", [])]
+        if not columns:
+            return ""
+
+        priority = ("LLD", "ILD", "AT90", "AT60", "AT30", "RT", "RDEEP", "RESD")
+        upper = {c.upper(): c for c in columns}
+        for key in priority:
+            if key in upper:
+                return upper[key]
+
+        for col in columns:
+            c = col.upper()
+            if "RT" in c or "RES" in c or "RDEEP" in c or "AT" in c:
+                return col
+        return ""
+
+    def _pick_phi_curve_name(self, df) -> str:
+        columns = [str(c) for c in getattr(df, "columns", [])]
+        if not columns:
+            return ""
+
+        priority = ("PHIE", "PHIT", "PHI", "NPHI")
+        upper = {c.upper(): c for c in columns}
+        for key in priority:
+            if key in upper:
+                return upper[key]
+
+        for col in columns:
+            c = col.upper()
+            if "PHI" in c or "NPHI" in c:
+                return col
         return ""
 
     def _spin_value(self, names: tuple[str, ...], default):
