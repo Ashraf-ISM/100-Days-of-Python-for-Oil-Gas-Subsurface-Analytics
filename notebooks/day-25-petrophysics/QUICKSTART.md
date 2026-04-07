@@ -381,16 +381,17 @@ Alt+F4 ........... Close Application (prompts save)
 """
 DOCUMENTATION:
 
-- PROJECT_MANAGEMENT_GUIDE.md .... Technical details
-- example_project_usage.py ....... Code examples
-- This file ..................... Quick reference
+- QUICKSTART.md .................. Fast workflow reference
+- PROJECT_MANAGEMENT_GUIDE.md .... Technical architecture details
+- README_PROJECT_SYSTEM.md ....... End-to-end project system behavior
+- example_project_usage.py ....... Automation and usage examples
 
 SUPPORT:
 
-- Check menu Help section
-- Review error messages carefully
-- Check recent project in file browser
-- Contact development team
+- In app: Help -> Documentation (F1)
+- In app: Help -> About PetroARX
+- Review traceback or popup message details before rerun
+- Verify active well and required curves before calculations
 """
 
 

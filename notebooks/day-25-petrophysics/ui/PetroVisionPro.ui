@@ -4670,7 +4670,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
   </action>
   <action name="actionDocumentation">
    <property name="text">
-    <string>PetroAnalyst Documentation...</string>
+        <string>PetroARX Documentation...</string>
    </property>
    <property name="shortcut">
     <string>F1</string>

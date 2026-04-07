@@ -70,6 +70,9 @@ class MainController:
         self._connect_action("actionNewCrossplot", self.plots.new_crossplot)
         self._connect_action("actionNewHistogram", self.plots.new_histogram)
         self._connect_action("actionBasicArithmetic", self.open_calculation_window)
+        self._connect_action("actionAbout", self._show_about_dialog)
+        self._connect_action("actionDocumentation", self._show_help_dialog)
+        self._connect_action("actionTutorials", self._show_help_dialog)
         # Plotting (plots tab buttons)
         self._connect_widget("btnPlotMultiTrack", "clicked", self.plots.new_log_plot)
         self._connect_widget("btnPlotTripleCombo", "clicked", self.plots.new_triple_combo)
@@ -257,3 +260,15 @@ class MainController:
         self.calculation_window.show()
         self.calculation_window.raise_()
         self.calculation_window.activateWindow()
+
+    def _show_about_dialog(self) -> None:
+        """Open About dialog from Help menu."""
+        handler = getattr(self.ui, "show_about_dialog", None)
+        if callable(handler):
+            handler()
+
+    def _show_help_dialog(self) -> None:
+        """Open documentation/help summary from Help menu."""
+        handler = getattr(self.ui, "show_help_dialog", None)
+        if callable(handler):
+            handler()

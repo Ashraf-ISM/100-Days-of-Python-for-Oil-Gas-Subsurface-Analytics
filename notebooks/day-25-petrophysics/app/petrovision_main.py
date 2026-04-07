@@ -20,6 +20,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         super().__init__()
         ui_path = UI_DIR / UI_FILE
         uic.loadUi(str(ui_path), self)
+        self.setWindowTitle("PetroARX v1.0 - Petrophysics Interpretation Platform")
         tab_widget = getattr(self, "centralTabWidget", None)
         if tab_widget is not None:
             self.setCentralWidget(tab_widget)
@@ -39,6 +40,37 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if project_path and Path(project_path).exists():
             QtCore.QTimer.singleShot(500, 
                 lambda p=project_path: self.controller.projects.load_project_from_path(p))
+
+    def show_about_dialog(self) -> None:
+        """Display About dialog for the PetroARX desktop application."""
+        message = (
+            "<h3>PetroARX</h3>"
+            "<p>A desktop petrophysics interpretation workspace for multi-well analysis.</p>"
+            "<p><b>Core capabilities:</b></p>"
+            "<ul>"
+            "<li>Well log loading, curve management, and QC workflows</li>"
+            "<li>Multi-track plotting and crossplot analysis</li>"
+            "<li>Shale volume, porosity, permeability, and net pay calculations</li>"
+            "<li>Water saturation workflows with Archie, Simandoux, Modified Simandoux, and Indonesia methods</li>"
+            "</ul>"
+            "<p><b>Quick help:</b> Open Help -> Documentation for usage and workflow guidance.</p>"
+        )
+        QtWidgets.QMessageBox.about(self, "About PetroARX", message)
+
+    def show_help_dialog(self) -> None:
+        """Display quick in-app help summary."""
+        message = (
+            "<h3>PetroARX Help</h3>"
+            "<p>Use the Dashboard for quick navigation, then run workflows in this order:</p>"
+            "<ol>"
+            "<li>Import well data (LAS/CSV/SEGY as available)</li>"
+            "<li>Review curves and perform QC checks</li>"
+            "<li>Run interpretation modules (Vsh, Phi, Sw, Net Pay)</li>"
+            "<li>Review plots and export reports</li>"
+            "</ol>"
+            "<p>For project-system details, see QUICKSTART.md and PROJECT_MANAGEMENT_GUIDE.md.</p>"
+        )
+        QtWidgets.QMessageBox.information(self, "PetroARX Documentation", message)
 
     def _build_dashboard(self) -> None:
         tab = getattr(self, "tabDashboard", None)

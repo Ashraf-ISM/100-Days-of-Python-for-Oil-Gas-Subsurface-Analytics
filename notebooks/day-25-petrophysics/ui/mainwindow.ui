@@ -8769,7 +8769,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
   </action>
   <action name="actionDocumentation">
    <property name="text">
-    <string>PetroAnalyst Documentation...</string>
+        <string>PetroARX Documentation...</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
