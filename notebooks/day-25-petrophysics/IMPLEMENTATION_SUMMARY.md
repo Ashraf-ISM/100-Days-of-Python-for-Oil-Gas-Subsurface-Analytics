@@ -35,7 +35,7 @@ CHANGES MADE
    • get_recent_projects(max_count=5) → list[str]
      - Get list of recently opened projects
      - Filters out missing files
-     - Reads from ~/.petrovision/recent_projects.json
+     - Reads from ~/.petroarx/recent_projects.json
    
    • add_recent_project(path)
      - Add project to recent list

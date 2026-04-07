@@ -547,7 +547,7 @@ class DataService:
 <html>
 <head>
 <meta charset='utf-8'>
-<title>PetroSight Report - {getattr(well, 'name', 'Well')}</title>
+<title>PetroARX Report - {getattr(well, 'name', 'Well')}</title>
 <style>
 body {{ font-family: Arial, sans-serif; margin: 24px; color: #1E293B; }}
 h1 {{ color: #274B72; margin-bottom: 0; }}

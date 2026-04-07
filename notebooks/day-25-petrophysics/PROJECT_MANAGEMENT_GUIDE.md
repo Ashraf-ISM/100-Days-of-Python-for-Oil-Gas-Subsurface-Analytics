@@ -200,7 +200,7 @@ Command Line:
   - Loads project automatically on startup
 
 Recent Projects:
-  - Stored in ~/.petrovision/recent_projects.json
+  - Stored in ~/.petroarx/recent_projects.json
   - Shows last 10 projects
   - Removes non-existent files on access
   - Dashboard shows top 3 as quick links

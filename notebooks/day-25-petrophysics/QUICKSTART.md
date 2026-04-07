@@ -214,8 +214,8 @@ Dashboard shows 3 recent projects:
 Click any to load instantly
 
 Recent projects stored in:
-- Windows: %USERPROFILE%\.petrovision\recent_projects.json
-- Mac/Linux: ~/.petrovision/recent_projects.json
+- Windows: %USERPROFILE%\.petroarx\recent_projects.json
+- Mac/Linux: ~/.petroarx/recent_projects.json
 
 Keeps history of last 10 projects
 

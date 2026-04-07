@@ -101,7 +101,10 @@ def get_recent_projects(max_count: int = 5) -> list[str]:
     Returns:
         List of project file paths
     """
-    config_file = Path.home() / ".petrovision" / "recent_projects.json"
+    config_file = Path.home() / ".petroarx" / "recent_projects.json"
+    legacy_file = Path.home() / ".petrovision" / "recent_projects.json"
+    if not config_file.exists() and legacy_file.exists():
+        config_file = legacy_file
     if not config_file.exists():
         return []
     
@@ -122,7 +125,7 @@ def add_recent_project(path: str) -> None:
     Args:
         path: Project file path
     """
-    config_dir = Path.home() / ".petrovision"
+    config_dir = Path.home() / ".petroarx"
     config_file = config_dir / "recent_projects.json"
     config_dir.mkdir(parents=True, exist_ok=True)
     

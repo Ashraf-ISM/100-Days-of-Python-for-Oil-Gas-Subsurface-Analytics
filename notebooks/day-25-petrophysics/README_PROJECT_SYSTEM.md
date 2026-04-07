@@ -199,7 +199,7 @@ MODIFICATION TRACKING:
 RECENT PROJECTS:
 ✓ Three buttons on dashboard (btnDashRecent1/2/3)
 ✓ One-click access to recent projects
-✓ Stored in ~/.petrovision/recent_projects.json
+✓ Stored in ~/.petroarx/recent_projects.json
 ✓ Keeps history of last 10 projects
 ✓ Auto-removes deleted files from list
 ✓ Updated every time project is opened
@@ -460,7 +460,7 @@ DEPLOYMENT STEPS:
 DISTRIBUTION NOTES:
 
 - Single Python package: no additional setup
-- User documents in: /.petrovision/ directory
+- User documents in: /.petroarx/ directory
 - Projects stored where user selects
 - No registry modifications (Windows)
 - No root permissions required
