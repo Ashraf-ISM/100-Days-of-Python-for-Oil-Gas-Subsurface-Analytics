@@ -1,9 +1,9 @@
 """
-PETROVISION PRO - PROJECT MANAGEMENT SYSTEM
+PETROARX - PROJECT MANAGEMENT SYSTEM
 =============================================
 
 This document describes the complete project management system integration
-for PetroVision Pro, including how projects flow through the entire application.
+for PetroARX, including how projects flow through the entire application.
 
 
 ARCHITECTURE OVERVIEW
@@ -172,9 +172,9 @@ Module Launch Buttons:
   And calculation buttons...
 
 Window Title:
-  Shows: "PetroAnalyst Pro v1.0 — ProjectName"
+  Shows: "PetroARX v1.0 — ProjectName"
   With "*" suffix when modified
-  Example: "PetroAnalyst Pro v1.0 — Example Project *"
+  Example: "PetroARX v1.0 — Example Project *"
 
 
 USAGE EXAMPLES

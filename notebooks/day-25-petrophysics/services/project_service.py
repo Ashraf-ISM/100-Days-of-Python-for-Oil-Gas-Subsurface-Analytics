@@ -81,7 +81,7 @@ class ProjectService:
             self.ui,
             "Open Project",
             str(Path.home()),
-            "PetroVision Projects (*.pproj);;All Files (*)",
+            "PetroARXjects (*.pproj);;All Files (*)",
         )
         if not path:
             return False
@@ -157,7 +157,7 @@ class ProjectService:
             self.ui,
             "Save Project As",
             f"{self.current_project.name}.pproj",
-            "PetroVision Projects (*.pproj);;All Files (*)",
+            "PetroARXjects (*.pproj);;All Files (*)",
         )
         if not path:
             return False
@@ -266,10 +266,10 @@ class ProjectService:
     def _update_ui_state(self) -> None:
         """Update UI to reflect current project state."""
         if self.current_project is None:
-            self._set_window_title("PetroAnalyst Pro v1.0")
+            self._set_window_title("PetroARX v1.0")
             self._update_project_header("No Project", "")
         else:
-            title = f"PetroAnalyst Pro v1.0 — {self.current_project.name}"
+            title = f"PetroARX v1.0 — {self.current_project.name}"
             if self.modified:
                 title += " *"
             self._set_window_title(title)

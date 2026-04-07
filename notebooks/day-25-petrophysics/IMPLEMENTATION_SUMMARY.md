@@ -393,7 +393,7 @@ SUMMARY
 =======
 
 The project management system is now FULLY INTEGRATED and FUNCTIONAL throughout
-PetroVision Pro. All operations are tested and working correctly. The system
+PetroARX. All operations are tested and working correctly. The system
 provides a complete workflow for creating projects, importing well data,
 performing analysis, saving results, and loading projects later.
 

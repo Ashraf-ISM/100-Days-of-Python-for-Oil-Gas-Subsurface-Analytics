@@ -17,12 +17,12 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>PetroAnalyst Pro — Calculations &amp; Tools</string>
+   <string>PetroARX — Calculations &amp; Tools</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
 /* ============================================================
-   PETROANALYST PRO — CALCULATIONS &amp; TOOLS DIALOG
+   PETROARX — CALCULATIONS &amp; TOOLS DIALOG
    Inherits the main Light Professional Theme
    ============================================================ */
 

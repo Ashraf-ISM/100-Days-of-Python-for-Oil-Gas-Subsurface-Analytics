@@ -12,7 +12,7 @@ import matplotlib.cm as cm
 # UI COMPONENTS & STYLING
 # ---------------------------------------------------------
 
-# Light theme matching PetroAnalyst Pro standard
+# Light theme matching PetroARX standard
 STYLE_FRAME = """
     QFrame#PanelFrame {
         background-color: #F8F9FA;

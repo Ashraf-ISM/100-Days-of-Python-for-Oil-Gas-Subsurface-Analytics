@@ -17,12 +17,12 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>PetroAnalyst Pro v1.0 — Petrophysics Interpretation Platform</string>
+   <string>PetroARX v1.0 — Petrophysics Interpretation Platform</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
 /* ============================================================
-   PETROANALYST PRO — LIGHT PROFESSIONAL THEME
+   PETROARX — LIGHT PROFESSIONAL THEME
    ============================================================ */
 
 QMainWindow {
@@ -496,7 +496,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         <string>font-size:18px;font-weight:700;color:#2A5090;padding:20px 0 6px 0;</string>
        </property>
        <property name="text">
-        <string>PetroAnalyst Pro — Welcome</string>
+        <string>PetroARX — Welcome</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -8802,7 +8802,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About PetroAnalyst Pro...</string>
+    <string>About PetroARX...</string>
    </property>
   </action>
  </widget>

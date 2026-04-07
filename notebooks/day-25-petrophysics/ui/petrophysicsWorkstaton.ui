@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>PetroSight Pro — Petrophysical Analysis Workstation</string>
+   <string>PetroARX — Petrophysical Analysis Workstation</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -19,7 +19,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">/* ─────────────────────────────────────────────────────────────
-   PetroSight Pro — Clean Light Theme (Fixed)
+   PetroARX — Clean Light Theme (Fixed)
    ───────────────────────────────────────────────────────────── */
 
 QMainWindow {
@@ -5397,7 +5397,7 @@ e.g., lithological observations, anomalies, fluid type, uncertainties in saturat
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cascadia Code,Consolas,Courier New,monospace'; font-size:11px; color:#2ab7ca;&quot;&gt;[INFO] PetroSight Pro initialized.&lt;/span&gt;&lt;span style=&quot; font-family:'Cascadia Code,Consolas,Courier New,monospace'; font-size:11px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-family:'Cascadia Code,Consolas,Courier New,monospace'; font-size:11px; color:#60a060;&quot;&gt;[READY] Waiting for data import...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cascadia Code,Consolas,Courier New,monospace'; font-size:11px; color:#2ab7ca;&quot;&gt;[INFO] PetroARX initialized.&lt;/span&gt;&lt;span style=&quot; font-family:'Cascadia Code,Consolas,Courier New,monospace'; font-size:11px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-family:'Cascadia Code,Consolas,Courier New,monospace'; font-size:11px; color:#60a060;&quot;&gt;[READY] Waiting for data import...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -5446,7 +5446,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>  PetroSight Pro  |  Ready</string>
+     <string>  PetroARX  |  Ready</string>
     </property>
    </widget>
    <widget class="QLabel" name="lblStatusWell">
@@ -5839,7 +5839,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About PetroSight Pro</string>
+    <string>About PetroARX</string>
    </property>
   </action>
  </widget>

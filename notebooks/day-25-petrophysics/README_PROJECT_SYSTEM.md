@@ -1,5 +1,5 @@
 """
-PETROVISION PRO - INTEGRATED PROJECT MANAGEMENT SYSTEM
+PETROARX - INTEGRATED PROJECT MANAGEMENT SYSTEM
 ========================================================
 
 Complete project management solution with full app integration.
@@ -11,7 +11,7 @@ Complete project management solution with full app integration.
 
 """
 The project management system is now FULLY FUNCTIONAL and integrated throughout
-the entire PetroVision Pro application. All project operations pipe through the
+the entire PetroARX application. All project operations pipe through the
 app, maintaining consistent state and user experience.
 
 KEY FEATURES:
@@ -191,7 +191,7 @@ PROJECT LOADING:
 
 MODIFICATION TRACKING:
 ✓ Window title shows "*" when modified
-✓ Example: "PetroAnalyst Pro — My Project *"
+✓ Example: "PetroARX — My Project *"
 ✓ Projects without unsaved changes have no "*"
 ✓ On close with unsaved changes: Save prompt
 ✓ User can Save, Discard, or Cancel
@@ -470,7 +470,7 @@ DISTRIBUTION NOTES:
 if __name__ == "__main__":
     print("""
     ========================================================================
-    PETROVISION PRO - PROJECT MANAGEMENT SYSTEM
+    PETROARX - PROJECT MANAGEMENT SYSTEM
     ========================================================================
     
     ✓ System fully integrated and functional

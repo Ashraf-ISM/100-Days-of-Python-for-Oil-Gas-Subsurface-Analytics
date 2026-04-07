@@ -559,7 +559,7 @@ th {{ background: #F8FBFE; }}
 </style>
 </head>
 <body>
-<h1>PetroSight Pro Report</h1>
+<h1>PetroARX Report</h1>
 <div class='meta'>Generated for {getattr(well, 'name', 'Unknown well')}</div>
 <h2>Overview</h2>
 <table>{overview_html}</table>

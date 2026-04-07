@@ -167,7 +167,7 @@ def example_integration_workflow():
 
 if __name__ == "__main__":
     # Run examples
-    print("\nPETROVISION PROJECT MANAGEMENT EXAMPLES\n")
+    print("\nPETROARXJECT MANAGEMENT EXAMPLES\n")
     
     # Example 1: Create and save
     project_path = example_create_and_save_project()

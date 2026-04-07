@@ -11,12 +11,12 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>PetroSight Pro — Borehole Image Analysis  |  v3.1.0</string>
+   <string>PetroARX — Borehole Image Analysis  |  v3.1.0</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
 /* ═══════════════════════════════════════════════
-   PETROSIGHT PRO — BOREHOLE IMAGE ANALYSIS THEME
+   PETROARX — BOREHOLE IMAGE ANALYSIS THEME
    Light / Professional Scientific Palette
    ═══════════════════════════════════════════════ */
 
@@ -2656,7 +2656,7 @@ QLCDNumber {
    <property name="text"><string>Keyboard Shortcuts</string></property>
   </action>
   <action name="actionAbout">
-   <property name="text"><string>About PetroSight Pro…</string></property>
+   <property name="text"><string>About PetroARX…</string></property>
   </action>
 
  </widget>

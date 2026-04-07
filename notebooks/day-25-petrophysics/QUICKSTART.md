@@ -2,7 +2,7 @@
 QUICKSTART GUIDE - PROJECT MANAGEMENT
 ======================================
 
-Get started with project management in PetroVision Pro
+Get started with project management in PetroARX
 """
 
 # ============================================================================
@@ -33,7 +33,7 @@ METHOD 3: Click desktop shortcut or file association
 """
 WORKFLOW:
 
-1. Launch PetroVision Pro
+1. Launch PetroARX
    Dashboard appears showing "No Project"
 
 2. Click "Load Project" button
@@ -46,7 +46,7 @@ WORKFLOW:
 
 4. Click "Create"
    - Project created in memory
-   - Window title shows: "PetroAnalyst Pro — My Well Evaluation"
+   - Window title shows: "PetroARX — My Well Evaluation"
    - Dashboard header updated
 
 5. Click "Load Well Logs" (Dashboard button)
@@ -76,7 +76,7 @@ WORKFLOW:
    - Saved to disk with all well data
 
 10. Window title now shows:
-    "PetroAnalyst Pro — My Well Evaluation"
+    "PetroARX — My Well Evaluation"
     (no asterisk = saved state)
 """
 
@@ -88,7 +88,7 @@ WORKFLOW:
 """
 WORKFLOW:
 
-1. Launch PetroVision Pro
+1. Launch PetroARX
    Dashboard appears
 
 2. Option A - Load from Recent:
@@ -102,7 +102,7 @@ WORKFLOW:
    - Project loads automatically
 
 3. Project status displayed:
-   - Window title: "PetroAnalyst Pro — ProjectName"
+   - Window title: "PetroARX — ProjectName"
    - Dashboard shows current project name
    - All wells and data loaded into memory
    - Ready to continue analysis
@@ -137,7 +137,7 @@ HOW TO SAVE:
 
 2. Auto-save check:
    - If project is modified (window title has "*"):
-     "PetroAnalyst Pro — My Project *"
+     "PetroARX — My Project *"
    - When you close the app, dialog prompts:
      "Project has unsaved changes. Save before closing?"
 

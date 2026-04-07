@@ -17,12 +17,12 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>PetroAnalyst Pro v1.0 — Petrophysics Interpretation Platform</string>
+   <string>PetroARX v1.0 — Petrophysics Interpretation Platform</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
 /* ============================================================
-   PETROANALYST PRO — LIGHT PROFESSIONAL THEME
+   PETROARX — LIGHT PROFESSIONAL THEME
    ============================================================ */
 
 QMainWindow {
@@ -4703,7 +4703,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About PetroAnalyst Pro...</string>
+    <string>About PetroARX...</string>
    </property>
   </action>
  </widget>
