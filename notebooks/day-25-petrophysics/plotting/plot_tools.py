@@ -546,9 +546,7 @@ def plot_pairplot(df, curves: list[str], *, show: bool = True):
             if row_index == col_index:
                 values = _get_curve_values(df, x_curve)
                 values = values[np.isfinite(values)]
-                ax.hist(
-                    values,
-                    bins=24,
+                ax.hist(values, bins=24,
                     color=PALETTE[col_index % len(PALETTE)],
                     alpha=0.88,
                     edgecolor="white",
