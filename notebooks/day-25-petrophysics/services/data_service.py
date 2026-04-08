@@ -659,6 +659,9 @@ th {{ background: #F8FBFE; }}
         porosity_refresh = getattr(self.ui, "refresh_porosity_tab", None)
         if callable(porosity_refresh):
             porosity_refresh()
+        corr_refresh = getattr(self.ui, "refresh_well_correlation_tab", None)
+        if callable(corr_refresh):
+            corr_refresh()
 
     def _clear_views_without_well(self) -> None:
         for table_name in (
