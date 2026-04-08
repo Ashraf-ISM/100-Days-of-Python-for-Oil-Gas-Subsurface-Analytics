@@ -5569,145 +5569,467 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="tabWellCorrelation">
-    <attribute name="title">
-     <string>Well Correlation</string>
-    </attribute>
-    <layout class="QVBoxLayout" name="layoutWellCorr">
-     <property name="spacing">
-      <number>4</number>
-     </property>
-     <item>
-      <layout class="QHBoxLayout" name="layoutWCControls">
-       <item>
-        <widget class="QLabel" name="auto_label_050">
-         <property name="text">
-          <string>Wells:</string>
+    <widget class="QWidget" name="tabWellCorrelation">
+     <attribute name="title">
+      <string>Well Correlation</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="layoutWellCorr">
+      <property name="spacing">
+        <number>10</number>
+      </property>
+      <property name="leftMargin">
+        <number>10</number>
+      </property>
+      <property name="topMargin">
+        <number>10</number>
+      </property>
+      <property name="rightMargin">
+        <number>10</number>
+      </property>
+      <property name="bottomMargin">
+        <number>10</number>
+      </property>
+      <item>
+        <widget class="QFrame" name="frameWCHeader">
+         <property name="styleSheet">
+          <string>QFrame#frameWCHeader{background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #204A70,stop:1 #2F6E9F);border:1px solid #1C3E5A;border-radius:8px;} QLabel{color:#F4F9FF;}</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <layout class="QHBoxLayout" name="layoutWCHeader">
+          <property name="leftMargin">
+            <number>14</number>
+          </property>
+          <property name="topMargin">
+            <number>10</number>
+          </property>
+          <property name="rightMargin">
+            <number>14</number>
+          </property>
+          <property name="bottomMargin">
+            <number>10</number>
+          </property>
+          <item>
+            <layout class="QVBoxLayout" name="layoutWCHeaderText">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lblWCTitle">
+                <property name="styleSheet">
+                 <string>font-size:15px;font-weight:700;</string>
+                </property>
+                <property name="text">
+                 <string>Multi-Well Correlation Workspace</string>
+                </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblWCSubtitle">
+                <property name="styleSheet">
+                 <string>color:#D8E9F7;font-size:11px;</string>
+                </property>
+                <property name="text">
+                 <string>Select wells, choose alignment settings, and render synchronized side-by-side tracks for interpretation.</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+              </widget>
+             </item>
+            </layout>
+          </item>
+          <item>
+            <spacer name="horizontalSpacerWCHeader">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+                <width>40</width>
+                <height>20</height>
+              </size>
+             </property>
+            </spacer>
+          </item>
+          <item>
+            <widget class="QLabel" name="lblWCProjectState">
+             <property name="styleSheet">
+              <string>background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:12px;padding:4px 10px;font-size:11px;font-weight:600;</string>
+             </property>
+             <property name="text">
+              <string>Status: Ready</string>
+             </property>
+            </widget>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item>
-        <widget class="QListWidget" name="listWCWells">
-         <property name="selectionMode">
-          <enum>QAbstractItemView::ExtendedSelection</enum>
+      </item>
+      <item>
+        <layout class="QHBoxLayout" name="layoutWCMainBody">
+         <property name="spacing">
+          <number>10</number>
          </property>
          <item>
-          <property name="text">
-           <string>CHr-1</string>
-          </property>
+          <widget class="QFrame" name="frameWCSidebar">
+            <property name="minimumSize">
+             <size>
+              <width>280</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>340</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string>QFrame#frameWCSidebar{background:#F6F9FC;border:1px solid #C9D8E8;border-radius:8px;} QGroupBox{font-weight:700;color:#2A4E77;border:1px solid #D5E0EB;border-radius:6px;margin-top:12px;background:#FFFFFF;} QGroupBox::title{subcontrol-origin:margin;left:10px;padding:0 4px;} QLabel{color:#4D6074;} QCheckBox{color:#3F5164;}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <layout class="QVBoxLayout" name="layoutWCSidebar">
+             <property name="leftMargin">
+              <number>10</number>
+             </property>
+             <property name="topMargin">
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>10</number>
+             </property>
+             <property name="bottomMargin">
+              <number>10</number>
+             </property>
+             <property name="spacing">
+              <number>8</number>
+             </property>
+             <item>
+              <widget class="QGroupBox" name="groupWCWells">
+                <property name="title">
+                 <string>Well Selection</string>
+                </property>
+                <layout class="QVBoxLayout" name="layoutWCWellsGroup">
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="auto_label_050">
+                    <property name="text">
+                     <string>Wells:</string>
+                    </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QListWidget" name="listWCWells">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>240</height>
+                     </size>
+                    </property>
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::ExtendedSelection</enum>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>CHr-1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Tau-1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Experior</string>
+                     </property>
+                    </item>
+                  </widget>
+                 </item>
+                </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupWCDisplayOptions">
+                <property name="title">
+                 <string>Display Options</string>
+                </property>
+                <layout class="QVBoxLayout" name="layoutWCDisplayOptions">
+                 <property name="spacing">
+                  <number>5</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkWCShowMarkers">
+                    <property name="text">
+                     <string>Show formation markers</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkWCSyncDepth">
+                    <property name="text">
+                     <string>Synchronize depth scrolling</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkWCHighlightPay">
+                    <property name="text">
+                     <string>Highlight potential pay zones</string>
+                    </property>
+                  </widget>
+                 </item>
+                </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacerWCSidebarBottom">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+              </spacer>
+             </item>
+            </layout>
+          </widget>
          </item>
          <item>
-          <property name="text">
-           <string>Tau-1</string>
-          </property>
+          <layout class="QVBoxLayout" name="layoutWCRightPane">
+            <property name="spacing">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QFrame" name="frameWCToolbar">
+              <property name="styleSheet">
+                <string>QFrame#frameWCToolbar{background:#EDF3F8;border:1px solid #C7D6E6;border-radius:8px;} QLabel{font-weight:600;color:#355673;} QComboBox{background:#FFFFFF;border:1px solid #BCCEE0;border-radius:4px;padding:2px 6px;} QPushButton{background:#2F6FA6;color:#FFFFFF;border:1px solid #255881;border-radius:4px;padding:5px 12px;font-weight:600;} QPushButton:hover{background:#3A7AB1;}</string>
+              </property>
+              <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+              </property>
+              <layout class="QHBoxLayout" name="layoutWCControls">
+                <property name="leftMargin">
+                 <number>12</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>12</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <property name="spacing">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="auto_label_051">
+                  <property name="text">
+                    <string>Template:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="comboWCTemplate">
+                  <property name="minimumSize">
+                    <size>
+                     <width>180</width>
+                     <height>0</height>
+                    </size>
+                  </property>
+                  <item>
+                    <property name="text">
+                     <string>Standard Triple Combo</string>
+                    </property>
+                  </item>
+                  <item>
+                    <property name="text">
+                     <string>Formation Evaluation</string>
+                    </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="auto_label_052">
+                  <property name="text">
+                    <string>Datum:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="comboWCDatum">
+                  <property name="minimumSize">
+                    <size>
+                     <width>120</width>
+                     <height>0</height>
+                    </size>
+                  </property>
+                  <item>
+                    <property name="text">
+                     <string>MD</string>
+                    </property>
+                  </item>
+                  <item>
+                    <property name="text">
+                     <string>TVDSS</string>
+                    </property>
+                  </item>
+                  <item>
+                    <property name="text">
+                     <string>Formation Top</string>
+                    </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="spacerWC">
+                  <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="btnWCRender">
+                  <property name="minimumSize">
+                    <size>
+                     <width>200</width>
+                     <height>32</height>
+                    </size>
+                  </property>
+                  <property name="text">
+                    <string>Render Correlation Panel</string>
+                  </property>
+                 </widget>
+                </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frameWCCanvas">
+              <property name="styleSheet">
+                <string>QFrame#frameWCCanvas{background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;} QLabel{color:#6E8296;font-size:13px;}</string>
+              </property>
+              <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+              </property>
+              <layout class="QVBoxLayout" name="layoutWCCanvas">
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>10</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>10</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblWCPlaceholder">
+                  <property name="text">
+                    <string>Multi-well correlation canvas
+(side-by-side synchronized well log display)</string>
+                  </property>
+                  <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frameWCStatusBar">
+              <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>34</height>
+                </size>
+              </property>
+              <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>34</height>
+                </size>
+              </property>
+              <property name="styleSheet">
+                <string>QFrame#frameWCStatusBar{background:#F4F8FC;border:1px solid #D2DEEA;border-radius:6px;} QLabel{color:#57708A;font-size:11px;}</string>
+              </property>
+              <layout class="QHBoxLayout" name="layoutWCStatusBar">
+                <property name="leftMargin">
+                 <number>12</number>
+                </property>
+                <property name="topMargin">
+                 <number>6</number>
+                </property>
+                <property name="rightMargin">
+                 <number>12</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>6</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblWCStatusLeft">
+                  <property name="text">
+                    <string>Selected Wells: 0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacerWCStatus">
+                  <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lblWCStatusRight">
+                  <property name="text">
+                    <string>Tip: Ctrl/Cmd-click to select multiple wells</string>
+                  </property>
+                 </widget>
+                </item>
+              </layout>
+             </widget>
+            </item>
+          </layout>
          </item>
-         <item>
-          <property name="text">
-           <string>Experior</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="auto_label_051">
-         <property name="text">
-          <string>Template:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboWCTemplate">
-         <item>
-          <property name="text">
-           <string>Standard Triple Combo</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Formation Evaluation</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="auto_label_052">
-         <property name="text">
-          <string>Datum:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboWCDatum">
-         <item>
-          <property name="text">
-           <string>MD</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>TVDSS</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Formation Top</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btnWCRender">
-         <property name="text">
-          <string>Render Correlation Panel</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="spacerWC">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QFrame" name="frameWCCanvas">
-       <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout">
-        <item>
-         <widget class="QLabel" name="lblWCPlaceholder">
-          <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
-          </property>
-          <property name="text">
-           <string>Multi-well correlation panel canvas
-(side-by-side well log display)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+        </layout>
+      </item>
+     </layout>
+    </widget>
    <widget class="QWidget" name="tabMultiMineral">
     <attribute name="title">
      <string>Multi-Mineral (ELAN)</string>
