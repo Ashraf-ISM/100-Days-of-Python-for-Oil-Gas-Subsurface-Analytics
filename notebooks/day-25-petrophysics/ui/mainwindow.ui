@@ -6030,45 +6030,181 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
       </item>
      </layout>
     </widget>
-   <widget class="QWidget" name="tabMultiMineral">
-    <attribute name="title">
-     <string>Multi-Mineral (ELAN)</string>
-    </attribute>
-    <layout class="QHBoxLayout" name="layoutELAN">
+  <widget class="QWidget" name="tabMultiMineral">
+   <attribute name="title">
+    <string>Multi-Mineral (ELAN)</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="layoutELAN">
+    <property name="spacing">
+    <number>10</number>
+    </property>
+    <property name="leftMargin">
+    <number>10</number>
+    </property>
+    <property name="topMargin">
+    <number>10</number>
+    </property>
+    <property name="rightMargin">
+    <number>10</number>
+    </property>
+    <property name="bottomMargin">
+    <number>10</number>
+    </property>
+    <item>
+    <widget class="QFrame" name="frameELANHeader">
+     <property name="styleSheet">
+      <string>QFrame#frameELANHeader{background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #1F4E74,stop:1 #2E7B8E);border:1px solid #1A425F;border-radius:8px;} QLabel{color:#F3FAFF;}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <layout class="QHBoxLayout" name="layoutELANHeader">
+      <property name="leftMargin">
+      <number>14</number>
+      </property>
+      <property name="topMargin">
+      <number>10</number>
+      </property>
+      <property name="rightMargin">
+      <number>14</number>
+      </property>
+      <property name="bottomMargin">
+      <number>10</number>
+      </property>
+      <item>
+      <layout class="QVBoxLayout" name="layoutELANHeaderText">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="lblELANTitle">
+        <property name="styleSheet">
+         <string>font-size:15px;font-weight:700;</string>
+        </property>
+        <property name="text">
+         <string>Multi-Mineral Interpretation Studio (ELAN)</string>
+        </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblELANSubtitle">
+        <property name="styleSheet">
+         <string>color:#D2EAF5;font-size:11px;</string>
+        </property>
+        <property name="text">
+         <string>Configure mineral model and solver, run inversion, and review volumetric outputs in a structured workflow.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        </widget>
+       </item>
+      </layout>
+      </item>
+      <item>
+      <spacer name="horizontalSpacerELANHeader">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+        <width>40</width>
+        <height>20</height>
+        </size>
+       </property>
+      </spacer>
+      </item>
+      <item>
+      <widget class="QLabel" name="lblELANStatus">
+       <property name="styleSheet">
+        <string>background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:12px;padding:4px 10px;font-size:11px;font-weight:600;</string>
+       </property>
+       <property name="text">
+        <string>Status: Awaiting Run</string>
+       </property>
+      </widget>
+      </item>
+     </layout>
+    </widget>
+    </item>
+    <item>
+    <layout class="QHBoxLayout" name="layoutELANBody">
      <property name="spacing">
-      <number>6</number>
+      <number>10</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="groupELANParams">
-       <property name="title">
-        <string>ELAN Configuration</string>
+      <widget class="QFrame" name="frameELANSidebar">
+      <property name="minimumSize">
+       <size>
+        <width>330</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>390</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string>QFrame#frameELANSidebar{background:#F6FAFC;border:1px solid #C9DCE6;border-radius:8px;} QGroupBox{font-weight:700;color:#27536E;border:1px solid #D3E1E8;border-radius:6px;margin-top:12px;background:#FFFFFF;} QGroupBox::title{subcontrol-origin:margin;left:10px;padding:0 4px;} QLabel{color:#466275;} QComboBox{background:#FFFFFF;border:1px solid #BECFDD;border-radius:4px;padding:2px 6px;}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <layout class="QVBoxLayout" name="layoutELANSidebar">
+       <property name="leftMargin">
+        <number>10</number>
        </property>
-       <layout class="QFormLayout" name="formELAN">
-        <item row="0" column="0">
-         <widget class="QLabel" name="auto_label_053">
+       <property name="topMargin">
+        <number>10</number>
+       </property>
+       <property name="rightMargin">
+        <number>10</number>
+       </property>
+       <property name="bottomMargin">
+        <number>10</number>
+       </property>
+       <property name="spacing">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="groupELANParams">
+        <property name="title">
+         <string>ELAN Configuration</string>
+        </property>
+        <layout class="QFormLayout" name="formELAN">
+         <property name="horizontalSpacing">
+          <number>10</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>8</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="auto_label_053">
           <property name="text">
            <string>Well:</string>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboELANWell">
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboELANWell">
           <item>
            <property name="text">
             <string>CHr-1</string>
            </property>
           </item>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="auto_label_054">
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="auto_label_054">
           <property name="text">
            <string>Model:</string>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboELANModel">
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboELANModel">
           <item>
            <property name="text">
             <string>Quartz + Calcite + Illite</string>
@@ -6089,34 +6225,34 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
             <string>Custom...</string>
            </property>
           </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="auto_label_055">
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="auto_label_055">
           <property name="text">
            <string>Input Curves:</string>
           </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="lblELANCurves">
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="lblELANCurves">
           <property name="text">
            <string>GR, RHOB, NPHI, DT, LLD</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
           </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="auto_label_056">
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="auto_label_056">
           <property name="text">
            <string>Solver:</string>
           </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QComboBox" name="comboELANSolver">
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QComboBox" name="comboELANSolver">
           <item>
            <property name="text">
             <string>Least-Squares (NNLS)</string>
@@ -6127,42 +6263,222 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
             <string>Weighted Inversion</string>
            </property>
           </item>
-         </widget>
-        </item>
-       </layout>
+          </widget>
+         </item>
+        </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupELANMineralPreset">
+        <property name="title">
+         <string>Mineral Preset Summary</string>
+        </property>
+        <layout class="QVBoxLayout" name="layoutELANPreset">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblELANPresetInfo">
+          <property name="styleSheet">
+           <string>color:#5C7387;font-size:12px;</string>
+          </property>
+          <property name="text">
+           <string>Configured minerals and endpoints are loaded from the selected ELAN model template.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          </widget>
+         </item>
+        </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacerELANSidebarBottom">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+        </spacer>
+       </item>
+      </layout>
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frameELANCanvas">
-       <property name="styleSheet">
-        <string>background:#FFFFFF;border:1px solid #C2D0E0;</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout">
+      <layout class="QVBoxLayout" name="layoutELANRightPane">
+      <property name="spacing">
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="frameELANActionBar">
+        <property name="styleSheet">
+        <string>QFrame#frameELANActionBar{background:#EDF5FA;border:1px solid #C8DAE8;border-radius:8px;} QLabel{font-weight:600;color:#355E78;} QPushButton{background:#2F7898;color:#FFFFFF;border:1px solid #265F78;border-radius:4px;padding:5px 12px;font-weight:600;} QPushButton:hover{background:#3988AB;}</string>
+        </property>
+        <layout class="QHBoxLayout" name="layoutELANActionBar">
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
         <item>
-         <widget class="QLabel" name="lblELANPlaceholder">
-          <property name="styleSheet">
-           <string>color:#8898A8;font-size:13px;</string>
-          </property>
+         <widget class="QLabel" name="lblELANWorkflow">
           <property name="text">
-           <string>ELAN volumetric output canvas
-(stacked mineral volume tracks)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <string>Workflow: Configure → Solve → Validate Volumes</string>
           </property>
          </widget>
         </item>
-       </layout>
-      </widget>
+        <item>
+         <spacer name="horizontalSpacerELANActionBar">
+          <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnELANPreview">
+          <property name="text">
+          <string>Preview Inputs</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnELANRun">
+          <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>30</height>
+          </size>
+          </property>
+          <property name="text">
+          <string>Run ELAN</string>
+          </property>
+         </widget>
+        </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frameELANCanvas">
+        <property name="styleSheet">
+        <string>QFrame#frameELANCanvas{background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;} QLabel{color:#6F8397;font-size:13px;}</string>
+        </property>
+        <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+        </property>
+        <layout class="QVBoxLayout" name="layoutELANCanvas">
+        <property name="leftMargin">
+         <number>10</number>
+        </property>
+        <property name="topMargin">
+         <number>10</number>
+        </property>
+        <property name="rightMargin">
+         <number>10</number>
+        </property>
+        <property name="bottomMargin">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblELANPlaceholder">
+          <property name="text">
+          <string>ELAN volumetric output canvas
+(stacked mineral-volume tracks and residual diagnostics)</string>
+          </property>
+          <property name="alignment">
+          <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frameELANFooterStatus">
+        <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>34</height>
+        </size>
+        </property>
+        <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>34</height>
+        </size>
+        </property>
+        <property name="styleSheet">
+        <string>QFrame#frameELANFooterStatus{background:#F4F8FC;border:1px solid #D2DEEA;border-radius:6px;} QLabel{color:#557188;font-size:11px;}</string>
+        </property>
+        <layout class="QHBoxLayout" name="layoutELANFooterStatus">
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblELANStatusLeft">
+          <property name="text">
+          <string>Volumes: Not computed</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacerELANFooterStatus">
+          <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblELANStatusRight">
+          <property name="text">
+          <string>Tip: Use model presets before switching to custom mode</string>
+          </property>
+         </widget>
+        </item>
+        </layout>
+       </widget>
+      </item>
+      </layout>
      </item>
     </layout>
-   </widget>
+    </item>
+   </layout>
+  </widget>
    <widget class="QWidget" name="tabFMIAnalysis">
     <attribute name="title">
      <string>FMI / Image Analysis</string>
