@@ -26,15 +26,12 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self.setCentralWidget(tab_widget)
         self._embed_data_analysis_tab()
         self._embed_borehole_analysis_tab()
-        self._embed_well_correlation_tab()
         self._reorder_tabs()
         self._connect_tab_switches()
         self._connect_edit_actions()
         self.controller = MainController(self)
         self._build_dashboard()
         self.refresh_dashboard_tab()
-        # Give correlation tab a reference to data service after controller is ready
-        QtCore.QTimer.singleShot(200, self._inject_correlation_data_service)
         
         # Set window geometry
         self.setGeometry(100, 100, 1497, 893)
