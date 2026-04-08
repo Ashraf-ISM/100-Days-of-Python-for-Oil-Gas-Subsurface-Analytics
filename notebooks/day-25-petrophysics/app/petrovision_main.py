@@ -26,12 +26,15 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self.setCentralWidget(tab_widget)
         self._embed_data_analysis_tab()
         self._embed_borehole_analysis_tab()
+        self._embed_well_correlation_tab()
         self._reorder_tabs()
         self._connect_tab_switches()
         self._connect_edit_actions()
         self.controller = MainController(self)
         self._build_dashboard()
         self.refresh_dashboard_tab()
+        # Give correlation tab a reference to data service after controller is ready
+        QtCore.QTimer.singleShot(200, self._inject_correlation_data_service)
         
         # Set window geometry
         self.setGeometry(100, 100, 1497, 893)
@@ -599,6 +602,49 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         from borehole_image.image_analysis_tab import ImageAnalysisTab
         self.borehole_analysis_widget = ImageAnalysisTab()
         layout.addWidget(self.borehole_analysis_widget)
+
+    def _embed_well_correlation_tab(self) -> None:
+        """Replace the Well Correlation tab's built-in UI with the advanced widget."""
+        tab_wc = getattr(self, "tabWellCorrelation", None)
+        if tab_wc is None:
+            return
+        layout = tab_wc.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(tab_wc)
+            layout.setContentsMargins(0, 0, 0, 0)
+        self._clear_layout(layout)
+        try:
+            from well_correlation.correlation_tab import WellCorrelationTab
+            self._well_correlation_widget = WellCorrelationTab(data_service=None)
+            layout.addWidget(self._well_correlation_widget)
+        except Exception as exc:
+            err_lbl = QtWidgets.QLabel(f"Well Correlation module failed to load:\n{exc}")
+            err_lbl.setStyleSheet("color: #FF6B6B; padding: 20px; font-size: 12px;")
+            err_lbl.setAlignment(QtCore.Qt.AlignCenter)
+            layout.addWidget(err_lbl)
+            self._well_correlation_widget = None
+
+    def _inject_correlation_data_service(self) -> None:
+        """Pass the live DataService into the Well Correlation tab."""
+        widget = getattr(self, "_well_correlation_widget", None)
+        if widget is None:
+            return
+        data_svc = getattr(self, "_data_service", None)
+        if data_svc is None:
+            controller = getattr(self, "controller", None)
+            if controller is not None:
+                data_svc = getattr(controller, "data", None)
+        if data_svc is not None and hasattr(widget, "set_data_service"):
+            widget.set_data_service(data_svc)
+
+    def refresh_well_correlation_tab(self) -> None:
+        """Called after well import/deletion to refresh the correlation tab well list."""
+        widget = getattr(self, "_well_correlation_widget", None)
+        if widget is not None and hasattr(widget, "_refresh_well_list"):
+            try:
+                widget._refresh_well_list()
+            except Exception:
+                pass
 
 
     def _embed_data_analysis_tab(self) -> None:
