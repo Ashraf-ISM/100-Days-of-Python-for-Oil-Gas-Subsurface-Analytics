@@ -458,6 +458,7 @@ def plot_crossplot(
     show: bool = True,
 ):
     fig, ax = plt.subplots(figsize=(7, 6))
+    ax.invert_yaxis()
     _style_figure(fig, "Crossplot")
     x_values = _get_curve_values(df, x_curve)
     y_values = _get_curve_values(df, y_curve)
