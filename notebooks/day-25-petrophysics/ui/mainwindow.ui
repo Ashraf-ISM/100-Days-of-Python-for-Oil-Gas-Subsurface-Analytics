@@ -6293,6 +6293,90 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
         </layout>
         </widget>
        </item>
+        <item>
+         <widget class="QGroupBox" name="groupELANConstraints">
+         <property name="title">
+          <string>Inversion Constraints</string>
+         </property>
+         <layout class="QFormLayout" name="formELANConstraints">
+          <property name="horizontalSpacing">
+           <number>10</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>8</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lblELANMaxIterLabel">
+            <property name="text">
+             <string>Max Iterations:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spinELANMaxIterations">
+            <property name="minimum">
+             <number>10</number>
+            </property>
+            <property name="maximum">
+             <number>500</number>
+            </property>
+            <property name="singleStep">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lblELANResidualLabel">
+            <property name="text">
+             <string>Residual Target:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="doubleELANResidualTarget">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>0.001000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.005000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.050000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkELANNonNegative">
+            <property name="text">
+             <string>Enforce non-negative mineral fractions</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkELANNormToOne">
+            <property name="text">
+             <string>Normalize mineral sum to 1.0</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+         </widget>
+        </item>
        <item>
         <spacer name="verticalSpacerELANSidebarBottom">
         <property name="orientation">
@@ -6317,7 +6401,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
       <item>
        <widget class="QFrame" name="frameELANActionBar">
         <property name="styleSheet">
-        <string>QFrame#frameELANActionBar{background:#EDF5FA;border:1px solid #C8DAE8;border-radius:8px;} QLabel{font-weight:600;color:#355E78;} QPushButton{background:#2F7898;color:#FFFFFF;border:1px solid #265F78;border-radius:4px;padding:5px 12px;font-weight:600;} QPushButton:hover{background:#3988AB;}</string>
+        <string>QFrame#frameELANActionBar{background:#EDF5FA;border:1px solid #C8DAE8;border-radius:8px;} QLabel{font-weight:600;color:#355E78;} QPushButton{background:#2F7898;color:#FFFFFF;border:1px solid #265F78;border-radius:4px;padding:5px 12px;font-weight:600;} QPushButton:hover{background:#3988AB;} QProgressBar{border:1px solid #B8CBD9;border-radius:4px;text-align:center;background:#FFFFFF;color:#2B5066;} QProgressBar::chunk{background:#2E7A95;border-radius:3px;}</string>
         </property>
         <layout class="QHBoxLayout" name="layoutELANActionBar">
         <property name="leftMargin">
@@ -6360,6 +6444,13 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="btnELANExport">
+          <property name="text">
+           <string>Export Results</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="btnELANRun">
           <property name="minimumSize">
           <size>
@@ -6372,6 +6463,174 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QLabel" name="lblELANProgressLabel">
+          <property name="text">
+           <string>Progress:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="progressELANRun">
+          <property name="minimumSize">
+           <size>
+            <width>130</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="textVisible">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frameELANKPIs">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>62</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>62</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string>QFrame#frameELANKPIs{background:#F6FAFD;border:1px solid #D1DFEA;border-radius:8px;} QLabel#lblELANKPITitle{color:#56748A;font-size:11px;font-weight:600;} QLabel#lblELANKPIValue{color:#244B63;font-size:14px;font-weight:700;}</string>
+        </property>
+        <layout class="QHBoxLayout" name="layoutELANKPIs">
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>10</number>
+         </property>
+         <property name="bottomMargin">
+          <number>8</number>
+         </property>
+         <property name="spacing">
+          <number>20</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="layoutELANKPI1">
+           <item>
+            <widget class="QLabel" name="lblELANKPI1Title">
+             <property name="objectName">
+              <string notr="true">lblELANKPITitle</string>
+             </property>
+             <property name="text">
+              <string>Avg Quartz</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblELANKPI1Value">
+             <property name="objectName">
+              <string notr="true">lblELANKPIValue</string>
+             </property>
+             <property name="text">
+              <string>-- %</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="layoutELANKPI2">
+           <item>
+            <widget class="QLabel" name="lblELANKPI2Title">
+             <property name="objectName">
+              <string notr="true">lblELANKPITitle</string>
+             </property>
+             <property name="text">
+              <string>Avg Clay</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblELANKPI2Value">
+             <property name="objectName">
+              <string notr="true">lblELANKPIValue</string>
+             </property>
+             <property name="text">
+              <string>-- %</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="layoutELANKPI3">
+           <item>
+            <widget class="QLabel" name="lblELANKPI3Title">
+             <property name="objectName">
+              <string notr="true">lblELANKPITitle</string>
+             </property>
+             <property name="text">
+              <string>Avg Calcite</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblELANKPI3Value">
+             <property name="objectName">
+              <string notr="true">lblELANKPIValue</string>
+             </property>
+             <property name="text">
+              <string>-- %</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="layoutELANKPI4">
+           <item>
+            <widget class="QLabel" name="lblELANKPI4Title">
+             <property name="objectName">
+              <string notr="true">lblELANKPITitle</string>
+             </property>
+             <property name="text">
+              <string>Residual RMS</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblELANKPI4Value">
+             <property name="objectName">
+              <string notr="true">lblELANKPIValue</string>
+             </property>
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerELANKPIs">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
       </item>
@@ -6400,14 +6659,100 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
          <number>10</number>
         </property>
         <item>
-         <widget class="QLabel" name="lblELANPlaceholder">
-          <property name="text">
-          <string>ELAN volumetric output canvas
+         <widget class="QSplitter" name="splitterELANResults">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QFrame" name="frameELANTrackPlaceholder">
+           <property name="styleSheet">
+            <string>QFrame#frameELANTrackPlaceholder{background:#FCFEFF;border:1px dashed #C7D7E4;border-radius:6px;}</string>
+           </property>
+           <layout class="QVBoxLayout" name="layoutELANTrackPlaceholder">
+            <item>
+             <widget class="QLabel" name="lblELANPlaceholder">
+              <property name="text">
+               <string>ELAN volumetric output canvas
 (stacked mineral-volume tracks and residual diagnostics)</string>
-          </property>
-          <property name="alignment">
-          <set>Qt::AlignCenter</set>
-          </property>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QFrame" name="frameELANResultsTable">
+           <property name="styleSheet">
+            <string>QFrame#frameELANResultsTable{background:#FFFFFF;border:1px solid #D3DFEA;border-radius:6px;} QTableWidget{border:0;gridline-color:#E3ECF3;background:#FFFFFF;} QHeaderView::section{background:#F2F7FB;color:#395A73;padding:4px;border:1px solid #E0EAF2;font-weight:600;}</string>
+           </property>
+           <layout class="QVBoxLayout" name="layoutELANResultsTable">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="lblELANTableTitle">
+              <property name="styleSheet">
+               <string>color:#46657B;font-size:12px;font-weight:700;</string>
+              </property>
+              <property name="text">
+               <string>Depth-Indexed Mineral Fractions</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableELANResults">
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+              <property name="columnCount">
+               <number>6</number>
+              </property>
+              <property name="rowCount">
+               <number>3</number>
+              </property>
+              <column>
+               <property name="text">
+                <string>Depth</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Quartz</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Calcite</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Clay</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Dolomite</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Residual</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
         </layout>
