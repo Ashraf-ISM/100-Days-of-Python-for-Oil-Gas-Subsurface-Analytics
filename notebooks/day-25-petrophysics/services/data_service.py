@@ -233,6 +233,18 @@ class DataService:
 
         self.ui._data_info_dashboard_built = True
 
+
+        # Correlation matrix
+        corr_section, corr_layout = make_section("Correlation Matrix")
+        corr_frame = QtWidgets.QFrame(corr_section)
+        corr_frame.setMinimumHeight(360)
+        corr_frame.setStyleSheet("background:#F8FBFE;border:1px dashed #C9D7E6;border-radius:8px;")
+        corr_frame.setLayout(QtWidgets.QVBoxLayout())
+        corr_frame.layout().setContentsMargins(0, 0, 0, 0)
+        setattr(self.ui, "frameDISCorrelationCanvas", corr_frame)
+        corr_layout.addWidget(corr_frame)
+        content_layout.addWidget(corr_section)
+
     def import_data(self):
         paths, _ = QtWidgets.QFileDialog.getOpenFileNames(
             self.ui,
