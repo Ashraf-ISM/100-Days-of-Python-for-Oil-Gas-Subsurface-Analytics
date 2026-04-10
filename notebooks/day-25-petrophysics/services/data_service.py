@@ -217,8 +217,6 @@ class DataService:
         content_layout.addWidget(corr_section)
 
 
-        
-
         # Well Data
         data_section, data_layout = make_section("Well Data")
         data_view = QtWidgets.QTableView(data_section)
