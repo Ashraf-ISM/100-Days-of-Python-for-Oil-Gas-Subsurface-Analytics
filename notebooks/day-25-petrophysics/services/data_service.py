@@ -217,15 +217,7 @@ class DataService:
         content_layout.addWidget(corr_section)
 
         # Insight box
-        insight_section, insight_layout = make_section("Basic Insights")
-        insight_label = QtWidgets.QLabel("Load data to see automatic observations.", insight_section)
-        insight_label.setWordWrap(True)
-        insight_label.setStyleSheet(
-            "background:#F8FBFE;border:1px solid #D7E2EE;border-radius:8px;padding:12px;color:#38556F;"
-        )
-        setattr(self.ui, "lblDISInsights", insight_label)
-        insight_layout.addWidget(insight_label)
-        content_layout.addWidget(insight_section)
+        
 
         # Well Data
         data_section, data_layout = make_section("Well Data")
