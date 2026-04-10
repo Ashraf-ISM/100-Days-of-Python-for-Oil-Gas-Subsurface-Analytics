@@ -10,4 +10,4 @@ class Well:
     name: str
     header: Dict[str, Any] = field(default_factory=dict)
     log_info: Dict[str, Dict[str, Any]] = field(default_factory=dict)
-    data: Any | None = None  # pandas DataFrame or dic
+    data: Any | None = None  # pandas DataFrame or dict
