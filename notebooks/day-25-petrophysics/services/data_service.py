@@ -207,7 +207,7 @@ class DataService:
 
 
 
-        # Well Data
+        # Well Data showing
         data_section, data_layout = make_section("Well Data")
         data_view = QtWidgets.QTableView(data_section)
         data_view.setAlternatingRowColors(True)
