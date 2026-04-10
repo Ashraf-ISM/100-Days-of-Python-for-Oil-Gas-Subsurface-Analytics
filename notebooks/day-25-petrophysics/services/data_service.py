@@ -233,7 +233,6 @@ class DataService:
 
         self.ui._data_info_dashboard_built = True
 
-
         # Correlation matrix display
         corr_section, corr_layout = make_section("Correlation Matrix")
         corr_frame = QtWidgets.QFrame(corr_section)
