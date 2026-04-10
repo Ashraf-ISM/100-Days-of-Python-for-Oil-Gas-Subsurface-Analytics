@@ -216,7 +216,7 @@ class DataService:
         corr_layout.addWidget(corr_frame)
         content_layout.addWidget(corr_section)
 
-        # Insight box
+
         
 
         # Well Data
