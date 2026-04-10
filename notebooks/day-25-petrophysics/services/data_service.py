@@ -206,7 +206,6 @@ class DataService:
         content_layout.addWidget(dist_section)
 
 
-
         # Well Data showing
         data_section, data_layout = make_section("Well Data")
         data_view = QtWidgets.QTableView(data_section)
