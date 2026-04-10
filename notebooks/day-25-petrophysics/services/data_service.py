@@ -9,6 +9,41 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from core.well_data_loader import load_well
 
 
+class PandasModel(QtCore.QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self._data = data
+
+    def rowCount(self, parent=None):
+        if self._data is None: return 0
+        return len(self._data)
+
+    def columnCount(self, parent=None):
+        if self._data is None: return 0
+        return len(self._data.columns)
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if not index.isValid():
+            return None
+        if role == QtCore.Qt.DisplayRole:
+            val = self._data.iat[index.row(), index.column()]
+            import pandas as pd
+            if pd.isna(val):
+                return ""
+            if isinstance(val, float):
+                return f"{val:.4f}"
+            return str(val)
+        return None
+
+    def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
+        if role == QtCore.Qt.DisplayRole:
+            if orientation == QtCore.Qt.Horizontal:
+                return str(self._data.columns[section])
+            if orientation == QtCore.Qt.Vertical:
+                return str(self._data.index[section])
+        return None
+
+
 class DataService:
     def __init__(self, ui: QtWidgets.QMainWindow):
         self.ui = ui
@@ -191,6 +226,16 @@ class DataService:
         setattr(self.ui, "lblDISInsights", insight_label)
         insight_layout.addWidget(insight_label)
         content_layout.addWidget(insight_section)
+
+        # Well Data
+        data_section, data_layout = make_section("Well Data")
+        data_view = QtWidgets.QTableView(data_section)
+        data_view.setAlternatingRowColors(True)
+        data_view.setMinimumHeight(400)
+        data_view.setStyleSheet("QTableView { background: #FFFFFF; border: 1px solid #D7E2EE; border-radius: 8px; font-size: 11px; } QTableView::item { padding: 4px; }")
+        setattr(self.ui, "tableDISWellData", data_view)
+        data_layout.addWidget(data_view)
+        content_layout.addWidget(data_section)
 
         content_layout.addStretch(1)
         scroll_area.setWidget(content)
@@ -388,6 +433,14 @@ class DataService:
             self._update_correlation_view(df)
             self._update_coverage_view(well, df)
             self._update_insight_box(well, df)
+
+            well_data_table = getattr(self.ui, "tableDISWellData", None)
+            if well_data_table is not None:
+                try:
+                    model = PandasModel(df)
+                    well_data_table.setModel(model)
+                except Exception as e:
+                    print("Could not update Pandas model:", e)
 
             # Only numeric columns
             desc = df.describe().transpose() if not df.empty else df.head(0)
