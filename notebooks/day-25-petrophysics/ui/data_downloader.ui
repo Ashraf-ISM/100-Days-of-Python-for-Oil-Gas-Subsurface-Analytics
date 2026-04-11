@@ -1,0 +1,1497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DataDownloaderWindow</class>
+ <widget class="QMainWindow" name="DataDownloaderWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>860</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PetroARX — Data Downloader</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+
+/* ═══════════════════════════════════════════════
+   PETROARX DATA DOWNLOADER — LIGHT THEME
+   ═══════════════════════════════════════════════ */
+
+QMainWindow, QDialog {
+    background-color: #F4F6F9;
+}
+
+/* ── TOP HEADER FRAME ── */
+#headerFrame {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #1A3A5C, stop:1 #2E6DA4);
+    border-bottom: 2px solid #1A3A5C;
+}
+
+#headerTitle {
+    color: #FFFFFF;
+    font-family: "Segoe UI";
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+#headerSubtitle {
+    color: #A8C8E8;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    font-weight: 400;
+}
+
+#headerIcon {
+    color: #F0C040;
+    font-family: "Segoe UI";
+    font-size: 26px;
+}
+
+/* ── TOOLBAR ── */
+#toolbarFrame {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #DDE3EC;
+    padding: 4px 0px;
+}
+
+/* ── SEARCH BAR ── */
+#searchLineEdit {
+    background-color: #F0F4FA;
+    border: 1px solid #C8D4E3;
+    border-radius: 6px;
+    padding: 6px 12px 6px 36px;
+    font-family: "Segoe UI";
+    font-size: 12px;
+    color: #2C3E50;
+    min-width: 300px;
+    max-height: 34px;
+}
+#searchLineEdit:focus {
+    border: 1.5px solid #2E6DA4;
+    background-color: #FFFFFF;
+}
+
+#searchLabel {
+    color: #5A7A99;
+    font-size: 14px;
+}
+
+/* ── FILTER COMBO BOXES ── */
+QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D4E3;
+    border-radius: 5px;
+    padding: 5px 28px 5px 10px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    color: #2C3E50;
+    min-width: 130px;
+    max-height: 30px;
+}
+QComboBox:hover {
+    border-color: #2E6DA4;
+}
+QComboBox::drop-down {
+    border: none;
+    width: 22px;
+}
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #5A7A99;
+    width: 0;
+    height: 0;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D4E3;
+    border-radius: 4px;
+    selection-background-color: #E8F0FA;
+    selection-color: #1A3A5C;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    padding: 2px;
+}
+
+/* ── TOOLBAR BUTTONS ── */
+#btnRefresh, #btnCopyLink, #btnOpenBrowser {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D4E3;
+    border-radius: 5px;
+    padding: 5px 14px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    font-weight: 500;
+    color: #2C3E50;
+    max-height: 30px;
+}
+#btnRefresh:hover, #btnCopyLink:hover, #btnOpenBrowser:hover {
+    background-color: #E8F0FA;
+    border-color: #2E6DA4;
+    color: #1A3A5C;
+}
+#btnRefresh:pressed, #btnCopyLink:pressed, #btnOpenBrowser:pressed {
+    background-color: #D0E4F5;
+}
+
+#btnAddLink {
+    background-color: #2E6DA4;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 16px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFFFFF;
+    max-height: 30px;
+}
+#btnAddLink:hover {
+    background-color: #245A8A;
+}
+#btnAddLink:pressed {
+    background-color: #1A3A5C;
+}
+
+/* ── MAIN TAB WIDGET ── */
+#mainTabWidget {
+    background-color: transparent;
+}
+
+QTabWidget::pane {
+    background-color: #FFFFFF;
+    border: 1px solid #DDE3EC;
+    border-top: none;
+    border-radius: 0px 0px 8px 8px;
+}
+
+QTabBar {
+    background-color: transparent;
+}
+
+QTabBar::tab {
+    background-color: #E8EEF6;
+    border: 1px solid #C8D4E3;
+    border-bottom: none;
+    border-radius: 6px 6px 0px 0px;
+    padding: 8px 18px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    font-weight: 500;
+    color: #5A7A99;
+    margin-right: 2px;
+    min-width: 110px;
+}
+
+QTabBar::tab:selected {
+    background-color: #FFFFFF;
+    color: #1A3A5C;
+    font-weight: 700;
+    border-bottom: 2px solid #FFFFFF;
+    border-top: 2px solid #2E6DA4;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #D8E8F5;
+    color: #2E6DA4;
+}
+
+/* ── TABLE WIDGET ── */
+QTableWidget {
+    background-color: #FFFFFF;
+    gridline-color: #EDF1F7;
+    border: none;
+    font-family: "Segoe UI";
+    font-size: 12px;
+    color: #2C3E50;
+    selection-background-color: #E0EDF8;
+    selection-color: #1A3A5C;
+    outline: none;
+}
+
+QTableWidget::item {
+    padding: 6px 10px;
+    border-bottom: 1px solid #EDF1F7;
+}
+
+QTableWidget::item:selected {
+    background-color: #E0EDF8;
+    color: #1A3A5C;
+}
+
+QTableWidget::item:alternate {
+    background-color: #F8FAFE;
+}
+
+QHeaderView::section {
+    background-color: #F0F4FA;
+    color: #1A3A5C;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    font-weight: 700;
+    padding: 8px 10px;
+    border: none;
+    border-bottom: 2px solid #2E6DA4;
+    border-right: 1px solid #DDE3EC;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+QHeaderView::section:last {
+    border-right: none;
+}
+
+/* ── TABLE ACTION BUTTONS ── */
+#btnVisitLink {
+    background-color: #2E6DA4;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+#btnVisitLink:hover {
+    background-color: #245A8A;
+}
+
+/* ── SIDE PANEL ── */
+#sidePanelFrame {
+    background-color: #FFFFFF;
+    border-left: 1px solid #DDE3EC;
+    border-radius: 0px 8px 8px 0px;
+}
+
+#sidePanelTitle {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #F0F4FA, stop:1 #E8EEF6);
+    color: #1A3A5C;
+    font-family: "Segoe UI";
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-bottom: 1px solid #DDE3EC;
+    letter-spacing: 0.3px;
+}
+
+/* ── STAT CARDS ── */
+#statCard {
+    background-color: #F8FAFE;
+    border: 1px solid #DDE3EC;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#statCardValue {
+    color: #2E6DA4;
+    font-family: "Segoe UI";
+    font-size: 22px;
+    font-weight: 700;
+}
+
+#statCardLabel {
+    color: #7A9AB5;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+}
+
+/* ── CATEGORY BADGES ── */
+#badgeSeismic {
+    background-color: #E6F0FA;
+    color: #1A5C9A;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+#badgeWellLog {
+    background-color: #E6F8EE;
+    color: #1A7A3C;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+#badgeGeo {
+    background-color: #FDF3E6;
+    color: #A05A00;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+#badgeFree {
+    background-color: #EDF9EE;
+    color: #267A30;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* ── LINK QUEUE / DOWNLOAD PANEL ── */
+#downloadFrame {
+    background-color: #FFFFFF;
+    border-top: 2px solid #DDE3EC;
+}
+
+#downloadPanelTitle {
+    color: #1A3A5C;
+    font-family: "Segoe UI";
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#linkListWidget {
+    background-color: #F8FAFE;
+    border: 1px solid #DDE3EC;
+    border-radius: 6px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    color: #2C3E50;
+    outline: none;
+}
+
+#linkListWidget::item {
+    padding: 5px 8px;
+    border-bottom: 1px solid #EDF1F7;
+}
+
+#linkListWidget::item:selected {
+    background-color: #E0EDF8;
+    color: #1A3A5C;
+}
+
+QProgressBar {
+    background-color: #E8EEF6;
+    border: none;
+    border-radius: 4px;
+    height: 8px;
+    text-align: center;
+    font-size: 0px;
+}
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #2E6DA4, stop:1 #4A9FD4);
+    border-radius: 4px;
+}
+
+/* ── DETAIL TEXT AREA ── */
+#detailTextEdit {
+    background-color: #F8FAFE;
+    border: 1px solid #DDE3EC;
+    border-radius: 6px;
+    font-family: "Consolas", "Courier New";
+    font-size: 11px;
+    color: #2C3E50;
+    padding: 8px;
+}
+
+/* ── SEPARATORS ── */
+QFrame[frameShape="4"], QFrame[frameShape="5"] {
+    color: #DDE3EC;
+}
+
+/* ── SCROLL BARS ── */
+QScrollBar:vertical {
+    background-color: #F4F6F9;
+    width: 8px;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical {
+    background-color: #B8C8D8;
+    border-radius: 4px;
+    min-height: 30px;
+}
+QScrollBar::handle:vertical:hover {
+    background-color: #2E6DA4;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+QScrollBar:horizontal {
+    background-color: #F4F6F9;
+    height: 8px;
+    border-radius: 4px;
+}
+QScrollBar::handle:horizontal {
+    background-color: #B8C8D8;
+    border-radius: 4px;
+    min-width: 30px;
+}
+QScrollBar::handle:horizontal:hover {
+    background-color: #2E6DA4;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* ── STATUS BAR ── */
+QStatusBar {
+    background-color: #1A3A5C;
+    color: #A8C8E8;
+    font-family: "Segoe UI";
+    font-size: 10px;
+    border-top: 1px solid #2E6DA4;
+    padding: 2px 8px;
+}
+
+QStatusBar QLabel {
+    color: #A8C8E8;
+    font-family: "Segoe UI";
+    font-size: 10px;
+}
+
+/* ── TOOL TIPS ── */
+QToolTip {
+    background-color: #1A3A5C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+}
+
+/* ── SPLITTER ── */
+QSplitter::handle {
+    background-color: #DDE3EC;
+    width: 3px;
+}
+QSplitter::handle:hover {
+    background-color: #2E6DA4;
+}
+
+/* ── CHECKBOXES ── */
+QCheckBox {
+    font-family: "Segoe UI";
+    font-size: 11px;
+    color: #2C3E50;
+    spacing: 6px;
+}
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #C8D4E3;
+    background-color: #FFFFFF;
+}
+QCheckBox::indicator:checked {
+    background-color: #2E6DA4;
+    border-color: #2E6DA4;
+}
+QCheckBox::indicator:hover {
+    border-color: #2E6DA4;
+}
+
+/* ── LINE EDIT (generic) ── */
+QLineEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #C8D4E3;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    color: #2C3E50;
+}
+QLineEdit:focus {
+    border-color: #2E6DA4;
+}
+
+/* ── LABELS ── */
+QLabel {
+    font-family: "Segoe UI";
+    color: #2C3E50;
+}
+
+/* ── GROUP BOXES ── */
+QGroupBox {
+    background-color: #FFFFFF;
+    border: 1px solid #DDE3EC;
+    border-radius: 8px;
+    margin-top: 18px;
+    padding: 10px 8px 8px 8px;
+    font-family: "Segoe UI";
+    font-size: 11px;
+    font-weight: 700;
+    color: #1A3A5C;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 12px;
+    padding: 0 6px;
+    background-color: #FFFFFF;
+    color: #1A3A5C;
+}
+
+   </string>
+  </property>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║         CENTRAL WIDGET               ║
+       ╚══════════════════════════════════════╝ -->
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="mainVLayout">
+    <property name="spacing"><number>0</number></property>
+    <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+    <!-- ══ HEADER ══ -->
+    <item>
+     <widget class="QFrame" name="headerFrame">
+      <property name="minimumHeight"><number>64</number></property>
+      <property name="maximumHeight"><number>64</number></property>
+      <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+      <layout class="QHBoxLayout" name="headerLayout">
+       <property name="contentsMargins"><rect><x>16</x><y>8</y><x>16</x><y>8</y></rect></property>
+       <property name="spacing"><number>12</number></property>
+       <item>
+        <widget class="QLabel" name="headerIcon">
+         <property name="text"><string>⛽</string></property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="headerTextLayout">
+         <property name="spacing"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="headerTitle">
+           <property name="text"><string>PetroARX — Data Downloader</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="headerSubtitle">
+           <property name="text"><string>Seismic · Well Logs · Geophysical · Open Datasets · Research Repositories</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QVBoxLayout">
+         <property name="spacing"><number>2</number></property>
+         <item>
+          <widget class="QLabel" name="totalSourcesLbl">
+           <property name="text"><string>150+ Verified Sources</string></property>
+           <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+           <property name="styleSheet"><string>color:#FFFFFF; font-family:'Segoe UI'; font-size:11px; font-weight:600;</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lastUpdatedLbl">
+           <property name="text"><string>Last updated: April 2026</string></property>
+           <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+           <property name="styleSheet"><string>color:#A8C8E8; font-family:'Segoe UI'; font-size:10px;</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- ══ TOOLBAR ══ -->
+    <item>
+     <widget class="QFrame" name="toolbarFrame">
+      <property name="minimumHeight"><number>48</number></property>
+      <property name="maximumHeight"><number>48</number></property>
+      <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+      <layout class="QHBoxLayout" name="toolbarLayout">
+       <property name="contentsMargins"><rect><x>12</x><y>6</y><x>12</x><y>6</y></rect></property>
+       <property name="spacing"><number>8</number></property>
+
+       <!-- Search -->
+       <item>
+        <widget class="QLabel" name="searchIconLbl">
+         <property name="text"><string>🔍</string></property>
+         <property name="styleSheet"><string>font-size:14px; margin-right:-4px;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="searchLineEdit">
+         <property name="placeholderText"><string>Search sources, datasets, organizations…</string></property>
+         <property name="clearButtonEnabled"><bool>true</bool></property>
+        </widget>
+       </item>
+
+       <item>
+        <widget class="QFrame" name="sep1">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+        </widget>
+       </item>
+
+       <!-- Filter: Category -->
+       <item>
+        <widget class="QLabel" name="filterCatLbl">
+         <property name="text"><string>Category:</string></property>
+         <property name="styleSheet"><string>font-family:'Segoe UI'; font-size:11px; color:#5A7A99; font-weight:600;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboCategory">
+         <item><property name="text"><string>All Categories</string></property></item>
+         <item><property name="text"><string>🌊 Seismic Data</string></property></item>
+         <item><property name="text"><string>🛢 Well Log Data</string></property></item>
+         <item><property name="text"><string>🗺 Geological / GIS</string></property></item>
+         <item><property name="text"><string>📡 Geophysical</string></property></item>
+         <item><property name="text"><string>🌍 Satellite / Remote Sensing</string></property></item>
+         <item><property name="text"><string>📚 Research / Publications</string></property></item>
+         <item><property name="text"><string>🔧 Software / Tools</string></property></item>
+        </widget>
+       </item>
+
+       <!-- Filter: Access -->
+       <item>
+        <widget class="QLabel" name="filterAccessLbl">
+         <property name="text"><string>Access:</string></property>
+         <property name="styleSheet"><string>font-family:'Segoe UI'; font-size:11px; color:#5A7A99; font-weight:600;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboAccess">
+         <item><property name="text"><string>All Types</string></property></item>
+         <item><property name="text"><string>✅ Free / Open Access</string></property></item>
+         <item><property name="text"><string>🔑 Registration Required</string></property></item>
+         <item><property name="text"><string>💳 Paid / Licensed</string></property></item>
+         <item><property name="text"><string>🏛 Government / Public</string></property></item>
+        </widget>
+       </item>
+
+       <!-- Filter: Region -->
+       <item>
+        <widget class="QLabel" name="filterRegionLbl">
+         <property name="text"><string>Region:</string></property>
+         <property name="styleSheet"><string>font-family:'Segoe UI'; font-size:11px; color:#5A7A99; font-weight:600;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboRegion">
+         <item><property name="text"><string>Global</string></property></item>
+         <item><property name="text"><string>North America</string></property></item>
+         <item><property name="text"><string>South America</string></property></item>
+         <item><property name="text"><string>Europe</string></property></item>
+         <item><property name="text"><string>Middle East</string></property></item>
+         <item><property name="text"><string>Asia Pacific</string></property></item>
+         <item><property name="text"><string>Africa</string></property></item>
+        </widget>
+       </item>
+
+       <item>
+        <widget class="QFrame" name="sep2">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+        </widget>
+       </item>
+
+       <item>
+        <widget class="QPushButton" name="btnRefresh">
+         <property name="text"><string>↻  Refresh</string></property>
+         <property name="toolTip"><string>Reload all data sources</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnCopyLink">
+         <property name="text"><string>⎘  Copy Link</string></property>
+         <property name="toolTip"><string>Copy selected source URL to clipboard</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnOpenBrowser">
+         <property name="text"><string>🌐  Open in Browser</string></property>
+         <property name="toolTip"><string>Open selected source in default browser</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnAddLink">
+         <property name="text"><string>＋  Add Source</string></property>
+         <property name="toolTip"><string>Add a custom data source link</string></property>
+        </widget>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+
+    <!-- ══ MAIN CONTENT SPLITTER ══ -->
+    <item>
+     <widget class="QSplitter" name="mainSplitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+      <property name="childrenCollapsible"><bool>false</bool></property>
+
+      <!-- LEFT: TABS + TABLE -->
+      <widget class="QWidget" name="leftPanelWidget">
+       <layout class="QVBoxLayout" name="leftLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins"><rect><x>10</x><y>10</y><x>4</x><y>0</y></rect></property>
+
+        <item>
+         <widget class="QTabWidget" name="mainTabWidget">
+          <property name="currentIndex"><number>0</number></property>
+
+          <!-- ─── TAB 1: SEISMIC DATA ─── -->
+          <widget class="QWidget" name="tabSeismic">
+           <attribute name="title"><string>🌊  Seismic Data</string></attribute>
+           <layout class="QVBoxLayout" name="seismicLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <widget class="QLabel" name="seismicDesc">
+              <property name="text"><string>Global seismic reflection, refraction, and ambient noise datasets. Click a row to preview details, then use Open in Browser to access the portal.</string></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet"><string>color:#5A7A99; font-size:11px; padding:4px 0px 6px 0px;</string></property>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableSeismic">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <property name="cornerButtonEnabled"><bool>false</bool></property>
+              <column><property name="text"><string>Resource Name</string></property></column>
+              <column><property name="text"><string>Organization</string></property></column>
+              <column><property name="text"><string>Data Format</string></property></column>
+              <column><property name="text"><string>Coverage</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+
+              <!-- SEGY Society Repo -->
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 2: WELL LOG DATA ─── -->
+          <widget class="QWidget" name="tabWellLog">
+           <attribute name="title"><string>🛢  Well Log Data</string></attribute>
+           <layout class="QVBoxLayout" name="wellLogLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <widget class="QLabel" name="wellLogDesc">
+              <property name="text"><string>Well log archives in LAS 2.0 / 3.0 format including GR, Sonic, Density, Resistivity, Neutron, Caliper curves from global petroleum basins.</string></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet"><string>color:#5A7A99; font-size:11px; padding:4px 0px 6px 0px;</string></property>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableWellLog">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <column><property name="text"><string>Resource Name</string></property></column>
+              <column><property name="text"><string>Organization</string></property></column>
+              <column><property name="text"><string>Data Format</string></property></column>
+              <column><property name="text"><string>Coverage</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+              <row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 3: GEOLOGICAL / GIS ─── -->
+          <widget class="QWidget" name="tabGeological">
+           <attribute name="title"><string>🗺  Geological / GIS</string></attribute>
+           <layout class="QVBoxLayout" name="geoLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <widget class="QLabel" name="geoDesc">
+              <property name="text"><string>Geological maps, stratigraphic databases, formation tops, basin outlines, and GIS shapefiles from national geological surveys worldwide.</string></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet"><string>color:#5A7A99; font-size:11px; padding:4px 0px 6px 0px;</string></property>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableGeo">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <column><property name="text"><string>Resource Name</string></property></column>
+              <column><property name="text"><string>Organization</string></property></column>
+              <column><property name="text"><string>Data Format</string></property></column>
+              <column><property name="text"><string>Coverage</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+              <row/><row/><row/><row/><row/><row/><row/><row/><row/><row/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 4: GEOPHYSICAL ─── -->
+          <widget class="QWidget" name="tabGeophysical">
+           <attribute name="title"><string>📡  Geophysical</string></attribute>
+           <layout class="QVBoxLayout" name="geophyLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <widget class="QLabel" name="geophyDesc">
+              <property name="text"><string>Gravity, magnetics, EM, heat flow, and potential field datasets from global surveys and research institutions.</string></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet"><string>color:#5A7A99; font-size:11px; padding:4px 0px 6px 0px;</string></property>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableGeophysical">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <column><property name="text"><string>Resource Name</string></property></column>
+              <column><property name="text"><string>Organization</string></property></column>
+              <column><property name="text"><string>Data Format</string></property></column>
+              <column><property name="text"><string>Coverage</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+              <row/><row/><row/><row/><row/><row/><row/><row/><row/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 5: SATELLITE / RS ─── -->
+          <widget class="QWidget" name="tabSatellite">
+           <attribute name="title"><string>🌍  Satellite / RS</string></attribute>
+           <layout class="QVBoxLayout" name="satLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <widget class="QLabel" name="satDesc">
+              <property name="text"><string>Satellite imagery, InSAR, DEM, multispectral, and hyperspectral data relevant to geological and hydrocarbon exploration.</string></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet"><string>color:#5A7A99; font-size:11px; padding:4px 0px 6px 0px;</string></property>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableSatellite">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <column><property name="text"><string>Resource Name</string></property></column>
+              <column><property name="text"><string>Organization</string></property></column>
+              <column><property name="text"><string>Data Format</string></property></column>
+              <column><property name="text"><string>Coverage</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+              <row/><row/><row/><row/><row/><row/><row/><row/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 6: RESEARCH / PUBLICATIONS ─── -->
+          <widget class="QWidget" name="tabResearch">
+           <attribute name="title"><string>📚  Research / Publications</string></attribute>
+           <layout class="QVBoxLayout" name="researchLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <widget class="QLabel" name="researchDesc">
+              <property name="text"><string>Academic datasets, open-access journals, SPE/SEG paper repositories, and benchmark petrophysical datasets for research and training.</string></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet"><string>color:#5A7A99; font-size:11px; padding:4px 0px 6px 0px;</string></property>
+             </widget>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableResearch">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <column><property name="text"><string>Resource Name</string></property></column>
+              <column><property name="text"><string>Organization</string></property></column>
+              <column><property name="text"><string>Data Format</string></property></column>
+              <column><property name="text"><string>Coverage</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+              <row/><row/><row/><row/><row/><row/><row/><row/><row/>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 7: MY SOURCES ─── -->
+          <widget class="QWidget" name="tabMySources">
+           <attribute name="title"><string>📌  My Sources</string></attribute>
+           <layout class="QVBoxLayout" name="mySourcesLayout">
+            <property name="spacing"><number>8</number></property>
+            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+            <item>
+             <layout class="QHBoxLayout" name="mySourcesToolbarLayout">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QLabel" name="mySourcesHint">
+                <property name="text"><string>Your custom saved data sources. Add links using "＋ Add Source" in the toolbar above.</string></property>
+                <property name="styleSheet"><string>color:#5A7A99; font-size:11px;</string></property>
+               </widget>
+              </item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+              <item>
+               <widget class="QPushButton" name="btnImportCsv">
+                <property name="text"><string>⬆  Import CSV</string></property>
+                <property name="styleSheet"><string>background:#FFFFFF; border:1px solid #C8D4E3; border-radius:5px; padding:4px 12px; font-family:'Segoe UI'; font-size:11px; color:#2C3E50;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnExportCsv">
+                <property name="text"><string>⬇  Export CSV</string></property>
+                <property name="styleSheet"><string>background:#FFFFFF; border:1px solid #C8D4E3; border-radius:5px; padding:4px 12px; font-family:'Segoe UI'; font-size:11px; color:#2C3E50;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnDeleteSource">
+                <property name="text"><string>🗑  Remove</string></property>
+                <property name="styleSheet"><string>background:#FFFFFF; border:1px solid #E8B0A8; border-radius:5px; padding:4px 12px; font-family:'Segoe UI'; font-size:11px; color:#C04030;</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <item>
+             <widget class="QTableWidget" name="tableMySources">
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="editTriggers"><set>QAbstractItemView::DoubleClicked</set></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="sortingEnabled"><bool>true</bool></property>
+              <column><property name="text"><string>Name</string></property></column>
+              <column><property name="text"><string>Category</string></property></column>
+              <column><property name="text"><string>Notes</string></property></column>
+              <column><property name="text"><string>Date Added</string></property></column>
+              <column><property name="text"><string>Access Type</string></property></column>
+              <column><property name="text"><string>URL</string></property></column>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+         </widget>
+        </item>
+
+        <!-- ══ BOTTOM: LINK DETAIL PANEL ══ -->
+        <item>
+         <widget class="QFrame" name="downloadFrame">
+          <property name="minimumHeight"><number>160</number></property>
+          <property name="maximumHeight"><number>180</number></property>
+          <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+          <layout class="QVBoxLayout" name="downloadLayout">
+           <property name="spacing"><number>0</number></property>
+           <property name="contentsMargins"><rect><x>0</x><y>6</y><x>0</x><y>6</y></rect></property>
+
+           <!-- Header row -->
+           <item>
+            <layout class="QHBoxLayout" name="downloadHeaderLayout">
+             <property name="spacing"><number>10</number></property>
+             <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>6</y></rect></property>
+             <item>
+              <widget class="QLabel" name="downloadPanelTitle">
+               <property name="text"><string>📋  Selected Source — Details &amp; Direct Link</string></property>
+              </widget>
+             </item>
+             <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+             <item>
+              <widget class="QCheckBox" name="chkShowOnlyFree">
+               <property name="text"><string>Show only free access</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkFavorites">
+               <property name="text"><string>Favorites only</string></property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+
+           <!-- Detail area -->
+           <item>
+            <layout class="QHBoxLayout" name="detailLayout">
+             <property name="spacing"><number>10</number></property>
+
+             <!-- Info labels -->
+             <item>
+              <layout class="QGridLayout" name="detailGridLayout">
+               <property name="horizontalSpacing"><number>14</number></property>
+               <property name="verticalSpacing"><number>6</number></property>
+
+               <item row="0" column="0">
+                <widget class="QLabel" name="lbl_name_key">
+                 <property name="text"><string>Name:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lbl_name_val">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>color:#2C3E50; font-size:11px;</string></property>
+                </widget>
+               </item>
+
+               <item row="1" column="0">
+                <widget class="QLabel" name="lbl_org_key">
+                 <property name="text"><string>Organization:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="lbl_org_val">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>color:#2C3E50; font-size:11px;</string></property>
+                </widget>
+               </item>
+
+               <item row="2" column="0">
+                <widget class="QLabel" name="lbl_format_key">
+                 <property name="text"><string>Format:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="lbl_format_val">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>color:#2C3E50; font-size:11px;</string></property>
+                </widget>
+               </item>
+
+               <item row="3" column="0">
+                <widget class="QLabel" name="lbl_access_key">
+                 <property name="text"><string>Access:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="lbl_access_val">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>color:#2C3E50; font-size:11px;</string></property>
+                </widget>
+               </item>
+
+               <item row="4" column="0">
+                <widget class="QLabel" name="lbl_coverage_key">
+                 <property name="text"><string>Coverage:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLabel" name="lbl_coverage_val">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>color:#2C3E50; font-size:11px;</string></property>
+                </widget>
+               </item>
+
+              </layout>
+             </item>
+
+             <item>
+              <widget class="QFrame" name="detailSep">
+               <property name="frameShape"><enum>QFrame::VLine</enum></property>
+               <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+              </widget>
+             </item>
+
+             <!-- URL box -->
+             <item>
+              <layout class="QVBoxLayout" name="urlBoxLayout">
+               <property name="spacing"><number>6</number></property>
+               <item>
+                <widget class="QLabel" name="urlLbl">
+                 <property name="text"><string>Direct URL:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="urlLineEdit">
+                 <property name="placeholderText"><string>Select a row above to see its URL…</string></property>
+                 <property name="readOnly"><bool>true</bool></property>
+                 <property name="styleSheet"><string>background:#F0F4FA; border:1px solid #C8D4E3; border-radius:5px; padding:5px 10px; font-family:'Consolas','Courier New'; font-size:11px; color:#1A3A5C;</string></property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="urlActionsLayout">
+                 <property name="spacing"><number>8</number></property>
+                 <item>
+                  <widget class="QPushButton" name="btnOpenInBrowserDetail">
+                   <property name="text"><string>🌐  Open in Browser</string></property>
+                   <property name="styleSheet"><string>background:#2E6DA4; border:none; border-radius:5px; padding:6px 16px; font-family:'Segoe UI'; font-size:11px; font-weight:600; color:#FFFFFF;</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnCopyLinkDetail">
+                   <property name="text"><string>⎘  Copy</string></property>
+                   <property name="styleSheet"><string>background:#FFFFFF; border:1px solid #C8D4E3; border-radius:5px; padding:6px 12px; font-family:'Segoe UI'; font-size:11px; color:#2C3E50;</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnFavorite">
+                   <property name="text"><string>☆  Favorite</string></property>
+                   <property name="styleSheet"><string>background:#FFFFFF; border:1px solid #C8D4E3; border-radius:5px; padding:6px 12px; font-family:'Segoe UI'; font-size:11px; color:#2C3E50;</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnAddToProject">
+                   <property name="text"><string>📁  Add to Project</string></property>
+                   <property name="styleSheet"><string>background:#28A060; border:none; border-radius:5px; padding:6px 14px; font-family:'Segoe UI'; font-size:11px; font-weight:600; color:#FFFFFF;</string></property>
+                  </widget>
+                 </item>
+                 <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+
+             <!-- Description -->
+             <item>
+              <layout class="QVBoxLayout" name="descBoxLayout">
+               <property name="spacing"><number>4</number></property>
+               <item>
+                <widget class="QLabel" name="descLbl">
+                 <property name="text"><string>Description:</string></property>
+                 <property name="styleSheet"><string>font-weight:700; color:#1A3A5C; font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="detailTextEdit">
+                 <property name="readOnly"><bool>true</bool></property>
+                 <property name="placeholderText"><string>Select a row to view description…</string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+
+            </layout>
+           </item>
+
+          </layout>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+
+      <!-- RIGHT: STATS PANEL -->
+      <widget class="QWidget" name="rightPanelWidget">
+       <property name="minimumWidth"><number>220</number></property>
+       <property name="maximumWidth"><number>260</number></property>
+       <layout class="QVBoxLayout" name="rightLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins"><rect><x>4</x><y>10</y><x>10</x><y>10</y></rect></property>
+
+        <!-- Stats Title -->
+        <item>
+         <widget class="QLabel" name="sidePanelTitle">
+          <property name="text"><string>📊  SOURCE STATISTICS</string></property>
+         </widget>
+        </item>
+
+        <item>
+         <widget class="QFrame" name="statsFrame">
+          <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+          <layout class="QVBoxLayout" name="statsLayout">
+           <property name="spacing"><number>8</number></property>
+           <property name="contentsMargins"><rect><x>0</x><y>8</y><x>0</x><y>0</y></rect></property>
+
+           <!-- Total Sources Card -->
+           <item>
+            <widget class="QFrame" name="statCard1">
+             <property name="objectName"><string>statCard</string></property>
+             <layout class="QVBoxLayout" name="sc1layout">
+              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="spacing"><number>2</number></property>
+              <item>
+               <widget class="QLabel" name="stat1val">
+                <property name="objectName"><string>statCardValue</string></property>
+                <property name="text"><string>150+</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="stat1lbl">
+                <property name="objectName"><string>statCardLabel</string></property>
+                <property name="text"><string>TOTAL SOURCES</string></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+           <!-- Free Sources Card -->
+           <item>
+            <widget class="QFrame" name="statCard2">
+             <property name="objectName"><string>statCard</string></property>
+             <layout class="QVBoxLayout" name="sc2layout">
+              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="spacing"><number>2</number></property>
+              <item>
+               <widget class="QLabel" name="stat2val">
+                <property name="objectName"><string>statCardValue</string></property>
+                <property name="text"><string>92</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="stat2lbl">
+                <property name="objectName"><string>statCardLabel</string></property>
+                <property name="text"><string>FREE / OPEN ACCESS</string></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+           <!-- Seismic -->
+           <item>
+            <widget class="QFrame" name="statCard3">
+             <property name="objectName"><string>statCard</string></property>
+             <layout class="QVBoxLayout" name="sc3layout">
+              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="spacing"><number>2</number></property>
+              <item>
+               <widget class="QLabel" name="stat3val">
+                <property name="objectName"><string>statCardValue</string></property>
+                <property name="text"><string>38</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="stat3lbl">
+                <property name="objectName"><string>statCardLabel</string></property>
+                <property name="text"><string>SEISMIC SOURCES</string></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+           <!-- Well Log -->
+           <item>
+            <widget class="QFrame" name="statCard4">
+             <property name="objectName"><string>statCard</string></property>
+             <layout class="QVBoxLayout" name="sc4layout">
+              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="spacing"><number>2</number></property>
+              <item>
+               <widget class="QLabel" name="stat4val">
+                <property name="objectName"><string>statCardValue</string></property>
+                <property name="text"><string>45</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="stat4lbl">
+                <property name="objectName"><string>statCardLabel</string></property>
+                <property name="text"><string>WELL LOG SOURCES</string></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+           <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+           <!-- Category Breakdown Title -->
+           <item>
+            <widget class="QLabel" name="catBreakdownTitle">
+             <property name="text"><string>BREAKDOWN BY CATEGORY</string></property>
+             <property name="styleSheet"><string>font-family:'Segoe UI'; font-size:10px; font-weight:700; color:#7A9AB5; letter-spacing:0.5px; padding:4px 0px 2px 0px;</string></property>
+            </widget>
+           </item>
+
+           <!-- Progress bars breakdown -->
+           <item>
+            <layout class="QGridLayout" name="breakdownGrid">
+             <property name="horizontalSpacing"><number>8</number></property>
+             <property name="verticalSpacing"><number>6</number></property>
+
+             <item row="0" column="0"><widget class="QLabel" name="lbl_cat1"><property name="text"><string>Seismic</string></property><property name="styleSheet"><string>font-size:10px; color:#2C3E50;</string></property></widget></item>
+             <item row="0" column="1"><widget class="QProgressBar" name="pb_cat1"><property name="value"><number>38</number></property><property name="maximum"><number>150</number></property><property name="textVisible"><bool>false</bool></property></widget></item>
+             <item row="0" column="2"><widget class="QLabel" name="lbl_cat1v"><property name="text"><string>38</string></property><property name="styleSheet"><string>font-size:10px; color:#5A7A99;</string></property></widget></item>
+
+             <item row="1" column="0"><widget class="QLabel" name="lbl_cat2"><property name="text"><string>Well Log</string></property><property name="styleSheet"><string>font-size:10px; color:#2C3E50;</string></property></widget></item>
+             <item row="1" column="1"><widget class="QProgressBar" name="pb_cat2"><property name="value"><number>45</number></property><property name="maximum"><number>150</number></property><property name="textVisible"><bool>false</bool></property></widget></item>
+             <item row="1" column="2"><widget class="QLabel" name="lbl_cat2v"><property name="text"><string>45</string></property><property name="styleSheet"><string>font-size:10px; color:#5A7A99;</string></property></widget></item>
+
+             <item row="2" column="0"><widget class="QLabel" name="lbl_cat3"><property name="text"><string>Geological</string></property><property name="styleSheet"><string>font-size:10px; color:#2C3E50;</string></property></widget></item>
+             <item row="2" column="1"><widget class="QProgressBar" name="pb_cat3"><property name="value"><number>28</number></property><property name="maximum"><number>150</number></property><property name="textVisible"><bool>false</bool></property></widget></item>
+             <item row="2" column="2"><widget class="QLabel" name="lbl_cat3v"><property name="text"><string>28</string></property><property name="styleSheet"><string>font-size:10px; color:#5A7A99;</string></property></widget></item>
+
+             <item row="3" column="0"><widget class="QLabel" name="lbl_cat4"><property name="text"><string>Geophysical</string></property><property name="styleSheet"><string>font-size:10px; color:#2C3E50;</string></property></widget></item>
+             <item row="3" column="1"><widget class="QProgressBar" name="pb_cat4"><property name="value"><number>20</number></property><property name="maximum"><number>150</number></property><property name="textVisible"><bool>false</bool></property></widget></item>
+             <item row="3" column="2"><widget class="QLabel" name="lbl_cat4v"><property name="text"><string>20</string></property><property name="styleSheet"><string>font-size:10px; color:#5A7A99;</string></property></widget></item>
+
+             <item row="4" column="0"><widget class="QLabel" name="lbl_cat5"><property name="text"><string>Satellite</string></property><property name="styleSheet"><string>font-size:10px; color:#2C3E50;</string></property></widget></item>
+             <item row="4" column="1"><widget class="QProgressBar" name="pb_cat5"><property name="value"><number>14</number></property><property name="maximum"><number>150</number></property><property name="textVisible"><bool>false</bool></property></widget></item>
+             <item row="4" column="2"><widget class="QLabel" name="lbl_cat5v"><property name="text"><string>14</string></property><property name="styleSheet"><string>font-size:10px; color:#5A7A99;</string></property></widget></item>
+
+             <item row="5" column="0"><widget class="QLabel" name="lbl_cat6"><property name="text"><string>Research</string></property><property name="styleSheet"><string>font-size:10px; color:#2C3E50;</string></property></widget></item>
+             <item row="5" column="1"><widget class="QProgressBar" name="pb_cat6"><property name="value"><number>15</number></property><property name="maximum"><number>150</number></property><property name="textVisible"><bool>false</bool></property></widget></item>
+             <item row="5" column="2"><widget class="QLabel" name="lbl_cat6v"><property name="text"><string>15</string></property><property name="styleSheet"><string>font-size:10px; color:#5A7A99;</string></property></widget></item>
+
+            </layout>
+           </item>
+
+           <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+           <!-- Quick Help -->
+           <item>
+            <widget class="QGroupBox" name="helpBox">
+             <property name="title"><string>Quick Guide</string></property>
+             <layout class="QVBoxLayout" name="helpLayout">
+              <property name="spacing"><number>4</number></property>
+              <property name="contentsMargins"><rect><x>8</x><y>16</y><x>8</x><y>8</y></rect></property>
+              <item>
+               <widget class="QLabel" name="helpText">
+                <property name="text"><string>1. Browse or search for a data source
+2. Click a row to load its details
+3. Press "Open in Browser" to visit
+4. Use "Add Source" to save custom links
+5. Export your list with "Export CSV"</string></property>
+                <property name="wordWrap"><bool>true</bool></property>
+                <property name="styleSheet"><string>font-family:'Segoe UI'; font-size:10px; color:#5A7A99; line-height:1.5;</string></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+           <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+          </layout>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+
+  <!-- ══ MENU BAR ══ -->
+  <widget class="QMenuBar" name="menuBar">
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>File</string></property>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionImportLinks"/>
+    <addaction name="actionExportLinks"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title"><string>Edit</string></property>
+    <addaction name="actionAddSource"/>
+    <addaction name="actionEditSource"/>
+    <addaction name="actionDeleteSource"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title"><string>View</string></property>
+    <addaction name="actionToggleSidePanel"/>
+    <addaction name="actionToggleDetailPanel"/>
+    <addaction name="separator"/>
+    <addaction name="actionCompactView"/>
+    <addaction name="actionExpandedView"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title"><string>Tools</string></property>
+    <addaction name="actionLinkChecker"/>
+    <addaction name="actionBulkCopy"/>
+    <addaction name="actionClearCache"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title"><string>Help</string></property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionAbout"/>
+   </widget>
+  </widget>
+
+  <!-- ══ STATUS BAR ══ -->
+  <widget class="QStatusBar" name="statusBar">
+   <widget class="QLabel" name="statusLeft">
+    <property name="text"><string>  ✅  PetroARX Data Downloader — Ready   |   150 sources loaded   |   Last updated: April 2026</string></property>
+   </widget>
+  </widget>
+
+  <!-- ══ ACTIONS ══ -->
+  <action name="actionNewProject"><property name="text"><string>New Project</string></property></action>
+  <action name="actionImportLinks"><property name="text"><string>Import Links (CSV)</string></property></action>
+  <action name="actionExportLinks"><property name="text"><string>Export Links (CSV)</string></property></action>
+  <action name="actionClose"><property name="text"><string>Close</string></property></action>
+  <action name="actionAddSource"><property name="text"><string>Add Source</string></property></action>
+  <action name="actionEditSource"><property name="text"><string>Edit Source</string></property></action>
+  <action name="actionDeleteSource"><property name="text"><string>Delete Source</string></property></action>
+  <action name="actionToggleSidePanel"><property name="text"><string>Toggle Stats Panel</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionToggleDetailPanel"><property name="text"><string>Toggle Detail Panel</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property></action>
+  <action name="actionCompactView"><property name="text"><string>Compact View</string></property></action>
+  <action name="actionExpandedView"><property name="text"><string>Expanded View</string></property></action>
+  <action name="actionLinkChecker"><property name="text"><string>Link Health Checker</string></property></action>
+  <action name="actionBulkCopy"><property name="text"><string>Bulk Copy URLs</string></property></action>
+  <action name="actionClearCache"><property name="text"><string>Clear Cache</string></property></action>
+  <action name="actionDocumentation"><property name="text"><string>Documentation</string></property></action>
+  <action name="actionAbout"><property name="text"><string>About</string></property></action>
+
+ </widget>
+
+ <!-- ══ RESOURCES ══ -->
+ <resources/>
+ <connections/>
+
+</ui>
