@@ -302,880 +302,258 @@ def _plot_track_group(
     return len(valid_curves)
 
 ################### Multi track ########################
-"""
-multitrack_plot.py
-==================
-Professional publication-quality multi-track petrophysical log plot.
-Schlumberger/Petrel-style layout with full petrophysical annotations.
-
-Author  : PetroARX Engine
-Version : 2.0.0
-"""
-
-from __future__ import annotations
-
-import warnings
-from typing import Any
-
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import matplotlib.ticker as ticker
-import numpy as np
-import pandas as pd
-from matplotlib.gridspec import GridSpec
-from matplotlib.lines import Line2D
-
-warnings.filterwarnings("ignore")
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  DESIGN TOKENS  (edit here to retheme globally)
-# ──────────────────────────────────────────────────────────────────────────────
-
-THEME = {
-    # panel chrome
-    "fig_bg":         "#F4F6F8",
-    "header_bg":      "#0D1B2A",       # deep navy
-    "header_fg":      "#E8EEF4",
-    "subheader_bg":   "#1B3A5C",
-    "subheader_fg":   "#A8C4DC",
-
-    # track styling
-    "track_bg_even":  "#FAFBFC",
-    "track_bg_odd":   "#F0F4F8",
-    "track_border":   "#B8C8D8",
-    "track_header_bg":"#1B3A5C",
-    "track_header_fg":"#FFFFFF",
-    "scale_bar_bg":   "#E8EFF6",
-    "grid_color":     "#D0DCE8",
-    "grid_alpha":     0.55,
-    "depth_bg":       "#0D1B2A",
-    "depth_fg":       "#E8EEF4",
-
-    # curve palettes (matched to log type)
-    "gr_color":        "#2D8B57",      # forest green
-    "gr_sand_fill":    "#F5C842",      # amber
-    "gr_shale_fill":   "#8B7355",      # clay brown
-    "res_color":       "#C0392B",      # deep red
-    "rhob_color":      "#5C3D9E",      # purple
-    "nphi_color":      "#1A7AB5",      # steel blue
-    "dt_color":        "#D4691E",      # burnt orange
-    "cali_color":      "#2176AE",      # slate blue
-    "sp_color":        "#1A8C6B",      # teal
-    "default_colors": [
-        "#2176AE", "#D4691E", "#5C3D9E", "#2D8B57",
-        "#A0522D", "#1A7AB5", "#B8860B", "#4B7BE5",
-    ],
-
-    # annotation
-    "cutoff_color":    "#1A1A2E",
-    "zone_alpha":      0.12,
-    "stats_bg":        "white",
-    "stats_alpha":     0.88,
-}
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  CURVE CLASSIFICATION MAPS
-# ──────────────────────────────────────────────────────────────────────────────
-
-GR_KEYS        = {"GR", "GAMMA", "GAMMA_RAY", "SGR", "CGR", "GRD", "GRC"}
-RESISTIVITY_KEYS = {
-    "RT", "RD", "RS", "RXO", "RILD", "RILM", "ILD", "ILM", "LLD", "LLS",
-    "MSFL", "SFLA", "SFLU", "AT10", "AT20", "AT60", "AT90",
-    "RLA1","RLA2","RLA3","RLA4","RLA5","RT_HRLT",
-}
-DENSITY_KEYS   = {"RHOB", "DEN", "ZDEN", "RHOZ", "DPHI"}
-NEUTRON_KEYS   = {"NPHI", "TNPH", "NPOR", "CNPHI", "NEUT", "CMFF", "CMRP"}
-SONIC_KEYS     = {"DT", "DTCO", "DTS", "DTC", "AC", "DTSM"}
-CALIPER_KEYS   = {"CALI", "CAL", "C1", "C2", "HCAL"}
-POROSITY_KEYS  = {"PHIE", "PHIT", "PHI", "POR"}
-SW_KEYS        = {"SW", "SWT", "SWE", "SXO", "BFV", "CBW"}
-VSH_KEYS       = {"VSH", "VCL", "VSHGR", "GRN"}
-PERMEABILITY_KEYS = {"K", "KLOG", "PERM", "TPERM", "KAIR"}
-
-# Natural overlay pairs: {primary: overlay_curve}
-OVERLAY_PAIRS = {
-    "NPHI":  "RHOB",
-    "TNPH":  "RHOB",
-    "RHOB":  "NPHI",
-    "DT":    "DTCO",
-    "DTCO":  "DTS",
-}
-
-# Track width weights (relative)
-TRACK_WIDTH_MAP = {
-    "DEPTH": 0.45,
-    "GR": 1.0, "GAMMA": 1.0, "GAMMA_RAY": 1.0,
-    "CALI": 0.75,
-    "RT": 1.2, "ILD": 1.2, "LLD": 1.2,
-    "RHOB": 1.1, "NPHI": 1.1, "TNPH": 1.1,
-    "DT": 1.0, "DTCO": 1.0,
-}
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  FONT SETUP
-# ──────────────────────────────────────────────────────────────────────────────
-
-plt.rcParams.update({
-    "font.family":        "DejaVu Sans",
-    "axes.unicode_minus": False,
-    "pdf.fonttype":       42,
-    "ps.fonttype":        42,
-})
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  HELPERS
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _classify(curve: str) -> str:
-    cu = curve.upper()
-    if any(cu.startswith(k) or cu == k for k in GR_KEYS):         return "GR"
-    if any(cu.startswith(k) or cu == k for k in RESISTIVITY_KEYS): return "RES"
-    if any(cu.startswith(k) or cu == k for k in DENSITY_KEYS):    return "RHOB"
-    if any(cu.startswith(k) or cu == k for k in NEUTRON_KEYS):    return "NPHI"
-    if any(cu.startswith(k) or cu == k for k in SONIC_KEYS):      return "SONIC"
-    if any(cu.startswith(k) or cu == k for k in CALIPER_KEYS):    return "CALI"
-    if any(cu.startswith(k) or cu == k for k in POROSITY_KEYS):   return "PHI"
-    if any(cu.startswith(k) or cu == k for k in SW_KEYS):         return "SW"
-    if any(cu.startswith(k) or cu == k for k in VSH_KEYS):        return "VSH"
-    if any(cu.startswith(k) or cu == k for k in PERMEABILITY_KEYS): return "PERM"
-    return "GENERIC"
-
-
-def _curve_color(curve: str, idx: int) -> str:
-    cls = _classify(curve)
-    return {
-        "GR":      THEME["gr_color"],
-        "RES":     THEME["res_color"],
-        "RHOB":    THEME["rhob_color"],
-        "NPHI":    THEME["nphi_color"],
-        "SONIC":   THEME["dt_color"],
-        "CALI":    THEME["cali_color"],
-        "SP":      THEME["sp_color"],
-    }.get(cls, THEME["default_colors"][idx % len(THEME["default_colors"])])
-
-
-def _is_log_scale(curve: str, values: pd.Series) -> bool:
-    cls = _classify(curve)
-    if cls != "RES":
-        return False
-    valid = values.dropna()
-    return valid.min() > 0 and valid.max() / (valid.min() + 1e-9) > 5
-
-
-def _safe_stats(values: pd.Series) -> dict:
-    v = values.dropna()
-    if len(v) == 0:
-        return {"mean": np.nan, "p10": np.nan, "p50": np.nan, "p90": np.nan,
-                "min": np.nan, "max": np.nan, "n": 0}
-    return {
-        "mean": v.mean(), "p10": v.quantile(0.10),
-        "p50":  v.median(), "p90": v.quantile(0.90),
-        "min":  v.min(),    "max": v.max(), "n": len(v),
-    }
-
-
-def _smart_lim(values: pd.Series, cls: str, log: bool) -> tuple[float, float]:
-    """Return [left, right] x-limits for a curve track."""
-    v = values.dropna()
-    if len(v) == 0:
-        return (0, 1)
-
-    PRESETS = {
-        "GR":    (0,   200),
-        "RES":   (0.2, 2000),
-        "RHOB":  (1.95, 2.95),
-        "NPHI":  (0.45, -0.15),   # reversed (left > right)
-        "SONIC": (140, 40),        # reversed (dt: 140→40)
-        "SW":    (0,   1),
-        "PHI":   (0,   0.50),
-        "VSH":   (0,   1),
-        "CALI":  (6,   16),
-        "PERM":  (0.001, 10000),
-    }
-    if cls in PRESETS:
-        return PRESETS[cls]
-    # auto
-    p2, p98 = v.quantile(0.02), v.quantile(0.98)
-    rng = p98 - p2
-    return (p2 - 0.05 * rng, p98 + 0.05 * rng)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  TRACK HEADER  (top box with curve name + scale)
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _draw_track_header(
-    ax,
-    curve: str,
-    xlim: tuple[float, float],
-    color: str,
-    unit: str = "",
-    log_scale: bool = False,
-    stats: dict | None = None,
-    header_height_ratio: float = 0.16,
-):
-    """Draw a professional track header box above the curve panel."""
-    ax.set_title("")  # clear matplotlib title
-
-    # ── top bar: curve name ────────────────────────────────────────────────
-    ax.text(
-        0.5, 1.055, curve,
-        transform=ax.transAxes,
-        ha="center", va="bottom",
-        fontsize=9.5, fontweight="bold",
-        color=THEME["track_header_fg"],
-        bbox=dict(
-            boxstyle="round,pad=0.28",
-            facecolor=color, edgecolor="none", alpha=0.92,
-        ),
-    )
-
-    # ── scale line: left value ── // ── right value ────────────────────────
-    left_val, right_val = xlim
-    fmt = ".3g"
-    scale_txt = f"{left_val:{fmt}}{'  [LOG]' if log_scale else ''}  ─────  {right_val:{fmt}}"
-    if unit:
-        scale_txt += f"  ({unit})"
-
-    ax.text(
-        0.5, 1.012, scale_txt,
-        transform=ax.transAxes,
-        ha="center", va="bottom",
-        fontsize=6.5, color="#334455",
-        fontfamily="monospace",
-    )
-
-    # ── stats row (P10 / mean / P90) ─────────────────────────────────────
-    if stats:
-        s = stats
-        ok = not np.isnan(s["mean"])
-        if ok:
-            stats_str = (
-                f"μ {s['mean']:.3g}   "
-                f"P10 {s['p10']:.3g}   "
-                f"P90 {s['p90']:.3g}"
-            )
-            ax.text(
-                0.5, 0.978,
-                stats_str,
-                transform=ax.transAxes,
-                ha="center", va="top",
-                fontsize=6.0,
-                color="#556677",
-                fontfamily="monospace",
-            )
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  CURVE FILLS
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _fill_gr(ax, depth, values, cutoff: float = 75.0):
-    ax.fill_betweenx(depth, values, cutoff,
-                     where=(values <= cutoff),
-                     color=THEME["gr_sand_fill"], alpha=0.45,
-                     linewidth=0, zorder=1, label="Sand")
-    ax.fill_betweenx(depth, values, cutoff,
-                     where=(values > cutoff),
-                     color=THEME["gr_shale_fill"], alpha=0.30,
-                     linewidth=0, zorder=1, label="Shale")
-
-
-def _fill_nphi_rhob_crossover(ax_nphi, ax_rhob, depth, nphi_vals, rhob_vals,
-                               nphi_xlim, rhob_xlim):
-    """
-    Normalise both curves to [0,1] axis space and shade crossover zones.
-    Gas crossover: NPHI < RHOB (in normalised space).
-    """
-    def _norm(v, lim):
-        return (v - lim[0]) / (lim[1] - lim[0] + 1e-12)
-
-    nn = _norm(nphi_vals, nphi_xlim)
-    nr = _norm(rhob_vals, rhob_xlim)
-
-    # Gas crossover (gas effect: NPHI reads low, RHOB reads low)
-    ax_nphi.fill_betweenx(depth, nn, nr,
-                          where=(nn < nr),
-                          transform=ax_nphi.get_yaxis_transform(),
-                          color="#00C9FF", alpha=0.28, linewidth=0,
-                          zorder=2, label="Gas crossover")
-    # Liquid / tight
-    ax_nphi.fill_betweenx(depth, nn, nr,
-                          where=(nn >= nr),
-                          transform=ax_nphi.get_yaxis_transform(),
-                          color="#FF8C42", alpha=0.18, linewidth=0,
-                          zorder=2, label="Liquid/Tight")
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  DEPTH TRACK
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _draw_depth_track(ax, depth: pd.Series, depth_label: str = "DEPTH (m)"):
-    ax.set_facecolor(THEME["depth_bg"])
-
-    for spine in ax.spines.values():
-        spine.set_edgecolor(THEME["track_border"])
-        spine.set_linewidth(0.8)
-
-    ax.set_xlim(0, 1)
-    ax.set_ylim(depth.max(), depth.min())
-
-    step = _nice_depth_step(depth)
-    ticks = np.arange(
-        np.ceil(depth.min() / step) * step,
-        np.floor(depth.max() / step) * step + 1,
-        step,
-    )
-    ax.set_yticks(ticks)
-    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.0f"))
-    ax.yaxis.set_tick_params(
-        which="major", labelsize=8.0, labelcolor=THEME["depth_fg"],
-        length=4, width=0.8, direction="in",
-    )
-    ax.set_xticks([])
-
-    # Minor grid lines
-    ax.yaxis.set_minor_locator(ticker.AutoMinorLocator(5))
-    ax.tick_params(which="minor", length=2, color="#4A6FA5")
-
-    ax.set_ylabel(depth_label, fontsize=8.5, color=THEME["depth_fg"],
-                  fontweight="bold", labelpad=4)
-    ax.yaxis.set_label_position("left")
-
-    # Depth label header
-    ax.text(0.5, 1.055, "DEPTH",
-            transform=ax.transAxes,
-            ha="center", va="bottom",
-            fontsize=9.5, fontweight="bold",
-            color=THEME["track_header_fg"],
-            bbox=dict(boxstyle="round,pad=0.28",
-                      facecolor=THEME["header_bg"],
-                      edgecolor="none", alpha=0.92))
-    ax.text(0.5, 1.012, depth_label,
-            transform=ax.transAxes,
-            ha="center", va="bottom",
-            fontsize=6.5, color="#556677",
-            fontfamily="monospace")
-
-
-def _nice_depth_step(depth: pd.Series) -> float:
-    span = depth.max() - depth.min()
-    for step in [5, 10, 20, 25, 50, 100, 200, 250, 500, 1000]:
-        if span / step <= 30:
-            return float(step)
-    return float(round(span / 20, -1))
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  MAIN FUNCTION
-# ──────────────────────────────────────────────────────────────────────────────
-
 def plot_multitrack(
-    df: pd.DataFrame,
+    df,
     curves: list[str] | None = None,
     depth_col: str = "DEPTH",
     *,
-    # ── meta ──────────────────────────────────────────────────────────────
-    well_name: str = "WELL",
-    field: str = "",
-    depth_unit: str = "m",
-    # ── curve control ─────────────────────────────────────────────────────
-    max_curves: int = 10,
-    units: dict[str, str] | None = None,
-    # ── petrophysical parameters ──────────────────────────────────────────
-    gr_cutoff: float = 75.0,
-    overlay_pairs: dict[str, str] | None = None,
-    cutoffs: dict[str, float] | None = None,
-    zones: list[dict[str, Any]] | None = None,
-    # ── display options ───────────────────────────────────────────────────
-    show_fills: bool = True,
-    show_crossover: bool = True,
-    show_stats: bool = True,
-    show_cutoffs: bool = True,
-    show_depth_track: bool = True,
-    show_zones: bool = True,
-    # ── output ────────────────────────────────────────────────────────────
-    figsize_width_per_track: float = 1.75,
-    figsize_height: float = 13.0,
-    dpi: int = 150,
-    export_path: str | None = None,
     show: bool = True,
-) -> plt.Figure:
-    """
-    Render a professional multi-track petrophysical log plot.
 
-    Parameters
-    ----------
-    df              : DataFrame with depth + curve columns.
-    curves          : List of curve names to plot. None → auto-select first 8.
-    depth_col       : Column name for depth.
-    well_name       : Well identifier for header.
-    field           : Field/block name (optional).
-    depth_unit      : 'm' or 'ft'.
-    units           : Dict mapping curve name → unit string for header display.
-    gr_cutoff       : GR sand/shale cutoff (API).
-    overlay_pairs   : {primary_curve: overlay_curve} for dual-scale tracks.
-                      Defaults to NPHI/RHOB crossover if both present.
-    cutoffs         : {curve: value} vertical cutoff lines per track.
-    zones           : List of dicts with keys: name, top, base, color.
-    show_fills      : Enable GR sand/shale fill and crossover shading.
-    show_crossover  : Enable NPHI–RHOB crossover shading.
-    show_stats      : Show P10/mean/P90 in track header.
-    show_cutoffs    : Draw cutoff vertical lines.
-    show_depth_track: Include depth axis track on the left.
-    show_zones      : Draw formation zone bands.
-    export_path     : If set, save figure to this path at `dpi` resolution.
-    show            : Call plt.show() at end.
-    dpi             : Resolution for screen and export.
+    # 🔥 New Features
+    gr_cutoff: float = 75.0,
+    zones: list[dict] | None = None,
+    cutoffs: dict | None = None,
+    overlays: dict | None = None,
+    show_stats: bool = True,
+    track_widths: dict | None = None,
+    computed_curves: dict | None = None,
+    export: str | None = None,
+):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from matplotlib.gridspec import GridSpec
+    from datetime import datetime
 
-    Returns
-    -------
-    matplotlib.figure.Figure
-    """
+    # ----------------------------
+    # 🧠 Inject computed curves
+    # ----------------------------
+    if computed_curves:
+        for name, func in computed_curves.items():
+            if name not in df.columns:
+                df[name] = func(df)
 
-    # ── 0. Validate depth ─────────────────────────────────────────────────
-    if depth_col not in df.columns:
-        raise ValueError(f"Depth column '{depth_col}' not found in DataFrame.")
+    available_curves = [c for c in df.columns if c != depth_col]
 
-    depth = df[depth_col].astype(float)
-    depth_label = f"DEPTH ({depth_unit})"
-
-    # ── 1. Select curves ──────────────────────────────────────────────────
-    available = [c for c in df.columns if c != depth_col]
     if curves is None:
-        curves = available[:max_curves]
+        curves = available_curves[:4]
     else:
         curves = [c for c in curves if c in df.columns and c != depth_col]
 
     if not curves:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        ax.text(0.5, 0.5, "No curves available.", ha="center", va="center")
+        fig = _empty_figure("Multi-Track Log Plot", "No curves available")
+        if show:
+            plt.show()
         return fig
 
-    n_curves = len(curves)
-    units = units or {}
-    overlay_pairs = overlay_pairs if overlay_pairs is not None else OVERLAY_PAIRS
-    cutoffs = cutoffs or {}
+    depth = _get_depth(df)
+    depth_label = _get_depth_label(df, depth_col)
 
-    # ── 2. Layout via GridSpec ────────────────────────────────────────────
-    n_tracks = n_curves + (1 if show_depth_track else 0)
+    n_tracks = len(curves)
 
-    widths = []
-    if show_depth_track:
-        widths.append(0.45)
-    for c in curves:
-        widths.append(TRACK_WIDTH_MAP.get(c.upper(), 1.0))
+    # ----------------------------
+    # 📐 Dynamic track widths
+    # ----------------------------
+    widths = [track_widths.get(c, 1) if track_widths else 1 for c in curves]
 
-    total_w = max(sum(widths) * figsize_width_per_track + 0.5, 10)
-    fig = plt.figure(figsize=(total_w, figsize_height), dpi=dpi,
-                     facecolor=THEME["fig_bg"])
+    fig = plt.figure(figsize=(max(3.2 * n_tracks, 10), 9.5))
+    gs = GridSpec(1, n_tracks, width_ratios=widths, figure=fig)
+    axes = [fig.add_subplot(gs[0, i]) for i in range(n_tracks)]
 
-    gs = GridSpec(
-        1, n_tracks,
-        figure=fig,
-        width_ratios=widths,
-        left=0.05, right=0.99,
-        bottom=0.04, top=0.87,
-        wspace=0.04,
-    )
+    _style_figure(fig, "Multi-Track Log Plot")
 
-    axes: list[plt.Axes] = []
-    for i in range(n_tracks):
-        sharey = axes[0] if i > 0 else None
-        ax = fig.add_subplot(gs[0, i], sharey=sharey)
-        axes.append(ax)
+    GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
 
-    depth_ax  = axes[0] if show_depth_track else None
-    curve_axes = axes[1:] if show_depth_track else axes
-
-    # ── 3. Global depth limits ────────────────────────────────────────────
-    d_min, d_max = depth.min(), depth.max()
-    axes[0].set_ylim(d_max, d_min)   # inverted (depth increases downward)
-
-    # ── 4. Depth track ────────────────────────────────────────────────────
-    if show_depth_track:
-        _draw_depth_track(depth_ax, depth, depth_label)
-
-    # ── 5. Curve tracks ───────────────────────────────────────────────────
-    nphi_ax_ref   = None  # for crossover shading
-    rhob_ax_ref   = None
-    nphi_vals_ref = None
-    rhob_vals_ref = None
-    nphi_lim_ref  = None
-    rhob_lim_ref  = None
-
-    for track_idx, (ax, curve) in enumerate(zip(curve_axes, curves)):
-        values = df[curve].astype(float)
-        cls    = _classify(curve)
-        color  = _curve_color(curve, track_idx)
-        log_sc = _is_log_scale(curve, values)
-        unit   = units.get(curve, "")
-        stats  = _safe_stats(values) if show_stats else None
-        xlim   = _smart_lim(values, cls, log_sc)
-
-        # ── track background ──────────────────────────────────────────────
-        bg = THEME["track_bg_even"] if track_idx % 2 == 0 else THEME["track_bg_odd"]
-        ax.set_facecolor(bg)
-
-        # ── spines ────────────────────────────────────────────────────────
-        for spine in ax.spines.values():
-            spine.set_edgecolor(THEME["track_border"])
-            spine.set_linewidth(0.8)
-
-        # ── grid ──────────────────────────────────────────────────────────
-        ax.grid(True, axis="y", color=THEME["grid_color"],
-                alpha=THEME["grid_alpha"], linewidth=0.5, linestyle="--")
-        ax.grid(True, axis="x", color=THEME["grid_color"],
-                alpha=THEME["grid_alpha"] * 0.6, linewidth=0.4, linestyle=":")
-        ax.set_axisbelow(True)
-
-        # ── x-axis scale ──────────────────────────────────────────────────
-        if log_sc:
-            ax.set_xscale("log")
-        ax.set_xlim(*xlim)
-
-        # ── depth ticks (only on depth track or left-most) ────────────────
-        ax.tick_params(axis="y", which="both",
-                       left=(not show_depth_track and track_idx == 0),
-                       labelleft=(not show_depth_track and track_idx == 0),
-                       labelsize=7.5)
-        ax.tick_params(axis="x", labelsize=6.5,
-                       color=THEME["track_border"],
-                       direction="out", length=3)
-
-        # ── X tick formatting ─────────────────────────────────────────────
-        if log_sc:
-            ax.xaxis.set_major_formatter(ticker.LogFormatter(labelOnlyBase=False))
+    # ----------------------------
+    # 🎨 Helper: Stats box
+    # ----------------------------
+    def _add_stats_box(ax, values):
+        import numpy as np
+        import pandas as pd
+    
+        # Convert to clean numpy array
+        if isinstance(values, pd.Series):
+            arr = values.dropna().values
         else:
-            ax.xaxis.set_major_locator(ticker.MaxNLocator(nbins=4, prune="both"))
-            ax.xaxis.set_major_formatter(ticker.FormatStrFormatter("%.4g"))
-
-        ax.tick_params(axis="x", top=False, bottom=True, labelbottom=False)
-
-        # ── PLOT CURVE ────────────────────────────────────────────────────
-        ax.plot(values, depth, color=color,
-                linewidth=1.4, alpha=0.93, zorder=3,
-                solid_capstyle="round", solid_joinstyle="round")
-
-        # ── GR sand/shale fill ────────────────────────────────────────────
-        if show_fills and cls == "GR":
-            _fill_gr(ax, depth, values, gr_cutoff)
-            ax.axvline(gr_cutoff, color=THEME["cutoff_color"],
-                       linewidth=0.8, linestyle=":", alpha=0.6, zorder=4)
-
-        # ── Caliper bit-size reference ─────────────────────────────────────
-        if cls == "CALI":
-            bit = 8.5 if depth_unit == "m" else 8.5  # standard
-            ax.axvline(bit, color="#FF5722", linewidth=0.9,
-                       linestyle="--", alpha=0.7, zorder=4,
-                       label=f"Bit {bit}\"")
-            ax.text(bit, d_min + (d_max - d_min) * 0.02,
-                    f" Bit\n {bit}\"", fontsize=5.5,
-                    color="#FF5722", va="top", zorder=5)
-
-        # ── User cutoff lines ─────────────────────────────────────────────
-        if show_cutoffs and curve in cutoffs:
-            cv = cutoffs[curve]
-            ax.axvline(cv, color=THEME["cutoff_color"],
-                       linewidth=1.0, linestyle="--",
-                       alpha=0.80, zorder=5)
-            ax.text(cv, d_min + (d_max - d_min) * 0.01,
-                    f" {cv:.3g}", fontsize=5.5,
-                    color=THEME["cutoff_color"], va="top", zorder=6)
-
-        # ── Dual-scale overlay (e.g., NPHI over RHOB track) ──────────────
-        overlay_curve = overlay_pairs.get(curve)
-        if overlay_curve and overlay_curve in df.columns:
-            ov_vals  = df[overlay_curve].astype(float)
-            ov_cls   = _classify(overlay_curve)
-            ov_color = _curve_color(overlay_curve, track_idx + 1)
-            ov_xlim  = _smart_lim(ov_vals, ov_cls, False)
-
-            ax2 = ax.twiny()
-            ax2.set_xlim(*ov_xlim)
-            ax2.plot(ov_vals, depth, color=ov_color,
-                     linewidth=1.2, linestyle="--",
-                     alpha=0.85, zorder=3)
-            ax2.set_xlabel(overlay_curve, color=ov_color,
-                           fontsize=6.5, labelpad=2)
-            ax2.tick_params(axis="x", colors=ov_color,
-                            labelsize=5.5, top=True,
-                            direction="in", length=2)
-            ax2.spines["top"].set_edgecolor(ov_color)
-            ax2.spines["top"].set_linewidth(0.8)
-
-        # ── Store NPHI/RHOB refs for crossover shading ────────────────────
-        if cls == "NPHI":
-            nphi_ax_ref, nphi_vals_ref, nphi_lim_ref = ax, values, xlim
-        if cls == "RHOB":
-            rhob_ax_ref, rhob_vals_ref, rhob_lim_ref = ax, values, xlim
-
-        # ── Formation zone bands ──────────────────────────────────────────
-        if show_zones and zones:
-            for zone in zones:
-                ax.axhspan(
-                    zone["top"], zone["base"],
-                    color=zone.get("color", "#FFD700"),
-                    alpha=THEME["zone_alpha"], zorder=0
-                )
-
-        # ── Track header ──────────────────────────────────────────────────
-        _draw_track_header(
-            ax,
-            curve=curve,
-            xlim=xlim,
-            color=color,
-            unit=unit,
-            log_scale=log_sc,
-            stats=stats,
+            arr = np.asarray(values)
+            arr = arr[~np.isnan(arr)]
+    
+        if arr.size == 0:
+            return
+    
+        txt = (
+            f"μ={np.mean(arr):.2f}\n"
+            f"P10={np.percentile(arr, 10):.2f}\n"
+            f"P90={np.percentile(arr, 90):.2f}"
+        )
+    
+        ax.text(
+            0.97, 0.98, txt,
+            transform=ax.transAxes,
+            fontsize=6.5,
+            va="top",
+            ha="right",
+            bbox=dict(
+                boxstyle="round,pad=0.3",
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="#ccc"
+            )
         )
 
-    # ── 6. NPHI–RHOB crossover (post-loop, both axes exist) ──────────────
-    if (
-        show_crossover
-        and nphi_ax_ref is not None
-        and rhob_ax_ref is not None
-        and nphi_vals_ref is not None
-        and rhob_vals_ref is not None
-    ):
-        _fill_nphi_rhob_crossover(
-            nphi_ax_ref, rhob_ax_ref,
-            depth,
-            nphi_vals_ref, rhob_vals_ref,
-            nphi_lim_ref, rhob_lim_ref,
-        )
-
-    # ── 7. Formation zone labels (on depth track or first curve track) ────
-    if show_zones and zones:
-        label_ax = depth_ax if show_depth_track else curve_axes[0]
+    # ----------------------------
+    # 🎨 Helper: Zone bands
+    # ----------------------------
+    def _draw_zone_bands():
+        if not zones:
+            return
         for zone in zones:
-            mid = (zone["top"] + zone["base"]) / 2
-            label_ax.text(
-                0.5, mid,
+            for ax in axes:
+                ax.axhspan(zone["top"], zone["base"],
+                           color=zone.get("color", "#FFD700"),
+                           alpha=0.12, zorder=0)
+
+            axes[0].text(
+                0.5,
+                (zone["top"] + zone["base"]) / 2,
                 zone["name"],
-                transform=label_ax.get_yaxis_transform(),
-                ha="center", va="center",
-                fontsize=6.5, fontstyle="italic",
-                fontweight="bold",
-                color=zone.get("label_color", "#222222"),
-                bbox=dict(boxstyle="round,pad=0.2",
-                          facecolor="white", alpha=0.65, edgecolor="none"),
-                zorder=10,
+                transform=axes[0].get_yaxis_transform(),
+                fontsize=7,
+                ha="center",
+                va="center",
+                fontstyle="italic"
             )
 
-    # ── 8. Main figure header ─────────────────────────────────────────────
-    _draw_figure_header(fig, well_name=well_name, field=field,
-                        depth=depth, depth_unit=depth_unit,
-                        curves=curves, df=df)
+    # ----------------------------
+    # 🚀 MAIN LOOP
+    # ----------------------------
+    for i, (ax, curve) in enumerate(zip(axes, curves)):
 
-    # ── 9. Legend strip (GR fill + zone colours) ──────────────────────────
-    _draw_legend(fig, zones=zones if show_zones else None, show_fills=show_fills)
+        values = _get_curve_values(df, curve)
+        curve_upper = curve.upper()
 
-    # ── 10. Depth inversion (confirmed once) ──────────────────────────────
-    axes[0].set_ylim(d_max, d_min)
+        use_log = _is_resistivity_curve(curve) and _can_use_log(values)
 
-    # ── 11. Export / show ─────────────────────────────────────────────────
-    if export_path:
-        fig.savefig(
-            export_path,
-            dpi=max(dpi, 300),
-            bbox_inches="tight",
-            facecolor=THEME["fig_bg"],
+        # ----------------------------
+        # 🎨 Color logic
+        # ----------------------------
+        if any(curve_upper.startswith(k) for k in GR_KEYS):
+            color = "green"
+        elif any(token in curve_upper for token in RESISTIVITY_TOKENS):
+            color = "red"
+        else:
+            color = _curve_color(i)
+
+        # ----------------------------
+        # 🎛 Axis styling
+        # ----------------------------
+        _style_track_axis(
+            ax,
+            label=curve,
+            color=color,
+            background=TRACK_BACKGROUNDS[i % len(TRACK_BACKGROUNDS)],
+            depth_label=depth_label,
+            show_ylabel=i == 0,
+            use_log_scale=use_log,
         )
-        print(f"[PetroARX] Saved → {export_path}")
+
+        # ----------------------------
+        # 📈 Plot main curve
+        # ----------------------------
+        _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
+
+        # ----------------------------
+        # 🪨 GR Lithology shading
+        # ----------------------------
+        if any(curve_upper.startswith(k) for k in GR_KEYS):
+            ax.fill_betweenx(
+                depth, values, gr_cutoff,
+                where=(values < gr_cutoff),
+                color="#F5C518", alpha=0.35
+            )
+            ax.fill_betweenx(
+                depth, values, gr_cutoff,
+                where=(values >= gr_cutoff),
+                color="#8B7355", alpha=0.25
+            )
+
+        # ----------------------------
+        # 📏 Cutoff lines
+        # ----------------------------
+        if cutoffs and curve in cutoffs:
+            ax.axvline(
+                cutoffs[curve],
+                color="black",
+                linestyle="--",
+                linewidth=1.1,
+                alpha=0.75
+            )
+
+        # ----------------------------
+        # 📐 Overlay curves
+        # ----------------------------
+        if overlays and curve in overlays:
+            overlay_curve = overlays[curve]
+            if overlay_curve in df.columns:
+                ax2 = ax.twiny()
+                overlay_vals = _get_curve_values(df, overlay_curve)
+
+                ax2.plot(overlay_vals, depth,
+                         color="blue", linestyle="--", linewidth=1.1)
+
+                ax2.set_xlabel(overlay_curve, color="blue", fontsize=8)
+                ax2.tick_params(axis="x", colors="blue", labelsize=7)
+
+                # Gas crossover shading
+                ax.fill_betweenx(
+                    depth, values, overlay_vals,
+                    where=(values < overlay_vals),
+                    color="cyan", alpha=0.3
+                )
+
+        # ----------------------------
+        # 📊 Stats box
+        # ----------------------------
+        if show_stats:
+            _add_stats_box(ax, values)
+
+        # Label
+        ax.text(
+            0.03, 0.02, curve,
+            fontsize=8,
+            color="#52606D",
+            transform=ax.transAxes,
+            va="bottom",
+        )
+
+    # ----------------------------
+    # 🔥 APPLY ONCE (FIXED BUG)
+    # ----------------------------
+    axes[0].set_ylim(depth.min(), depth.max())
+    axes[0].invert_yaxis()
+
+    # ----------------------------
+    # 🪨 Draw zones AFTER plotting
+    # ----------------------------
+    _draw_zone_bands()
+
+    fig.subplots_adjust(
+        left=0.07, right=0.985,
+        bottom=0.06, top=0.90,
+        wspace=0.1
+    )
+
+    # ----------------------------
+    # 🖨️ Export option
+    # ----------------------------
+    if export:
+        fname = f"{export}_{datetime.now():%Y%m%d_%H%M}.png"
+        fig.savefig(fname, dpi=300, bbox_inches="tight")
 
     if show:
         plt.show()
 
     return fig
 
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  FIGURE HEADER
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _draw_figure_header(fig, well_name, field, depth, depth_unit, curves, df):
-    d_min, d_max = depth.min(), depth.max()
-
-    # Dark navy banner
-    header_ax = fig.add_axes([0.0, 0.895, 1.0, 0.105])
-    header_ax.set_facecolor(THEME["header_bg"])
-    header_ax.axis("off")
-
-    # ── Left: Well identification ─────────────────────────────────────────
-    header_ax.text(
-        0.013, 0.80,
-        f"WELL:  {well_name}" + (f"   |   FIELD:  {field}" if field else ""),
-        transform=header_ax.transAxes,
-        ha="left", va="top",
-        fontsize=12.5, fontweight="bold",
-        color=THEME["header_fg"],
-    )
-
-    depth_span_txt = (
-        f"Depth Interval:  {d_min:.1f} – {d_max:.1f} {depth_unit}   "
-        f"|   Span: {d_max - d_min:.1f} {depth_unit}   "
-        f"|   Samples: {len(depth):,}"
-    )
-    header_ax.text(
-        0.013, 0.40,
-        depth_span_txt,
-        transform=header_ax.transAxes,
-        ha="left", va="top",
-        fontsize=8.0,
-        color=THEME["subheader_fg"],
-    )
-
-    # ── Right: Curve count badge ──────────────────────────────────────────
-    header_ax.text(
-        0.987, 0.80,
-        f"MULTI-TRACK LOG PLOT",
-        transform=header_ax.transAxes,
-        ha="right", va="top",
-        fontsize=11, fontweight="bold",
-        color=THEME["header_fg"],
-        alpha=0.85,
-    )
-    header_ax.text(
-        0.987, 0.38,
-        f"{len(curves)} tracks displayed   |   PetroARX v2.0",
-        transform=header_ax.transAxes,
-        ha="right", va="top",
-        fontsize=7.5,
-        color=THEME["subheader_fg"],
-    )
-
-    # Thin accent line under header
-    accent = fig.add_axes([0.0, 0.893, 1.0, 0.003])
-    accent.set_facecolor("#1A9EFF")
-    accent.axis("off")
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  LEGEND STRIP
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _draw_legend(fig, zones=None, show_fills=True):
-    handles = []
-    if show_fills:
-        handles += [
-            mpatches.Patch(color=THEME["gr_sand_fill"], alpha=0.7, label="Sand (GR < cutoff)"),
-            mpatches.Patch(color=THEME["gr_shale_fill"], alpha=0.6, label="Shale (GR ≥ cutoff)"),
-            mpatches.Patch(color="#00C9FF",              alpha=0.55, label="Gas crossover (NPHI–RHOB)"),
-            mpatches.Patch(color="#FF8C42",              alpha=0.45, label="Liquid / Tight"),
-        ]
-
-    if zones:
-        for z in zones:
-            handles.append(
-                mpatches.Patch(
-                    color=z.get("color", "#FFD700"),
-                    alpha=0.6,
-                    label=z.get("name", "Zone"),
-                )
-            )
-
-    if not handles:
-        return
-
-    legend = fig.legend(
-        handles=handles,
-        loc="lower center",
-        ncol=min(len(handles), 6),
-        fontsize=7.5,
-        frameon=True,
-        framealpha=0.92,
-        edgecolor=THEME["track_border"],
-        facecolor="white",
-        bbox_to_anchor=(0.5, 0.0),
-        bbox_transform=fig.transFigure,
-        borderpad=0.5,
-        columnspacing=1.2,
-        handlelength=1.4,
-    )
-    legend.get_frame().set_linewidth(0.8)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  DEMO  (run this file directly to see output)
-# ──────────────────────────────────────────────────────────────────────────────
-
-def _generate_synthetic_well(n: int = 800) -> pd.DataFrame:
-    """Synthetic well log data for demonstration."""
-    rng = np.random.default_rng(42)
-    depth = np.linspace(3900, 4140, n)
-
-    # Base GR with blocky shale/sand patterns
-    gr_base  = rng.uniform(30, 180, n)
-    zones_gr = np.where((depth > 3970) & (depth < 4010), 0.35,
-               np.where((depth > 4060) & (depth < 4100), 0.25, 1.0))
-    gr = np.clip(gr_base * zones_gr + rng.normal(0, 5, n), 5, 250)
-
-    # RHOB
-    rhob = np.clip(2.65 - 0.3 * (gr < 75).astype(float) + rng.normal(0, 0.025, n), 2.0, 2.95)
-
-    # NPHI (reversed scale in plot, higher = more porous)
-    nphi = np.clip(0.35 - 0.15 * (gr < 75).astype(float) + rng.normal(0, 0.02, n), -0.05, 0.60)
-
-    # Resistivity (log-normal, spiky in reservoir)
-    res_base = rng.lognormal(1.0, 1.2, n)
-    res = np.where((depth > 3970) & (depth < 4010), res_base * 15,
-          np.where((depth > 4060) & (depth < 4100), res_base * 8, res_base))
-    res = np.clip(res, 0.2, 5000)
-
-    # DT sonic
-    dt = np.clip(90 - 25 * (gr < 75).astype(float) + rng.normal(0, 5, n), 40, 140)
-
-    # CALI
-    cali = np.clip(8.5 + rng.exponential(0.3, n) * (gr > 120), 8.0, 16.0)
-
-    return pd.DataFrame({
-        "DEPTH": depth,
-        "GR":    gr,
-        "CALI":  cali,
-        "RHOB":  rhob,
-        "RT":    res,
-        "NPHI":  nphi,
-        "DT":    dt,
-    })
-
-
-if __name__ == "__main__":
-    df = _generate_synthetic_well(800)
-
-    example_zones = [
-        {"name": "Res A",  "top": 3970, "base": 4010, "color": "#27AE60", "label_color": "#145A32"},
-        {"name": "Res B",  "top": 4060, "base": 4100, "color": "#2980B9", "label_color": "#154360"},
-        {"name": "Shale",  "top": 4010, "base": 4060, "color": "#BDC3C7", "label_color": "#555"},
-    ]
-
-    fig = plot_multitrack(
-        df,
-        curves=["CALI", "GR", "RHOB", "RT", "NPHI", "DT"],
-        depth_col="DEPTH",
-        well_name="GORGON-1_SUPERCOMBO",
-        field="Gorgon Field — NW Shelf",
-        depth_unit="m",
-        units={
-            "GR": "API", "RHOB": "g/cc", "NPHI": "v/v",
-            "RT": "Ω·m", "DT": "μs/ft", "CALI": "in",
-        },
-        gr_cutoff=75.0,
-        cutoffs={"RHOB": 2.50, "NPHI": 0.10, "SW": 0.50},
-        zones=example_zones,
-        show_fills=True,
-        show_crossover=True,
-        show_stats=True,
-        show_cutoffs=True,
-        show_depth_track=True,
-        show_zones=True,
-        figsize_height=14,
-        dpi=150,
-        export_path="multitrack_professional.png",
-        show=True,
-    )
 
 def plot_triple_combo(
     df,

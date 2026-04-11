@@ -194,6 +194,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         quick_grid.setSpacing(10)
         self._dashboard_quick_buttons = [
             self._make_launch_button("Import Data", lambda: self._trigger_widget_click("btnDashImportLAS"), "#2F6FB3"),
+            self._make_launch_button("Load Demo Data", self._load_demo_data, "#FF6B6B"),
             self._make_launch_button("Log Viewer", lambda: self._call_controller_action("_go_to_logviewer_tab"), "#1FA67A"),
             self._make_launch_button("Crossplot", lambda: self._trigger_widget_click("btnDashXplot"), "#D48A1D"),
             self._make_launch_button("Shale Volume", lambda: self._trigger_widget_click("btnDashVsh"), "#A354D0"),
@@ -244,6 +245,27 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             "QWidget#tabDashboard { background: #F3F7FC; }"
             "QFrame#dashCard { background: #FFFFFF; border: 1px solid #D7E2EE; border-radius: 14px; }"
         )
+
+    def _load_demo_data(self) -> None:
+        data_svc = getattr(self.controller, "data", None)
+        if data_svc is None:
+            return
+            
+        demo_path = "/home/ashraf/Desktop/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics-Well-log/notebooks/day-25-petrophysics/data/_Gorgonichthys_1_suite3_supercombo_log_Gorgonichthys1_suite2_CMR.las"
+        import os
+        if not os.path.exists(demo_path):
+            QtWidgets.QMessageBox.warning(self, "Demo Data", f"Demo data file not found:\n{demo_path}")
+            return
+            
+        from core.well_data_loader import load_well
+        try:
+            well, msg = load_well(demo_path, replace_nulls=True, depth_unit="m", depth_type="MD")
+            data_svc._register_well(well)
+            data_svc._update_well_lists()
+            data_svc._refresh_views()
+            QtWidgets.QMessageBox.information(self, "Demo Data", f"Demo data loaded successfully.\n{msg}")
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(self, "Demo Data", f"Failed to load demo data:\n{e}")
 
     def refresh_dashboard_tab(self) -> None:
         data_service = getattr(self.controller, "data", None)
