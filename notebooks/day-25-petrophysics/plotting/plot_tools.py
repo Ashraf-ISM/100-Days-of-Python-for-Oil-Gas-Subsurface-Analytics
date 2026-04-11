@@ -531,6 +531,16 @@ def plot_multitrack(
     axes[0].set_ylim(depth.min(), depth.max())
     axes[0].invert_yaxis()
 
+
+    #
+    def on_move(event):
+        
+        if event.inaxes:
+            depth_val = event.ydata
+            print(f"Depth: {depth_val:.2f}")
+
+    fig.canvas.mpl_connect("motion_notify_event", on_move)
+
     # ----------------------------
     # 🪨 Draw zones AFTER plotting
     # ----------------------------
