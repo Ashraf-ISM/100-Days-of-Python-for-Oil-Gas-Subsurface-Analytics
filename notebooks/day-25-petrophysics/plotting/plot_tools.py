@@ -348,6 +348,11 @@ def plot_multitrack(
             show_ylabel=index == 0,
             use_log_scale=use_log_scale,
         )
+            # 🔥 FORCE GR COLOR GREEN
+        if "GR" in curve:
+            color = "green"
+        else:
+            color = _curve_color(index)
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
         ax.text(
             0.03,
