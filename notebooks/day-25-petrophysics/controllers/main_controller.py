@@ -117,6 +117,8 @@ class MainController:
         self._connect_widget("btnApplyRename", "clicked", self.data.apply_rename)
         self._connect_widget("btnResetRename", "clicked", self.data.reset_rename)
         self._connect_widget("btnUndoRename", "clicked", self.data.undo_rename)
+        self._connect_widget("btnDISRenameColumns", "clicked", self.data.show_rename_dialog)
+        self._connect_widget("btnDISUndoRename", "clicked", self.data.undo_rename)
         self._connect_widget("btnCalcStats", "clicked", self.data.compute_stats)
         self._connect_widget("btnDISExport", "clicked", self.data.export_report)
         self._connect_widget("tabData", "currentChanged", self.data.on_data_tab_changed)

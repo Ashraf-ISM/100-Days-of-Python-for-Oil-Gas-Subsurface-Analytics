@@ -208,6 +208,21 @@ class DataService:
 
         # Well Data showing
         data_section, data_layout = make_section("Well Data")
+        
+        btn_layout = QtWidgets.QHBoxLayout()
+        btn_rename = QtWidgets.QPushButton("Rename Columns...", data_section)
+        btn_rename.setStyleSheet("padding: 4px 12px; background: #2A6FD4; color: white; border-radius: 4px; font-weight: bold;")
+        setattr(self.ui, "btnDISRenameColumns", btn_rename)
+        
+        btn_undo = QtWidgets.QPushButton("Undo Rename", data_section)
+        btn_undo.setStyleSheet("padding: 4px 12px; background: #F0F4F8; color: #2A6FD4; border: 1px solid #2A6FD4; border-radius: 4px;")
+        setattr(self.ui, "btnDISUndoRename", btn_undo)
+        
+        btn_layout.addWidget(btn_rename)
+        btn_layout.addWidget(btn_undo)
+        btn_layout.addStretch()
+        data_layout.addLayout(btn_layout)
+        
         data_view = QtWidgets.QTableView(data_section)
         data_view.setAlternatingRowColors(True)
         data_view.setMinimumHeight(400)
@@ -407,6 +422,60 @@ class DataService:
         prev = history.pop()
         df.columns = prev
         self._refresh_views()
+
+    def show_rename_dialog(self):
+        well = self._get_current_well()
+        if not well:
+            return
+        df = getattr(well, "data", None)
+        if df is None:
+            QtWidgets.QMessageBox.information(self.ui, "Rename Column", "No well data loaded.")
+            return
+
+        dialog = QtWidgets.QDialog(self.ui)
+        dialog.setWindowTitle(f"Rename Columns - {getattr(well, 'name', 'Well')}")
+        dialog.resize(350, 450)
+        layout = QtWidgets.QVBoxLayout(dialog)
+
+        lbl = QtWidgets.QLabel("Edit the 'New Name' column to rename curves.")
+        layout.addWidget(lbl)
+
+        table = QtWidgets.QTableWidget(dialog)
+        table.setColumnCount(2)
+        table.setHorizontalHeaderLabels(["Original Name", "New Name"])
+        table.horizontalHeader().setStretchLastSection(True)
+        table.setSortingEnabled(False)
+        cols = list(df.columns)
+        table.setRowCount(len(cols))
+        for i, name in enumerate(cols):
+            item_orig = QtWidgets.QTableWidgetItem(str(name))
+            item_orig.setFlags(item_orig.flags() & ~QtCore.Qt.ItemIsEditable)
+            table.setItem(i, 0, item_orig)
+            item_new = QtWidgets.QTableWidgetItem(str(name))
+            table.setItem(i, 1, item_new)
+
+        layout.addWidget(table)
+
+        btn_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        layout.addWidget(btn_box)
+
+        btn_box.accepted.connect(dialog.accept)
+        btn_box.rejected.connect(dialog.reject)
+
+        if dialog.exec_() == QtWidgets.QDialog.Accepted:
+            new_cols = []
+            for r in range(table.rowCount()):
+                item = table.item(r, 1)
+                new_cols.append(item.text().strip() if item else "")
+            
+            if any(not c for c in new_cols) or len(set(new_cols)) != len(new_cols):
+                QtWidgets.QMessageBox.warning(self.ui, "Rename", "Column names must be unique and non-empty.")
+                return
+            
+            if new_cols != cols:
+                self._rename_history[well.name].append(cols)
+                df.columns = new_cols
+                self._refresh_views()
 
     def compute_stats(self):
         target = self._get_active_analysis_target()
