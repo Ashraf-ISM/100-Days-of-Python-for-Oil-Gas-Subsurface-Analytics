@@ -41,6 +41,17 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             QtCore.QTimer.singleShot(500, 
                 lambda p=project_path: self.controller.projects.load_project_from_path(p))
 
+        # Add Data Downloader to Tools menu
+        self.actionDataDownloader = QtWidgets.QAction("Data Downloader", self)
+        if hasattr(self, "menuTools"):
+            self.menuTools.addAction(self.actionDataDownloader)
+        self.actionDataDownloader.triggered.connect(self._open_data_downloader)
+
+    def _open_data_downloader(self) -> None:
+        from app.data_downloader_dialog import DataDownloaderDialog
+        dlg = DataDownloaderDialog(self)
+        dlg.exec_()
+
     def show_about_dialog(self) -> None:
         """Display About dialog for the PetroARX desktop application."""
         message = (
