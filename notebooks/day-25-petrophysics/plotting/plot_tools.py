@@ -308,16 +308,39 @@ def plot_multitrack(
     depth_col: str = "DEPTH",
     *,
     show: bool = True,
+
+    # 🔥 New Features
+    gr_cutoff: float = 75.0,
+    zones: list[dict] | None = None,
+    cutoffs: dict | None = None,
+    overlays: dict | None = None,
+    show_stats: bool = True,
+    track_widths: dict | None = None,
+    computed_curves: dict | None = None,
+    export: str | None = None,
 ):
-    available_curves = [curve for curve in df.columns if curve != depth_col]
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from matplotlib.gridspec import GridSpec
+    from datetime import datetime
+
+    # ----------------------------
+    # 🧠 Inject computed curves
+    # ----------------------------
+    if computed_curves:
+        for name, func in computed_curves.items():
+            if name not in df.columns:
+                df[name] = func(df)
+
+    available_curves = [c for c in df.columns if c != depth_col]
 
     if curves is None:
         curves = available_curves[:4]
     else:
-        curves = [curve for curve in curves if curve in df.columns and curve != depth_col]
+        curves = [c for c in curves if c in df.columns and c != depth_col]
 
     if not curves:
-        fig = _empty_figure("Multi-Track Log Plot", "No curves available for multi-track plotting.")
+        fig = _empty_figure("Multi-Track Log Plot", "No curves available")
         if show:
             plt.show()
         return fig
@@ -326,64 +349,188 @@ def plot_multitrack(
     depth_label = _get_depth_label(df, depth_col)
 
     n_tracks = len(curves)
-    fig, axes = plt.subplots(
-        1,
-        n_tracks,
-        figsize=(max(3.2 * n_tracks, 10), 9.5),
-        sharey=True,
-    )
 
-    if n_tracks == 1:
-        axes = [axes]
+    # ----------------------------
+    # 📐 Dynamic track widths
+    # ----------------------------
+    widths = [track_widths.get(c, 1) if track_widths else 1 for c in curves]
+
+    fig = plt.figure(figsize=(max(3.2 * n_tracks, 10), 9.5))
+    gs = GridSpec(1, n_tracks, width_ratios=widths, figure=fig)
+    axes = [fig.add_subplot(gs[0, i]) for i in range(n_tracks)]
 
     _style_figure(fig, "Multi-Track Log Plot")
 
-    #  Define GR keys once
     GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
 
-    for index, (ax, curve) in enumerate(zip(axes, curves)):
+    # ----------------------------
+    # 🎨 Helper: Stats box
+    # ----------------------------
+    def _add_stats_box(ax, values):
+        valid = values.dropna()
+        if valid.empty:
+            return
+        txt = (
+            f"μ={valid.mean():.2f}\n"
+            f"P10={valid.quantile(0.10):.2f}\n"
+            f"P90={valid.quantile(0.90):.2f}"
+        )
+        ax.text(
+            0.97, 0.98, txt,
+            transform=ax.transAxes,
+            fontsize=6.5, va="top", ha="right",
+            bbox=dict(boxstyle="round,pad=0.3",
+                      facecolor="white", alpha=0.7, edgecolor="#ccc")
+        )
+
+    # ----------------------------
+    # 🎨 Helper: Zone bands
+    # ----------------------------
+    def _draw_zone_bands():
+        if not zones:
+            return
+        for zone in zones:
+            for ax in axes:
+                ax.axhspan(zone["top"], zone["base"],
+                           color=zone.get("color", "#FFD700"),
+                           alpha=0.12, zorder=0)
+
+            axes[0].text(
+                0.5,
+                (zone["top"] + zone["base"]) / 2,
+                zone["name"],
+                transform=axes[0].get_yaxis_transform(),
+                fontsize=7,
+                ha="center",
+                va="center",
+                fontstyle="italic"
+            )
+
+    # ----------------------------
+    # 🚀 MAIN LOOP
+    # ----------------------------
+    for i, (ax, curve) in enumerate(zip(axes, curves)):
 
         values = _get_curve_values(df, curve)
-        use_log_scale = _is_resistivity_curve(curve) and _can_use_log(values)
-
         curve_upper = curve.upper()
 
-        # 🔥 COLOR DECISION FIRST (FIXED)
-        if any(curve_upper.startswith(key) for key in GR_KEYS):
+        use_log = _is_resistivity_curve(curve) and _can_use_log(values)
+
+        # ----------------------------
+        # 🎨 Color logic
+        # ----------------------------
+        if any(curve_upper.startswith(k) for k in GR_KEYS):
             color = "green"
         elif any(token in curve_upper for token in RESISTIVITY_TOKENS):
             color = "red"
         else:
-            color = _curve_color(index)
+            color = _curve_color(i)
 
-        # Now apply styling with correct color
+        # ----------------------------
+        # 🎛 Axis styling
+        # ----------------------------
         _style_track_axis(
             ax,
             label=curve,
             color=color,
-            background=TRACK_BACKGROUNDS[index % len(TRACK_BACKGROUNDS)],
+            background=TRACK_BACKGROUNDS[i % len(TRACK_BACKGROUNDS)],
             depth_label=depth_label,
-            show_ylabel=index == 0,
-            use_log_scale=use_log_scale,
+            show_ylabel=i == 0,
+            use_log_scale=use_log,
         )
-    
+
+        # ----------------------------
+        # 📈 Plot main curve
+        # ----------------------------
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
 
+        # ----------------------------
+        # 🪨 GR Lithology shading
+        # ----------------------------
+        if any(curve_upper.startswith(k) for k in GR_KEYS):
+            ax.fill_betweenx(
+                depth, values, gr_cutoff,
+                where=(values < gr_cutoff),
+                color="#F5C518", alpha=0.35
+            )
+            ax.fill_betweenx(
+                depth, values, gr_cutoff,
+                where=(values >= gr_cutoff),
+                color="#8B7355", alpha=0.25
+            )
+
+        # ----------------------------
+        # 📏 Cutoff lines
+        # ----------------------------
+        if cutoffs and curve in cutoffs:
+            ax.axvline(
+                cutoffs[curve],
+                color="black",
+                linestyle="--",
+                linewidth=1.1,
+                alpha=0.75
+            )
+
+        # ----------------------------
+        # 📐 Overlay curves
+        # ----------------------------
+        if overlays and curve in overlays:
+            overlay_curve = overlays[curve]
+            if overlay_curve in df.columns:
+                ax2 = ax.twiny()
+                overlay_vals = _get_curve_values(df, overlay_curve)
+
+                ax2.plot(overlay_vals, depth,
+                         color="blue", linestyle="--", linewidth=1.3)
+
+                ax2.set_xlabel(overlay_curve, color="blue", fontsize=8)
+                ax2.tick_params(axis="x", colors="blue", labelsize=7)
+
+                # Gas crossover shading
+                ax.fill_betweenx(
+                    depth, values, overlay_vals,
+                    where=(values < overlay_vals),
+                    color="cyan", alpha=0.3
+                )
+
+        # ----------------------------
+        # 📊 Stats box
+        # ----------------------------
+        if show_stats:
+            _add_stats_box(ax, values)
+
+        # Label
         ax.text(
-            0.03,
-            0.02,
-            curve,
+            0.03, 0.02, curve,
             fontsize=8,
             color="#52606D",
             transform=ax.transAxes,
             va="bottom",
-            )
+        )
 
-       # 🔥 APPLY ONCE (VERY IMPORTAN    T)
-        axes[0].set_ylim(depth.min(), depth.max())
-        axes[0].invert_yaxis()
+    # ----------------------------
+    # 🔥 APPLY ONCE (FIXED BUG)
+    # ----------------------------
+    axes[0].set_ylim(depth.min(), depth.max())
+    axes[0].invert_yaxis()
 
-    fig.subplots_adjust(left=0.07, right=0.985, bottom=0.06, top=0.90, wspace=0.1)
+    # ----------------------------
+    # 🪨 Draw zones AFTER plotting
+    # ----------------------------
+    _draw_zone_bands()
+
+    fig.subplots_adjust(
+        left=0.07, right=0.985,
+        bottom=0.06, top=0.90,
+        wspace=0.1
+    )
+
+    # ----------------------------
+    # 🖨️ Export option
+    # ----------------------------
+    if export:
+        fname = f"{export}_{datetime.now():%Y%m%d_%H%M}.png"
+        fig.savefig(fname, dpi=300, bbox_inches="tight")
 
     if show:
         plt.show()
