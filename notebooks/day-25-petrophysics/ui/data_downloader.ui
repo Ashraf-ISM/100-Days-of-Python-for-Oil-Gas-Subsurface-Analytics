@@ -547,7 +547,18 @@ QGroupBox::title {
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="mainVLayout">
     <property name="spacing"><number>0</number></property>
-    <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
 
     <!-- ══ HEADER ══ -->
     <item>
@@ -556,7 +567,18 @@ QGroupBox::title {
       <property name="maximumHeight"><number>64</number></property>
       <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
       <layout class="QHBoxLayout" name="headerLayout">
-       <property name="contentsMargins"><rect><x>16</x><y>8</y><x>16</x><y>8</y></rect></property>
+       <property name="leftMargin">
+     <number>16</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>16</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
        <property name="spacing"><number>12</number></property>
        <item>
         <widget class="QLabel" name="headerIcon">
@@ -613,7 +635,18 @@ QGroupBox::title {
       <property name="maximumHeight"><number>48</number></property>
       <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
       <layout class="QHBoxLayout" name="toolbarLayout">
-       <property name="contentsMargins"><rect><x>12</x><y>6</y><x>12</x><y>6</y></rect></property>
+       <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>6</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>6</number>
+    </property>
        <property name="spacing"><number>8</number></property>
 
        <!-- Search -->
@@ -739,7 +772,18 @@ QGroupBox::title {
       <widget class="QWidget" name="leftPanelWidget">
        <layout class="QVBoxLayout" name="leftLayout">
         <property name="spacing"><number>0</number></property>
-        <property name="contentsMargins"><rect><x>10</x><y>10</y><x>4</x><y>0</y></rect></property>
+        <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
 
         <item>
          <widget class="QTabWidget" name="mainTabWidget">
@@ -750,7 +794,18 @@ QGroupBox::title {
            <attribute name="title"><string>🌊  Seismic Data</string></attribute>
            <layout class="QVBoxLayout" name="seismicLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <widget class="QLabel" name="seismicDesc">
@@ -801,7 +856,18 @@ QGroupBox::title {
            <attribute name="title"><string>🛢  Well Log Data</string></attribute>
            <layout class="QVBoxLayout" name="wellLogLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <widget class="QLabel" name="wellLogDesc">
@@ -836,7 +902,18 @@ QGroupBox::title {
            <attribute name="title"><string>🗺  Geological / GIS</string></attribute>
            <layout class="QVBoxLayout" name="geoLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <widget class="QLabel" name="geoDesc">
@@ -871,7 +948,18 @@ QGroupBox::title {
            <attribute name="title"><string>📡  Geophysical</string></attribute>
            <layout class="QVBoxLayout" name="geophyLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <widget class="QLabel" name="geophyDesc">
@@ -906,7 +994,18 @@ QGroupBox::title {
            <attribute name="title"><string>🌍  Satellite / RS</string></attribute>
            <layout class="QVBoxLayout" name="satLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <widget class="QLabel" name="satDesc">
@@ -941,7 +1040,18 @@ QGroupBox::title {
            <attribute name="title"><string>📚  Research / Publications</string></attribute>
            <layout class="QVBoxLayout" name="researchLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <widget class="QLabel" name="researchDesc">
@@ -976,7 +1086,18 @@ QGroupBox::title {
            <attribute name="title"><string>📌  My Sources</string></attribute>
            <layout class="QVBoxLayout" name="mySourcesLayout">
             <property name="spacing"><number>8</number></property>
-            <property name="contentsMargins"><rect><x>10</x><y>10</y><x>10</x><y>10</y></rect></property>
+            <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
             <item>
              <layout class="QHBoxLayout" name="mySourcesToolbarLayout">
@@ -1039,13 +1160,35 @@ QGroupBox::title {
           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
           <layout class="QVBoxLayout" name="downloadLayout">
            <property name="spacing"><number>0</number></property>
-           <property name="contentsMargins"><rect><x>0</x><y>6</y><x>0</x><y>6</y></rect></property>
+           <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>6</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>6</number>
+    </property>
 
            <!-- Header row -->
            <item>
             <layout class="QHBoxLayout" name="downloadHeaderLayout">
              <property name="spacing"><number>10</number></property>
-             <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>6</y></rect></property>
+             <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>6</number>
+    </property>
              <item>
               <widget class="QLabel" name="downloadPanelTitle">
                <property name="text"><string>📋  Selected Source — Details &amp; Direct Link</string></property>
@@ -1236,7 +1379,18 @@ QGroupBox::title {
        <property name="maximumWidth"><number>260</number></property>
        <layout class="QVBoxLayout" name="rightLayout">
         <property name="spacing"><number>0</number></property>
-        <property name="contentsMargins"><rect><x>4</x><y>10</y><x>10</x><y>10</y></rect></property>
+        <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
 
         <!-- Stats Title -->
         <item>
@@ -1250,14 +1404,36 @@ QGroupBox::title {
           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
           <layout class="QVBoxLayout" name="statsLayout">
            <property name="spacing"><number>8</number></property>
-           <property name="contentsMargins"><rect><x>0</x><y>8</y><x>0</x><y>0</y></rect></property>
+           <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
 
            <!-- Total Sources Card -->
            <item>
             <widget class="QFrame" name="statCard1">
              <property name="objectName"><string>statCard</string></property>
              <layout class="QVBoxLayout" name="sc1layout">
-              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
               <property name="spacing"><number>2</number></property>
               <item>
                <widget class="QLabel" name="stat1val">
@@ -1280,7 +1456,18 @@ QGroupBox::title {
             <widget class="QFrame" name="statCard2">
              <property name="objectName"><string>statCard</string></property>
              <layout class="QVBoxLayout" name="sc2layout">
-              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
               <property name="spacing"><number>2</number></property>
               <item>
                <widget class="QLabel" name="stat2val">
@@ -1303,7 +1490,18 @@ QGroupBox::title {
             <widget class="QFrame" name="statCard3">
              <property name="objectName"><string>statCard</string></property>
              <layout class="QVBoxLayout" name="sc3layout">
-              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
               <property name="spacing"><number>2</number></property>
               <item>
                <widget class="QLabel" name="stat3val">
@@ -1326,7 +1524,18 @@ QGroupBox::title {
             <widget class="QFrame" name="statCard4">
              <property name="objectName"><string>statCard</string></property>
              <layout class="QVBoxLayout" name="sc4layout">
-              <property name="contentsMargins"><rect><x>10</x><y>8</y><x>10</x><y>8</y></rect></property>
+              <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
               <property name="spacing"><number>2</number></property>
               <item>
                <widget class="QLabel" name="stat4val">
@@ -1395,7 +1604,18 @@ QGroupBox::title {
              <property name="title"><string>Quick Guide</string></property>
              <layout class="QVBoxLayout" name="helpLayout">
               <property name="spacing"><number>4</number></property>
-              <property name="contentsMargins"><rect><x>8</x><y>16</y><x>8</x><y>8</y></rect></property>
+              <property name="leftMargin">
+     <number>8</number>
+    </property>
+    <property name="topMargin">
+     <number>16</number>
+    </property>
+    <property name="rightMargin">
+     <number>8</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
               <item>
                <widget class="QLabel" name="helpText">
                 <property name="text"><string>1. Browse or search for a data source
