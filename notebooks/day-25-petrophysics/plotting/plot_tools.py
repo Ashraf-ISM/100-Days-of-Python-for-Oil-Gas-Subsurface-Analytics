@@ -308,18 +308,13 @@ def plot_multitrack(
     depth_col: str = "DEPTH",
     *,
     show: bool = True,
-
-    # 🔥 New Features
     gr_cutoff: float = 75.0,
     zones: list[dict] | None = None,
     cutoffs: dict | None = None,
-    overlays: dict | None = None,
-    show_stats: bool = True,
     track_widths: dict | None = None,
     computed_curves: dict | None = None,
     export: str | None = None,
 ):
-    import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
     from datetime import datetime
@@ -332,6 +327,9 @@ def plot_multitrack(
             if name not in df.columns:
                 df[name] = func(df)
 
+    # ----------------------------
+    # 📊 Curve selection
+    # ----------------------------
     available_curves = [c for c in df.columns if c != depth_col]
 
     if curves is None:
@@ -364,53 +362,21 @@ def plot_multitrack(
     GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
 
     # ----------------------------
-    # 🎨 Helper: Stats box
-    # ----------------------------
-    def _add_stats_box(ax, values):
-        import numpy as np
-        import pandas as pd
-    
-        # Convert to clean numpy array
-        if isinstance(values, pd.Series):
-            arr = values.dropna().values
-        else:
-            arr = np.asarray(values)
-            arr = arr[~np.isnan(arr)]
-    
-        if arr.size == 0:
-            return
-    
-        txt = (
-            f"μ={np.mean(arr):.2f}\n"
-            f"P10={np.percentile(arr, 10):.2f}\n"
-            f"P90={np.percentile(arr, 90):.2f}"
-        )
-    
-        ax.text(
-            0.97, 0.98, txt,
-            transform=ax.transAxes,
-            fontsize=6.5,
-            va="top",
-            ha="right",
-            bbox=dict(
-                boxstyle="round,pad=0.3",
-                facecolor="white",
-                alpha=0.7,
-                edgecolor="#ccc"
-            )
-        )
-
-    # ----------------------------
-    # 🎨 Helper: Zone bands
+    # 🎨 Zone bands
     # ----------------------------
     def _draw_zone_bands():
         if not zones:
             return
+
         for zone in zones:
             for ax in axes:
-                ax.axhspan(zone["top"], zone["base"],
-                           color=zone.get("color", "#FFD700"),
-                           alpha=0.12, zorder=0)
+                ax.axhspan(
+                    zone["top"],
+                    zone["base"],
+                    color=zone.get("color", "#FFD700"),
+                    alpha=0.12,
+                    zorder=0
+                )
 
             axes[0].text(
                 0.5,
@@ -457,23 +423,29 @@ def plot_multitrack(
         )
 
         # ----------------------------
-        # 📈 Plot main curve
+        # 📈 Plot curve
         # ----------------------------
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
 
         # ----------------------------
-        # 🪨 GR Lithology shading
+        # 🪨 GR shading
         # ----------------------------
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             ax.fill_betweenx(
-                depth, values, gr_cutoff,
+                depth,
+                values,
+                gr_cutoff,
                 where=(values < gr_cutoff),
-                color="#F5C518", alpha=0.35
+                color="#F5C518",
+                alpha=0.35
             )
             ax.fill_betweenx(
-                depth, values, gr_cutoff,
+                depth,
+                values,
+                gr_cutoff,
                 where=(values >= gr_cutoff),
-                color="#8B7355", alpha=0.25
+                color="#8B7355",
+                alpha=0.25
             )
 
         # ----------------------------
@@ -489,36 +461,12 @@ def plot_multitrack(
             )
 
         # ----------------------------
-        # 📐 Overlay curves
+        # 🏷 Curve label
         # ----------------------------
-        if overlays and curve in overlays:
-            overlay_curve = overlays[curve]
-            if overlay_curve in df.columns:
-                ax2 = ax.twiny()
-                overlay_vals = _get_curve_values(df, overlay_curve)
-
-                ax2.plot(overlay_vals, depth,
-                         color="blue", linestyle="--", linewidth=1.1)
-
-                ax2.set_xlabel(overlay_curve, color="blue", fontsize=8)
-                ax2.tick_params(axis="x", colors="blue", labelsize=7)
-
-                # Gas crossover shading
-                ax.fill_betweenx(
-                    depth, values, overlay_vals,
-                    where=(values < overlay_vals),
-                    color="cyan", alpha=0.3
-                )
-
-        # ----------------------------
-        # 📊 Stats box
-        # ----------------------------
-        if show_stats:
-            _add_stats_box(ax, values)
-
-        # Label
         ax.text(
-            0.03, 0.02, curve,
+            0.03,
+            0.02,
+            curve,
             fontsize=8,
             color="#52606D",
             transform=ax.transAxes,
@@ -526,34 +474,26 @@ def plot_multitrack(
         )
 
     # ----------------------------
-    # 🔥 APPLY ONCE (FIXED BUG)
+    # 🔥 APPLY ONCE (CORRECT)
     # ----------------------------
     axes[0].set_ylim(depth.min(), depth.max())
     axes[0].invert_yaxis()
 
-
-    #
-    def on_move(event):
-        
-        if event.inaxes:
-            depth_val = event.ydata
-            print(f"Depth: {depth_val:.2f}")
-
-    fig.canvas.mpl_connect("motion_notify_event", on_move)
-
     # ----------------------------
-    # 🪨 Draw zones AFTER plotting
+    # 🪨 Draw zones
     # ----------------------------
     _draw_zone_bands()
 
     fig.subplots_adjust(
-        left=0.07, right=0.985,
-        bottom=0.06, top=0.90,
+        left=0.07,
+        right=0.985,
+        bottom=0.06,
+        top=0.90,
         wspace=0.1
     )
 
     # ----------------------------
-    # 🖨️ Export option
+    # 🖨️ Export
     # ----------------------------
     if export:
         fname = f"{export}_{datetime.now():%Y%m%d_%H%M}.png"
