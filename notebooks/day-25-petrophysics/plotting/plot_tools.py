@@ -301,7 +301,6 @@ def _plot_track_group(
     )
     return len(valid_curves)
 
-################### Multi track ########################
 def plot_multitrack(
     df,
     curves: list[str] | None = None,
@@ -314,7 +313,12 @@ def plot_multitrack(
     track_widths: dict | None = None,
     computed_curves: dict | None = None,
     export: str | None = None,
+
+    # 🔥 NEW
+    add_bad_hole: bool = True,
+    bit_size: float = 8.5,
 ):
+    import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
     from datetime import datetime
@@ -337,6 +341,12 @@ def plot_multitrack(
     else:
         curves = [c for c in curves if c in df.columns and c != depth_col]
 
+    # ----------------------------
+    # 🚨 Add BAD HOLE track
+    # ----------------------------
+    if add_bad_hole and "CALI" in df.columns:
+        curves = ["BADHOLE"] + curves
+
     if not curves:
         fig = _empty_figure("Multi-Track Log Plot", "No curves available")
         if show:
@@ -349,9 +359,14 @@ def plot_multitrack(
     n_tracks = len(curves)
 
     # ----------------------------
-    # 📐 Dynamic track widths
+    # 📐 Track widths
     # ----------------------------
-    widths = [track_widths.get(c, 1) if track_widths else 1 for c in curves]
+    widths = []
+    for c in curves:
+        if c == "BADHOLE":
+            widths.append(0.4)  # narrow track
+        else:
+            widths.append(track_widths.get(c, 1) if track_widths else 1)
 
     fig = plt.figure(figsize=(max(3.2 * n_tracks, 10), 9.5))
     gs = GridSpec(1, n_tracks, width_ratios=widths, figure=fig)
@@ -394,14 +409,45 @@ def plot_multitrack(
     # ----------------------------
     for i, (ax, curve) in enumerate(zip(axes, curves)):
 
+        # ----------------------------
+        # 🚨 BAD HOLE TRACK
+        # ----------------------------
+        if curve == "BADHOLE":
+            cali = df["CALI"]
+
+            bad = (
+                (cali > bit_size * 1.2) |
+                (cali < bit_size * 0.8)
+            )
+
+            ax.fill_betweenx(
+                depth,
+                0,
+                bad.astype(int),
+                where=bad,
+                color="red",
+                alpha=0.6
+            )
+
+            ax.set_xlim(0, 1)
+            ax.set_xticks([])
+            ax.set_xlabel("BH", fontsize=8, color="red")
+
+            # minimal styling
+            ax.set_ylabel(depth_label if i == 0 else "")
+            ax.invert_yaxis()
+
+            continue
+
+        # ----------------------------
+        # 📈 Normal curve logic
+        # ----------------------------
         values = _get_curve_values(df, curve)
         curve_upper = curve.upper()
 
         use_log = _is_resistivity_curve(curve) and _can_use_log(values)
 
-        # ----------------------------
-        # 🎨 Color logic
-        # ----------------------------
+        # 🎨 Color
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             color = "green"
         elif any(token in curve_upper for token in RESISTIVITY_TOKENS):
@@ -409,9 +455,7 @@ def plot_multitrack(
         else:
             color = _curve_color(i)
 
-        # ----------------------------
         # 🎛 Axis styling
-        # ----------------------------
         _style_track_axis(
             ax,
             label=curve,
@@ -422,14 +466,10 @@ def plot_multitrack(
             use_log_scale=use_log,
         )
 
-        # ----------------------------
         # 📈 Plot curve
-        # ----------------------------
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
 
-        # ----------------------------
         # 🪨 GR shading
-        # ----------------------------
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             ax.fill_betweenx(
                 depth,
@@ -448,9 +488,7 @@ def plot_multitrack(
                 alpha=0.25
             )
 
-        # ----------------------------
-        # 📏 Cutoff lines
-        # ----------------------------
+        # 📏 Cutoff
         if cutoffs and curve in cutoffs:
             ax.axvline(
                 cutoffs[curve],
@@ -460,9 +498,7 @@ def plot_multitrack(
                 alpha=0.75
             )
 
-        # ----------------------------
-        # 🏷 Curve label
-        # ----------------------------
+        # Label
         ax.text(
             0.03,
             0.02,
@@ -474,13 +510,13 @@ def plot_multitrack(
         )
 
     # ----------------------------
-    # 🔥 APPLY ONCE (CORRECT)
+    # 🔥 APPLY ONCE
     # ----------------------------
     axes[0].set_ylim(depth.min(), depth.max())
     axes[0].invert_yaxis()
 
     # ----------------------------
-    # 🪨 Draw zones
+    # 🪨 Zones
     # ----------------------------
     _draw_zone_bands()
 
