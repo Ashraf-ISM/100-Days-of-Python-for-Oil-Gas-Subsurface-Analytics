@@ -338,7 +338,7 @@ def plot_multitrack(
 
     _style_figure(fig, "Multi-Track Log Plot")
 
-    # 🎯 Define GR keys once
+    #  Define GR keys once
     GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
 
     for index, (ax, curve) in enumerate(zip(axes, curves)):
@@ -356,7 +356,7 @@ def plot_multitrack(
         else:
             color = _curve_color(index)
 
-        # ✅ Now apply styling with correct color
+        # Now apply styling with correct color
         _style_track_axis(
             ax,
             label=curve,
@@ -366,7 +366,7 @@ def plot_multitrack(
             show_ylabel=index == 0,
             use_log_scale=use_log_scale,
         )
-
+    
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
 
         ax.text(
@@ -377,7 +377,11 @@ def plot_multitrack(
             color="#52606D",
             transform=ax.transAxes,
             va="bottom",
-        )
+            )
+
+       # 🔥 APPLY ONCE (VERY IMPORTAN    T)
+        axes[0].set_ylim(depth.min(), depth.max())
+        axes[0].invert_yaxis()
 
     fig.subplots_adjust(left=0.07, right=0.985, bottom=0.06, top=0.90, wspace=0.1)
 
