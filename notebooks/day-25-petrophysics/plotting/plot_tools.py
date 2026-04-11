@@ -335,36 +335,29 @@ def plot_multitrack(
         axes = [axes]
 
     _style_figure(fig, "Multi-Track Log Plot")
-
-    # 🔹 STEP 2: Plot each track
-    for index, (ax, track_curves) in enumerate(zip(axes, curves)):
-
+    for index, (ax, curve) in enumerate(zip(axes, curves)):
+        color = _curve_color(index)
+        values = _get_curve_values(df, curve)
+        use_log_scale = _is_resistivity_curve(curve) and _can_use_log(values)
         _style_track_axis(
             ax,
-            label=", ".join(track_curves),
-            color="black",
+            label=curve,
+            color=color,
             background=TRACK_BACKGROUNDS[index % len(TRACK_BACKGROUNDS)],
             depth_label=depth_label,
             show_ylabel=index == 0,
-            use_log_scale=False,
+            use_log_scale=use_log_scale,
         )
-
-        for curve in track_curves:
-            values = _get_curve_values(df, curve)
-
             # 🔥 FORCE GR COLOR GREEN
-            if "GR" in curve.upper():
-                color = "green"
-            else:
-                color = _curve_color(index)
-
-            _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
-
-        # label text
+        if "GR" in curve:
+            color = "green"
+        else:
+            color = _curve_color(index)
+        _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
         ax.text(
             0.03,
             0.02,
-            ", ".join(track_curves),
+            curve,
             fontsize=8,
             color="#52606D",
             transform=ax.transAxes,
@@ -372,12 +365,9 @@ def plot_multitrack(
         )
 
     fig.subplots_adjust(left=0.07, right=0.985, bottom=0.06, top=0.90, wspace=0.1)
-
     if show:
         plt.show()
-
     return fig
-    
 
 
 def plot_triple_combo(
