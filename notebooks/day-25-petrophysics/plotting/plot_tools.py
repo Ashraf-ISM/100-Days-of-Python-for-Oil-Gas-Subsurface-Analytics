@@ -335,8 +335,50 @@ def plot_multitrack(
         axes = [axes]
 
     _style_figure(fig, "Multi-Track Log Plot")
+
+    # 🔹 STEP 2: Plot each track
+    for index, (ax, track_curves) in enumerate(zip(axes, tracks)):
+
+        _style_track_axis(
+            ax,
+            label=", ".join(track_curves),
+            color="black",
+            background=TRACK_BACKGROUNDS[index % len(TRACK_BACKGROUNDS)],
+            depth_label=depth_label,
+            show_ylabel=index == 0,
+            use_log_scale=False,
+        )
+
+        for curve in track_curves:
+            values = _get_curve_values(df, curve)
+
+            # 🔥 FORCE GR COLOR GREEN
+            if "GR" in curve.upper():
+                color = "green"
+            else:
+                color = _curve_color(index)
+
+            _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
+
+        # label text
+        ax.text(
+            0.03,
+            0.02,
+            ", ".join(track_curves),
+            fontsize=8,
+            color="#52606D",
+            transform=ax.transAxes,
+            va="bottom",
+        )
+
+    fig.subplots_adjust(left=0.07, right=0.985, bottom=0.06, top=0.90, wspace=0.1)
+
+    if show:
+        plt.show()
+
+    return fig
     
-    
+
 
 def plot_triple_combo(
     df,
