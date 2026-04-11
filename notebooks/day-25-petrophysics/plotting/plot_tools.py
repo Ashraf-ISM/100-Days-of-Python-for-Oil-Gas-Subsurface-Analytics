@@ -301,75 +301,209 @@ def _plot_track_group(
     )
     return len(valid_curves)
 
+################### Multi track ########################
+def _classify_curve(curve: str) -> str:
+    c = curve.upper()
 
-def plot_multitrack(
-    df,
-    curves: list[str] | None = None,
-    depth_col: str = "DEPTH",
-    *,
-    show: bool = True,
-):
-    available_curves = [curve for curve in df.columns if curve != depth_col]
+    if any(k in c for k in ["GR", "GAMMA"]):
+        return "GR"
+
+    elif any(k in c for k in RESISTIVITY_TOKENS):
+        return "RES"
+
+    elif "RHOB" in c or "DEN" in c:
+        return "RHOB"
+
+    elif "NPHI" in c or "NEU" in c:
+        return "NPHI"
+
+    return "OTHER"
+
+def _group_tracks(curves):
+    tracks = {
+        "GR": [],
+        "RES": [],
+        "POR": [],   # RHOB + NPHI
+        "OTHER": []
+    }
+
+    for c in curves:
+        t = _classify_curve(c)
+
+        if t == "RHOB" or t == "NPHI":
+            tracks["POR"].append(c)
+        else:
+            tracks[t].append(c)
+
+    # remove empty
+    return [v for v in tracks.values() if v]
+
+
+# def plot_multitrack(
+#     df,
+#     curves: list[str] | None = None,
+#     depth_col: str = "DEPTH",
+#     *,
+#     show: bool = True,
+# ):
+#     available_curves = [curve for curve in df.columns if curve != depth_col]
+#     if curves is None:
+#         curves = available_curves[:4]
+#     else:
+#         curves = [curve for curve in curves if curve in df.columns and curve != depth_col]
+
+#     if not curves:
+#         fig = _empty_figure("Multi-Track Log Plot", "No curves available for multi-track plotting.")
+#         if show:
+#             plt.show()
+#         return fig
+
+#     depth = _get_depth(df)
+#     depth_label = _get_depth_label(df, depth_col)
+#     n_tracks = len(curves)
+#     fig, axes = plt.subplots(
+#         1,
+#         n_tracks,
+#         figsize=(max(3.2 * n_tracks, 10), 9.5),
+#         sharey=True,
+#     )
+#     if n_tracks == 1:
+#         axes = [axes]
+
+#     _style_figure(fig, "Multi-Track Log Plot")
+#     for index, (ax, curve) in enumerate(zip(axes, curves)):
+#         color = _curve_color(index)
+#         values = _get_curve_values(df, curve)
+#         use_log_scale = _is_resistivity_curve(curve) and _can_use_log(values)
+#         _style_track_axis(
+#             ax,
+#             label=curve,
+#             color=color,
+#             background=TRACK_BACKGROUNDS[index % len(TRACK_BACKGROUNDS)],
+#             depth_label=depth_label,
+#             show_ylabel=index == 0,
+#             use_log_scale=use_log_scale,
+#         )
+#             # 🔥 FORCE GR COLOR GREEN
+
+#         GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
+
+#         if any(curve.upper().startswith(key) for key in GR_KEYS):
+#             color = "green"
+#         else:
+#             color = _curve_color(index)
+
+#         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
+#         ax.text(
+#             0.03,
+#             0.02,
+#             curve,
+#             fontsize=8,
+#             color="#52606D",
+#             transform=ax.transAxes,
+#             va="bottom",
+#         )
+
+#     fig.subplots_adjust(left=0.07, right=0.985, bottom=0.06, top=0.90, wspace=0.1)
+#     if show:
+#         plt.show()
+#     return fig
+
+def plot_multitrack(df, curves=None, depth_col="DEPTH", *, show=True):
+
+    available_curves = [c for c in df.columns if c != depth_col]
+
     if curves is None:
-        curves = available_curves[:4]
-    else:
-        curves = [curve for curve in curves if curve in df.columns and curve != depth_col]
+        curves = available_curves[:6]
 
-    if not curves:
-        fig = _empty_figure("Multi-Track Log Plot", "No curves available for multi-track plotting.")
-        if show:
-            plt.show()
-        return fig
+    curves = [c for c in curves if c in df.columns]
 
     depth = _get_depth(df)
     depth_label = _get_depth_label(df, depth_col)
-    n_tracks = len(curves)
-    fig, axes = plt.subplots(
-        1,
-        n_tracks,
-        figsize=(max(3.2 * n_tracks, 10), 9.5),
-        sharey=True,
-    )
+
+    # 🔥 AUTO GROUPING
+    tracks = _group_tracks(curves)
+
+    n_tracks = len(tracks)
+
+    fig, axes = plt.subplots(1, n_tracks, figsize=(3.5*n_tracks, 10), sharey=True)
+
     if n_tracks == 1:
         axes = [axes]
 
     _style_figure(fig, "Multi-Track Log Plot")
-    for index, (ax, curve) in enumerate(zip(axes, curves)):
-        color = _curve_color(index)
-        values = _get_curve_values(df, curve)
-        use_log_scale = _is_resistivity_curve(curve) and _can_use_log(values)
-        _style_track_axis(
-            ax,
-            label=curve,
-            color=color,
-            background=TRACK_BACKGROUNDS[index % len(TRACK_BACKGROUNDS)],
-            depth_label=depth_label,
-            show_ylabel=index == 0,
-            use_log_scale=use_log_scale,
-        )
-            # 🔥 FORCE GR COLOR GREEN
 
-        GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
+    for i, (ax, track) in enumerate(zip(axes, tracks)):
 
-        if any(curve.upper().startswith(key) for key in GR_KEYS):
-            color = "green"
+        background = TRACK_BACKGROUNDS[i % len(TRACK_BACKGROUNDS)]
+
+        # ===== GR TRACK =====
+        if any(_classify_curve(c) == "GR" for c in track):
+
+            ax.set_xlim(0, 150)
+
+            for c in track:
+                _plot_curve(ax, df, depth, c, "green", 1.5)
+
+        # ===== RESISTIVITY TRACK =====
+        elif any(_classify_curve(c) == "RES" for c in track):
+
+            ax.set_xscale("log")
+            ax.set_xlim(0.2, 2000)
+
+            for c in track:
+                _plot_curve(ax, df, depth, c, "red", 1.5)
+
+        # ===== POROSITY TRACK =====
+        elif any(_classify_curve(c) in ["RHOB", "NPHI"] for c in track):
+
+            rhob = None
+            nphi = None
+
+            for c in track:
+                if _classify_curve(c) == "RHOB":
+                    rhob = _get_curve_values(df, c)
+                    _plot_curve(ax, df, depth, c, "blue", 1.5)
+
+                elif _classify_curve(c) == "NPHI":
+                    nphi = _get_curve_values(df, c)
+                    _plot_curve(ax, df, depth, c, "purple", 1.5)
+
+            # 🎯 scaling
+            ax.set_xlim(1.95, 2.95)
+
+            # 🔥 CROSSOVER SHADING
+            if rhob is not None and nphi is not None:
+                nphi_scaled = 2.95 - (nphi * (2.95 - 1.95))  # convert scale
+
+                ax.fill_betweenx(
+                    depth,
+                    rhob,
+                    nphi_scaled,
+                    where=(nphi_scaled > rhob),
+                    color="yellow",
+                    alpha=0.3,
+                )
+
+        # ===== OTHER =====
         else:
-            color = _curve_color(index)
+            for j, c in enumerate(track):
+                _plot_curve(ax, df, depth, c, _curve_color(j), 1.5)
 
-        _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
-        ax.text(
-            0.03,
-            0.02,
-            curve,
-            fontsize=8,
-            color="#52606D",
-            transform=ax.transAxes,
-            va="bottom",
-        )
+        # 🎯 common styling
+        ax.set_facecolor(background)
+        ax.set_ylim(depth.max(), depth.min())
 
-    fig.subplots_adjust(left=0.07, right=0.985, bottom=0.06, top=0.90, wspace=0.1)
+        if i == 0:
+            ax.set_ylabel(depth_label)
+
+        ax.set_title(", ".join(track), fontsize=9)
+
+    plt.tight_layout()
+
     if show:
         plt.show()
+
     return fig
 
 
