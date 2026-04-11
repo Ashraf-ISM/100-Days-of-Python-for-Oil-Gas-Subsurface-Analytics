@@ -349,10 +349,14 @@ def plot_multitrack(
             use_log_scale=use_log_scale,
         )
             # 🔥 FORCE GR COLOR GREEN
-        if "GR" in curve:
+
+        GR_KEYS = ["GR", "GAMMA", "GAMMA_RAY"]
+
+        if any(curve.upper().startswith(key) for key in GR_KEYS):
             color = "green"
         else:
             color = _curve_color(index)
+
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
         ax.text(
             0.03,
