@@ -48,9 +48,12 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self.actionDataDownloader.triggered.connect(self._open_data_downloader)
 
     def _open_data_downloader(self) -> None:
-        from app.data_downloader_dialog import DataDownloaderDialog
-        dlg = DataDownloaderDialog(self)
-        dlg.exec_()
+        from app.data_downloader_dialog import DataDownloaderWindow
+        if not hasattr(self, '_data_downloader_win'):
+            self._data_downloader_win = DataDownloaderWindow(self)
+        self._data_downloader_win.show()
+        self._data_downloader_win.raise_()
+        self._data_downloader_win.activateWindow()
 
     def show_about_dialog(self) -> None:
         """Display About dialog for the PetroARX desktop application."""
