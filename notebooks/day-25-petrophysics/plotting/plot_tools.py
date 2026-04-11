@@ -337,7 +337,7 @@ def plot_multitrack(
     _style_figure(fig, "Multi-Track Log Plot")
 
     # 🔹 STEP 2: Plot each track
-    for index, (ax, track_curves) in enumerate(zip(axes, tracks)):
+    for index, (ax, track_curves) in enumerate(zip(axes, curves)):
 
         _style_track_axis(
             ax,
