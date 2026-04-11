@@ -8,7 +8,6 @@ from matplotlib import ticker
 PALETTE = [
     "#0F4C81",
     "#D1495B",
-    "#2F855A",
     "#8C5E34",
     "#6B46C1",
     "#008B8B",
