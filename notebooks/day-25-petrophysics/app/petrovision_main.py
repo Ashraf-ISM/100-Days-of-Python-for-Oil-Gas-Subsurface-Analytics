@@ -87,6 +87,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
     #         "<p>For project-system details, see QUICKSTART.md and PROJECT_MANAGEMENT_GUIDE.md.</p>"
     #     )
     #     QtWidgets.QMessageBox.information(self, "PetroARX Documentation", message)
+    def show_about_dialog(self):
+        show_about(self)
+
+    def show_help_dialog(self):
+        show_help(self)
 
     def _build_dashboard(self) -> None:
         tab = getattr(self, "tabDashboard", None)
