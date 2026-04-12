@@ -14,12 +14,12 @@ if str(ROOT_DIR) not in sys.path:
 
 from controllers.main_controller import MainController  # noqa: E402
 
-from extra.dialogs import show_about, show_help
+from extra.dialogs import AboutHelpDialog
 
 class PetroVisionMainWindow(QtWidgets.QMainWindow):
     def __init__(self, project_path: str | None = None):
         super().__init__()
-        ui_path = UI_DIR / UI_FILE
+        ui_path = UI_DIR / UI_FILE  
         uic.loadUi(str(ui_path), self)
         self.setWindowTitle("PetroARX v1.0 - Petrophysics Interpretation Platform")
         tab_widget = getattr(self, "centralTabWidget", None)
@@ -88,10 +88,12 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
     #     )
     #     QtWidgets.QMessageBox.information(self, "PetroARX Documentation", message)
     def show_about_dialog(self):
-        show_about(self)
+        dialog = AboutHelpDialog(self)
+        dialog.exec_()
 
     def show_help_dialog(self):
-        show_help(self)
+        dialog = AboutHelpDialog(self)
+        dialog.exec_()
 
     def _build_dashboard(self) -> None:
         tab = getattr(self, "tabDashboard", None)
