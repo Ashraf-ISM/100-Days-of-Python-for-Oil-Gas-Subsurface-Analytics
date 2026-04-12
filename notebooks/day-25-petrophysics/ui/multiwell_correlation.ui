@@ -1,0 +1,2794 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MultiWellCorrelationWindow</class>
+ <widget class="QMainWindow" name="MultiWellCorrelationWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1500</width><height>940</height></rect>
+  </property>
+  <property name="minimumSize">
+   <size><width>1100</width><height>700</height></size>
+  </property>
+  <property name="windowTitle">
+   <string>Multi-Well Correlation — PetroARX Interpretation Platform</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ═══════════════════════════════════════════════════════════
+   PetroARX  ·  Multi-Well Correlation  ·  Light Theme
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── base ────────────────────────────────────────────────── */
+QMainWindow, QDialog, QWidget {
+    background-color: #F4F6FA;
+    color: #1E293B;
+    font-family: "Segoe UI", "Ubuntu", "Helvetica Neue", sans-serif;
+    font-size: 11px;
+}
+
+/* ── menu bar ────────────────────────────────────────────── */
+QMenuBar {
+    background-color: #1E2D45;
+    color: #E2E8F0;
+    padding: 1px 4px;
+    spacing: 0px;
+}
+QMenuBar::item {
+    padding: 5px 12px;
+    background: transparent;
+    border-radius: 3px;
+}
+QMenuBar::item:selected { background: #2D4A6B; }
+QMenuBar::item:pressed  { background: #2563EB; }
+
+QMenu {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    padding: 4px 0;
+}
+QMenu::item { padding: 5px 24px 5px 16px; color: #1E293B; }
+QMenu::item:selected { background: #EFF6FF; color: #2563EB; }
+QMenu::separator {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 3px 8px;
+}
+
+/* ── toolbars ────────────────────────────────────────────── */
+QToolBar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    spacing: 2px;
+    padding: 2px 4px;
+}
+QToolBar::separator {
+    width: 1px;
+    background: #D1D9E6;
+    margin: 4px 4px;
+}
+QToolButton {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 6px;
+    color: #374151;
+    min-width: 24px;
+    min-height: 24px;
+}
+QToolButton:hover   { background: #EFF6FF; border-color: #BFDBFE; color: #2563EB; }
+QToolButton:pressed { background: #DBEAFE; border-color: #93C5FD; }
+QToolButton:checked { background: #DBEAFE; border-color: #2563EB; color: #1D4ED8; }
+QToolButton[text=""] { min-width: 28px; }
+
+/* ── left / right panel frames ───────────────────────────── */
+QFrame#frameLeft {
+    background-color: #F8FAFD;
+    border-right: 1px solid #D1D9E6;
+    min-width: 255px;
+    max-width: 320px;
+}
+QFrame#frameRight {
+    background-color: #F8FAFD;
+    border-left: 1px solid #D1D9E6;
+    min-width: 220px;
+    max-width: 290px;
+}
+
+/* ── section labels (panel headers) ─────────────────────── */
+QLabel#lblSectionHeader {
+    background: #E8EDF5;
+    color: #374151;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #D1D9E6;
+    text-transform: uppercase;
+}
+
+/* ── tab widget ──────────────────────────────────────────── */
+QTabWidget::pane {
+    background: #FFFFFF;
+    border: 1px solid #D1D9E6;
+    border-top: none;
+}
+QTabBar {
+    background: transparent;
+}
+QTabBar::tab {
+    background: #EEF2F8;
+    border: 1px solid #D1D9E6;
+    border-bottom: none;
+    padding: 6px 14px;
+    color: #64748B;
+    font-size: 10.5px;
+    font-weight: 500;
+    margin-right: 1px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #2563EB;
+    font-weight: 600;
+    border-bottom: 2px solid #2563EB;
+}
+QTabBar::tab:hover:!selected { background: #E0E8F4; color: #374151; }
+
+/* ── group boxes ─────────────────────────────────────────── */
+QGroupBox {
+    background: #FFFFFF;
+    border: 1px solid #D1D9E6;
+    border-radius: 5px;
+    margin-top: 18px;
+    padding: 10px 8px 8px 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 10.5px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 8px;
+    top: 2px;
+    padding: 0 4px;
+    background: #FFFFFF;
+    color: #374151;
+}
+
+/* ── buttons ─────────────────────────────────────────────── */
+QPushButton {
+    background-color: #FFFFFF;
+    border: 1px solid #C4CDD8;
+    border-radius: 4px;
+    padding: 4px 12px;
+    color: #374151;
+    font-weight: 500;
+    min-height: 22px;
+}
+QPushButton:hover   { background: #EFF6FF; border-color: #2563EB; color: #1D4ED8; }
+QPushButton:pressed { background: #DBEAFE; }
+QPushButton:disabled { background: #F1F5F9; color: #94A3B8; border-color: #E2E8F0; }
+
+QPushButton#btnPrimary, QPushButton#btnAddWell,
+QPushButton#btnCorrelate, QPushButton#btnAutoCorrelate {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border: none;
+    font-weight: 600;
+}
+QPushButton#btnPrimary:hover, QPushButton#btnAddWell:hover,
+QPushButton#btnCorrelate:hover, QPushButton#btnAutoCorrelate:hover {
+    background-color: #1D4ED8;
+}
+
+QPushButton#btnDanger, QPushButton#btnRemoveWell {
+    background-color: #FEF2F2;
+    color: #DC2626;
+    border-color: #FECACA;
+}
+QPushButton#btnDanger:hover, QPushButton#btnRemoveWell:hover {
+    background-color: #DC2626;
+    color: #FFFFFF;
+}
+
+QPushButton#btnSmall {
+    padding: 2px 8px;
+    font-size: 10px;
+    min-height: 18px;
+    border-radius: 3px;
+}
+
+/* ── inputs ──────────────────────────────────────────────── */
+QLineEdit, QComboBox, QSpinBox, QDoubleSpinBox {
+    background: #FFFFFF;
+    border: 1px solid #C4CDD8;
+    border-radius: 4px;
+    padding: 3px 7px;
+    color: #1E293B;
+    selection-background-color: #BFDBFE;
+    min-height: 22px;
+}
+QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus {
+    border-color: #2563EB;
+    background: #FAFCFF;
+}
+QLineEdit::placeholder { color: #94A3B8; }
+
+QComboBox::drop-down {
+    border-left: 1px solid #D1D9E6;
+    width: 22px;
+    subcontrol-position: right center;
+}
+QComboBox::down-arrow { width: 10px; }
+QComboBox QAbstractItemView {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    selection-background-color: #EFF6FF;
+    selection-color: #2563EB;
+    outline: none;
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button,
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    background: #F1F5F9;
+    border: none;
+    width: 16px;
+}
+
+/* ── sliders ─────────────────────────────────────────────── */
+QSlider::groove:horizontal {
+    height: 4px;
+    background: #D1D9E6;
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    background: #2563EB;
+    border: 2px solid #FFFFFF;
+    width: 14px;
+    height: 14px;
+    margin: -5px 0;
+    border-radius: 7px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+QSlider::sub-page:horizontal { background: #2563EB; border-radius: 2px; }
+QSlider::groove:vertical {
+    width: 4px;
+    background: #D1D9E6;
+    border-radius: 2px;
+}
+QSlider::handle:vertical {
+    background: #2563EB;
+    border: 2px solid #FFFFFF;
+    width: 14px;
+    height: 14px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+
+/* ── checkboxes / radios ─────────────────────────────────── */
+QCheckBox, QRadioButton {
+    color: #374151;
+    spacing: 5px;
+}
+QCheckBox::indicator {
+    width: 14px; height: 14px;
+    border: 1px solid #9CA3AF;
+    border-radius: 3px;
+    background: #FFFFFF;
+}
+QCheckBox::indicator:checked {
+    background: #2563EB;
+    border-color: #2563EB;
+    image: url(none);
+}
+QCheckBox::indicator:hover { border-color: #2563EB; }
+QRadioButton::indicator {
+    width: 14px; height: 14px;
+    border: 1px solid #9CA3AF;
+    border-radius: 7px;
+    background: #FFFFFF;
+}
+QRadioButton::indicator:checked {
+    background: #2563EB;
+    border-color: #2563EB;
+}
+
+/* ── trees / lists ───────────────────────────────────────── */
+QTreeWidget, QListWidget {
+    background: #FFFFFF;
+    border: 1px solid #D1D9E6;
+    border-radius: 4px;
+    alternate-background-color: #F8FAFC;
+    outline: none;
+    show-decoration-selected: 1;
+}
+QTreeWidget::item, QListWidget::item {
+    padding: 3px 4px;
+    color: #1E293B;
+}
+QTreeWidget::item:selected, QListWidget::item:selected {
+    background: #DBEAFE;
+    color: #1D4ED8;
+}
+QTreeWidget::item:hover, QListWidget::item:hover {
+    background: #F0F7FF;
+}
+QTreeWidget::branch:open:has-children {
+    image: url(none);
+}
+
+/* ── table ───────────────────────────────────────────────── */
+QTableWidget {
+    background: #FFFFFF;
+    alternate-background-color: #F8FAFC;
+    gridline-color: #E8EDF5;
+    border: none;
+    outline: none;
+}
+QTableWidget::item { padding: 3px 6px; }
+QTableWidget::item:selected {
+    background: #DBEAFE;
+    color: #1D4ED8;
+}
+QHeaderView::section {
+    background: #EEF2F8;
+    border: none;
+    border-right: 1px solid #D1D9E6;
+    border-bottom: 1px solid #C4CDD8;
+    padding: 4px 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 10.5px;
+}
+QHeaderView::section:last { border-right: none; }
+
+/* ── scroll bars ─────────────────────────────────────────── */
+QScrollBar:vertical, QScrollBar:horizontal {
+    background: #F1F5F9;
+    width: 8px; height: 8px;
+    margin: 0;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: #C0CBD8;
+    border-radius: 4px;
+    min-height: 24px; min-width: 24px;
+}
+QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+    background: #94A3B8;
+}
+QScrollBar::add-line, QScrollBar::sub-line { height: 0; width: 0; }
+QScrollBar::add-page, QScrollBar::sub-page { background: none; }
+
+/* ── splitters ───────────────────────────────────────────── */
+QSplitter::handle {
+    background: #D1D9E6;
+}
+QSplitter::handle:horizontal { width: 1px; }
+QSplitter::handle:vertical   { height: 1px; }
+QSplitter::handle:hover      { background: #2563EB; }
+
+/* ── dock widgets ────────────────────────────────────────── */
+QDockWidget {
+    color: #1E293B;
+    titlebar-close-icon: url(none);
+    titlebar-normal-icon: url(none);
+}
+QDockWidget::title {
+    background: #E8EDF5;
+    border-bottom: 1px solid #D1D9E6;
+    padding: 4px 8px;
+    font-weight: 600;
+    font-size: 10.5px;
+    color: #374151;
+    text-align: left;
+}
+
+/* ── status bar ──────────────────────────────────────────── */
+QStatusBar {
+    background: #EEF2F8;
+    border-top: 1px solid #D1D9E6;
+    color: #64748B;
+    font-size: 10px;
+    padding: 0 4px;
+}
+QStatusBar::item { border: none; }
+QLabel#lblStatusSection {
+    color: #374151;
+    font-weight: 500;
+    padding: 2px 10px 2px 4px;
+    border-right: 1px solid #D1D9E6;
+    margin-right: 4px;
+}
+
+/* ── correlation viewport ────────────────────────────────── */
+QFrame#frameCorrelationView {
+    background: #FFFFFF;
+    border: none;
+}
+QFrame#frameWellHeaders {
+    background: #EEF2F8;
+    border-bottom: 2px solid #C4CDD8;
+    min-height: 76px;
+    max-height: 76px;
+}
+QFrame#frameDepthControls {
+    background: #F4F6FA;
+    border-top: 1px solid #D1D9E6;
+    min-height: 48px;
+    max-height: 48px;
+}
+QFrame#frameViewportToolbar {
+    background: #FAFBFD;
+    border-bottom: 1px solid #E2E8F0;
+    min-height: 36px;
+    max-height: 36px;
+}
+
+/* ── colored tag labels ──────────────────────────────────── */
+QLabel#tagActive {
+    background: #DCFCE7; color: #15803D;
+    border: 1px solid #86EFAC;
+    border-radius: 10px; padding: 1px 8px;
+    font-weight: 600; font-size: 9.5px;
+}
+QLabel#tagInfo {
+    background: #EFF6FF; color: #2563EB;
+    border: 1px solid #93C5FD;
+    border-radius: 10px; padding: 1px 8px;
+    font-weight: 600; font-size: 9.5px;
+}
+QLabel#tagWarn {
+    background: #FFFBEB; color: #D97706;
+    border: 1px solid #FCD34D;
+    border-radius: 10px; padding: 1px 8px;
+    font-weight: 600; font-size: 9.5px;
+}
+
+/* ── colour swatches ─────────────────────────────────────── */
+QPushButton#btnColorSwatch {
+    min-width: 24px; max-width: 24px;
+    min-height: 18px; max-height: 18px;
+    border-radius: 3px;
+    border: 1px solid #9CA3AF;
+    padding: 0;
+}
+
+/* ── divider labels ──────────────────────────────────────── */
+QFrame#hLine {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    max-height: 1px;
+}
+
+/* ── progress bar ────────────────────────────────────────── */
+QProgressBar {
+    background: #E2E8F0;
+    border: none;
+    border-radius: 3px;
+    height: 4px;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background: #2563EB;
+    border-radius: 3px;
+}
+   </string>
+  </property>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!--  CENTRAL WIDGET                                              -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="centralLayout">
+    <property name="spacing"><number>0</number></property>
+    <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+    <!-- ── viewport toolbar bar ──────────────────────────────── -->
+    <item>
+     <widget class="QFrame" name="frameViewportToolbar">
+      <layout class="QHBoxLayout" name="viewportToolbarLayout">
+       <property name="spacing"><number>3</number></property>
+       <property name="contentsMargins"><rect><x>6</x><y>3</y><x>6</x><y>3</y></rect></property>
+
+       <!-- Mode buttons -->
+       <item>
+        <widget class="QToolButton" name="btnModePan">
+         <property name="text"><string>⊹ Pan</string></property>
+         <property name="toolTip"><string>Pan / Scroll (H)</string></property>
+         <property name="checkable"><bool>true</bool></property>
+         <property name="checked"><bool>false</bool></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="btnModeZoom">
+         <property name="text"><string>⊕ Zoom</string></property>
+         <property name="toolTip"><string>Zoom In/Out (Z)</string></property>
+         <property name="checkable"><bool>true</bool></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="btnModePick">
+         <property name="text"><string>⊗ Pick</string></property>
+         <property name="toolTip"><string>Pick Formation Top (P)</string></property>
+         <property name="checkable"><bool>true</bool></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="btnModeCorrelate">
+         <property name="text"><string>⇌ Correlate</string></property>
+         <property name="toolTip"><string>Draw Correlation Line (C)</string></property>
+         <property name="checkable"><bool>true</bool></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="btnModeMeasure">
+         <property name="text"><string>↕ Measure</string></property>
+         <property name="toolTip"><string>Measure Depth Interval (M)</string></property>
+         <property name="checkable"><bool>true</bool></property>
+        </widget>
+       </item>
+
+       <!-- Separator -->
+       <item>
+        <widget class="QFrame" name="vSep1">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+         <property name="styleSheet"><string>color:#D1D9E6;</string></property>
+        </widget>
+       </item>
+
+       <!-- Depth reference -->
+       <item>
+        <widget class="QLabel" name="lblDepthRefLabel">
+         <property name="text"><string>Depth:</string></property>
+         <property name="styleSheet"><string>color:#64748B; font-weight:600;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cmbDepthReference">
+         <property name="toolTip"><string>Depth reference datum</string></property>
+         <property name="minimumWidth"><number>90</number></property>
+         <item><property name="text"><string>MD (m)</string></property></item>
+         <item><property name="text"><string>TVD (m)</string></property></item>
+         <item><property name="text"><string>TVDSS (m)</string></property></item>
+         <item><property name="text"><string>MD (ft)</string></property></item>
+         <item><property name="text"><string>TVD (ft)</string></property></item>
+        </widget>
+       </item>
+
+       <!-- Separator -->
+       <item>
+        <widget class="QFrame" name="vSep2">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+         <property name="styleSheet"><string>color:#D1D9E6;</string></property>
+        </widget>
+       </item>
+
+       <!-- Depth range -->
+       <item>
+        <widget class="QLabel" name="lblDepthFromLabel">
+         <property name="text"><string>From:</string></property>
+         <property name="styleSheet"><string>color:#64748B;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDoubleSpinBox" name="dspinDepthFrom">
+         <property name="toolTip"><string>Top of display depth</string></property>
+         <property name="minimum"><double>0.0</double></property>
+         <property name="maximum"><double>99999.0</double></property>
+         <property name="value"><double>0.0</double></property>
+         <property name="singleStep"><double>50.0</double></property>
+         <property name="decimals"><number>1</number></property>
+         <property name="minimumWidth"><number>80</number></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblDepthToLabel">
+         <property name="text"><string>To:</string></property>
+         <property name="styleSheet"><string>color:#64748B;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDoubleSpinBox" name="dspinDepthTo">
+         <property name="toolTip"><string>Bottom of display depth</string></property>
+         <property name="minimum"><double>0.0</double></property>
+         <property name="maximum"><double>99999.0</double></property>
+         <property name="value"><double>3000.0</double></property>
+         <property name="singleStep"><double>50.0</double></property>
+         <property name="decimals"><number>1</number></property>
+         <property name="minimumWidth"><number>80</number></property>
+        </widget>
+       </item>
+
+       <!-- Separator -->
+       <item>
+        <widget class="QFrame" name="vSep3">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+         <property name="styleSheet"><string>color:#D1D9E6;</string></property>
+        </widget>
+       </item>
+
+       <!-- Vertical scale -->
+       <item>
+        <widget class="QLabel" name="lblScaleLabel">
+         <property name="text"><string>V-Scale:</string></property>
+         <property name="styleSheet"><string>color:#64748B; font-weight:600;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cmbVerticalScale">
+         <property name="toolTip"><string>Vertical scale (depth per cm)</string></property>
+         <property name="minimumWidth"><number>90</number></property>
+         <property name="editable"><bool>true</bool></property>
+         <item><property name="text"><string>1:200</string></property></item>
+         <item><property name="text"><string>1:500</string></property></item>
+         <item><property name="text"><string>1:1000</string></property></item>
+         <item><property name="text"><string>1:2000</string></property></item>
+         <item><property name="text"><string>1:5000</string></property></item>
+         <item><property name="text"><string>Custom…</string></property></item>
+        </widget>
+       </item>
+
+       <!-- Fit button -->
+       <item>
+        <widget class="QToolButton" name="btnFitAll">
+         <property name="text"><string>⊞ Fit All</string></property>
+         <property name="toolTip"><string>Fit all wells in view (F)</string></property>
+        </widget>
+       </item>
+
+       <!-- Spacer -->
+       <item>
+        <spacer>
+         <property name="orientation"><enum>Qt::Horizontal</enum></property>
+         <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+        </spacer>
+       </item>
+
+       <!-- Status indicators -->
+       <item>
+        <widget class="QLabel" name="lblWellCount">
+         <property name="text"><string>Wells: 0</string></property>
+         <property name="styleSheet"><string>color:#64748B; font-size:10px;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblZoneCount">
+         <property name="text"><string>Zones: 0</string></property>
+         <property name="styleSheet"><string>color:#64748B; font-size:10px; padding-left:8px;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblPickCount">
+         <property name="text"><string>Picks: 0</string></property>
+         <property name="styleSheet"><string>color:#64748B; font-size:10px; padding-left:8px;</string></property>
+        </widget>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+
+    <!-- ── main splitter (left | center | right) ─────────────── -->
+    <item>
+     <widget class="QSplitter" name="splitterMain">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+      <property name="handleWidth"><number>1</number></property>
+      <property name="childrenCollapsible"><bool>false</bool></property>
+
+      <!-- ════════════════════════════════════════════════════════
+           LEFT PANEL
+           ════════════════════════════════════════════════════════ -->
+      <widget class="QFrame" name="frameLeft">
+       <layout class="QVBoxLayout" name="leftLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+        <!-- Panel header -->
+        <item>
+         <widget class="QLabel" name="lblLeftHeader">
+          <property name="text"><string>  CORRELATION BROWSER</string></property>
+          <property name="styleSheet">
+           <string>background:#1E2D45; color:#E2E8F0; font-weight:700;
+                   font-size:10px; letter-spacing:0.6px; padding:6px 8px;
+                   border-bottom:2px solid #2563EB;</string>
+          </property>
+         </widget>
+        </item>
+
+        <!-- Tab widget -->
+        <item>
+         <widget class="QTabWidget" name="tabLeft">
+          <property name="tabPosition"><enum>QTabWidget::North</enum></property>
+          <property name="currentIndex"><number>0</number></property>
+          <property name="documentMode"><bool>true</bool></property>
+
+          <!-- ─── TAB 0: WELLS ─────────────────────────────────── -->
+          <widget class="QWidget" name="tabWells">
+           <attribute name="title"><string>Wells</string></attribute>
+           <layout class="QVBoxLayout" name="wellsTabLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins"><rect><x>6</x><y>8</y><x>6</x><y>6</y></rect></property>
+
+            <!-- Search -->
+            <item>
+             <widget class="QLineEdit" name="editSearchWells">
+              <property name="placeholderText"><string>🔍  Search wells…</string></property>
+              <property name="clearButtonEnabled"><bool>true</bool></property>
+             </widget>
+            </item>
+
+            <!-- Well tree -->
+            <item>
+             <widget class="QTreeWidget" name="treeWells">
+              <property name="toolTip"><string>Loaded wells — check to display in correlation</string></property>
+              <property name="selectionMode"><enum>QAbstractItemView::ExtendedSelection</enum></property>
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="uniformRowHeights"><bool>true</bool></property>
+              <property name="columnCount"><number>2</number></property>
+              <property name="indentation"><number>16</number></property>
+              <attribute name="headerVisible"><bool>true</bool></attribute>
+              <column>
+               <property name="text"><string>Well / Curve</string></property>
+               <property name="toolTip"><string>Well name or curve identifier</string></property>
+              </column>
+              <column>
+               <property name="text"><string>Track</string></property>
+               <property name="toolTip"><string>Assigned track slot</string></property>
+              </column>
+             </widget>
+            </item>
+
+            <!-- Well action buttons -->
+            <item>
+             <layout class="QHBoxLayout" name="wellBtnLayout">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QPushButton" name="btnAddWell">
+                <property name="objectName"><string>btnAddWell</string></property>
+                <property name="text"><string>+ Add Well</string></property>
+                <property name="toolTip"><string>Add well to correlation display</string></property>
+              </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnRemoveWell">
+                <property name="objectName"><string>btnRemoveWell</string></property>
+                <property name="text"><string>✕ Remove</string></property>
+                <property name="toolTip"><string>Remove selected well from display</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Reorder buttons -->
+            <item>
+             <layout class="QHBoxLayout" name="wellOrderLayout">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QPushButton" name="btnWellMoveLeft">
+                <property name="text"><string>◀ Left</string></property>
+                <property name="toolTip"><string>Move well left in display order</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnWellMoveRight">
+                <property name="text"><string>Right ▶</string></property>
+                <property name="toolTip"><string>Move well right in display order</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnWellSortByLocation">
+                <property name="text"><string>⇅ Sort</string></property>
+                <property name="toolTip"><string>Sort wells by geographic location (X/Y)</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Horizontal separator -->
+            <item>
+             <widget class="QFrame" name="hLineWells">
+              <property name="frameShape"><enum>QFrame::HLine</enum></property>
+              <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+              <property name="styleSheet"><string>color: #E2E8F0;</string></property>
+             </widget>
+            </item>
+
+            <!-- Well properties group -->
+            <item>
+             <widget class="QGroupBox" name="grpWellProperties">
+              <property name="title"><string>Selected Well</string></property>
+              <layout class="QFormLayout" name="wellPropsLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblWellNameLabel">
+                 <property name="text"><string>Name:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lblWellNameValue">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-weight:600; color:#1E293B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblWellKBLabel">
+                 <property name="text"><string>KB (m):</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="dspinKB">
+                 <property name="toolTip"><string>Kelly Bushing elevation (m ASL)</string></property>
+                 <property name="minimum"><double>-9999.0</double></property>
+                 <property name="maximum"><double>9999.0</double></property>
+                 <property name="value"><double>0.0</double></property>
+                 <property name="decimals"><number>2</number></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblWellDatumLabel">
+                 <property name="text"><string>Datum:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="cmbWellDatum">
+                 <property name="toolTip"><string>Depth datum for this well</string></property>
+                 <item><property name="text"><string>KB</string></property></item>
+                 <item><property name="text"><string>MSL</string></property></item>
+                 <item><property name="text"><string>Ground Level</string></property></item>
+                 <item><property name="text"><string>DF (Derrick Floor)</string></property></item>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="lblWellColorLabel">
+                 <property name="text"><string>Colour:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <layout class="QHBoxLayout">
+                 <property name="spacing"><number>4</number></property>
+                 <item>
+                  <widget class="QPushButton" name="btnWellColor">
+                   <property name="objectName"><string>btnColorSwatch</string></property>
+                   <property name="toolTip"><string>Click to change well colour</string></property>
+                   <property name="styleSheet"><string>background:#2563EB;</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblWellColorHex">
+                   <property name="text"><string>#2563EB</string></property>
+                   <property name="styleSheet"><string>color:#64748B; font-size:10px;</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer>
+                   <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Depth shift group -->
+            <item>
+             <widget class="QGroupBox" name="grpDepthShift">
+              <property name="title"><string>Depth Shift / Datum Correction</string></property>
+              <layout class="QFormLayout" name="depthShiftLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Global shift:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="dspinGlobalShift">
+                 <property name="toolTip"><string>Shift all wells up/down by this amount (m)</string></property>
+                 <property name="minimum"><double>-9999.0</double></property>
+                 <property name="maximum"><double>9999.0</double></property>
+                 <property name="value"><double>0.0</double></property>
+                 <property name="singleStep"><double>1.0</double></property>
+                 <property name="suffix"><string>  m</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Well shift:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="dspinWellShift">
+                 <property name="toolTip"><string>Shift selected well individually (m)</string></property>
+                 <property name="minimum"><double>-9999.0</double></property>
+                 <property name="maximum"><double>9999.0</double></property>
+                 <property name="value"><double>0.0</double></property>
+                 <property name="singleStep"><double>1.0</double></property>
+                 <property name="suffix"><string>  m</string></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Align by:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="cmbAlignReference">
+                 <property name="toolTip"><string>Reference horizon for datum alignment</string></property>
+                 <item><property name="text"><string>None</string></property></item>
+                 <item><property name="text"><string>Top picked zone</string></property></item>
+                 <item><property name="text"><string>Sea Level (MSL)</string></property></item>
+                 <item><property name="text"><string>Formation Top…</string></property></item>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Stretch -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint"><size><width>1</width><height>8</height></size></property>
+             </spacer>
+            </item>
+
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 1: TRACKS ────────────────────────────────── -->
+          <widget class="QWidget" name="tabTracks">
+           <attribute name="title"><string>Tracks</string></attribute>
+           <layout class="QVBoxLayout" name="tracksTabLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins"><rect><x>6</x><y>8</y><x>6</x><y>6</y></rect></property>
+
+            <!-- Track list header -->
+            <item>
+             <layout class="QHBoxLayout" name="trackListHeader">
+              <item>
+               <widget class="QLabel">
+                <property name="text"><string>Track Configuration</string></property>
+                <property name="styleSheet"><string>font-weight:600; color:#374151;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnAddTrack">
+                <property name="text"><string>+ Track</string></property>
+                <property name="toolTip"><string>Add a new log track column</string></property>
+                <property name="objectName"><string>btnSmall</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Track list -->
+            <item>
+             <widget class="QListWidget" name="listTracks">
+              <property name="toolTip"><string>Track slots — drag to reorder</string></property>
+              <property name="dragDropMode"><enum>QAbstractItemView::InternalMove</enum></property>
+              <property name="defaultDropAction"><enum>Qt::MoveAction</enum></property>
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="maximumHeight"><number>130</number></property>
+             </widget>
+            </item>
+
+            <!-- Track buttons -->
+            <item>
+             <layout class="QHBoxLayout" name="trackBtnLayout">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QPushButton" name="btnRemoveTrack">
+                <property name="text"><string>✕ Remove</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnMoveTrackLeft">
+                <property name="text"><string>◀</string></property>
+                <property name="toolTip"><string>Move track left</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnMoveTrackRight">
+                <property name="text"><string>▶</string></property>
+                <property name="toolTip"><string>Move track right</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Track properties group -->
+            <item>
+             <widget class="QGroupBox" name="grpTrackProps">
+              <property name="title"><string>Track Properties</string></property>
+              <layout class="QFormLayout" name="trackPropsLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Width (px):</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="spinTrackWidth">
+                 <property name="toolTip"><string>Track display width in pixels</string></property>
+                 <property name="minimum"><number>60</number></property>
+                 <property name="maximum"><number>400</number></property>
+                 <property name="value"><number>120</number></property>
+                 <property name="suffix"><string>  px</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Curve:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="cmbTrackCurve">
+                 <property name="toolTip"><string>Primary curve for this track</string></property>
+                 <item><property name="text"><string>(none)</string></property></item>
+                 <item><property name="text"><string>GR</string></property></item>
+                 <item><property name="text"><string>RT / Resistivity</string></property></item>
+                 <item><property name="text"><string>RHOB</string></property></item>
+                 <item><property name="text"><string>NPHI</string></property></item>
+                 <item><property name="text"><string>Vshale</string></property></item>
+                 <item><property name="text"><string>PHIE</string></property></item>
+                 <item><property name="text"><string>Sw</string></property></item>
+                 <item><property name="text"><string>Permeability</string></property></item>
+                 <item><property name="text"><string>Net Pay Flag</string></property></item>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Scale:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="cmbTrackScale">
+                 <property name="toolTip"><string>Horizontal scale type</string></property>
+                 <item><property name="text"><string>Linear</string></property></item>
+                 <item><property name="text"><string>Logarithmic</string></property></item>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Min:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDoubleSpinBox" name="dspinTrackMin">
+                 <property name="toolTip"><string>Track minimum value</string></property>
+                 <property name="minimum"><double>-99999.0</double></property>
+                 <property name="maximum"><double>99999.0</double></property>
+                 <property name="value"><double>0.0</double></property>
+                 <property name="specialValueText"><string>Auto</string></property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Max:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDoubleSpinBox" name="dspinTrackMax">
+                 <property name="toolTip"><string>Track maximum value</string></property>
+                 <property name="minimum"><double>-99999.0</double></property>
+                 <property name="maximum"><double>99999.0</double></property>
+                 <property name="value"><double>150.0</double></property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Fill:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QComboBox" name="cmbTrackFill">
+                 <property name="toolTip"><string>Track fill / shading option</string></property>
+                 <item><property name="text"><string>None</string></property></item>
+                 <item><property name="text"><string>Left fill (sand)</string></property></item>
+                 <item><property name="text"><string>Right fill (shale)</string></property></item>
+                 <item><property name="text"><string>Bilateral (Vsh)</string></property></item>
+                 <item><property name="text"><string>Solid colour</string></property></item>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Color:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QPushButton" name="btnTrackColor">
+                 <property name="objectName"><string>btnColorSwatch</string></property>
+                 <property name="toolTip"><string>Track curve colour</string></property>
+                 <property name="styleSheet"><string>background:#DC2626;</string></property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Line (px):</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QDoubleSpinBox" name="dspinTrackLineWidth">
+                 <property name="toolTip"><string>Curve line width in pixels</string></property>
+                 <property name="minimum"><double>0.5</double></property>
+                 <property name="maximum"><double>5.0</double></property>
+                 <property name="value"><double>1.0</double></property>
+                 <property name="singleStep"><double>0.5</double></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Apply button -->
+            <item>
+             <widget class="QPushButton" name="btnApplyTrackConfig">
+              <property name="objectName"><string>btnPrimary</string></property>
+              <property name="text"><string>Apply Track Configuration</string></property>
+              <property name="toolTip"><string>Apply and redraw the correlation display</string></property>
+             </widget>
+            </item>
+
+            <!-- Stretch -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint"><size><width>1</width><height>8</height></size></property>
+             </spacer>
+            </item>
+
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 2: ZONES ─────────────────────────────────── -->
+          <widget class="QWidget" name="tabZones">
+           <attribute name="title"><string>Zones</string></attribute>
+           <layout class="QVBoxLayout" name="zonesTabLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins"><rect><x>6</x><y>8</y><x>6</x><y>6</y></rect></property>
+
+            <!-- Formation tops header -->
+            <item>
+             <layout class="QHBoxLayout" name="zoneHeaderLayout">
+              <item>
+               <widget class="QLabel">
+                <property name="text"><string>Formation Tops / Zones</string></property>
+                <property name="styleSheet"><string>font-weight:600; color:#374151;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnImportTops">
+                <property name="text"><string>⇑ Import</string></property>
+                <property name="toolTip"><string>Import formation tops from CSV/LAS</string></property>
+                <property name="objectName"><string>btnSmall</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Zones tree -->
+            <item>
+             <widget class="QTreeWidget" name="treeZones">
+              <property name="toolTip"><string>Formation zones — check to display correlation lines</string></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="columnCount"><number>3</number></property>
+              <property name="maximumHeight"><number>160</number></property>
+              <attribute name="headerVisible"><bool>true</bool></attribute>
+              <column>
+               <property name="text"><string>Formation</string></property>
+              </column>
+              <column>
+               <property name="text"><string>Colour</string></property>
+              </column>
+              <column>
+               <property name="text"><string>Picks</string></property>
+              </column>
+             </widget>
+            </item>
+
+            <!-- Zone buttons -->
+            <item>
+             <layout class="QHBoxLayout" name="zoneBtnLayout">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QPushButton" name="btnAddZone">
+                <property name="text"><string>+ Zone</string></property>
+                <property name="toolTip"><string>Add a new formation zone</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnRemoveZone">
+                <property name="text"><string>✕</string></property>
+                <property name="toolTip"><string>Remove selected zone</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnZoneColor">
+                <property name="text"><string>Colour</string></property>
+                <property name="toolTip"><string>Change zone colour</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnClearPicks">
+                <property name="text"><string>Clear Picks</string></property>
+                <property name="toolTip"><string>Clear all picks for selected zone</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Correlation style group -->
+            <item>
+             <widget class="QGroupBox" name="grpCorrelationStyle">
+              <property name="title"><string>Correlation Line Style</string></property>
+              <layout class="QFormLayout" name="corrStyleLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Line type:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="cmbCorrelLineType">
+                 <item><property name="text"><string>Solid</string></property></item>
+                 <item><property name="text"><string>Dashed</string></property></item>
+                 <item><property name="text"><string>Dotted</string></property></item>
+                 <item><property name="text"><string>Dash-dot</string></property></item>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Thickness:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="dspinCorrelLineWidth">
+                 <property name="minimum"><double>0.5</double></property>
+                 <property name="maximum"><double>5.0</double></property>
+                 <property name="value"><double>1.5</double></property>
+                 <property name="singleStep"><double>0.5</double></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Zone fill:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="cmbZoneFill">
+                 <item><property name="text"><string>None</string></property></item>
+                 <item><property name="text"><string>Transparent shading</string></property></item>
+                 <item><property name="text"><string>Gradient fill</string></property></item>
+                 <item><property name="text"><string>Hatch pattern</string></property></item>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Opacity:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSlider" name="sliderZoneFillOpacity">
+                 <property name="toolTip"><string>Zone fill opacity 0–100%</string></property>
+                 <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                 <property name="minimum"><number>0</number></property>
+                 <property name="maximum"><number>100</number></property>
+                 <property name="value"><number>30</number></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Auto-correlate group -->
+            <item>
+             <widget class="QGroupBox" name="grpAutoCorrelate">
+              <property name="title"><string>Auto-Correlation</string></property>
+              <layout class="QVBoxLayout" name="autoCorrelLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <layout class="QFormLayout" name="autoCorrelFormLayout">
+                 <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+                 <property name="horizontalSpacing"><number>8</number></property>
+                 <property name="verticalSpacing"><number>5</number></property>
+                 <item row="0" column="0">
+                  <widget class="QLabel">
+                   <property name="text"><string>Method:</string></property>
+                   <property name="styleSheet"><string>color:#64748B;</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="cmbAutoCorrelMethod">
+                   <item><property name="text"><string>Cross-correlation (GR)</string></property></item>
+                   <item><property name="text"><string>Pattern matching</string></property></item>
+                   <item><property name="text"><string>DTW (Dynamic Warping)</string></property></item>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel">
+                   <property name="text"><string>Window (m):</string></property>
+                   <property name="styleSheet"><string>color:#64748B;</string></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="dspinAutoCorrelWindow">
+                   <property name="minimum"><double>10.0</double></property>
+                   <property name="maximum"><double>500.0</double></property>
+                   <property name="value"><double>50.0</double></property>
+                   <property name="suffix"><string>  m</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnAutoCorrelate">
+                 <property name="objectName"><string>btnAutoCorrelate</string></property>
+                 <property name="text"><string>⚡  Run Auto-Correlation</string></property>
+                 <property name="toolTip"><string>Automatically correlate formation tops across all visible wells</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Stretch -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint"><size><width>1</width><height>8</height></size></property>
+             </spacer>
+            </item>
+
+           </layout>
+          </widget>
+
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════════
+           CENTER  — CORRELATION VIEWPORT
+           ════════════════════════════════════════════════════════ -->
+      <widget class="QFrame" name="frameCenterMain">
+       <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+       <layout class="QVBoxLayout" name="centerMainLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+        <!-- Well header strip -->
+        <item>
+         <widget class="QFrame" name="frameWellHeaders">
+          <layout class="QHBoxLayout" name="wellHeadersLayout">
+           <property name="spacing"><number>0</number></property>
+           <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+           <!-- Depth scale column label -->
+           <item>
+            <widget class="QFrame" name="frameDepthHeaderCell">
+             <property name="styleSheet">
+              <string>background:#D8E2EF; border-right:1px solid #B8CADF; min-width:56px; max-width:56px;</string>
+             </property>
+             <layout class="QVBoxLayout" name="depthHeaderCellLayout">
+              <property name="contentsMargins"><rect><x>2</x><y>4</y><x>2</x><y>4</y></rect></property>
+              <item>
+               <widget class="QLabel" name="lblDepthHeaderTitle">
+                <property name="text"><string>DEPTH</string></property>
+                <property name="alignment"><set>Qt::AlignCenter</set></property>
+                <property name="styleSheet"><string>font-weight:700; font-size:9px; color:#374151; letter-spacing:0.5px;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblDepthHeaderUnit">
+                <property name="text"><string>MD (m)</string></property>
+                <property name="alignment"><set>Qt::AlignCenter</set></property>
+                <property name="styleSheet"><string>font-size:9px; color:#64748B;</string></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+           <!-- Scroll area for well name headers -->
+           <item>
+            <widget class="QScrollArea" name="scrollWellHeaders">
+             <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+             <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+             <property name="verticalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+             <property name="widgetResizable"><bool>true</bool></property>
+             <widget class="QWidget" name="wellHeadersContainer">
+              <layout class="QHBoxLayout" name="wellHeadersContainerLayout">
+               <property name="spacing"><number>0</number></property>
+               <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+               <!-- Well header cells will be added here programmatically -->
+               <item>
+                <widget class="QLabel" name="lblWellHeaderPlaceholder">
+                 <property name="text"><string>Load wells to begin correlation</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 <property name="styleSheet"><string>color:#94A3B8; font-size:11px; padding:8px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <spacer>
+                 <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                 <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+
+          </layout>
+         </widget>
+        </item>
+
+        <!-- Main correlation view (matplotlib canvas replaces this) -->
+        <item>
+         <widget class="QSplitter" name="splitterCenterVertical">
+          <property name="orientation"><enum>Qt::Vertical</enum></property>
+          <property name="handleWidth"><number>4</number></property>
+          <property name="childrenCollapsible"><bool>false</bool></property>
+
+          <!-- Correlation canvas placeholder -->
+          <widget class="QFrame" name="frameCorrelationView">
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>1</horstretch>
+             <verstretch>4</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QVBoxLayout" name="correlationViewLayout">
+            <property name="spacing"><number>0</number></property>
+            <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+            <item>
+             <widget class="QLabel" name="lblCorrelationPlaceholder">
+              <property name="text">
+               <string>No wells loaded.
+Import wells and configure tracks to begin multi-well correlation.</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="styleSheet">
+               <string>color:#94A3B8; font-size:13px; font-weight:500; padding:40px;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+          <!-- Minimap / overview strip -->
+          <widget class="QFrame" name="frameMinimap">
+           <property name="styleSheet">
+            <string>background:#EEF2F8; border-top:1px solid #D1D9E6;</string>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>1</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumHeight"><number>60</number></property>
+           <property name="maximumHeight"><number>90</number></property>
+           <layout class="QHBoxLayout" name="minimapLayout">
+            <property name="spacing"><number>4</number></property>
+            <property name="contentsMargins"><rect><x>4</x><y>2</y><x>4</x><y>2</y></rect></property>
+            <item>
+             <widget class="QLabel" name="lblMinimapTitle">
+              <property name="text"><string>Overview</string></property>
+              <property name="styleSheet"><string>font-weight:600; color:#64748B; font-size:9px;</string></property>
+              <property name="minimumWidth"><number>50</number></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frameMinimapCanvas">
+              <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+              <property name="styleSheet"><string>background:#FFFFFF; border:1px solid #D1D9E6; border-radius:3px;</string></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+
+         </widget>
+        </item>
+
+        <!-- Depth range & zoom controls -->
+        <item>
+         <widget class="QFrame" name="frameDepthControls">
+          <layout class="QHBoxLayout" name="depthControlsLayout">
+           <property name="spacing"><number>6</number></property>
+           <property name="contentsMargins"><rect><x>8</x><y>4</y><x>8</x><y>4</y></rect></property>
+
+           <item>
+            <widget class="QLabel" name="lblDepthSliderLabel">
+             <property name="text"><string>Depth range:</string></property>
+             <property name="styleSheet"><string>color:#64748B; font-weight:600; font-size:10px;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblDepthSliderFrom">
+             <property name="text"><string>0 m</string></property>
+             <property name="styleSheet"><string>color:#374151; font-size:10px; min-width:52px;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="sliderDepthTop">
+             <property name="toolTip"><string>Top of display window</string></property>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="minimum"><number>0</number></property>
+             <property name="maximum"><number>10000</number></property>
+             <property name="value"><number>0</number></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="sliderDepthBottom">
+             <property name="toolTip"><string>Bottom of display window</string></property>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="minimum"><number>0</number></property>
+             <property name="maximum"><number>10000</number></property>
+             <property name="value"><number>3000</number></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblDepthSliderTo">
+             <property name="text"><string>3000 m</string></property>
+             <property name="styleSheet"><string>color:#374151; font-size:10px; min-width:52px;</string></property>
+            </widget>
+           </item>
+
+           <!-- Separator -->
+           <item>
+            <widget class="QFrame" name="vSepDepth">
+             <property name="frameShape"><enum>QFrame::VLine</enum></property>
+             <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+             <property name="styleSheet"><string>color:#D1D9E6;</string></property>
+            </widget>
+           </item>
+
+           <item>
+            <widget class="QLabel">
+             <property name="text"><string>Zoom:</string></property>
+             <property name="styleSheet"><string>color:#64748B; font-size:10px;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="btnZoomOut">
+             <property name="text"><string>−</string></property>
+             <property name="toolTip"><string>Zoom out</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="sliderZoomLevel">
+             <property name="toolTip"><string>Zoom level</string></property>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="minimum"><number>10</number></property>
+             <property name="maximum"><number>500</number></property>
+             <property name="value"><number>100</number></property>
+             <property name="minimumWidth"><number>100</number></property>
+             <property name="maximumWidth"><number>150</number></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="btnZoomIn">
+             <property name="text"><string>+</string></property>
+             <property name="toolTip"><string>Zoom in</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblZoomValue">
+             <property name="text"><string>100%</string></property>
+             <property name="styleSheet"><string>color:#374151; font-size:10px; min-width:38px;</string></property>
+            </widget>
+           </item>
+
+           <!-- Separator -->
+           <item>
+            <widget class="QFrame" name="vSepZoom">
+             <property name="frameShape"><enum>QFrame::VLine</enum></property>
+             <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+             <property name="styleSheet"><string>color:#D1D9E6;</string></property>
+            </widget>
+           </item>
+
+           <!-- Quick zoom buttons -->
+           <item>
+            <widget class="QPushButton" name="btnZoomFitAll">
+             <property name="text"><string>Fit All</string></property>
+             <property name="toolTip"><string>Show full depth range</string></property>
+             <property name="objectName"><string>btnSmall</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnZoom200m">
+             <property name="text"><string>200 m</string></property>
+             <property name="toolTip"><string>Zoom to 200 m window</string></property>
+             <property name="objectName"><string>btnSmall</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnZoom500m">
+             <property name="text"><string>500 m</string></property>
+             <property name="toolTip"><string>Zoom to 500 m window</string></property>
+             <property name="objectName"><string>btnSmall</string></property>
+            </widget>
+           </item>
+
+           <item>
+            <spacer>
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+            </spacer>
+           </item>
+
+           <!-- Cursor readout -->
+           <item>
+            <widget class="QLabel" name="lblCursorDepth">
+             <property name="text"><string>Depth: —</string></property>
+             <property name="styleSheet"><string>color:#64748B; font-size:10px;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCursorWell">
+             <property name="text"><string>Well: —</string></property>
+             <property name="styleSheet"><string>color:#64748B; font-size:10px; padding-left:10px;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCursorValue">
+             <property name="text"><string>Value: —</string></property>
+             <property name="styleSheet"><string>color:#64748B; font-size:10px; padding-left:10px;</string></property>
+            </widget>
+           </item>
+
+          </layout>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════════════════════════════
+           RIGHT PANEL
+           ════════════════════════════════════════════════════════ -->
+      <widget class="QFrame" name="frameRight">
+       <layout class="QVBoxLayout" name="rightLayout">
+        <property name="spacing"><number>0</number></property>
+        <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+        <!-- Panel header -->
+        <item>
+         <widget class="QLabel" name="lblRightHeader">
+          <property name="text"><string>  DISPLAY SETTINGS</string></property>
+          <property name="styleSheet">
+           <string>background:#1E2D45; color:#E2E8F0; font-weight:700;
+                   font-size:10px; letter-spacing:0.6px; padding:6px 8px;
+                   border-bottom:2px solid #2563EB;</string>
+          </property>
+         </widget>
+        </item>
+
+        <!-- Right tab widget -->
+        <item>
+         <widget class="QTabWidget" name="tabRight">
+          <property name="tabPosition"><enum>QTabWidget::North</enum></property>
+          <property name="currentIndex"><number>0</number></property>
+          <property name="documentMode"><bool>true</bool></property>
+
+          <!-- ─── TAB 0: DISPLAY ────────────────────────────────── -->
+          <widget class="QWidget" name="tabDisplay">
+           <attribute name="title"><string>Display</string></attribute>
+           <layout class="QVBoxLayout" name="displayTabLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins"><rect><x>6</x><y>8</y><x>6</x><y>6</y></rect></property>
+
+            <!-- Grid / scale group -->
+            <item>
+             <widget class="QGroupBox" name="grpGridOptions">
+              <property name="title"><string>Grid &amp; Scale</string></property>
+              <layout class="QVBoxLayout" name="gridOptionsLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <widget class="QCheckBox" name="chkShowDepthGrid">
+                 <property name="text"><string>Show depth grid lines</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowMajorGrid">
+                 <property name="text"><string>Major depth ticks</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowMinorGrid">
+                 <property name="text"><string>Minor depth ticks</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="gridSpacingLayout">
+                 <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+                 <property name="horizontalSpacing"><number>8</number></property>
+                 <property name="verticalSpacing"><number>4</number></property>
+                 <item row="0" column="0">
+                  <widget class="QLabel">
+                   <property name="text"><string>Major (m):</string></property>
+                   <property name="styleSheet"><string>color:#64748B;</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="dspinMajorGrid">
+                   <property name="minimum"><double>1.0</double></property>
+                   <property name="maximum"><double>1000.0</double></property>
+                   <property name="value"><double>100.0</double></property>
+                   <property name="singleStep"><double>50.0</double></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel">
+                   <property name="text"><string>Minor (m):</string></property>
+                   <property name="styleSheet"><string>color:#64748B;</string></property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="dspinMinorGrid">
+                   <property name="minimum"><double>0.5</double></property>
+                   <property name="maximum"><double>500.0</double></property>
+                   <property name="value"><double>25.0</double></property>
+                   <property name="singleStep"><double>5.0</double></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Labels group -->
+            <item>
+             <widget class="QGroupBox" name="grpLabels">
+              <property name="title"><string>Labels &amp; Annotations</string></property>
+              <layout class="QVBoxLayout" name="labelsLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <widget class="QCheckBox" name="chkShowWellNames">
+                 <property name="text"><string>Well names in header</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowFormationNames">
+                 <property name="text"><string>Formation zone names</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowDepthLabels">
+                 <property name="text"><string>Depth annotations</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowCurveHeaders">
+                 <property name="text"><string>Curve scale headers</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkShowPickValues">
+                 <property name="text"><string>Show pick depth values</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="labelSizeLayout">
+                 <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+                 <property name="horizontalSpacing"><number>8</number></property>
+                 <property name="verticalSpacing"><number>4</number></property>
+                 <item row="0" column="0">
+                  <widget class="QLabel">
+                   <property name="text"><string>Font size:</string></property>
+                   <property name="styleSheet"><string>color:#64748B;</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="spinLabelFontSize">
+                   <property name="minimum"><number>6</number></property>
+                   <property name="maximum"><number>18</number></property>
+                   <property name="value"><number>8</number></property>
+                   <property name="suffix"><string>  pt</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Background group -->
+            <item>
+             <widget class="QGroupBox" name="grpBackground">
+              <property name="title"><string>Track Background</string></property>
+              <layout class="QVBoxLayout" name="bgLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <layout class="QHBoxLayout" name="bgColorLayout">
+                 <item>
+                  <widget class="QRadioButton" name="rdoBgWhite">
+                   <property name="text"><string>White</string></property>
+                   <property name="checked"><bool>true</bool></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="rdoBgCream">
+                   <property name="text"><string>Cream</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="rdoBgCustom">
+                   <property name="text"><string>Custom</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkAlternateTrackBg">
+                 <property name="text"><string>Alternate track shading</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Stretch -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint"><size><width>1</width><height>8</height></size></property>
+             </spacer>
+            </item>
+
+            <!-- Apply display button -->
+            <item>
+             <widget class="QPushButton" name="btnApplyDisplay">
+              <property name="objectName"><string>btnPrimary</string></property>
+              <property name="text"><string>Apply Display Settings</string></property>
+             </widget>
+            </item>
+
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 1: CORRELATION ───────────────────────────── -->
+          <widget class="QWidget" name="tabCorrelation">
+           <attribute name="title"><string>Correlation</string></attribute>
+           <layout class="QVBoxLayout" name="correlTabLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins"><rect><x>6</x><y>8</y><x>6</x><y>6</y></rect></property>
+
+            <!-- Current pick info -->
+            <item>
+             <widget class="QGroupBox" name="grpCurrentPick">
+              <property name="title"><string>Active Pick</string></property>
+              <layout class="QFormLayout" name="activePickLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Well:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lblPickedWell">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-weight:600; color:#1E293B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Depth (MD):</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="lblPickedMD">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-weight:600; color:#2563EB;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>TVD:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="lblPickedTVD">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Formation:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QComboBox" name="cmbPickFormation">
+                 <property name="toolTip"><string>Assign this pick to a formation zone</string></property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>GR:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLabel" name="lblPickedGR">
+                 <property name="text"><string>—  API</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>RHOB:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLabel" name="lblPickedRHOB">
+                 <property name="text"><string>—  g/cc</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>RT:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QLabel" name="lblPickedRT">
+                 <property name="text"><string>—  ohm.m</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Pick actions -->
+            <item>
+             <layout class="QHBoxLayout" name="pickActionsLayout">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QPushButton" name="btnConfirmPick">
+                <property name="objectName"><string>btnPrimary</string></property>
+                <property name="text"><string>✔ Confirm Pick</string></property>
+                <property name="toolTip"><string>Accept and save the current pick</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnDeletePick">
+                <property name="text"><string>✕ Delete</string></property>
+                <property name="toolTip"><string>Delete the nearest pick</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+
+            <!-- Correlation propagation group -->
+            <item>
+             <widget class="QGroupBox" name="grpPropagate">
+              <property name="title"><string>Propagation</string></property>
+              <layout class="QVBoxLayout" name="propagateLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <widget class="QCheckBox" name="chkAutoPropagate">
+                 <property name="text"><string>Auto-propagate pick to all wells</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkSnapToLog">
+                 <property name="text"><string>Snap pick to nearest GR peak</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkInterpolateUncertain">
+                 <property name="text"><string>Flag uncertain correlations</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="snapWindowLayout">
+                 <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+                 <property name="horizontalSpacing"><number>8</number></property>
+                 <property name="verticalSpacing"><number>4</number></property>
+                 <item row="0" column="0">
+                  <widget class="QLabel">
+                   <property name="text"><string>Snap window:</string></property>
+                   <property name="styleSheet"><string>color:#64748B;</string></property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="dspinSnapWindow">
+                   <property name="minimum"><double>0.5</double></property>
+                   <property name="maximum"><double>50.0</double></property>
+                   <property name="value"><double>5.0</double></property>
+                   <property name="suffix"><string>  m</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Statistics group -->
+            <item>
+             <widget class="QGroupBox" name="grpCorrStats">
+              <property name="title"><string>Zone Statistics</string></property>
+              <layout class="QFormLayout" name="corrStatsLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>4</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Avg thickness:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lblStatAvgThick">
+                 <property name="text"><string>—  m</string></property>
+                 <property name="styleSheet"><string>font-weight:600; color:#059669;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Max thickness:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="lblStatMaxThick">
+                 <property name="text"><string>—  m</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Wells picked:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="lblStatWellsPicked">
+                 <property name="text"><string>0 / 0</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Dip (avg):</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="lblStatDip">
+                 <property name="text"><string>—  °</string></property>
+                 <property name="styleSheet"><string>color:#374151;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Stretch -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint"><size><width>1</width><height>8</height></size></property>
+             </spacer>
+            </item>
+
+           </layout>
+          </widget>
+
+          <!-- ─── TAB 2: EXPORT ────────────────────────────────── -->
+          <widget class="QWidget" name="tabExport">
+           <attribute name="title"><string>Export</string></attribute>
+           <layout class="QVBoxLayout" name="exportTabLayout">
+            <property name="spacing"><number>6</number></property>
+            <property name="contentsMargins"><rect><x>6</x><y>8</y><x>6</x><y>6</y></rect></property>
+
+            <!-- Export format group -->
+            <item>
+             <widget class="QGroupBox" name="grpExportFormat">
+              <property name="title"><string>Output Format</string></property>
+              <layout class="QVBoxLayout" name="exportFormatLayout">
+               <property name="spacing"><number>5</number></property>
+               <item>
+                <widget class="QRadioButton" name="rdoExportPDF">
+                 <property name="text"><string>PDF (vector, multi-page)</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rdoExportSVG">
+                 <property name="text"><string>SVG (vector, single page)</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rdoExportPNG">
+                 <property name="text"><string>PNG (raster image)</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rdoExportTIFF">
+                 <property name="text"><string>TIFF (high-res raster)</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="rdoExportCSV">
+                 <property name="text"><string>CSV (picks / tops table)</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Page setup group -->
+            <item>
+             <widget class="QGroupBox" name="grpPageSetup">
+              <property name="title"><string>Page / Resolution</string></property>
+              <layout class="QFormLayout" name="pageSetupLayout">
+               <property name="labelAlignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+               <property name="horizontalSpacing"><number>8</number></property>
+               <property name="verticalSpacing"><number>5</number></property>
+               <item row="0" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Paper:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="cmbPaperSize">
+                 <item><property name="text"><string>A4 Landscape</string></property></item>
+                 <item><property name="text"><string>A4 Portrait</string></property></item>
+                 <item><property name="text"><string>A3 Landscape</string></property></item>
+                 <item><property name="text"><string>A1 Poster</string></property></item>
+                 <item><property name="text"><string>Custom…</string></property></item>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>DPI:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="cmbExportDPI">
+                 <item><property name="text"><string>150 dpi (screen)</string></property></item>
+                 <item><property name="text"><string>300 dpi (print)</string></property></item>
+                 <item><property name="text"><string>600 dpi (high-res)</string></property></item>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel">
+                 <property name="text"><string>Margins:</string></property>
+                 <property name="styleSheet"><string>color:#64748B;</string></property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="dspinMargin">
+                 <property name="minimum"><double>0.0</double></property>
+                 <property name="maximum"><double>50.0</double></property>
+                 <property name="value"><double>10.0</double></property>
+                 <property name="suffix"><string>  mm</string></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Export content options -->
+            <item>
+             <widget class="QGroupBox" name="grpExportContent">
+              <property name="title"><string>Include in Export</string></property>
+              <layout class="QVBoxLayout" name="exportContentLayout">
+               <property name="spacing"><number>4</number></property>
+               <item>
+                <widget class="QCheckBox" name="chkExportTitle">
+                 <property name="text"><string>Title block / report header</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkExportLegend">
+                 <property name="text"><string>Formation legend</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkExportPicksTable">
+                 <property name="text"><string>Picks / tops table</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkExportStats">
+                 <property name="text"><string>Zone statistics summary</string></property>
+                 <property name="checked"><bool>false</bool></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="chkExportPageNumbers">
+                 <property name="text"><string>Page numbers</string></property>
+                 <property name="checked"><bool>true</bool></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Stretch -->
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint"><size><width>1</width><height>8</height></size></property>
+             </spacer>
+            </item>
+
+            <!-- Export buttons -->
+            <item>
+             <widget class="QPushButton" name="btnExportPreview">
+              <property name="text"><string>Preview Export</string></property>
+              <property name="toolTip"><string>Preview before saving</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnExport">
+              <property name="objectName"><string>btnPrimary</string></property>
+              <property name="text"><string>⇓  Export…</string></property>
+              <property name="toolTip"><string>Save the correlation to file</string></property>
+             </widget>
+            </item>
+
+           </layout>
+          </widget>
+
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+   </layout>
+  </widget>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!--  DOCK WIDGET — CORRELATION PICKS TABLE (bottom)             -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <widget class="QDockWidget" name="dockPicksTable">
+   <attribute name="dockWidgetArea"><number>8</number></attribute>
+   <property name="windowTitle"><string>Correlation Picks &amp; Formation Tops</string></property>
+   <property name="minimumHeight"><number>140</number></property>
+   <widget class="QWidget" name="dockPicksContents">
+    <layout class="QVBoxLayout" name="dockPicksLayout">
+     <property name="spacing"><number>0</number></property>
+     <property name="contentsMargins"><rect><x>0</x><y>0</y><x>0</x><y>0</y></rect></property>
+
+     <!-- Toolbar row for the table -->
+     <item>
+      <widget class="QFrame" name="framePicksToolbar">
+       <property name="styleSheet"><string>background:#F4F6FA; border-bottom:1px solid #D1D9E6; max-height:32px;</string></property>
+       <layout class="QHBoxLayout" name="picksToolbarLayout">
+        <property name="spacing"><number>4</number></property>
+        <property name="contentsMargins"><rect><x>6</x><y>3</y><x>6</x><y>3</y></rect></property>
+        <item>
+         <widget class="QLabel">
+          <property name="text"><string>Filter formation:</string></property>
+          <property name="styleSheet"><string>color:#64748B; font-size:10px;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cmbPicksFilterZone">
+          <property name="minimumWidth"><number>130</number></property>
+          <item><property name="text"><string>All zones</string></property></item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text"><string>Filter well:</string></property>
+          <property name="styleSheet"><string>color:#64748B; font-size:10px;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cmbPicksFilterWell">
+          <property name="minimumWidth"><number>130</number></property>
+          <item><property name="text"><string>All wells</string></property></item>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeHint"><size><width>1</width><height>1</height></size></property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnPicksExportCSV">
+          <property name="text"><string>⇓ CSV</string></property>
+          <property name="toolTip"><string>Export picks table as CSV</string></property>
+          <property name="objectName"><string>btnSmall</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnPicksClearAll">
+          <property name="text"><string>Clear All</string></property>
+          <property name="toolTip"><string>Clear all formation picks</string></property>
+          <property name="objectName"><string>btnSmall</string></property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+
+     <!-- Picks table -->
+     <item>
+      <widget class="QTableWidget" name="tableCorrelationPicks">
+       <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+       <property name="selectionMode"><enum>QAbstractItemView::ExtendedSelection</enum></property>
+       <property name="alternatingRowColors"><bool>true</bool></property>
+       <property name="sortingEnabled"><bool>true</bool></property>
+       <property name="editTriggers"><set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set></property>
+       <property name="showGrid"><bool>true</bool></property>
+       <property name="gridStyle"><enum>Qt::DotLine</enum></property>
+       <property name="columnCount"><number>12</number></property>
+       <property name="rowCount"><number>0</number></property>
+       <column>
+        <property name="text"><string>Well</string></property>
+        <property name="toolTip"><string>Well name</string></property>
+       </column>
+       <column>
+        <property name="text"><string>Formation</string></property>
+        <property name="toolTip"><string>Formation zone name</string></property>
+       </column>
+       <column>
+        <property name="text"><string>MD (m)</string></property>
+        <property name="toolTip"><string>Measured depth of pick</string></property>
+       </column>
+       <column>
+        <property name="text"><string>TVD (m)</string></property>
+        <property name="toolTip"><string>True vertical depth</string></property>
+       </column>
+       <column>
+        <property name="text"><string>TVDSS (m)</string></property>
+        <property name="toolTip"><string>TVD sub-sea</string></property>
+       </column>
+       <column>
+        <property name="text"><string>GR (API)</string></property>
+        <property name="toolTip"><string>Gamma ray at pick depth</string></property>
+       </column>
+       <column>
+        <property name="text"><string>RHOB (g/cc)</string></property>
+        <property name="toolTip"><string>Bulk density at pick depth</string></property>
+       </column>
+       <column>
+        <property name="text"><string>RT (ohm.m)</string></property>
+        <property name="toolTip"><string>Resistivity at pick depth</string></property>
+       </column>
+       <column>
+        <property name="text"><string>Vsh (v/v)</string></property>
+        <property name="toolTip"><string>Shale volume at pick depth</string></property>
+       </column>
+       <column>
+        <property name="text"><string>Confidence</string></property>
+        <property name="toolTip"><string>Pick confidence: Certain / Uncertain / Inferred</string></property>
+       </column>
+       <column>
+        <property name="text"><string>Picked By</string></property>
+        <property name="toolTip"><string>Interpreter who made the pick</string></property>
+       </column>
+       <column>
+        <property name="text"><string>Notes</string></property>
+        <property name="toolTip"><string>Free-text annotation</string></property>
+       </column>
+      </widget>
+     </item>
+
+    </layout>
+   </widget>
+  </widget>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!--  MENU BAR                                                    -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <widget class="QMenuBar" name="menuBar">
+
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>File</string></property>
+    <addaction name="actionNewCorrelation"/>
+    <addaction name="actionOpenCorrelation"/>
+    <addaction name="actionSaveCorrelation"/>
+    <addaction name="actionSaveCorrelationAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionImportLAS"/>
+    <addaction name="actionImportTops"/>
+    <addaction name="actionImportTrajectory"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportPDF"/>
+    <addaction name="actionExportSVG"/>
+    <addaction name="actionExportCSV"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+
+   <widget class="QMenu" name="menuEdit">
+    <property name="title"><string>Edit</string></property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopyView"/>
+    <addaction name="actionSelectAllPicks"/>
+    <addaction name="actionDeleteSelectedPicks"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+   </widget>
+
+   <widget class="QMenu" name="menuView">
+    <property name="title"><string>View</string></property>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="actionFitAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowDepthGrid"/>
+    <addaction name="actionShowZoneFills"/>
+    <addaction name="actionShowCorrelLines"/>
+    <addaction name="separator"/>
+    <addaction name="actionToggleLeftPanel"/>
+    <addaction name="actionToggleRightPanel"/>
+    <addaction name="actionTogglePicksTable"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullscreen"/>
+   </widget>
+
+   <widget class="QMenu" name="menuWells">
+    <property name="title"><string>Wells</string></property>
+    <addaction name="actionAddWell"/>
+    <addaction name="actionRemoveWell"/>
+    <addaction name="actionSelectAllWells"/>
+    <addaction name="separator"/>
+    <addaction name="actionSortByLocation"/>
+    <addaction name="actionFlipOrder"/>
+    <addaction name="separator"/>
+    <addaction name="actionWellProperties"/>
+   </widget>
+
+   <widget class="QMenu" name="menuCorrelation">
+    <property name="title"><string>Correlation</string></property>
+    <addaction name="actionStartPicking"/>
+    <addaction name="actionAutoCorrelate"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddZone"/>
+    <addaction name="actionRemoveZone"/>
+    <addaction name="separator"/>
+    <addaction name="actionImportZones"/>
+    <addaction name="actionExportZones"/>
+    <addaction name="separator"/>
+    <addaction name="actionZoneStats"/>
+   </widget>
+
+   <widget class="QMenu" name="menuHelp">
+    <property name="title"><string>Help</string></property>
+    <addaction name="actionUserGuide"/>
+    <addaction name="actionKeyboardShortcuts"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
+
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuWells"/>
+   <addaction name="menuCorrelation"/>
+   <addaction name="menuHelp"/>
+  </widget>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!--  MAIN TOOLBAR                                                -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <widget class="QToolBar" name="toolBarMain">
+   <attribute name="toolBarArea"><number>4</number></attribute>
+   <attribute name="movable"><bool>false</bool></attribute>
+   <property name="windowTitle"><string>Main Toolbar</string></property>
+   <property name="iconSize"><size><width>18</width><height>18</height></size></property>
+   <property name="toolButtonStyle"><enum>Qt::ToolButtonTextBesideIcon</enum></property>
+
+   <addaction name="actionNewCorrelation"/>
+   <addaction name="actionOpenCorrelation"/>
+   <addaction name="actionSaveCorrelation"/>
+   <addaction name="separator"/>
+   <addaction name="actionImportLAS"/>
+   <addaction name="actionImportTops"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddWell"/>
+   <addaction name="actionAutoCorrelate"/>
+   <addaction name="separator"/>
+   <addaction name="actionExportPDF"/>
+   <addaction name="actionPrint"/>
+  </widget>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!--  STATUS BAR                                                  -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <widget class="QStatusBar" name="statusBar">
+  </widget>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!--  ACTIONS                                                     -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+
+  <!-- File actions -->
+  <action name="actionNewCorrelation">
+   <property name="text"><string>New Correlation</string></property>
+   <property name="toolTip"><string>Create a new multi-well correlation project (Ctrl+N)</string></property>
+   <property name="shortcut"><string>Ctrl+N</string></property>
+  </action>
+  <action name="actionOpenCorrelation">
+   <property name="text"><string>Open Correlation…</string></property>
+   <property name="toolTip"><string>Open an existing correlation project (Ctrl+O)</string></property>
+   <property name="shortcut"><string>Ctrl+O</string></property>
+  </action>
+  <action name="actionSaveCorrelation">
+   <property name="text"><string>Save</string></property>
+   <property name="toolTip"><string>Save correlation project (Ctrl+S)</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionSaveCorrelationAs">
+   <property name="text"><string>Save As…</string></property>
+   <property name="shortcut"><string>Ctrl+Shift+S</string></property>
+  </action>
+  <action name="actionImportLAS">
+   <property name="text"><string>Import LAS 2.0 / 3.0…</string></property>
+   <property name="toolTip"><string>Import well log data from LAS file</string></property>
+  </action>
+  <action name="actionImportTops">
+   <property name="text"><string>Import Formation Tops (CSV)…</string></property>
+   <property name="toolTip"><string>Import formation picks from CSV / spreadsheet</string></property>
+  </action>
+  <action name="actionImportTrajectory">
+   <property name="text"><string>Import Deviation Survey…</string></property>
+  </action>
+  <action name="actionExportPDF">
+   <property name="text"><string>Export as PDF…</string></property>
+   <property name="shortcut"><string>Ctrl+Shift+E</string></property>
+  </action>
+  <action name="actionExportSVG">
+   <property name="text"><string>Export as SVG…</string></property>
+  </action>
+  <action name="actionExportCSV">
+   <property name="text"><string>Export Picks (CSV)…</string></property>
+  </action>
+  <action name="actionPrint">
+   <property name="text"><string>Print…</string></property>
+   <property name="shortcut"><string>Ctrl+P</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>Exit</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+
+  <!-- Edit actions -->
+  <action name="actionUndo">
+   <property name="text"><string>Undo</string></property>
+   <property name="shortcut"><string>Ctrl+Z</string></property>
+  </action>
+  <action name="actionRedo">
+   <property name="text"><string>Redo</string></property>
+   <property name="shortcut"><string>Ctrl+Y</string></property>
+  </action>
+  <action name="actionCopyView">
+   <property name="text"><string>Copy View to Clipboard</string></property>
+   <property name="shortcut"><string>Ctrl+C</string></property>
+  </action>
+  <action name="actionSelectAllPicks">
+   <property name="text"><string>Select All Picks</string></property>
+   <property name="shortcut"><string>Ctrl+A</string></property>
+  </action>
+  <action name="actionDeleteSelectedPicks">
+   <property name="text"><string>Delete Selected Picks</string></property>
+   <property name="shortcut"><string>Delete</string></property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text"><string>Preferences…</string></property>
+   <property name="shortcut"><string>Ctrl+,</string></property>
+  </action>
+
+  <!-- View actions -->
+  <action name="actionZoomIn">
+   <property name="text"><string>Zoom In</string></property>
+   <property name="shortcut"><string>Ctrl+Plus</string></property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="text"><string>Zoom Out</string></property>
+   <property name="shortcut"><string>Ctrl+Minus</string></property>
+  </action>
+  <action name="actionFitAll">
+   <property name="text"><string>Fit All</string></property>
+   <property name="shortcut"><string>F</string></property>
+  </action>
+  <action name="actionShowDepthGrid">
+   <property name="text"><string>Show Depth Grid</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionShowZoneFills">
+   <property name="text"><string>Show Zone Fills</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionShowCorrelLines">
+   <property name="text"><string>Show Correlation Lines</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+  </action>
+  <action name="actionToggleLeftPanel">
+   <property name="text"><string>Left Panel</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+   <property name="shortcut"><string>Ctrl+L</string></property>
+  </action>
+  <action name="actionToggleRightPanel">
+   <property name="text"><string>Right Panel</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+   <property name="shortcut"><string>Ctrl+R</string></property>
+  </action>
+  <action name="actionTogglePicksTable">
+   <property name="text"><string>Picks Table</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>true</bool></property>
+   <property name="shortcut"><string>Ctrl+T</string></property>
+  </action>
+  <action name="actionFullscreen">
+   <property name="text"><string>Full Screen</string></property>
+   <property name="checkable"><bool>true</bool></property>
+   <property name="shortcut"><string>F11</string></property>
+  </action>
+
+  <!-- Wells actions -->
+  <action name="actionAddWell">
+   <property name="text"><string>Add Well…</string></property>
+   <property name="toolTip"><string>Add a new well to the correlation panel</string></property>
+   <property name="shortcut"><string>Ctrl+Shift+W</string></property>
+  </action>
+  <action name="actionRemoveWell">
+   <property name="text"><string>Remove Well</string></property>
+  </action>
+  <action name="actionSelectAllWells">
+   <property name="text"><string>Select All Wells</string></property>
+  </action>
+  <action name="actionSortByLocation">
+   <property name="text"><string>Sort Wells by Location</string></property>
+  </action>
+  <action name="actionFlipOrder">
+   <property name="text"><string>Flip Well Order</string></property>
+  </action>
+  <action name="actionWellProperties">
+   <property name="text"><string>Well Properties…</string></property>
+  </action>
+
+  <!-- Correlation actions -->
+  <action name="actionStartPicking">
+   <property name="text"><string>Start Picking Mode</string></property>
+   <property name="shortcut"><string>P</string></property>
+  </action>
+  <action name="actionAutoCorrelate">
+   <property name="text"><string>Auto-Correlate…</string></property>
+   <property name="toolTip"><string>Automatically correlate formation tops using curve matching</string></property>
+  </action>
+  <action name="actionAddZone">
+   <property name="text"><string>Add Formation Zone…</string></property>
+  </action>
+  <action name="actionRemoveZone">
+   <property name="text"><string>Remove Zone</string></property>
+  </action>
+  <action name="actionImportZones">
+   <property name="text"><string>Import Zones / Tops…</string></property>
+  </action>
+  <action name="actionExportZones">
+   <property name="text"><string>Export Zones / Picks…</string></property>
+  </action>
+  <action name="actionZoneStats">
+   <property name="text"><string>Zone Statistics…</string></property>
+  </action>
+
+  <!-- Help actions -->
+  <action name="actionUserGuide">
+   <property name="text"><string>User Guide</string></property>
+   <property name="shortcut"><string>F1</string></property>
+  </action>
+  <action name="actionKeyboardShortcuts">
+   <property name="text"><string>Keyboard Shortcuts</string></property>
+  </action>
+  <action name="actionAbout">
+   <property name="text"><string>About PetroARX</string></property>
+  </action>
+
+ </widget>
+
+ <!-- ════════════════════════════════════════════════════════════ -->
+ <!--  CONNECTIONS                                                  -->
+ <!-- ════════════════════════════════════════════════════════════ -->
+ <connections/>
+
+ <!-- ════════════════════════════════════════════════════════════ -->
+ <!--  RESOURCES                                                    -->
+ <!-- ════════════════════════════════════════════════════════════ -->
+ <resources/>
+
+ <customwidgets>
+ </customwidgets>
+
+</ui>
