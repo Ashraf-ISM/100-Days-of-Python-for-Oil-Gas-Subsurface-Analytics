@@ -9,11 +9,12 @@ THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
 UI_DIR = ROOT_DIR / "ui"
 UI_FILE = "mainwindow.ui"
-THREE_D_WELL_UI_FILE = "3dwell.ui"
+THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from controllers.main_controller import MainController  # noqa: E402
+from app.well_3d_workspace import Well3DWorkspaceController  # noqa: E402
 
 from extra.dialogs import AboutHelpDialog
 
@@ -688,41 +689,18 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self.tab3DWell = page
         tab_index = tab_widget.addTab(page, "3D Well")
         tab_widget.setTabToolTip(tab_index, "3D well trajectory and survey workspace")
-
-        for name in (
-            "combo3DWell",
-            "combo3DVerticalExag",
-            "combo3DColorMode",
-            "chk3DShowTrajectory",
-            "chk3DShowMarkers",
-            "chk3DShowGrid",
-            "chk3DShowLabels",
-            "btn3DLoadWell",
-            "btn3DRefresh",
-            "btn3DExportView",
-            "btn3DResetView",
-            "btn3DTopView",
-            "btn3DSideView",
-            "frame3DPlotHost",
-            "table3DSurveyPreview",
-            "list3DInsights",
-            "lbl3DHeroActiveWell",
-            "lbl3DHeroTrajectory",
-            "lbl3DStatusValue",
-            "lbl3DMDRangeValue",
-            "lbl3DTVDRangeValue",
-            "lbl3DXRangeValue",
-            "lbl3DYRangeValue",
-            "lbl3DDeviationValue",
-            "lbl3DPointsValue",
-        ):
-            child = page.findChild(QtCore.QObject, name)
-            if child is not None:
-                setattr(self, name, child)
-
-        self._three_d_well_figure = None
-        self._three_d_well_axes = None
-        self._three_d_well_canvas = None
+        try:
+            self._well_3d_controller = Well3DWorkspaceController(self, page)
+        except Exception as exc:
+            layout = page.layout()
+            if layout is None:
+                layout = QtWidgets.QVBoxLayout(page)
+                layout.setContentsMargins(18, 18, 18, 18)
+            fallback = QtWidgets.QLabel(f"3D Well backend failed to initialize:\n{exc}", page)
+            fallback.setAlignment(QtCore.Qt.AlignCenter)
+            fallback.setStyleSheet("color:#FF6B6B;font-size:12px;font-weight:600;")
+            layout.addWidget(fallback)
+            self._well_3d_controller = None
 
     def _install_3d_well_action(self) -> None:
         if getattr(self, "action3DWellViewer", None) is not None:
@@ -736,6 +714,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             menu_well.addAction(self.action3DWellViewer)
 
     def _wire_3d_well_controls(self) -> None:
+        controller = getattr(self, "_well_3d_controller", None)
+        if controller is not None:
+            controller.connect_signals()
+            return
+
         button_map = {
             "btn3DLoadWell": getattr(getattr(self, "controller", None), "data", None).import_data
             if getattr(getattr(self, "controller", None), "data", None) is not None
@@ -781,6 +764,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         data_service.set_current_well(name)
 
     def refresh_3d_well_tab(self) -> None:
+        controller = getattr(self, "_well_3d_controller", None)
+        if controller is not None:
+            controller.refresh()
+            return
+
         combo = getattr(self, "combo3DWell", None)
 
         controller = getattr(self, "controller", None)
@@ -1174,6 +1162,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         canvas.draw_idle()
 
     def _set_3d_camera(self, elev: float, azim: float) -> None:
+        controller = getattr(self, "_well_3d_controller", None)
+        if controller is not None:
+            controller.set_camera(elev, azim)
+            return
+
         axes = getattr(self, "_three_d_well_axes", None)
         canvas = getattr(self, "_three_d_well_canvas", None)
         if axes is None or canvas is None or not hasattr(axes, "view_init"):
@@ -1182,6 +1175,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         canvas.draw_idle()
 
     def _export_3d_well_view(self) -> None:
+        controller = getattr(self, "_well_3d_controller", None)
+        if controller is not None:
+            controller.export_view()
+            return
+
         fig = getattr(self, "_three_d_well_figure", None)
         if fig is None:
             QtWidgets.QMessageBox.information(self, "3D Well Export", "No 3D trajectory figure is available yet.")
