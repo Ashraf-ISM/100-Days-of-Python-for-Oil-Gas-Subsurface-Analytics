@@ -212,7 +212,7 @@ QFrame#statusBar {
   background-color: #1B3A6B;
   border-radius: 4px;
 }
-QLabel#statusLabel {
+QFrame#statusBar QLabel {
   color: #8BB8D8;
   font-size: 10px;
   padding: 2px 6px;
@@ -254,7 +254,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
        ═══════════════════════════════════════════════════════ -->
   <layout class="QVBoxLayout" name="mainLayout">
    <property name="spacing"><number>5</number></property>
-   <property name="contentsMargins"><rect><left>8</left><top>6</top><right>8</right><bottom>6</bottom></rect></property>
+   <property name="contentsMargins"><rect><x>8</x><y>6</y><width>8</width><height>6</height></rect></property>
 
    <!-- ───────────── TOP TOOLBAR ───────────────────────── -->
    <item>
@@ -263,7 +263,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
      <property name="maximumHeight"><number>42</number></property>
      <layout class="QHBoxLayout" name="toolbarLayout">
       <property name="spacing"><number>3</number></property>
-      <property name="contentsMargins"><rect><left>8</left><top>4</top><right>8</right><bottom>4</bottom></rect></property>
+      <property name="contentsMargins"><rect><x>8</x><y>4</y><width>8</width><height>4</height></rect></property>
 
       <!-- View Label -->
       <item>
@@ -470,7 +470,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
       <layout class="QVBoxLayout" name="leftPanelLayout">
        <property name="spacing"><number>6</number></property>
-       <property name="contentsMargins"><rect><left>7</left><top>7</top><right>7</right><bottom>7</bottom></rect></property>
+       <property name="contentsMargins"><rect><x>7</x><y>7</y><width>7</width><height>7</height></rect></property>
 
        <!-- Wells Section Header -->
        <item>
@@ -522,7 +522,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
          <property name="title"><string>Trajectories</string></property>
          <layout class="QVBoxLayout">
           <property name="spacing"><number>4</number></property>
-          <property name="contentsMargins"><rect><left>9</left><top>8</top><right>9</right><bottom>7</bottom></rect></property>
+          <property name="contentsMargins"><rect><x>9</x><y>8</y><width>9</width><height>7</height></rect></property>
           <item>
            <widget class="QCheckBox" name="chkShowTrajectory">
             <property name="text"><string>Well Trajectories</string></property>
@@ -557,7 +557,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
          <property name="title"><string>Log Curve Overlays</string></property>
          <layout class="QVBoxLayout">
           <property name="spacing"><number>4</number></property>
-          <property name="contentsMargins"><rect><left>9</left><top>8</top><right>9</right><bottom>7</bottom></rect></property>
+          <property name="contentsMargins"><rect><x>9</x><y>8</y><width>9</width><height>7</height></rect></property>
           <item>
            <widget class="QCheckBox" name="chkShowLogRibbon">
             <property name="text"><string>Log Ribbon (3D)</string></property>
@@ -618,7 +618,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
          <property name="title"><string>Scene Objects</string></property>
          <layout class="QVBoxLayout">
           <property name="spacing"><number>4</number></property>
-          <property name="contentsMargins"><rect><left>9</left><top>8</top><right>9</right><bottom>7</bottom></rect></property>
+          <property name="contentsMargins"><rect><x>9</x><y>8</y><width>9</width><height>7</height></rect></property>
           <item>
            <widget class="QCheckBox" name="chkShowFormationPlanes">
             <property name="text"><string>Formation Planes</string></property>
@@ -674,7 +674,7 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
      <widget class="QWidget" name="centerWidget">
       <layout class="QVBoxLayout" name="centerLayout">
        <property name="spacing"><number>5</number></property>
-       <property name="contentsMargins"><rect><left>0</left><top>0</top><right>0</right><bottom>0</bottom></rect></property>
+       <property name="contentsMargins"><rect><x>0</x><y>0</y><width>0</width><height>0</height></rect></property>
 
        <!-- 3D Viewport Frame -->
        <item>
@@ -682,13 +682,16 @@ QPushButton#btnAnimStop  { background:#E74C3C; color:#FFFFFF; border:none; borde
          <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
          <layout class="QVBoxLayout" name="viewportLayout">
           <property name="spacing"><number>0</number></property>
-          <property name="contentsMargins"><rect><left>2</left><top>2</top><right>2</right><bottom>0</bottom></rect></property>
+          <property name="contentsMargins"><rect><x>2</x><y>2</y><width>2</width><height>0</height></rect></property>
 
           <!-- OpenGL Viewport -->
           <item>
            <widget class="QOpenGLWidget" name="glWidget3D">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding"/>
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <property name="minimumSize">
              <size><width>400</width><height>360</height></size>
@@ -707,7 +710,7 @@ Double-Click: Select &amp; Query Point</string>
             <property name="maximumHeight"><number>22</number></property>
             <layout class="QHBoxLayout">
              <property name="spacing"><number>14</number></property>
-             <property name="contentsMargins"><rect><left>10</left><top>2</top><right>10</right><bottom>2</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>10</x><y>2</y><width>10</width><height>2</height></rect></property>
              <item>
               <widget class="QLabel" name="lblCursorX">
                <property name="text"><string>X: --</string></property>
@@ -771,7 +774,7 @@ Double-Click: Select &amp; Query Point</string>
          <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
          <layout class="QVBoxLayout" name="bottomControlLayout">
           <property name="spacing"><number>6</number></property>
-          <property name="contentsMargins"><rect><left>12</left><top>7</top><right>12</right><bottom>7</bottom></rect></property>
+          <property name="contentsMargins"><rect><x>12</x><y>7</y><width>12</width><height>7</height></rect></property>
 
           <!-- Row 1: Depth Range Clipping -->
           <item>
@@ -970,13 +973,16 @@ Double-Click: Select &amp; Query Point</string>
       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
       <layout class="QVBoxLayout" name="rightPanelLayout">
        <property name="spacing"><number>6</number></property>
-       <property name="contentsMargins"><rect><left>7</left><top>7</top><right>7</right><bottom>7</bottom></rect></property>
+       <property name="contentsMargins"><rect><x>7</x><y>7</y><width>7</width><height>7</height></rect></property>
 
        <!-- Right Panel Tab Widget -->
        <item>
         <widget class="QTabWidget" name="rightTabWidget">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding"/>
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="currentIndex"><number>0</number></property>
 
@@ -985,7 +991,7 @@ Double-Click: Select &amp; Query Point</string>
           <attribute name="title"><string>Display</string></attribute>
           <layout class="QVBoxLayout">
            <property name="spacing"><number>6</number></property>
-           <property name="contentsMargins"><rect><left>4</left><top>6</top><right>4</right><bottom>4</bottom></rect></property>
+           <property name="contentsMargins"><rect><x>4</x><y>6</y><width>4</width><height>4</height></rect></property>
 
            <!-- Trajectory Style -->
            <item>
@@ -993,7 +999,7 @@ Double-Click: Select &amp; Query Point</string>
              <property name="title"><string>Trajectory Style</string></property>
              <layout class="QVBoxLayout">
               <property name="spacing"><number>5</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item>
                <layout class="QHBoxLayout">
                 <item>
@@ -1068,7 +1074,7 @@ Double-Click: Select &amp; Query Point</string>
              <property name="title"><string>Scene Background</string></property>
              <layout class="QVBoxLayout">
               <property name="spacing"><number>5</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item>
                <layout class="QHBoxLayout">
                 <item>
@@ -1123,7 +1129,7 @@ Double-Click: Select &amp; Query Point</string>
              <property name="title"><string>Labels &amp; Annotations</string></property>
              <layout class="QVBoxLayout">
               <property name="spacing"><number>4</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item>
                <widget class="QCheckBox" name="chkShowWellNames">
                 <property name="text"><string>Well Names</string></property>
@@ -1167,14 +1173,14 @@ Double-Click: Select &amp; Query Point</string>
           <attribute name="title"><string>Color Map</string></attribute>
           <layout class="QVBoxLayout">
            <property name="spacing"><number>6</number></property>
-           <property name="contentsMargins"><rect><left>4</left><top>6</top><right>4</right><bottom>4</bottom></rect></property>
+           <property name="contentsMargins"><rect><x>4</x><y>6</y><width>4</width><height>4</height></rect></property>
 
            <item>
             <widget class="QGroupBox" name="grpColorMapping">
              <property name="title"><string>Property Color Mapping</string></property>
              <layout class="QVBoxLayout">
               <property name="spacing"><number>6</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
 
               <!-- Property -->
               <item>
@@ -1320,7 +1326,7 @@ Double-Click: Select &amp; Query Point</string>
           <attribute name="title"><string>Camera</string></attribute>
           <layout class="QVBoxLayout">
            <property name="spacing"><number>6</number></property>
-           <property name="contentsMargins"><rect><left>4</left><top>6</top><right>4</right><bottom>4</bottom></rect></property>
+           <property name="contentsMargins"><rect><x>4</x><y>6</y><width>4</width><height>4</height></rect></property>
 
            <!-- Camera Position -->
            <item>
@@ -1328,7 +1334,7 @@ Double-Click: Select &amp; Query Point</string>
              <property name="title"><string>Camera Position</string></property>
              <layout class="QVBoxLayout">
               <property name="spacing"><number>6</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item>
                <layout class="QHBoxLayout">
                 <item><widget class="QLabel" name="lblAzimuth"><property name="text"><string>Azimuth:</string></property><property name="styleSheet"><string>font-size:10px;color:#4A5568;min-width:58px;</string></property></widget></item>
@@ -1367,7 +1373,7 @@ Double-Click: Select &amp; Query Point</string>
              <property name="title"><string>Scene Lighting</string></property>
              <layout class="QVBoxLayout">
               <property name="spacing"><number>5</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item>
                <layout class="QHBoxLayout">
                 <item><widget class="QLabel" name="lblAmbient"><property name="text"><string>Ambient:</string></property><property name="styleSheet"><string>font-size:10px;color:#4A5568;min-width:55px;</string></property></widget></item>
@@ -1420,7 +1426,7 @@ Double-Click: Select &amp; Query Point</string>
           <attribute name="title"><string>Well Info</string></attribute>
           <layout class="QVBoxLayout">
            <property name="spacing"><number>6</number></property>
-           <property name="contentsMargins"><rect><left>4</left><top>6</top><right>4</right><bottom>4</bottom></rect></property>
+           <property name="contentsMargins"><rect><x>4</x><y>6</y><width>4</width><height>4</height></rect></property>
 
            <item>
             <widget class="QLabel" name="lblPickInfoHeader">
@@ -1436,7 +1442,7 @@ Double-Click: Select &amp; Query Point</string>
              <layout class="QFormLayout">
               <property name="horizontalSpacing"><number>8</number></property>
               <property name="verticalSpacing"><number>5</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Well:</string></property><property name="styleSheet"><string>font-size:10px;color:#4A5568;</string></property></widget></item>
               <item row="0" column="1"><widget class="QLabel" name="lblPickWell"><property name="text"><string>--</string></property><property name="styleSheet"><string>font-size:10px;color:#1B3A6B;font-weight:bold;</string></property></widget></item>
               <item row="1" column="0"><widget class="QLabel"><property name="text"><string>MD (m):</string></property><property name="styleSheet"><string>font-size:10px;color:#4A5568;</string></property></widget></item>
@@ -1458,7 +1464,7 @@ Double-Click: Select &amp; Query Point</string>
              <layout class="QFormLayout">
               <property name="horizontalSpacing"><number>8</number></property>
               <property name="verticalSpacing"><number>5</number></property>
-              <property name="contentsMargins"><rect><left>9</left><top>9</top><right>9</right><bottom>7</bottom></rect></property>
+             <property name="contentsMargins"><rect><x>9</x><y>9</y><width>9</width><height>7</height></rect></property>
               <item row="0" column="0"><widget class="QLabel"><property name="text"><string>GR:</string></property><property name="styleSheet"><string>font-size:10px;color:#4A5568;</string></property></widget></item>
               <item row="0" column="1"><widget class="QLabel" name="lblPickGR"><property name="text"><string>--  API</string></property><property name="styleSheet"><string>font-size:10px;font-weight:bold;</string></property></widget></item>
               <item row="1" column="0"><widget class="QLabel"><property name="text"><string>RHOB:</string></property><property name="styleSheet"><string>font-size:10px;color:#4A5568;</string></property></widget></item>
@@ -1514,28 +1520,24 @@ Double-Click: Select &amp; Query Point</string>
      <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
      <layout class="QHBoxLayout" name="statusBarLayout">
       <property name="spacing"><number>18</number></property>
-      <property name="contentsMargins"><rect><left>8</left><top>0</top><right>8</right><bottom>0</bottom></rect></property>
+      <property name="contentsMargins"><rect><x>8</x><y>0</y><width>8</width><height>0</height></rect></property>
       <item>
        <widget class="QLabel" name="lblStatus3D">
-        <property name="objectName"><string>statusLabel</string></property>
         <property name="text"><string>3D Well Visualization  |  Ready</string></property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lblStatusWells">
-        <property name="objectName"><string>statusLabel</string></property>
         <property name="text"><string>Wells: 0 / 0</string></property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lblStatusTriangles">
-        <property name="objectName"><string>statusLabel</string></property>
         <property name="text"><string>Geometry: -- triangles</string></property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lblStatusRenderer">
-        <property name="objectName"><string>statusLabel</string></property>
         <property name="text"><string>Renderer: PyVista / VTK</string></property>
        </widget>
       </item>
@@ -1547,7 +1549,6 @@ Double-Click: Select &amp; Query Point</string>
       </item>
       <item>
        <widget class="QLabel" name="lblStatusCamera">
-        <property name="objectName"><string>statusLabel</string></property>
         <property name="text"><string>Perspective  |  Az: 45°  El: 30°  |  Zoom: 100%</string></property>
        </widget>
       </item>
