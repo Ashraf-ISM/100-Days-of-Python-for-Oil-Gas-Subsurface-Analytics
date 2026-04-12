@@ -127,14 +127,53 @@ class QCService:
                     zscore = (curve_series - mean) / std
                     outlier_mask = visible_mask & zscore.abs().gt(max(threshold, 0.5)).fillna(False)
 
-        if self._is_checked(("checkQCSpikes", "checkLVQCSpikes"), True) and valid_values.size >= 3:
-            diff_values = np.abs(np.diff(valid_values, prepend=valid_values[0]))
-            diff_limit = float(np.nanmean(diff_values) + max(threshold, 1.0) * max(np.nanstd(diff_values), 1e-9))
-            spike_detected = diff_values > diff_limit
-            if spike_detected.size:
-                spike_detected[0] = False
+                # =========================
+# AD        VANCED SPIKE DETECTION
+# ==        =======================
+        if self._is_checked(("checkQCSpikes", "checkLVQCSpikes"), True) and valid_values.size >= 5:
+        
+            spike_detected = np.zeros_like(valid_values, dtype=bool)
+        
+            k = max(threshold, 1.5)   # sensitivity factor
+            win = max(window, 3)
+        
+            curve_name = curve.upper()
+        
+            # ---- Log-dependent hard thresholds ----
+            if "NPHI" in curve_name:
+                hard_limit = 0.08
+            elif "RHOB" in curve_name:
+                hard_limit = 0.15
+            elif "GR" in curve_name:
+                hard_limit = 30
+            else:
+                hard_limit = None
+        
+            for i in range(1, len(valid_values) - 1):
+        
+                # 🔹 Gradient
+                grad = abs(valid_values[i] - valid_values[i - 1])
+        
+                # 🔹 Local window
+                w_start = max(0, i - win // 2)
+                w_end = min(len(valid_values), i + win // 2 + 1)
+        
+                local_window = valid_values[w_start:w_end]
+                local_median = np.median(local_window)
+                local_std = np.std(local_window)
+        
+                # 🔹 Deviation from local trend
+                deviation = abs(valid_values[i] - local_median)
+        
+                # 🔥 Decision logic
+                if hard_limit is not None:
+                    if grad > hard_limit:
+                        spike_detected[i] = True
+                else:
+                    if (grad > k * (local_std + 1e-6)) and (deviation > k * (local_std + 1e-6)):
+                        spike_detected[i] = True
+        
             spike_mask.loc[valid_index] = spike_detected
-
         if self._is_checked(("checkQCNegative", "checkLVQCNegative"), True):
             negative_mask = visible_mask & curve_series.lt(0).fillna(False)
 
