@@ -26,6 +26,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self.setCentralWidget(tab_widget)
         self._embed_data_analysis_tab()
         self._embed_borehole_analysis_tab()
+        self._embed_pore_pressure_tab()
         self._reorder_tabs()
         self._connect_tab_switches()
         self._connect_edit_actions()
@@ -636,6 +637,49 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         from borehole_image.image_analysis_tab import ImageAnalysisTab
         self.borehole_analysis_widget = ImageAnalysisTab()
         layout.addWidget(self.borehole_analysis_widget)
+
+    def _embed_pore_pressure_tab(self) -> None:
+        """Embeds the new Pore Pressure analysis module into the existing tab."""
+        tab_pp = getattr(self, "tabPorePressure", None)
+        if tab_pp is None:
+            return
+        layout = tab_pp.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(tab_pp)
+            layout.setContentsMargins(0, 0, 0, 0)
+        self._clear_layout(layout)
+        try:
+            from geomechanics.pore_pressure_tab import PorePressureTab
+            self._pore_pressure_widget = PorePressureTab()
+            layout.addWidget(self._pore_pressure_widget)
+        except Exception as exc:
+            err_lbl = QtWidgets.QLabel(f"Pore Pressure module failed to load:\n{exc}")
+            err_lbl.setStyleSheet("color: #FF6B6B; padding: 20px; font-size: 12px;")
+            err_lbl.setAlignment(QtCore.Qt.AlignCenter)
+            layout.addWidget(err_lbl)
+            self._pore_pressure_widget = None
+
+    def _inject_pore_pressure_data_service(self) -> None:
+        """Pass the live DataService into the Pore Pressure tab."""
+        widget = getattr(self, "_pore_pressure_widget", None)
+        if widget is None:
+            return
+        data_svc = getattr(self, "_data_service", None)
+        if data_svc is None:
+            controller = getattr(self, "controller", None)
+            if controller is not None:
+                data_svc = getattr(controller, "data", None)
+        if data_svc is not None and hasattr(widget, "set_data_service"):
+            widget.set_data_service(data_svc)
+
+    def refresh_pore_pressure_tab(self) -> None:
+        self._inject_pore_pressure_data_service()
+        widget = getattr(self, "_pore_pressure_widget", None)
+        if widget is not None and hasattr(widget, "_refresh_data"):
+            try:
+                widget._refresh_data()
+            except Exception:
+                pass
 
     def _embed_well_correlation_tab(self) -> None:
         """Replace the Well Correlation tab's built-in UI with the advanced widget."""

@@ -774,6 +774,9 @@ th {{ background: #F8FBFE; }}
         corr_refresh = getattr(self.ui, "refresh_well_correlation_tab", None)
         if callable(corr_refresh):
             corr_refresh()
+        pp_refresh = getattr(self.ui, "refresh_pore_pressure_tab", None)
+        if callable(pp_refresh):
+            pp_refresh()
 
     def _clear_views_without_well(self) -> None:
         for table_name in (

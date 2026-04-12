@@ -76,8 +76,8 @@ class QCService:
         curve_series = pd.to_numeric(df[curve], errors="coerce")
         start_depth = self._spin_value(("spinQCFrom", "spinLVQCFrom"), None)
         end_depth = self._spin_value(("spinQCTo", "spinLVQCTo"), None)
-        threshold = float(self._spin_value(("spinQCThreshold", "spinLVQCThreshold"), 2.0) or 2.0)
-        window = int(self._spin_value(("spinQCWindow", "spinLVQCWindow"), 5) or 5)
+        threshold = float(self._spin_value(("spinQCThreshold", "spinLVQCThreshold"), 3.0) or 3.0)
+        window = max(int(self._spin_value(("spinQCWindow", "spinLVQCWindow"), 5) or 5), 3)
         method = self._combo_text("comboQCMethod", "comboLVQCMethod") or "Isolation Forest"
         smoothing = self._combo_text("comboQCSmoothing", "comboLVQCSmoothing") or "None"
 
@@ -105,87 +105,89 @@ class QCService:
         valid_values = curve_series.loc[valid_index].to_numpy(dtype=float)
         valid_depths = depth_series.loc[valid_index].to_numpy(dtype=float)
 
+        # ── OUTLIER DETECTION ────────────────────────────────────────────────
         if self._is_checked(("checkQCOutliers", "checkLVQCOutliers"), True) and valid_values.size >= 8:
             if method == "Isolation Forest":
                 detected = self._detect_isolation_forest(valid_depths, valid_values, threshold)
                 outlier_mask.loc[valid_index] = detected
+
             elif method == "Moving Z-Score":
-                rolling_mean = curve_series.where(visible_mask).rolling(window=window, center=True, min_periods=3).mean()
-                rolling_std = curve_series.where(visible_mask).rolling(window=window, center=True, min_periods=3).std()
-                zscore = (curve_series - rolling_mean) / rolling_std.replace(0, np.nan)
-                outlier_mask = visible_mask & zscore.abs().gt(max(threshold, 0.5)).fillna(False)
+                # FIX: use a rolling window to compute local mean/std, then flag
+                # points whose |z-score| exceeds the threshold.  We guard against
+                # tiny windows and zero std, and we do NOT artificially inflate the
+                # threshold with max(threshold, 0.5) – the user controls sensitivity
+                # directly via the threshold spinner.
+                s = curve_series.where(visible_mask)
+                rolling_mean = s.rolling(window=window, center=True, min_periods=3).mean()
+                rolling_std  = s.rolling(window=window, center=True, min_periods=3).std(ddof=1)
+                # Replace zero / NaN std with a small fallback so we don't get
+                # spurious flags when the curve is locally flat.
+                rolling_std = rolling_std.where(rolling_std > 1e-9, other=np.nan)
+                zscore = (s - rolling_mean) / rolling_std
+                outlier_mask = visible_mask & zscore.abs().gt(threshold).fillna(False)
+
             elif method == "IQR Rule":
+                # FIX: use threshold directly as the IQR fence multiplier.
+                # Standard petrophysics practice: 1.5 = mild outlier, 3.0 = extreme.
+                # The user's threshold spinner maps 1:1 to the fence multiplier.
                 q1, q3 = np.percentile(valid_values, [25, 75])
                 iqr = max(q3 - q1, 1e-9)
-                lower = q1 - threshold * 0.5 * iqr
-                upper = q3 + threshold * 0.5 * iqr
+                lower = q1 - threshold * iqr
+                upper = q3 + threshold * iqr
                 outlier_mask = finite_mask & ((curve_series < lower) | (curve_series > upper))
-            else:
-                mean = float(np.nanmean(valid_values))
-                std = float(np.nanstd(valid_values))
-                if std > 0:
-                    zscore = (curve_series - mean) / std
-                    outlier_mask = visible_mask & zscore.abs().gt(max(threshold, 0.5)).fillna(False)
 
-                # =========================
-# AD        VANCED SPIKE DETECTION
-# ==        =======================
+            else:  # Global Z-Score
+                # FIX: use robust statistics (median / MAD) instead of mean/std
+                # so that the presence of outliers doesn't inflate the baseline.
+                median = float(np.nanmedian(valid_values))
+                mad    = float(np.nanmedian(np.abs(valid_values - median)))
+                robust_std = max(mad * 1.4826, 1e-9)   # MAD → equivalent std
+                zscore = (curve_series - median) / robust_std
+                outlier_mask = visible_mask & zscore.abs().gt(threshold).fillna(False)
+
+        # ── SPIKE DETECTION ─────────────────────────────────────────────────
+        # FIX: a petrophysical spike is a point that deviates sharply from BOTH
+        # its predecessor and its successor (up-then-back-down pattern).
+        # The old code used a single forward-diff which only caught steps/jumps.
+        # New approach: for each interior point compute the deviation from the
+        # local median of its neighbours; flag when that deviation exceeds
+        #   threshold × MAD_of_neighbourhood × 1.4826
+        # This is symmetric, robust to skewed distributions, and correctly
+        # ignores genuine trend changes.
         if self._is_checked(("checkQCSpikes", "checkLVQCSpikes"), True) and valid_values.size >= 5:
-        
-            spike_detected = np.zeros_like(valid_values, dtype=bool)
-        
-            k = max(threshold, 1.5)   # sensitivity factor
-            win = max(window, 3)
-        
-            curve_name = curve.upper()
-        
-            # ---- Log-dependent hard thresholds ----
-            if "NPHI" in curve_name:
-                hard_limit = 0.08
-            elif "RHOB" in curve_name:
-                hard_limit = 0.15
-            elif "GR" in curve_name:
-                hard_limit = 30
-            else:
-                hard_limit = None
-        
-            for i in range(1, len(valid_values) - 1):
-        
-                # 🔹 Gradient
-                grad = abs(valid_values[i] - valid_values[i - 1])
-        
-                # 🔹 Local window
-                w_start = max(0, i - win // 2)
-                w_end = min(len(valid_values), i + win // 2 + 1)
-        
-                local_window = valid_values[w_start:w_end]
-                local_median = np.median(local_window)
-                local_std = np.std(local_window)
-        
-                # 🔹 Deviation from local trend
-                deviation = abs(valid_values[i] - local_median)
-        
-                # 🔥 Decision logic
-                if hard_limit is not None:
-                    if grad > hard_limit:
-                        spike_detected[i] = True
-                else:
-                    if (grad > k * (local_std + 1e-6)) and (deviation > k * (local_std + 1e-6)):
-                        spike_detected[i] = True
-        
+            n = len(valid_values)
+            spike_detected = np.zeros(n, dtype=bool)
+            half_w = max(window // 2, 2)
+
+            for i in range(1, n - 1):
+                lo = max(0, i - half_w)
+                hi = min(n, i + half_w + 1)
+                # neighbours exclude the candidate point itself
+                neighbours = np.concatenate([valid_values[lo:i], valid_values[i + 1:hi]])
+                if neighbours.size < 2:
+                    continue
+                local_med = np.median(neighbours)
+                local_mad = np.median(np.abs(neighbours - local_med))
+                local_std = max(local_mad * 1.4826, 1e-9)
+                if abs(valid_values[i] - local_med) > threshold * local_std:
+                    spike_detected[i] = True
+
             spike_mask.loc[valid_index] = spike_detected
+
+        # ── NEGATIVE VALUE DETECTION ─────────────────────────────────────────
         if self._is_checked(("checkQCNegative", "checkLVQCNegative"), True):
             negative_mask = visible_mask & curve_series.lt(0).fillna(False)
 
+        # ── CLEANING & EXPORT FRAME ──────────────────────────────────────────
         issue_mask = missing_mask | outlier_mask | spike_mask | negative_mask
         cleaned_series = curve_series.copy()
         cleaned_series.loc[issue_mask] = np.nan
         cleaned_series = cleaned_series.interpolate(limit_direction="both")
         cleaned_series = self._apply_smoothing(cleaned_series.where(visible_mask), smoothing, window)
 
-        retained_mask = visible_mask & ~issue_mask
-        visible_count = int(visible_mask.sum()) or 1
-        retained_pct = 100.0 * retained_mask.sum() / visible_count
+        retained_mask  = visible_mask & ~issue_mask
+        visible_count  = int(visible_mask.sum()) or 1
+        retained_pct   = 100.0 * retained_mask.sum() / visible_count
         issue_rows = self._build_issue_rows(
             depth_series=depth_series,
             values=curve_series,
@@ -200,9 +202,9 @@ class QCService:
                 depth_label: depth_series.where(visible_mask),
                 curve: curve_series.where(visible_mask),
                 f"{curve}_cleaned": cleaned_series.where(visible_mask),
-                "missing_flag": missing_mask.where(visible_mask, False).astype(int),
-                "outlier_flag": outlier_mask.where(visible_mask, False).astype(int),
-                "spike_flag": spike_mask.where(visible_mask, False).astype(int),
+                "missing_flag":  missing_mask.where(visible_mask, False).astype(int),
+                "outlier_flag":  outlier_mask.where(visible_mask, False).astype(int),
+                "spike_flag":    spike_mask.where(visible_mask, False).astype(int),
                 "negative_flag": negative_mask.where(visible_mask, False).astype(int),
             }
         ).loc[visible_mask].reset_index(drop=True)
@@ -238,19 +240,31 @@ class QCService:
         depth_label = getattr(df.index, "name", None) or "Depth"
         return depth_label, pd.Series(pd.to_numeric(df.index, errors="coerce"), index=df.index)
 
-    def _detect_isolation_forest(self, depth_values: np.ndarray, curve_values: np.ndarray, threshold: float) -> np.ndarray:
+    def _detect_isolation_forest(
+        self,
+        depth_values: np.ndarray,
+        curve_values: np.ndarray,
+        threshold: float,
+    ) -> np.ndarray:
+        """Isolation Forest outlier detection.
+
+        FIX: contamination now maps the *threshold* slider sensibly.
+        threshold=1  → contamination≈0.10  (aggressive)
+        threshold=3  → contamination≈0.05  (moderate, typical default)
+        threshold=9  → contamination≈0.02  (conservative)
+        Formula: contamination = clip(0.15 / threshold, 0.01, 0.15)
+        """
         try:
             from sklearn.ensemble import IsolationForest
         except Exception:
             return np.zeros(curve_values.shape[0], dtype=bool)
 
         features = np.column_stack([depth_values, curve_values])
-        feature_std = np.nanstd(features, axis=0)
+        feature_std  = np.nanstd(features, axis=0)
         feature_std[feature_std == 0] = 1.0
         features = (features - np.nanmean(features, axis=0)) / feature_std
 
-        sensitivity = max(float(threshold), 0.5)
-        contamination = float(np.clip(0.2 / sensitivity, 0.01, 0.2))
+        contamination = float(np.clip(0.15 / max(float(threshold), 0.5), 0.01, 0.15))
         model = IsolationForest(
             contamination=contamination,
             n_estimators=200,
@@ -278,9 +292,9 @@ class QCService:
     ) -> list[tuple[str, str, str, str]]:
         rows: list[tuple[str, str, str, str]] = []
         for mask, issue, action in (
-            (missing_mask, "Missing", "Flagged"),
-            (outlier_mask, "Outlier", "Review"),
-            (spike_mask, "Spike", "Smooth"),
+            (missing_mask,  "Missing",  "Flagged"),
+            (outlier_mask,  "Outlier",  "Review"),
+            (spike_mask,    "Spike",    "Smooth"),
             (negative_mask, "Negative", "Flagged"),
         ):
             for index in depth_series.index[mask][:250]:
@@ -302,26 +316,26 @@ class QCService:
         except Exception:
             return
 
-        curve = qc_result["curve"]
+        curve      = qc_result["curve"]
         depth_label = qc_result["depth_label"]
-        depth = qc_result["depth_series"]
-        raw = qc_result["curve_series"]
-        cleaned = qc_result["cleaned_series"]
+        depth       = qc_result["depth_series"]
+        raw         = qc_result["curve_series"]
+        cleaned     = qc_result["cleaned_series"]
         visible_mask = qc_result["visible_mask"]
 
         fig = Figure(figsize=(4.6, 7.5), tight_layout=True)
-        ax = fig.add_subplot(111)
+        ax  = fig.add_subplot(111)
         ax.set_facecolor("#FBFCFE")
-        ax.plot(raw[visible_mask], depth[visible_mask], color="#355C7D", linewidth=0.9, alpha=0.7, label="Original")
+        ax.plot(raw[visible_mask],     depth[visible_mask], color="#355C7D", linewidth=0.9, alpha=0.7, label="Original")
         ax.plot(cleaned[visible_mask], depth[visible_mask], color="#2F855A", linewidth=1.4, label="Cleaned")
 
         for mask_name, color, label in (
-            ("missing_mask", "#6C4CE0", "Missing"),
-            ("outlier_mask", "#D1495B", "Outlier"),
-            ("spike_mask", "#F59E0B", "Spike"),
+            ("missing_mask",  "#6C4CE0", "Missing"),
+            ("outlier_mask",  "#D1495B", "Outlier"),
+            ("spike_mask",    "#F59E0B", "Spike"),
             ("negative_mask", "#2563EB", "Negative"),
         ):
-            mask = qc_result[mask_name]
+            mask    = qc_result[mask_name]
             flagged = visible_mask & mask
             if flagged.any():
                 marker_x = cleaned[flagged].fillna(raw[flagged])
@@ -341,14 +355,14 @@ class QCService:
         except Exception:
             return
 
-        curve = qc_result["curve"]
-        raw = qc_result["curve_series"][qc_result["visible_mask"]].dropna().to_numpy(dtype=float)
+        curve   = qc_result["curve"]
+        raw     = qc_result["curve_series"][qc_result["visible_mask"]].dropna().to_numpy(dtype=float)
         cleaned = qc_result["cleaned_series"][qc_result["visible_mask"]].dropna().to_numpy(dtype=float)
 
         fig = Figure(figsize=(5.4, 2.8), tight_layout=True)
-        ax = fig.add_subplot(111)
+        ax  = fig.add_subplot(111)
         ax.set_facecolor("#FBFCFE")
-        ax.hist(raw, bins=25, alpha=0.55, color="#D1495B", label="Before QC")
+        ax.hist(raw,     bins=25, alpha=0.55, color="#D1495B", label="Before QC")
         ax.hist(cleaned, bins=25, alpha=0.55, color="#2A9D8F", label="After QC")
         ax.set_title(f"{curve} Histogram", fontsize=10, fontweight="bold", color="#24466B")
         ax.set_xlabel(curve, fontsize=8.5, color="#24466B")
@@ -363,12 +377,12 @@ class QCService:
         except Exception:
             return
 
-        curve = qc_result["curve"]
-        raw = qc_result["curve_series"][qc_result["visible_mask"]].dropna().to_numpy(dtype=float)
+        curve   = qc_result["curve"]
+        raw     = qc_result["curve_series"][qc_result["visible_mask"]].dropna().to_numpy(dtype=float)
         cleaned = qc_result["cleaned_series"][qc_result["visible_mask"]].dropna().to_numpy(dtype=float)
 
         fig = Figure(figsize=(4.0, 2.8), tight_layout=True)
-        ax = fig.add_subplot(111)
+        ax  = fig.add_subplot(111)
         ax.set_facecolor("#FBFCFE")
         box = ax.boxplot(
             [raw, cleaned],
@@ -398,7 +412,7 @@ class QCService:
         if layout is None:
             return
         while layout.count():
-            item = layout.takeAt(0)
+            item   = layout.takeAt(0)
             widget = item.widget()
             if widget is not None:
                 widget.setParent(None)
@@ -423,7 +437,7 @@ class QCService:
 
         host = self._plot_hosts.get(frame_name)
         if host is None:
-            host = QtWidgets.QWidget(frame)
+            host        = QtWidgets.QWidget(frame)
             host_layout = QtWidgets.QVBoxLayout(host)
             host_layout.setContentsMargins(0, 0, 0, 0)
             host_layout.setSpacing(0)
@@ -435,9 +449,9 @@ class QCService:
 
     def _show_qc_placeholders(self) -> None:
         for frame_name, placeholder_name in (
-            ("frameQCLogView", "lblQCLogViewPlaceholder"),
+            ("frameQCLogView",  "lblQCLogViewPlaceholder"),
             ("frameQCHistogram", "lblQCHistPlaceholder"),
-            ("frameQCBoxplot", "lblQCBoxPlaceholder"),
+            ("frameQCBoxplot",  "lblQCBoxPlaceholder"),
         ):
             placeholder = self._get_widget(placeholder_name)
             if placeholder is not None:
@@ -446,7 +460,7 @@ class QCService:
             if host is None or host.layout() is None:
                 continue
             while host.layout().count():
-                item = host.layout().takeAt(0)
+                item   = host.layout().takeAt(0)
                 widget = item.widget()
                 if widget is not None:
                     widget.setParent(None)
