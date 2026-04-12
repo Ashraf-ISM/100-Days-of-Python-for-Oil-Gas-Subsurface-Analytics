@@ -127,7 +127,7 @@ class PPViewerEngine(QtWidgets.QWidget):
         self.p2.showGrid(x=True, y=True, alpha=0.3)
         self.p2.addLegend(offset=(10, 10))
         
-        # Plot 3: Effective Stress
+        # Plot 3: Effective Stress plot
         self.p3 = self.canvas.addPlot(title="Effective Stress", col=2)
         self.p3.setLabel('left', "Depth (m)")
         self.p3.setLabel('bottom', "σ' (psi)")
