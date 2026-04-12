@@ -9,6 +9,7 @@ THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
 UI_DIR = ROOT_DIR / "ui"
 UI_FILE = "mainwindow.ui"
+THREE_D_WELL_UI_FILE = "3dwell.ui"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
@@ -28,12 +29,16 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_data_analysis_tab()
         self._embed_borehole_analysis_tab()
         self._embed_pore_pressure_tab()
+        self._embed_3d_well_tab()
         self._reorder_tabs()
+        self._install_3d_well_action()
         self._connect_tab_switches()
         self._connect_edit_actions()
         self.controller = MainController(self)
+        self._wire_3d_well_controls()
         self._build_dashboard()
         self.refresh_dashboard_tab()
+        self.refresh_3d_well_tab()
         
         # Set window geometry
         self.setGeometry(100, 100, 1497, 893)
@@ -661,6 +666,541 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             except Exception:
                 pass
 
+    def _embed_3d_well_tab(self) -> None:
+        """Create a dedicated 3D well workspace from a standalone Qt Designer UI."""
+        tab_widget = getattr(self, "centralTabWidget", None)
+        if tab_widget is None or getattr(self, "tab3DWell", None) is not None:
+            return
+
+        ui_path = UI_DIR / THREE_D_WELL_UI_FILE
+        try:
+            page = uic.loadUi(str(ui_path))
+        except Exception as exc:
+            page = QtWidgets.QWidget()
+            layout = QtWidgets.QVBoxLayout(page)
+            layout.setContentsMargins(18, 18, 18, 18)
+            label = QtWidgets.QLabel(f"3D Well workspace failed to load:\n{exc}", page)
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            label.setStyleSheet("color:#FF6B6B;font-size:12px;font-weight:600;")
+            layout.addWidget(label)
+
+        page.setObjectName("tab3DWell")
+        self.tab3DWell = page
+        tab_index = tab_widget.addTab(page, "3D Well")
+        tab_widget.setTabToolTip(tab_index, "3D well trajectory and survey workspace")
+
+        for name in (
+            "combo3DWell",
+            "combo3DVerticalExag",
+            "combo3DColorMode",
+            "chk3DShowTrajectory",
+            "chk3DShowMarkers",
+            "chk3DShowGrid",
+            "chk3DShowLabels",
+            "btn3DLoadWell",
+            "btn3DRefresh",
+            "btn3DExportView",
+            "btn3DResetView",
+            "btn3DTopView",
+            "btn3DSideView",
+            "frame3DPlotHost",
+            "table3DSurveyPreview",
+            "list3DInsights",
+            "lbl3DHeroActiveWell",
+            "lbl3DHeroTrajectory",
+            "lbl3DStatusValue",
+            "lbl3DMDRangeValue",
+            "lbl3DTVDRangeValue",
+            "lbl3DXRangeValue",
+            "lbl3DYRangeValue",
+            "lbl3DDeviationValue",
+            "lbl3DPointsValue",
+        ):
+            child = page.findChild(QtCore.QObject, name)
+            if child is not None:
+                setattr(self, name, child)
+
+        self._three_d_well_figure = None
+        self._three_d_well_axes = None
+        self._three_d_well_canvas = None
+
+    def _install_3d_well_action(self) -> None:
+        if getattr(self, "action3DWellViewer", None) is not None:
+            return
+        self.action3DWellViewer = QtWidgets.QAction("3D Well Viewer", self)
+        self.action3DWellViewer.setObjectName("action3DWellViewer")
+        self.action3DWellViewer.setToolTip("Open the 3D well trajectory workspace")
+        menu_well = getattr(self, "menuWell", None)
+        if menu_well is not None:
+            menu_well.addSeparator()
+            menu_well.addAction(self.action3DWellViewer)
+
+    def _wire_3d_well_controls(self) -> None:
+        button_map = {
+            "btn3DLoadWell": getattr(getattr(self, "controller", None), "data", None).import_data
+            if getattr(getattr(self, "controller", None), "data", None) is not None
+            else None,
+            "btn3DRefresh": self.refresh_3d_well_tab,
+            "btn3DExportView": self._export_3d_well_view,
+            "btn3DResetView": lambda: self._set_3d_camera(24, -58),
+            "btn3DTopView": lambda: self._set_3d_camera(90, -90),
+            "btn3DSideView": lambda: self._set_3d_camera(5, -90),
+        }
+        for name, handler in button_map.items():
+            button = getattr(self, name, None)
+            if button is not None and handler is not None:
+                button.clicked.connect(handler)
+
+        combo = getattr(self, "combo3DWell", None)
+        if combo is not None:
+            combo.currentTextChanged.connect(self._on_3d_well_selected)
+
+        for name in (
+            "combo3DVerticalExag",
+            "combo3DColorMode",
+            "chk3DShowTrajectory",
+            "chk3DShowMarkers",
+            "chk3DShowGrid",
+            "chk3DShowLabels",
+        ):
+            widget = getattr(self, name, None)
+            if widget is None:
+                continue
+            signal = getattr(widget, "currentTextChanged", None) or getattr(widget, "toggled", None)
+            if signal is not None:
+                signal.connect(lambda *args: self.refresh_3d_well_tab())
+
+    def _on_3d_well_selected(self, name: str) -> None:
+        if not name:
+            return
+        controller = getattr(self, "controller", None)
+        data_service = getattr(controller, "data", None) if controller is not None else None
+        wells = getattr(data_service, "_wells", {}) if data_service is not None else {}
+        if name not in wells:
+            return
+        data_service.set_current_well(name)
+
+    def refresh_3d_well_tab(self) -> None:
+        combo = getattr(self, "combo3DWell", None)
+
+        controller = getattr(self, "controller", None)
+        data_service = getattr(self, "_data_service", None)
+        if data_service is None and controller is not None:
+            data_service = getattr(controller, "data", None)
+
+        wells = getattr(data_service, "_wells", {}) or {}
+        well_names = sorted(wells.keys())
+        current_name = getattr(data_service, "_current_well", None) if data_service is not None else None
+
+        if combo is not None:
+            blocker = QtCore.QSignalBlocker(combo)
+            combo.clear()
+            combo.addItems(well_names)
+            if current_name in well_names:
+                combo.setCurrentText(current_name)
+            elif well_names:
+                combo.setCurrentIndex(0)
+            del blocker
+
+        if not well_names:
+            self._set_3d_metric("lbl3DMDRangeValue", "--")
+            self._set_3d_metric("lbl3DTVDRangeValue", "--")
+            self._set_3d_metric("lbl3DXRangeValue", "--")
+            self._set_3d_metric("lbl3DYRangeValue", "--")
+            self._set_3d_metric("lbl3DDeviationValue", "--")
+            self._set_3d_metric("lbl3DPointsValue", "--")
+            self._set_3d_metric("lbl3DHeroActiveWell", "Active well: --")
+            self._set_3d_metric("lbl3DHeroTrajectory", "Trajectory source: Waiting for well data")
+            self._set_3d_status("Status: Import a well to generate a 3D trajectory preview.")
+            self._populate_3d_survey_table(None)
+            self._update_3d_insights([
+                "No wells are currently loaded into the project.",
+                "Import a LAS, CSV, or supported log file to activate the 3D workspace.",
+            ])
+            self._render_3d_well_message("No wells loaded yet.\nImport a well to generate a 3D trajectory preview.")
+            return
+
+        selected_name = combo.currentText().strip() if combo is not None else ""
+        if selected_name not in wells:
+            selected_name = current_name if current_name in wells else well_names[0]
+        well = wells.get(selected_name)
+        self._set_3d_metric("lbl3DHeroActiveWell", f"Active well: {selected_name}")
+
+        trajectory, source_text = self._build_3d_well_trajectory(well)
+        self._set_3d_metric("lbl3DHeroTrajectory", f"Trajectory source: {source_text}")
+
+        if trajectory is None or trajectory.empty:
+            self._set_3d_metric("lbl3DMDRangeValue", "--")
+            self._set_3d_metric("lbl3DTVDRangeValue", "--")
+            self._set_3d_metric("lbl3DXRangeValue", "--")
+            self._set_3d_metric("lbl3DYRangeValue", "--")
+            self._set_3d_metric("lbl3DDeviationValue", "--")
+            self._set_3d_metric("lbl3DPointsValue", "0")
+            self._set_3d_status(f"Status: {source_text}")
+            self._populate_3d_survey_table(None)
+            self._update_3d_insights([
+                f"Well '{selected_name}' is loaded, but no numeric depth trajectory could be derived.",
+                "Check the imported curves for measured depth, TVD, deviation, azimuth, or coordinate columns.",
+            ])
+            self._render_3d_well_message(source_text)
+            return
+
+        md_min = float(trajectory["md"].min())
+        md_max = float(trajectory["md"].max())
+        tvd_min = float(trajectory["tvd"].min())
+        tvd_max = float(trajectory["tvd"].max())
+        x_min = float(trajectory["x"].min())
+        x_max = float(trajectory["x"].max())
+        y_min = float(trajectory["y"].min())
+        y_max = float(trajectory["y"].max())
+        max_dev = float(trajectory["deviation"].max()) if "deviation" in trajectory else 0.0
+
+        self._set_3d_metric("lbl3DMDRangeValue", f"{(md_max - md_min):,.1f} m")
+        self._set_3d_metric("lbl3DTVDRangeValue", f"{(tvd_max - tvd_min):,.1f} m")
+        self._set_3d_metric("lbl3DXRangeValue", f"{x_min:,.0f} to {x_max:,.0f}")
+        self._set_3d_metric("lbl3DYRangeValue", f"{y_min:,.0f} to {y_max:,.0f}")
+        self._set_3d_metric("lbl3DDeviationValue", f"{max_dev:,.1f}°")
+        self._set_3d_metric("lbl3DPointsValue", f"{len(trajectory):,}")
+        self._set_3d_status(f"Status: {source_text}")
+
+        df = getattr(well, "data", None)
+        curve_count = len(getattr(df, "columns", [])) if df is not None else 0
+        lateral_span = float(trajectory["lateral"].max()) if "lateral" in trajectory else 0.0
+        self._update_3d_insights([
+            f"Loaded well '{selected_name}' with {curve_count} curves and {len(trajectory):,} trajectory samples.",
+            f"Measured depth span is {md_max - md_min:,.1f} m with a TVD span of {tvd_max - tvd_min:,.1f} m.",
+            f"Maximum lateral offset reaches {lateral_span:,.1f} m and the peak deviation is {max_dev:,.1f}°.",
+            source_text,
+        ])
+        self._populate_3d_survey_table(trajectory)
+        self._plot_3d_well_trajectory(selected_name, trajectory)
+
+    def _build_3d_well_trajectory(self, well):
+        import numpy as np
+        import pandas as pd
+
+        df = getattr(well, "data", None)
+        if df is None or getattr(df, "empty", True):
+            return None, "No well data available for trajectory rendering."
+
+        md_col = self._match_well_column(df, "MD", "DEPTH", "DEPT", "MEASUREDDEPTH")
+        tvd_col = self._match_well_column(df, "TVD", "TVDSS", "TRUEVERTICALDEPTH")
+        x_col = self._match_well_column(df, "X", "XCOORD", "XCOORDINATE", "EASTING", "UTMX")
+        y_col = self._match_well_column(df, "Y", "YCOORD", "YCOORDINATE", "NORTHING", "UTMY")
+        dev_col = self._match_well_column(df, "DEVIATION", "DEVI", "DEV", "INC", "INCLINATION")
+        azi_col = self._match_well_column(df, "AZIMUTH", "AZI", "AZM")
+
+        trajectory = pd.DataFrame()
+        if md_col is not None:
+            trajectory["md"] = pd.to_numeric(df[md_col], errors="coerce")
+            md_source = f"MD from '{md_col}'"
+        else:
+            trajectory["md"] = np.arange(len(df), dtype=float)
+            md_source = "MD synthesized from sample index"
+
+        for key, column in (
+            ("tvd", tvd_col),
+            ("x", x_col),
+            ("y", y_col),
+            ("deviation", dev_col),
+            ("azimuth", azi_col),
+        ):
+            if column is not None:
+                trajectory[key] = pd.to_numeric(df[column], errors="coerce")
+
+        trajectory = trajectory.dropna(subset=["md"]).sort_values("md").drop_duplicates("md").reset_index(drop=True)
+        if trajectory.empty:
+            return None, "No valid numeric depth values were found in the selected well."
+
+        delta_md = trajectory["md"].diff().fillna(0.0).clip(lower=0.0).to_numpy()
+        notes = [md_source]
+
+        if "tvd" in trajectory:
+            trajectory["tvd"] = trajectory["tvd"].interpolate(limit_direction="both").bfill().ffill()
+            trajectory["tvd"] = trajectory["tvd"] - float(trajectory["tvd"].iloc[0])
+            notes.append(f"TVD from '{tvd_col}'")
+        elif "deviation" in trajectory:
+            deviation_rad = np.radians(trajectory["deviation"].fillna(0.0).to_numpy())
+            trajectory["tvd"] = np.cumsum(delta_md * np.cos(deviation_rad))
+            notes.append(f"TVD estimated from '{dev_col}'")
+        else:
+            trajectory["tvd"] = trajectory["md"] - float(trajectory["md"].iloc[0])
+            notes.append("Vertical TVD assumption from measured depth")
+
+        if "x" in trajectory and "y" in trajectory:
+            trajectory["x"] = trajectory["x"].interpolate(limit_direction="both").bfill().ffill()
+            trajectory["y"] = trajectory["y"].interpolate(limit_direction="both").bfill().ffill()
+            trajectory["x"] = trajectory["x"] - float(trajectory["x"].iloc[0])
+            trajectory["y"] = trajectory["y"] - float(trajectory["y"].iloc[0])
+            notes.append(f"Plan view from '{x_col}' and '{y_col}'")
+        elif "deviation" in trajectory and "azimuth" in trajectory:
+            deviation_rad = np.radians(trajectory["deviation"].fillna(0.0).to_numpy())
+            azimuth_rad = np.radians(trajectory["azimuth"].fillna(0.0).to_numpy())
+            step = delta_md * np.sin(deviation_rad)
+            trajectory["x"] = np.cumsum(step * np.sin(azimuth_rad))
+            trajectory["y"] = np.cumsum(step * np.cos(azimuth_rad))
+            notes.append(f"Lateral offsets estimated from '{dev_col}' and '{azi_col}'")
+        else:
+            trajectory["x"] = 0.0
+            trajectory["y"] = 0.0
+            notes.append("Vertical well path assumed (no coordinate survey found)")
+
+        if "deviation" not in trajectory:
+            trajectory["deviation"] = self._compute_deviation_from_path(
+                trajectory["x"].to_numpy(),
+                trajectory["y"].to_numpy(),
+                trajectory["tvd"].to_numpy(),
+            )
+        else:
+            trajectory["deviation"] = trajectory["deviation"].ffill().fillna(0.0)
+
+        trajectory["lateral"] = np.sqrt((trajectory["x"] ** 2) + (trajectory["y"] ** 2))
+        return trajectory, " | ".join(notes)
+
+    def _match_well_column(self, df, *aliases: str) -> str | None:
+        lookup = {}
+        for column in df.columns:
+            normalized = "".join(ch for ch in str(column).upper() if ch.isalnum())
+            lookup.setdefault(normalized, column)
+
+        for alias in aliases:
+            key = "".join(ch for ch in alias.upper() if ch.isalnum())
+            if key in lookup:
+                return lookup[key]
+
+        for column in df.columns:
+            normalized = "".join(ch for ch in str(column).upper() if ch.isalnum())
+            if any("".join(ch for ch in alias.upper() if ch.isalnum()) in normalized for alias in aliases):
+                return column
+        return None
+
+    def _compute_deviation_from_path(self, x_vals, y_vals, tvd_vals):
+        import numpy as np
+
+        dx = np.diff(x_vals, prepend=x_vals[0])
+        dy = np.diff(y_vals, prepend=y_vals[0])
+        dz = np.diff(tvd_vals, prepend=tvd_vals[0])
+        lateral = np.sqrt((dx ** 2) + (dy ** 2))
+        vertical = np.maximum(np.abs(dz), 1e-9)
+        return np.degrees(np.arctan2(lateral, vertical))
+
+    def _set_3d_metric(self, widget_name: str, text: str) -> None:
+        widget = getattr(self, widget_name, None)
+        if widget is not None and hasattr(widget, "setText"):
+            widget.setText(text)
+
+    def _set_3d_status(self, text: str) -> None:
+        label = getattr(self, "lbl3DStatusValue", None)
+        if label is not None:
+            label.setText(text)
+
+    def _update_3d_insights(self, lines: list[str]) -> None:
+        widget = getattr(self, "list3DInsights", None)
+        if widget is None:
+            return
+        widget.clear()
+        for line in lines:
+            widget.addItem(line)
+
+    def _populate_3d_survey_table(self, trajectory) -> None:
+        table = getattr(self, "table3DSurveyPreview", None)
+        if table is None:
+            return
+
+        headers = ["MD", "TVD", "X Offset", "Y Offset", "Deviation"]
+        table.clear()
+        table.setColumnCount(len(headers))
+        table.setHorizontalHeaderLabels(headers)
+
+        if trajectory is None or getattr(trajectory, "empty", True):
+            table.setRowCount(0)
+            return
+
+        preview = trajectory[["md", "tvd", "x", "y", "deviation"]].head(14).reset_index(drop=True)
+        table.setRowCount(len(preview))
+        for row_idx, row in preview.iterrows():
+            for col_idx, value in enumerate(row):
+                item = QtWidgets.QTableWidgetItem(f"{float(value):,.2f}")
+                item.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+                table.setItem(row_idx, col_idx, item)
+
+        header = table.horizontalHeader()
+        if header is not None:
+            header.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        table.verticalHeader().setVisible(False)
+
+    def _plot_3d_well_trajectory(self, well_name: str, trajectory) -> None:
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        if trajectory is None or getattr(trajectory, "empty", True):
+            self._render_3d_well_message("No trajectory data available for plotting.")
+            return
+
+        exag_text = getattr(getattr(self, "combo3DVerticalExag", None), "currentText", lambda: "1.0x")()
+        try:
+            vertical_exag = float(str(exag_text).lower().replace("x", "").strip())
+        except ValueError:
+            vertical_exag = 1.0
+
+        x_vals = trajectory["x"].to_numpy(dtype=float)
+        y_vals = trajectory["y"].to_numpy(dtype=float)
+        z_vals = trajectory["tvd"].to_numpy(dtype=float) * vertical_exag
+
+        color_mode = getattr(getattr(self, "combo3DColorMode", None), "currentText", lambda: "Measured Depth")()
+        if color_mode == "True Vertical Depth":
+            color_values = trajectory["tvd"].to_numpy(dtype=float)
+            color_label = "TVD (m)"
+            cmap = "viridis"
+        elif color_mode == "Lateral Offset":
+            color_values = trajectory["lateral"].to_numpy(dtype=float)
+            color_label = "Lateral Offset (m)"
+            cmap = "plasma"
+        else:
+            color_values = trajectory["md"].to_numpy(dtype=float)
+            color_label = "Measured Depth (m)"
+            cmap = "cividis"
+
+        fig = plt.figure(figsize=(8.6, 5.8), constrained_layout=True)
+        fig.patch.set_facecolor("#F8FBFE")
+        ax = fig.add_subplot(111, projection="3d")
+        ax.set_facecolor("#FFFFFF")
+
+        if getattr(getattr(self, "chk3DShowTrajectory", None), "isChecked", lambda: True)():
+            ax.plot(x_vals, y_vals, z_vals, color="#1F5F99", linewidth=2.6, alpha=0.92)
+
+        scatter = None
+        if getattr(getattr(self, "chk3DShowMarkers", None), "isChecked", lambda: True)():
+            scatter = ax.scatter(
+                x_vals,
+                y_vals,
+                z_vals,
+                c=color_values,
+                cmap=cmap,
+                s=26,
+                alpha=0.95,
+                depthshade=True,
+                edgecolors="#FFFFFF",
+                linewidths=0.35,
+            )
+        else:
+            ax.scatter(x_vals[-1:], y_vals[-1:], z_vals[-1:], color="#FF8A3D", s=48, depthshade=True)
+
+        if scatter is not None:
+            colorbar = fig.colorbar(scatter, ax=ax, pad=0.07, shrink=0.82)
+            colorbar.set_label(color_label)
+
+        if getattr(getattr(self, "chk3DShowLabels", None), "isChecked", lambda: True)():
+            ax.text(x_vals[0], y_vals[0], z_vals[0], "  Wellhead", color="#0F3C66", fontsize=9, weight="bold")
+            ax.text(x_vals[-1], y_vals[-1], z_vals[-1], "  TD", color="#D66A1F", fontsize=9, weight="bold")
+
+        ax.set_title(f"{well_name}  |  3D Well Trajectory", fontsize=13, fontweight="bold", color="#163B61", pad=16)
+        ax.set_xlabel("X Offset (m)", labelpad=10)
+        ax.set_ylabel("Y Offset (m)", labelpad=10)
+        ax.set_zlabel(f"TVD x{vertical_exag:.1f} (m)", labelpad=12)
+        ax.view_init(elev=24, azim=-58)
+        ax.invert_zaxis()
+
+        if getattr(getattr(self, "chk3DShowGrid", None), "isChecked", lambda: True)():
+            ax.grid(True, alpha=0.24)
+        else:
+            ax.grid(False)
+
+        max_range = max(float(np.ptp(x_vals)), float(np.ptp(y_vals)), float(np.ptp(z_vals)), 1.0)
+        mid_x = float(np.mean([x_vals.min(), x_vals.max()]))
+        mid_y = float(np.mean([y_vals.min(), y_vals.max()]))
+        mid_z = float(np.mean([z_vals.min(), z_vals.max()]))
+        half_range = max_range / 2.0
+        ax.set_xlim(mid_x - half_range, mid_x + half_range)
+        ax.set_ylim(mid_y - half_range, mid_y + half_range)
+        ax.set_zlim(mid_z + half_range, mid_z - half_range)
+
+        self._render_3d_well_figure(fig, ax)
+
+    def _render_3d_well_message(self, message: str) -> None:
+        frame = getattr(self, "frame3DPlotHost", None)
+        if frame is None:
+            return
+        self._three_d_well_axes = None
+        self._three_d_well_canvas = None
+        self._three_d_well_figure = None
+
+        layout = frame.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(frame)
+            layout.setContentsMargins(10, 10, 10, 10)
+
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        label = QtWidgets.QLabel(message, frame)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setWordWrap(True)
+        label.setStyleSheet("color:#5C718A;font-size:12px;font-weight:600;padding:18px;")
+        layout.addWidget(label)
+
+    def _render_3d_well_figure(self, fig, ax) -> None:
+        frame = getattr(self, "frame3DPlotHost", None)
+        if frame is None:
+            return
+        try:
+            from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
+        except Exception as exc:
+            self._render_3d_well_message(f"Matplotlib Qt backend is unavailable:\n{exc}")
+            return
+
+        layout = frame.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(frame)
+            layout.setContentsMargins(10, 10, 10, 10)
+
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        canvas = FigureCanvas(fig)
+        canvas.setStyleSheet("background:#F8FBFE;border:none;")
+        layout.addWidget(canvas, 1)
+        self._three_d_well_figure = fig
+        self._three_d_well_axes = ax
+        self._three_d_well_canvas = canvas
+        canvas.draw_idle()
+
+    def _set_3d_camera(self, elev: float, azim: float) -> None:
+        axes = getattr(self, "_three_d_well_axes", None)
+        canvas = getattr(self, "_three_d_well_canvas", None)
+        if axes is None or canvas is None or not hasattr(axes, "view_init"):
+            return
+        axes.view_init(elev=elev, azim=azim)
+        canvas.draw_idle()
+
+    def _export_3d_well_view(self) -> None:
+        fig = getattr(self, "_three_d_well_figure", None)
+        if fig is None:
+            QtWidgets.QMessageBox.information(self, "3D Well Export", "No 3D trajectory figure is available yet.")
+            return
+        file_path, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self,
+            "Export 3D Well Figure",
+            str(ROOT_DIR / "outputs" / "3d_well_view.png"),
+            "PNG Image (*.png);;JPEG Image (*.jpg *.jpeg);;PDF Document (*.pdf)",
+        )
+        if not file_path:
+            return
+        try:
+            Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+            fig.savefig(file_path, dpi=220, bbox_inches="tight", facecolor=fig.get_facecolor())
+            QtWidgets.QMessageBox.information(self, "3D Well Export", f"Figure exported successfully:\n{file_path}")
+        except Exception as exc:
+            QtWidgets.QMessageBox.critical(self, "3D Well Export", f"Failed to export figure:\n{exc}")
+
     def _embed_well_correlation_tab(self) -> None:
         """Replace the Well Correlation tab's built-in UI with the advanced widget."""
         tab_wc = getattr(self, "tabWellCorrelation", None)
@@ -787,6 +1327,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_action_to_tab("actiondatainfo", "tabDataInfoStats", 2)
         connect_action_to_tab("actionNewCrossplot", "tabLogViewer", 1)
         connect_action_to_tab("actionNewHistogram", "tabLogViewer", 1)
+        connect_action_to_tab("action3DWellViewer", "tab3DWell", 3)
         connect_action_to_tab("actionQualityControl", "tabQualitycontrol", 3)
         connect_action_to_tab("actionFormationTesting", "tabFormationevaluation", 4)
         rose_idx = tab_index("tabRoseDiagram", None)
@@ -1030,6 +1571,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             "tabDashboard",
             "tabDataInfoStats",
             "tabLogViewer",
+            "tab3DWell",
             "tabQualitycontrol",
             "tabFormationevaluation",
         ]

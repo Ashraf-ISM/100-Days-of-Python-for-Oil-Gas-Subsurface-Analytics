@@ -777,6 +777,9 @@ th {{ background: #F8FBFE; }}
         pp_refresh = getattr(self.ui, "refresh_pore_pressure_tab", None)
         if callable(pp_refresh):
             pp_refresh()
+        well3d_refresh = getattr(self.ui, "refresh_3d_well_tab", None)
+        if callable(well3d_refresh):
+            well3d_refresh()
 
     def _clear_views_without_well(self) -> None:
         for table_name in (
@@ -815,6 +818,9 @@ th {{ background: #F8FBFE; }}
         porosity_refresh = getattr(self.ui, "refresh_porosity_tab", None)
         if callable(porosity_refresh):
             porosity_refresh()
+        well3d_refresh = getattr(self.ui, "refresh_3d_well_tab", None)
+        if callable(well3d_refresh):
+            well3d_refresh()
 
     def _get_active_analysis_target(self):
         if self._all_wells_mode:
