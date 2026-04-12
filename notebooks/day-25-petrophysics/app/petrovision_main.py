@@ -241,6 +241,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             "QFrame#dashCard { background: #FFFFFF; border: 1px solid #D7E2EE; border-radius: 14px; }"
         )
 
+
     def _load_demo_data(self) -> None:
         data_svc = getattr(self.controller, "data", None)
         if data_svc is None:
