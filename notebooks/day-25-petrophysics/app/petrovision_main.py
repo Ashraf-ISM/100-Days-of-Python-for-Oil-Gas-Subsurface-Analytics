@@ -10,10 +10,12 @@ ROOT_DIR = THIS_DIR.parent
 UI_DIR = ROOT_DIR / "ui"
 UI_FILE = "mainwindow.ui"
 THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui"
+WELL_CORRELATION_UI_FILE = "multiwell_correlation.ui"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from controllers.main_controller import MainController  # noqa: E402
+from app.multiwell_correlation_workspace import MultiWellCorrelationWorkspaceController  # noqa: E402
 from app.well_3d_workspace import Well3DWorkspaceController  # noqa: E402
 
 from extra.dialogs import AboutHelpDialog
@@ -31,6 +33,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_borehole_analysis_tab()
         self._embed_pore_pressure_tab()
         self._embed_3d_well_tab()
+        self._embed_well_correlation_tab()
         self._reorder_tabs()
         self._install_3d_well_action()
         self._connect_tab_switches()
@@ -1200,7 +1203,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.critical(self, "3D Well Export", f"Failed to export figure:\n{exc}")
 
     def _embed_well_correlation_tab(self) -> None:
-        """Replace the Well Correlation tab's built-in UI with the advanced widget."""
+        """Replace the Well Correlation tab with the standalone Qt Designer workspace."""
         tab_wc = getattr(self, "tabWellCorrelation", None)
         if tab_wc is None:
             return
@@ -1210,35 +1213,38 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             layout.setContentsMargins(0, 0, 0, 0)
         self._clear_layout(layout)
         try:
-            from well_correlation.correlation_tab import WellCorrelationTab
-            self._well_correlation_widget = WellCorrelationTab(data_service=None)
-            layout.addWidget(self._well_correlation_widget)
+            workspace = uic.loadUi(str(UI_DIR / WELL_CORRELATION_UI_FILE))
+            workspace.setWindowFlags(QtCore.Qt.Widget)
+            layout.addWidget(workspace)
+            self._well_correlation_widget = workspace
+            self._well_correlation_controller = MultiWellCorrelationWorkspaceController(self, workspace)
         except Exception as exc:
             err_lbl = QtWidgets.QLabel(f"Well Correlation module failed to load:\n{exc}")
             err_lbl.setStyleSheet("color: #FF6B6B; padding: 20px; font-size: 12px;")
             err_lbl.setAlignment(QtCore.Qt.AlignCenter)
             layout.addWidget(err_lbl)
             self._well_correlation_widget = None
+            self._well_correlation_controller = None
 
     def _inject_correlation_data_service(self) -> None:
         """Pass the live DataService into the Well Correlation tab."""
-        widget = getattr(self, "_well_correlation_widget", None)
-        if widget is None:
+        controller = getattr(self, "_well_correlation_controller", None)
+        if controller is None:
             return
         data_svc = getattr(self, "_data_service", None)
         if data_svc is None:
             controller = getattr(self, "controller", None)
             if controller is not None:
                 data_svc = getattr(controller, "data", None)
-        if data_svc is not None and hasattr(widget, "set_data_service"):
-            widget.set_data_service(data_svc)
+        if data_svc is not None and hasattr(controller, "set_data_service"):
+            controller.set_data_service(data_svc)
 
     def refresh_well_correlation_tab(self) -> None:
         """Called after well import/deletion to refresh the correlation tab well list."""
-        widget = getattr(self, "_well_correlation_widget", None)
-        if widget is not None and hasattr(widget, "_refresh_well_list"):
+        controller = getattr(self, "_well_correlation_controller", None)
+        if controller is not None and hasattr(controller, "refresh"):
             try:
-                widget._refresh_well_list()
+                controller.refresh()
             except Exception:
                 pass
 
