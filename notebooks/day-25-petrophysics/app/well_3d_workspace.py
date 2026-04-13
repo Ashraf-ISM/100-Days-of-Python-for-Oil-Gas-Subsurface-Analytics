@@ -1305,7 +1305,7 @@ class Well3DWorkspaceController(QtCore.QObject):
         ax.plot_surface(xx, yy, zz, color="#7EC8E3", alpha=0.10, linewidth=0)
 
     # ------------------------------------------------------------------ #
-    #  Well data access Panel                                   #
+    #  Well data access Panel                                    #
     # ------------------------------------------------------------------ #
 
     def _widget(self, name: str):
