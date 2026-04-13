@@ -900,7 +900,7 @@ RAW_DATA = {
     ],
 
     # -----------------------------------------------------------------------
-    # OPEN-SOURCE TOOLS & GITHUB REPOSITORIES
+    # OPEN-SOURCE TOOLS & GITHUB REPOSITORIE
     # -----------------------------------------------------------------------
     "tableTools": [
         (
