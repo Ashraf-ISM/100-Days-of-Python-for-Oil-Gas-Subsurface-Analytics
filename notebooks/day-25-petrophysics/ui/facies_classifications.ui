@@ -303,14 +303,10 @@ QFrame#lineSeparator {
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="brandIcon">
-        <property name="text">
-         <string>oo</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="brandLabel">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(38, 162, 105);</string>
+        </property>
         <property name="text">
          <string>PetroARX</string>
         </property>
@@ -318,6 +314,9 @@ QFrame#lineSeparator {
       </item>
       <item>
        <widget class="QLabel" name="menuLabel">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(38, 162, 105);</string>
+        </property>
         <property name="text">
          <string>File</string>
         </property>
@@ -326,7 +325,8 @@ QFrame#lineSeparator {
       <item>
        <widget class="QLabel" name="menuLabel_2">
         <property name="styleSheet">
-         <string notr="true">color: #D9E6FF;</string>
+         <string notr="true">color: #D9E6FF;
+background-color: rgb(38, 162, 105);</string>
         </property>
         <property name="text">
          <string>Tools</string>
@@ -336,7 +336,8 @@ QFrame#lineSeparator {
       <item>
        <widget class="QLabel" name="menuLabel_3">
         <property name="styleSheet">
-         <string notr="true">color: #D9E6FF;</string>
+         <string notr="true">color: #D9E6FF;
+background-color: rgb(38, 162, 105);</string>
         </property>
         <property name="text">
          <string>Settings</string>
@@ -346,7 +347,8 @@ QFrame#lineSeparator {
       <item>
        <widget class="QLabel" name="menuLabel_4">
         <property name="styleSheet">
-         <string notr="true">color: #D9E6FF;</string>
+         <string notr="true">color: #D9E6FF;
+background-color: rgb(38, 162, 105);</string>
         </property>
         <property name="text">
          <string>Help</string>
@@ -368,6 +370,9 @@ QFrame#lineSeparator {
       </item>
       <item>
        <widget class="QLabel" name="windowTitleLabel">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(38, 162, 105);</string>
+        </property>
         <property name="text">
          <string>Facies Classification - PetroARX</string>
         </property>
@@ -424,6 +429,9 @@ QFrame#lineSeparator {
         </property>
         <item>
          <widget class="QLabel" name="heroTitle">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(87, 227, 137);</string>
+          </property>
           <property name="text">
            <string>Facies Classification</string>
           </property>
@@ -458,6 +466,10 @@ QFrame#lineSeparator {
         </property>
         <item>
          <widget class="QLabel" name="progressCaption">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(0, 0, 0);
+background-color: rgb(145, 65, 172);</string>
+          </property>
           <property name="text">
            <string>Classification Progress</string>
           </property>
@@ -740,7 +752,7 @@ QFrame#lineSeparator {
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabDataQC">
       <attribute name="title">
@@ -976,7 +988,7 @@ QFrame#lineSeparator {
                <number>3</number>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="verticalHeaderVisible">
                <bool>false</bool>
@@ -1292,7 +1304,7 @@ Null clusters: 3 short intervals</string>
                <number>4</number>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="verticalHeaderVisible">
                <bool>false</bool>
