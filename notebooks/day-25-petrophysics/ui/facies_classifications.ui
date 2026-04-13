@@ -1420,7 +1420,9 @@ Null clusters: 3 short intervals</string>
          </widget>
         </item>
        </layout>
-      </widget>
+      </item>
+     </layout>
+    </widget>
       <widget class="QWidget" name="tabHyperparameterTuning">
        <attribute name="title"><string>3. Hyperparameter Tuning</string></attribute>
        <layout class="QVBoxLayout" name="tabHyperparameterTuningLayout">
