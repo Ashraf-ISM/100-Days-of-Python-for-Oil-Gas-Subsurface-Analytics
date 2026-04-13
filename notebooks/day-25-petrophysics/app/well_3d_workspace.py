@@ -48,7 +48,7 @@ class Well3DWorkspaceController(QtCore.QObject):
         self.refresh()
 
     # ------------------------------------------------------------------ #
-    #  Signal wiring                                                        #
+    #  Signal wiring                                                #
     # ------------------------------------------------------------------ #
 
     def connect_signals(self) -> None:
