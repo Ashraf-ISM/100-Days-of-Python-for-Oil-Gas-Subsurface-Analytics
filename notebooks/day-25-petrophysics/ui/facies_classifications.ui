@@ -180,12 +180,16 @@ QPushButton#btnResetAll {
     color: #FFFFFF;
     min-width: 110px;
 }
-QPushButton#btnPrimary, QPushButton#btnLoadTemplate, QPushButton#btnSaveFeatureSet, QPushButton#btnProceedToTuning {
+QPushButton#btnLoadTemplate, QPushButton#btnSaveFeatureSet, QPushButton#btnProceedToTuning,
+QPushButton#btnAdvanceToFeatureEngineering, QPushButton#btnAddCustomFeature,
+QPushButton#btnRunFeatureSelection, QPushButton#btnRunTuning,
+QPushButton#btnTrainModel, QPushButton#btnRunTesting,
+QPushButton#btnRunPrediction, QPushButton#btnUpdateCorrelation {
     background: #1E5ED8;
     border-color: #1E5ED8;
     color: #FFFFFF;
 }
-QPushButton#btnGhostSmall {
+QPushButton#btnResetFeatureTab {
     background: #FFFFFF;
     color: #284376;
     border: 1px solid #BFD0F0;
@@ -1061,7 +1065,7 @@ Null clusters: 3 short intervals</string>
 9 logs mapped
 4 zones detected
 0 blocking QC errors</string></property></widget></item>
-            <item><widget class="QPushButton" name="btnAdvanceToFeatureEngineering"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Proceed to Feature Engineering</string></property></widget></item>
+            <item><widget class="QPushButton" name="btnAdvanceToFeatureEngineering"><property name="text"><string>Proceed to Feature Engineering</string></property></widget></item>
            </layout>
           </widget>
          </item>
@@ -1095,7 +1099,7 @@ Null clusters: 3 short intervals</string>
          </item>
          <item><widget class="QPushButton" name="btnLoadTemplate"><property name="text"><string>Load Template</string></property></widget></item>
          <item><widget class="QPushButton" name="btnSaveFeatureSet"><property name="text"><string>Save Feature Set</string></property></widget></item>
-         <item><widget class="QPushButton" name="btnResetFeatureTab"><property name="objectName"><string>btnGhostSmall</string></property><property name="text"><string>Reset All</string></property></widget></item>
+         <item><widget class="QPushButton" name="btnResetFeatureTab"><property name="text"><string>Reset All</string></property></widget></item>
         </layout>
        </item>
        <item>
@@ -1164,7 +1168,7 @@ Null clusters: 3 short intervals</string>
                </layout>
               </item>
               <item><widget class="QLabel" name="smallHint_3"><property name="styleSheet"><string notr="true">color:#64748B; font-size:8pt;</string></property><property name="text"><string>Available variables: GR, RHOB, NPHI, DT, ILD, PEF, CALI, SP</string></property></widget></item>
-              <item><widget class="QPushButton" name="btnAddCustomFeature"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Add Custom Feature</string></property></widget></item>
+              <item><widget class="QPushButton" name="btnAddCustomFeature"><property name="text"><string>Add Custom Feature</string></property></widget></item>
              </layout>
             </widget>
            </item>
@@ -1258,7 +1262,7 @@ Null clusters: 3 short intervals</string>
                  <item row="4" column="0"><widget class="QLabel" name="lblPca"><property name="text"><string>Dimensionality</string></property></widget></item>
                  <item row="4" column="1"><widget class="QComboBox" name="cmbDimensionality"><item><property name="text"><string>No Reduction</string></property></item><item><property name="text"><string>PCA to 95% variance</string></property></item><item><property name="text"><string>UMAP for embeddings</string></property></item></widget></item>
                  <item row="5" column="0"><widget class="QLabel" name="lblFeatureAction"><property name="text"><string>Run</string></property></widget></item>
-                 <item row="5" column="1"><widget class="QPushButton" name="btnRunFeatureSelection"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Run Feature Selection</string></property></widget></item>
+                 <item row="5" column="1"><widget class="QPushButton" name="btnRunFeatureSelection"><property name="text"><string>Run Feature Selection</string></property></widget></item>
                 </layout>
                </widget>
               </item>
@@ -1544,7 +1548,7 @@ Null clusters: 3 short intervals</string>
                </widget>
               </widget>
              </item>
-             <item><widget class="QPushButton" name="btnRunTuning"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Run Hyperparameter Tuning</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnRunTuning"><property name="text"><string>Run Hyperparameter Tuning</string></property></widget></item>
             </layout>
            </widget>
           </item>
@@ -1606,7 +1610,7 @@ Elapsed Time: 00:12:47</string></property></widget></item>
              <item row="5" column="0"><widget class="QLabel" name="lblTrainTarget"><property name="text"><string>Target Label</string></property></widget></item>
              <item row="5" column="1"><widget class="QComboBox" name="cmbTrainTarget"><item><property name="text"><string>Core_Calibrated_Facies</string></property></item><item><property name="text"><string>Electrofacies_Label</string></property></item></widget></item>
              <item row="6" column="0"><widget class="QLabel" name="lblTrainAction"><property name="text"><string>Execute</string></property></widget></item>
-             <item row="6" column="1"><widget class="QPushButton" name="btnTrainModel"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Train Model</string></property></widget></item>
+             <item row="6" column="1"><widget class="QPushButton" name="btnTrainModel"><property name="text"><string>Train Model</string></property></widget></item>
             </layout>
            </widget>
           </item>
@@ -1668,7 +1672,7 @@ Elapsed Time: 00:12:47</string></property></widget></item>
              <item row="2" column="0"><widget class="QLabel" name="lblCalibration"><property name="text"><string>Calibration</string></property></widget></item>
              <item row="2" column="1"><widget class="QComboBox" name="cmbCalibration"><item><property name="text"><string>Platt Scaling</string></property></item><item><property name="text"><string>Isotonic</string></property></item><item><property name="text"><string>None</string></property></item></widget></item>
              <item row="3" column="0"><widget class="QLabel" name="lblTestAction"><property name="text"><string>Run</string></property></widget></item>
-             <item row="3" column="1"><widget class="QPushButton" name="btnRunTesting"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Run Testing</string></property></widget></item>
+             <item row="3" column="1"><widget class="QPushButton" name="btnRunTesting"><property name="text"><string>Run Testing</string></property></widget></item>
             </layout>
            </widget>
           </item>
@@ -1716,7 +1720,7 @@ Elapsed Time: 00:12:47</string></property></widget></item>
              <item row="4" column="0"><widget class="QLabel" name="lblProbabilityCurve"><property name="text"><string>Probability Curve</string></property></widget></item>
              <item row="4" column="1"><widget class="QLineEdit" name="editProbabilityCurveName"><property name="text"><string>FACIES_PROB</string></property></widget></item>
              <item row="5" column="0"><widget class="QLabel" name="lblPredictionAction"><property name="text"><string>Execute</string></property></widget></item>
-             <item row="5" column="1"><widget class="QPushButton" name="btnRunPrediction"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Run Prediction</string></property></widget></item>
+             <item row="5" column="1"><widget class="QPushButton" name="btnRunPrediction"><property name="text"><string>Run Prediction</string></property></widget></item>
             </layout>
            </widget>
           </item>
@@ -1822,7 +1826,7 @@ Recommended next step
             <property name="title"><string>Well Selection</string></property>
             <layout class="QVBoxLayout" name="wellSelectionLayout">
              <item><widget class="QTreeWidget" name="treeCorrelationWells"><property name="columnCount"><number>2</number></property><attribute name="headerVisible"><bool>true</bool></attribute><column><property name="text"><string>Well</string></property></column><column><property name="text"><string>Status</string></property></column></widget></item>
-             <item><widget class="QPushButton" name="btnUpdateCorrelation"><property name="objectName"><string>btnPrimary</string></property><property name="text"><string>Update Correlation View</string></property></widget></item>
+             <item><widget class="QPushButton" name="btnUpdateCorrelation"><property name="text"><string>Update Correlation View</string></property></widget></item>
             </layout>
            </widget>
           </item>
