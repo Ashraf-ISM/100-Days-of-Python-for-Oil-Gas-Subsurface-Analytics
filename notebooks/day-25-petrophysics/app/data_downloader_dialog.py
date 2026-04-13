@@ -996,7 +996,7 @@ RAW_DATA = {
     ],
 
     # -----------------------------------------------------------------------
-    # RESEARCH & ACADEMIC DATA REPOSITORIE
+    # RESEARCH & ACADEMIC DATA REPOSITORIES
     # -----------------------------------------------------------------------
     "tableResearch": [
         (
