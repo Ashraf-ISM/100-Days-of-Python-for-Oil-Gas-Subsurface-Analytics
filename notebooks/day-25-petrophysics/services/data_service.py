@@ -780,6 +780,9 @@ th {{ background: #F8FBFE; }}
         well3d_refresh = getattr(self.ui, "refresh_3d_well_tab", None)
         if callable(well3d_refresh):
             well3d_refresh()
+        facies_refresh = getattr(self.ui, "refresh_facies_classification_tab", None)
+        if callable(facies_refresh):
+            facies_refresh()
 
     def _clear_views_without_well(self) -> None:
         for table_name in (

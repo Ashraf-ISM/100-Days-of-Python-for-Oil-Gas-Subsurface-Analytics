@@ -11,6 +11,7 @@ UI_DIR = ROOT_DIR / "ui"
 UI_FILE = "mainwindow.ui"
 THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui"
 WELL_CORRELATION_UI_FILE = "multiwell_correlation.ui"
+FACIES_CLASSIFICATION_UI_FILE = "facies_classifications.ui"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
@@ -34,6 +35,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_pore_pressure_tab()
         self._embed_3d_well_tab()
         self._embed_well_correlation_tab()
+        self._init_facies_window()      # standalone separate window (not a tab)
         self._reorder_tabs()
         self._install_3d_well_action()
         self._connect_tab_switches()
@@ -1249,6 +1251,73 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 pass
 
 
+    # ─── Facies Classification – standalone window ───────────────────────────────
+
+    def _init_facies_window(self) -> None:
+        """Pre-create the standalone Facies Classification window (hidden)."""
+        self._facies_win: "FaciesClassificationWindow | None" = None
+        try:
+            from Facies_classifications.facies_window import FaciesClassificationWindow
+            self._facies_win = FaciesClassificationWindow(UI_DIR, parent=None)
+            # Inject data service if already available
+            self._inject_facies_data_service()
+        except Exception as exc:
+            print(f"[PetroARX] Facies window could not be pre-created: {exc}")
+            self._facies_win = None
+
+    def _inject_facies_data_service(self) -> None:
+        """Pass the live DataService into the Facies Classification window."""
+        win = getattr(self, "_facies_win", None)
+        if win is None:
+            return
+        data_svc = getattr(self, "_data_service", None)
+        if data_svc is None:
+            ctrl = getattr(self, "controller", None)
+            if ctrl is not None:
+                data_svc = getattr(ctrl, "data", None)
+        if data_svc is not None and hasattr(win, "set_data_service"):
+            win.set_data_service(data_svc)
+
+    def refresh_facies_classification_tab(self) -> None:
+        """Called by DataService after well import/deletion – refreshes the window."""
+        self._inject_facies_data_service()
+        win = getattr(self, "_facies_win", None)
+        if win is not None and hasattr(win, "refresh"):
+            try:
+                win.refresh()
+            except Exception:
+                pass
+
+    def _open_facies_window(self, algorithm: str | None = None) -> None:
+        """Show the standalone Facies Classification window.
+
+        Parameters
+        ----------
+        algorithm:
+            One of 'kmeans', 'gmm', 'som', 'ensemble', 'randomforest', or
+            None (open without pre-selection).
+        """
+        # Lazy-create if the pre-creation failed
+        if getattr(self, "_facies_win", None) is None:
+            self._init_facies_window()
+
+        win = getattr(self, "_facies_win", None)
+        if win is None:
+            QtWidgets.QMessageBox.critical(
+                self,
+                "Facies Classification",
+                "The Facies Classification module could not be loaded.\n"
+                "Please check that all dependencies (scikit-learn, matplotlib, "
+                "pandas) are installed.",
+            )
+            return
+
+        # Always inject the latest DataService before showing
+        self._inject_facies_data_service()
+        win.show_with_algorithm(algorithm)
+
+    # ─── Data Analysis tab ────────────────────────────────────────────────────
+
     def _embed_data_analysis_tab(self) -> None:
         """Replace the Data Info & Stats tab with the Data & Analysis dock contents."""
         data_tab = getattr(self, "tabDataInfoStats", None)
@@ -1373,6 +1442,32 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         connect_button("btnDashVsh", tab_index("tabShaleVolume", 6) or 6)
         connect_button("btnDashSw", tab_index("tabWaterSaturation", 8) or 8)
         connect_button("btnDashCorr", tab_index("tabWellCorrelation", 11) or 11)
+
+        # ── Facies Classification menu actions ──────────────────────────────
+        self._wire_facies_menu_actions(tab_widget)
+
+    def _wire_facies_menu_actions(self, tab_widget: QtWidgets.QTabWidget) -> None:  # noqa: ARG002
+        """Wire every Facies Classification menu action to _open_facies_window()."""
+
+        # action name → algorithm key passed to _open_facies_window
+        action_algo_map = {
+            "actionOpenFaciesWorkspace": None,           # no pre-selection
+            "actionFaciesKMeans":        "kmeans",
+            "actionFaciesGMM":           "gmm",
+            "actionFaciesSOM":           "som",
+            "actionFaciesEnsemble":      "ensemble",
+            "actionFaciesRandomForest":  "randomforest",
+            "actionSupervised":          "ensemble",     # legacy menu item
+            "actionUnsupervised":        "kmeans",       # legacy menu item
+        }
+
+        for action_name, algo_key in action_algo_map.items():
+            action = getattr(self, action_name, None)
+            if action is None:
+                continue
+            action.triggered.connect(
+                lambda checked=False, _algo=algo_key: self._open_facies_window(_algo)
+            )
 
     def _connect_edit_actions(self) -> None:
         action_map = {

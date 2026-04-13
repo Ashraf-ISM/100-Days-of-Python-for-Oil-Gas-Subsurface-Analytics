@@ -9078,8 +9078,28 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
    </widget>
    <widget class="QMenu" name="menuFacies_Classification">
     <property name="title">
-     <string>Facies Classification</string>
+     <string>&amp;Facies Classification</string>
     </property>
+    <addaction name="actionOpenFaciesWorkspace"/>
+    <addaction name="separator"/>
+    <widget class="QMenu" name="menuUnsupervisedFacies">
+     <property name="title">
+      <string>Unsupervised Methods</string>
+     </property>
+     <addaction name="actionFaciesKMeans"/>
+     <addaction name="actionFaciesGMM"/>
+     <addaction name="actionFaciesSOM"/>
+    </widget>
+    <widget class="QMenu" name="menuSupervisedFacies">
+     <property name="title">
+      <string>Supervised Methods</string>
+     </property>
+     <addaction name="actionFaciesEnsemble"/>
+     <addaction name="actionFaciesRandomForest"/>
+    </widget>
+    <addaction name="menuUnsupervisedFacies"/>
+    <addaction name="menuSupervisedFacies"/>
+    <addaction name="separator"/>
     <addaction name="actionSupervised"/>
     <addaction name="actionUnsupervised"/>
    </widget>
@@ -11104,12 +11124,69 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
   </action>
   <action name="actionSupervised">
    <property name="text">
-    <string>Supervised</string>
+    <string>Supervised (Ensemble)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification – Supervised Ensemble mode</string>
    </property>
   </action>
   <action name="actionUnsupervised">
    <property name="text">
-    <string>Unsupervised</string>
+    <string>Unsupervised (K-Means)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification – Unsupervised K-Means mode</string>
+   </property>
+  </action>
+  <action name="actionOpenFaciesWorkspace">
+   <property name="text">
+    <string>Open Facies Workspace</string>
+   </property>
+   <property name="toolTip">
+    <string>Open the full Facies Classification workspace</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
+   </property>
+  </action>
+  <action name="actionFaciesKMeans">
+   <property name="text">
+    <string>K-Means Clustering</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification with K-Means algorithm pre-selected</string>
+   </property>
+  </action>
+  <action name="actionFaciesGMM">
+   <property name="text">
+    <string>Gaussian Mixture Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification with Gaussian Mixture Model pre-selected</string>
+   </property>
+  </action>
+  <action name="actionFaciesSOM">
+   <property name="text">
+    <string>Self-Organizing Map (SOM)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification with SOM pre-selected</string>
+   </property>
+  </action>
+  <action name="actionFaciesEnsemble">
+   <property name="text">
+    <string>Ensemble (RF + XGBoost + SVM)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification with Ensemble Classifier pre-selected</string>
+   </property>
+  </action>
+  <action name="actionFaciesRandomForest">
+   <property name="text">
+    <string>Random Forest Classifier</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Facies Classification with Random Forest pre-selected</string>
    </property>
   </action>
  </widget>
