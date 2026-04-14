@@ -222,8 +222,8 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
 
     def _on_load_las(self) -> None:
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self._ui, "Select LAS File", "",
-            "LAS Files (*.las *.LAS);;All Files (*)"
+            self._ui, "Select Data File", "",
+            "Supported Files (*.las *.LAS *.csv *.CSV *.txt);;LAS Files (*.las *.LAS);;CSV Files (*.csv *.txt);;All Files (*)"
         )
         if not path:
             return
@@ -244,10 +244,19 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
             zc = None
 
         def _worker():
-            return load_las_file(path, top_depth=top, base_depth=base,
-                                 null_strategy=null, sampling_m=samp,
-                                 despike=desp, normalize_by_zone=norm_z,
-                                 zone_column=zc)
+            if Path(path).suffix.lower() in [".csv", ".txt"]:
+                from Facies_classifications.data_loader import load_csv_file
+                return load_csv_file(path, top_depth=top, base_depth=base,
+                                     null_strategy=null, sampling_m=samp,
+                                     despike=desp, normalize_by_zone=norm_z,
+                                     zone_column=zc)
+            else:
+                # LAS
+                from Facies_classifications.data_loader import load_las_file
+                return load_las_file(path, top_depth=top, base_depth=base,
+                                     null_strategy=null, sampling_m=samp,
+                                     despike=desp, normalize_by_zone=norm_z,
+                                     zone_column=zc)
 
         w = _Worker(_worker)
         w.signals.result.connect(self._on_las_loaded)
@@ -266,11 +275,12 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
         self._meta   = meta
 
         # Update LAS path label
-        self._set_ui_label("editLasFile", meta.get("las_file", ""))
+        self._set_ui_label("editLasFile", meta.get("source_file", meta.get("las_file", "")))
 
         # Update status bar
         self._set_ui_label("statusValue",   "Data Loaded")
-        self._set_ui_label("statusValue_2", meta.get("las_file", "—"))
+        source_name = meta.get("source_file", meta.get("las_file", "—"))
+        self._set_ui_label("statusValue_2", source_name)
         self._set_ui_label("statusValue_3", f"{meta.get('total_rows', 0):,}")
 
         # Populate inventory table
@@ -278,7 +288,7 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
         # Populate zone summary
         self._populate_zone_summary(meta)
         # Populate QC notes
-        self._update_qc_notes(df, meta)
+        self._on_qc_profile()
         # Populate feature log selector
         self._populate_feature_log_table(df)
         # Update metric cards
@@ -565,18 +575,28 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
             if algo in ("K-Means", "Gaussian Mixture", "Self-Organizing Map"):
                 labels, metrics, msg = train_unsupervised(feat_df, algorithm=algo, params=params)
             else:
-                # Supervised – no ground-truth labels in LAS file → fall back to K-Means
-                # then use those pseudo-labels to train the supervised model
-                labels_km, _, _ = train_unsupervised(
-                    feat_df, algorithm="K-Means",
-                    params={"n_clusters": int(params.get("n_clusters", 6)),
-                            "random_state": 42})
-                if labels_km is None:
-                    return None, {}, "K-Means pseudo-labelling failed."
-                y_pseudo = pd.Series(labels_km, index=feat_df.index)
-                labels, metrics, msg = train_supervised(
-                    feat_df, y_pseudo, algorithm=algo,
-                    params=params, cv_folds=int(params.get("cv_folds", 5)))
+                raw_y = None
+                lbl_col = self._meta.get("label_column")
+                if lbl_col and self._raw_df is not None and lbl_col in self._raw_df.columns:
+                    raw_y = self._raw_df.loc[feat_df.index, lbl_col]
+
+                if raw_y is not None and raw_y.notna().any():
+                    labels, metrics, msg = train_supervised(
+                        feat_df, raw_y, algorithm=algo,
+                        params=params, cv_folds=int(params.get("cv_folds", 5)))
+                else:
+                    # Supervised – no ground-truth labels in data → fall back to K-Means
+                    # then use those pseudo-labels to train the supervised model
+                    labels_km, _, _ = train_unsupervised(
+                        feat_df, algorithm="K-Means",
+                        params={"n_clusters": int(params.get("n_clusters", 6)),
+                                "random_state": 42})
+                    if labels_km is None:
+                        return None, {}, "K-Means pseudo-labelling failed."
+                    y_pseudo = pd.Series(labels_km, index=feat_df.index)
+                    labels, metrics, msg = train_supervised(
+                        feat_df, y_pseudo, algorithm=algo,
+                        params=params, cv_folds=int(params.get("cv_folds", 5)))
             return labels, metrics, msg
 
         w = _Worker(_work)
