@@ -1,1032 +1,789 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>VshModelComparisonDialog</class>
-    <widget class="QDialog" name="VshModelComparisonDialog">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>1460</width>
-                <height>900</height>
-            </rect>
+ <class>VshModelComparisonDialog</class>
+ <widget class="QDialog" name="VshModelComparisonDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1460</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Vsh Model Comparison</string>
+  </property>
+  <property name="styleSheet">
+   <string>QDialog{background:#F4F7FB;} QLabel{color:#24384D;} QPushButton{font-weight:600;}</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_root">
+   <property name="spacing">
+    <number>12</number>
+   </property>
+   <property name="leftMargin">
+    <number>14</number>
+   </property>
+   <property name="topMargin">
+    <number>14</number>
+   </property>
+   <property name="rightMargin">
+    <number>14</number>
+   </property>
+   <property name="bottomMargin">
+    <number>14</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="headerFrame">
+     <property name="styleSheet">
+      <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_header">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <property name="leftMargin">
+       <number>16</number>
+      </property>
+      <property name="topMargin">
+       <number>14</number>
+      </property>
+      <property name="rightMargin">
+       <number>16</number>
+      </property>
+      <property name="bottomMargin">
+       <number>14</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_title">
+        <property name="spacing">
+         <number>2</number>
         </property>
-        <property name="windowTitle">
-            <string>Vsh Model Comparison</string>
+       </layout>
+      </item>
+      <item alignment="Qt::AlignTop">
+       <widget class="QLabel" name="lblStatusBadge">
+        <property name="minimumSize">
+         <size>
+          <width>220</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="styleSheet">
-            <string>QDialog{background:#F4F7FB;} QLabel{color:#24384D;} QPushButton{font-weight:600;}</string>
+         <string>background:#E8F7EE;color:#2F855A;border:1px solid #CFE8D8;border-radius:16px;padding:8px 12px;font-weight:700;</string>
         </property>
-        <property name="modal">
-            <bool>true</bool>
+        <property name="text">
+         <string>Ready</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_root">
-            <property name="spacing">
-                <number>12</number>
-            </property>
-            <property name="leftMargin">
-                <number>14</number>
-            </property>
-            <property name="topMargin">
-                <number>14</number>
-            </property>
-            <property name="rightMargin">
-                <number>14</number>
-            </property>
-            <property name="bottomMargin">
-                <number>14</number>
-            </property>
-            <item>
-                <widget class="QFrame" name="headerFrame">
-                    <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                    </property>
-                    <property name="styleSheet">
-                        <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
-                    </property>
-                    <layout class="QHBoxLayout" name="horizontalLayout_header">
-                        <property name="spacing">
-                            <number>12</number>
-                        </property>
-                        <property name="leftMargin">
-                            <number>16</number>
-                        </property>
-                        <property name="topMargin">
-                            <number>14</number>
-                        </property>
-                        <property name="rightMargin">
-                            <number>16</number>
-                        </property>
-                        <property name="bottomMargin">
-                            <number>14</number>
-                        </property>
-                        <item>
-                            <layout class="QVBoxLayout" name="verticalLayout_title">
-                                <property name="spacing">
-                                    <number>2</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>2</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>2</number>
-                                </property>
-                            </layout>
-                        </item>
-                        <item alignment="Qt::AlignTop">
-                            <widget class="QLabel" name="lblStatusBadge">
-                                <property name="text">
-                                    <string>Ready</string>
-                                </property>
-                                <property name="minimumSize">
-                                    <size>(220, 0)</size>
-                                </property>
-                                <property name="minimumSize">
-                                    <size>
-                                        <width>220</width>
-                                        <height>0</height>
-                                    </size>
-                                </property>
-                                <property name="alignment">
-                                    <set>Qt::AlignCenter</set>
-                                </property>
-                                <property name="styleSheet">
-                                    <string>background:#E8F7EE;color:#2F855A;border:1px solid #CFE8D8;border-radius:16px;padding:8px 12px;font-weight:700;</string>
-                                </property>
-                            </widget>
-                        </item>
-                    </layout>
-                </widget>
-            </item>
-            <item>
-                <widget class="QFrame" name="controlsFrame">
-                    <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                    </property>
-                    <property name="styleSheet">
-                        <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
-                    </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_controls">
-                        <property name="spacing">
-                            <number>12</number>
-                        </property>
-                        <property name="leftMargin">
-                            <number>16</number>
-                        </property>
-                        <property name="topMargin">
-                            <number>14</number>
-                        </property>
-                        <property name="rightMargin">
-                            <number>16</number>
-                        </property>
-                        <property name="bottomMargin">
-                            <number>14</number>
-                        </property>
-                        <item>
-                            <layout class="QHBoxLayout" name="horizontalLayout_meta">
-                                <property name="spacing">
-                                    <number>12</number>
-                                </property>
-                                <item>
-                                    <widget class="QFrame" name="chipWell">
-                                        <property name="frameShape">
-                                            <enum>QFrame::StyledPanel</enum>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
-                                        </property>
-                                        <layout class="QVBoxLayout" name="verticalLayout_chipWell">
-                                            <property name="spacing">
-                                                <number>2</number>
-                                            </property>
-                                            <property name="leftMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="topMargin">
-                                                <number>8</number>
-                                            </property>
-                                            <property name="rightMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="bottomMargin">
-                                                <number>8</number>
-                                            </property>
-                                            <item>
-                                                <widget class="QLabel" name="lbl_t_chipWell">
-                                                    <property name="text">
-                                                        <string>Well</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:10px;color:#61788F;font-weight:700;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                            <item>
-                                                <widget class="QLabel" name="lblWellValue">
-                                                    <property name="text">
-                                                        <string>--</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:14px;color:#1F3653;font-weight:800;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                        </layout>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QFrame" name="chipCurve">
-                                        <property name="frameShape">
-                                            <enum>QFrame::StyledPanel</enum>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
-                                        </property>
-                                        <layout class="QVBoxLayout" name="verticalLayout_chipCurve">
-                                            <property name="spacing">
-                                                <number>2</number>
-                                            </property>
-                                            <property name="leftMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="topMargin">
-                                                <number>8</number>
-                                            </property>
-                                            <property name="rightMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="bottomMargin">
-                                                <number>8</number>
-                                            </property>
-                                            <item>
-                                                <widget class="QLabel" name="lbl_t_chipCurve">
-                                                    <property name="text">
-                                                        <string>GR Curve</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:10px;color:#61788F;font-weight:700;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                            <item>
-                                                <widget class="QLabel" name="lblCurveValue">
-                                                    <property name="text">
-                                                        <string>--</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:14px;color:#1F3653;font-weight:800;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                        </layout>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <spacer name="spacer_meta">
-                                        <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                        </property>
-                                        <property name="sizeHint" stdset="0">
-                                            <size>
-                                                <width>40</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
-                                </item>
-                            </layout>
-                        </item>
-                        <item>
-                            <layout class="QHBoxLayout" name="horizontalLayout_config">
-                                <property name="spacing">
-                                    <number>14</number>
-                                </property>
-                                <item>
-                                    <widget class="QFrame" name="spinCardClean">
-                                        <property name="frameShape">
-                                            <enum>QFrame::StyledPanel</enum>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
-                                        </property>
-                                        <layout class="QVBoxLayout" name="verticalLayout_spinCardClean">
-                                            <property name="spacing">
-                                                <number>8</number>
-                                            </property>
-                                            <property name="leftMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="topMargin">
-                                                <number>10</number>
-                                            </property>
-                                            <property name="rightMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="bottomMargin">
-                                                <number>10</number>
-                                            </property>
-                                            <item>
-                                                <widget class="QLabel" name="lbl_st_spinCardClean">
-                                                    <property name="text">
-                                                        <string>GR Clean (Sand Line)</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:12px;font-weight:700;color:#42566C;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                            <item>
-                                                <widget class="QDoubleSpinBox" name="spinGrClean">
-                                                    <property name="decimals">
-                                                        <number>2</number>
-                                                    </property>
-                                                    <property name="minimum">
-                                                        <double>-1000.0</double>
-                                                    </property>
-                                                    <property name="maximum">
-                                                        <double>10000.0</double>
-                                                    </property>
-                                                    <property name="value">
-                                                        <double>23.0</double>
-                                                    </property>
-                                                    <property name="minimumSize">
-                                                        <size>
-                                                            <width>0</width>
-                                                            <height>36</height>
-                                                        </size>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                            <item>
-                                                <widget class="QLabel" name="lbl_u_spinCardClean">
-                                                    <property name="text">
-                                                        <string>API</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                        </layout>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QFrame" name="spinCardShale">
-                                        <property name="frameShape">
-                                            <enum>QFrame::StyledPanel</enum>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
-                                        </property>
-                                        <layout class="QVBoxLayout" name="verticalLayout_spinCardShale">
-                                            <property name="spacing">
-                                                <number>8</number>
-                                            </property>
-                                            <property name="leftMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="topMargin">
-                                                <number>10</number>
-                                            </property>
-                                            <property name="rightMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="bottomMargin">
-                                                <number>10</number>
-                                            </property>
-                                            <item>
-                                                <widget class="QLabel" name="lbl_st_spinCardShale">
-                                                    <property name="text">
-                                                        <string>GR Shale (Shale Line)</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:12px;font-weight:700;color:#42566C;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                            <item>
-                                                <widget class="QDoubleSpinBox" name="spinGrShale">
-                                                    <property name="decimals">
-                                                        <number>2</number>
-                                                    </property>
-                                                    <property name="minimum">
-                                                        <double>-1000.0</double>
-                                                    </property>
-                                                    <property name="maximum">
-                                                        <double>10000.0</double>
-                                                    </property>
-                                                    <property name="value">
-                                                        <double>160.0</double>
-                                                    </property>
-                                                    <property name="minimumSize">
-                                                        <size>
-                                                            <width>0</width>
-                                                            <height>36</height>
-                                                        </size>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                            <item>
-                                                <widget class="QLabel" name="lbl_u_spinCardShale">
-                                                    <property name="text">
-                                                        <string>API</string>
-                                                    </property>
-                                                    <property name="styleSheet">
-                                                        <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                    </property>
-                                                </widget>
-                                            </item>
-                                        </layout>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QFrame" name="models_card">
-                                        <property name="frameShape">
-                                            <enum>QFrame::StyledPanel</enum>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
-                                        </property>
-                                        <layout class="QVBoxLayout" name="verticalLayout_mc">
-                                            <property name="spacing">
-                                                <number>10</number>
-                                            </property>
-                                            <property name="leftMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="topMargin">
-                                                <number>10</number>
-                                            </property>
-                                            <property name="rightMargin">
-                                                <number>12</number>
-                                            </property>
-                                            <property name="bottomMargin">
-                                                <number>10</number>
-                                            </property>
-                                            <item>
-                                                <layout class="QHBoxLayout" name="horizontalLayout_mch">
-                                                    <item>
-                                                        <widget class="QLabel" name="lbl_tm">
-                                                            <property name="text">
-                                                                <string>Models to Display</string>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>font-size:12px;font-weight:700;color:#42566C;</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                    <item>
-                                                        <spacer name="spacer_mh">
-                                                            <property name="orientation">
-                                                                <enum>Qt::Horizontal</enum>
-                                                            </property>
-                                                            <property name="sizeHint" stdset="0">
-                                                                <size>
-                                                                    <width>40</width>
-                                                                    <height>20</height>
-                                                                </size>
-                                                            </property>
-                                                        </spacer>
-                                                    </item>
-                                                    <item>
-                                                        <widget class="QPushButton" name="btnSelectAll">
-                                                            <property name="text">
-                                                                <string>Select All</string>
-                                                            </property>
-                                                            <property name="cursor">
-                                                                <cursorShape>PointingHandCursor</cursorShape>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>QPushButton{background:transparent;color:#1F6FEB;border:none;font-weight:700;padding:2px 4px;}QPushButton:hover{color:#1658B8;}</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                </layout>
-                                            </item>
-                                            <item>
-                                                <layout class="QHBoxLayout" name="horizontalLayout_checks">
-                                                    <property name="spacing">
-                                                        <number>12</number>
-                                                    </property>
-                                                    <item>
-                                                        <widget class="QCheckBox" name="chkLinear">
-                                                            <property name="text">
-                                                                <string>Linear</string>
-                                                            </property>
-                                                            <property name="checked">
-                                                                <bool>true</bool>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>QCheckBox{color:#2DD4BF;font-weight:700;border:none;}</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                    <item>
-                                                        <widget class="QCheckBox" name="chkLarionovTertiary">
-                                                            <property name="text">
-                                                                <string>Larionov Tertiary</string>
-                                                            </property>
-                                                            <property name="checked">
-                                                                <bool>true</bool>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>QCheckBox{color:#2563EB;font-weight:700;border:none;}</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                    <item>
-                                                        <widget class="QCheckBox" name="chkLarionovOlder">
-                                                            <property name="text">
-                                                                <string>Larionov Older</string>
-                                                            </property>
-                                                            <property name="checked">
-                                                                <bool>true</bool>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>QCheckBox{color:#7C3AED;font-weight:700;border:none;}</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                    <item>
-                                                        <widget class="QCheckBox" name="chkClavier">
-                                                            <property name="text">
-                                                                <string>Clavier</string>
-                                                            </property>
-                                                            <property name="checked">
-                                                                <bool>true</bool>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>QCheckBox{color:#1F2937;font-weight:700;border:none;}</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                    <item>
-                                                        <widget class="QCheckBox" name="chkSteiber">
-                                                            <property name="text">
-                                                                <string>Steiber</string>
-                                                            </property>
-                                                            <property name="checked">
-                                                                <bool>true</bool>
-                                                            </property>
-                                                            <property name="styleSheet">
-                                                                <string>QCheckBox{color:#F59E0B;font-weight:700;border:none;}</string>
-                                                            </property>
-                                                        </widget>
-                                                    </item>
-                                                    <item>
-                                                        <spacer name="spacer_checks">
-                                                            <property name="orientation">
-                                                                <enum>Qt::Horizontal</enum>
-                                                            </property>
-                                                            <property name="sizeHint" stdset="0">
-                                                                <size>
-                                                                    <width>40</width>
-                                                                    <height>20</height>
-                                                                </size>
-                                                            </property>
-                                                        </spacer>
-                                                    </item>
-                                                </layout>
-                                            </item>
-                                        </layout>
-                                        <property name="sizePolicy">
-                                            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                                                <horstretch>1</horstretch>
-                                                <verstretch>0</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                    </widget>
-                                </item>
-                            </layout>
-                        </item>
-                        <item>
-                            <layout class="QHBoxLayout" name="horizontalLayout_buttons">
-                                <property name="spacing">
-                                    <number>10</number>
-                                </property>
-                                <item>
-                                    <spacer name="spacer_b">
-                                        <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                        </property>
-                                        <property name="sizeHint" stdset="0">
-                                            <size>
-                                                <width>40</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
-                                </item>
-                                <item>
-                                    <widget class="QPushButton" name="btnGenerate">
-                                        <property name="text">
-                                            <string>Generate Comparison</string>
-                                        </property>
-                                        <property name="cursor">
-                                            <cursorShape>PointingHandCursor</cursorShape>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>0</width>
-                                                <height>40</height>
-                                            </size>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>QPushButton{background:#1F6FEB;color:#FFFFFF;border:none;border-radius:9px;padding:8px 18px;font-weight:700;}QPushButton:hover{background:#1658B8;}</string>
-                                        </property>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QPushButton" name="btnExport">
-                                        <property name="text">
-                                            <string>Export Figure</string>
-                                        </property>
-                                        <property name="cursor">
-                                            <cursorShape>PointingHandCursor</cursorShape>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>0</width>
-                                                <height>40</height>
-                                            </size>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>QPushButton{background:#FFFFFF;color:#42566C;border:1px solid #C9D7E6;border-radius:9px;padding:8px 18px;font-weight:700;}QPushButton:hover{background:#F8FBFE;}</string>
-                                        </property>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QPushButton" name="btnClose">
-                                        <property name="text">
-                                            <string>Close</string>
-                                        </property>
-                                        <property name="cursor">
-                                            <cursorShape>PointingHandCursor</cursorShape>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>0</width>
-                                                <height>40</height>
-                                            </size>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>QPushButton{background:#FFFFFF;color:#42566C;border:1px solid #C9D7E6;border-radius:9px;padding:8px 18px;font-weight:700;}QPushButton:hover{background:#F8FBFE;}</string>
-                                        </property>
-                                    </widget>
-                                </item>
-                            </layout>
-                        </item>
-                    </layout>
-                </widget>
-            </item>
-            <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_content" stretch="5,6">
-                    <property name="spacing">
-                        <number>12</number>
-                    </property>
-                    <item>
-                        <widget class="QFrame" name="left_card">
-                            <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="styleSheet">
-                                <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                                    <horstretch>5</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_left">
-                                <property name="spacing">
-                                    <number>10</number>
-                                </property>
-                                <property name="leftMargin">
-                                    <number>14</number>
-                                </property>
-                                <property name="topMargin">
-                                    <number>12</number>
-                                </property>
-                                <property name="rightMargin">
-                                    <number>14</number>
-                                </property>
-                                <property name="bottomMargin">
-                                    <number>14</number>
-                                </property>
-                                <item>
-                                    <widget class="QLabel" name="lblLeftTitle">
-                                        <property name="text">
-                                            <string>THEORETICAL MODEL CURVES</string>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>font-size:13px;font-weight:800;color:#1F4E79;</string>
-                                        </property>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QLabel" name="lblLeftSub">
-                                        <property name="text">
-                                            <string>Vsh vs Gamma Ray - model comparison</string>
-                                        </property>
-                                        <property name="styleSheet">
-                                            <string>font-size:11px;color:#5C718A;</string>
-                                        </property>
-                                    </widget>
-                                </item>
-                                <item>
-                                    <widget class="QWidget" name="_theory_host">
-                                        <property name="sizePolicy">
-                                            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                                                <horstretch>0</horstretch>
-                                                <verstretch>1</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                    </widget>
-                                </item>
-                            </layout>
-                        </widget>
-                    </item>
-                    <item>
-                        <layout class="QVBoxLayout" name="verticalLayout_right_wrap">
-                            <item>
-                                <widget class="QFrame" name="right_card">
-                                    <property name="frameShape">
-                                        <enum>QFrame::StyledPanel</enum>
-                                    </property>
-                                    <property name="styleSheet">
-                                        <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                                            <horstretch>0</horstretch>
-                                            <verstretch>5</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <layout class="QVBoxLayout" name="verticalLayout_right">
-                                        <property name="spacing">
-                                            <number>10</number>
-                                        </property>
-                                        <property name="leftMargin">
-                                            <number>14</number>
-                                        </property>
-                                        <property name="topMargin">
-                                            <number>12</number>
-                                        </property>
-                                        <property name="rightMargin">
-                                            <number>14</number>
-                                        </property>
-                                        <property name="bottomMargin">
-                                            <number>14</number>
-                                        </property>
-                                        <item>
-                                            <layout class="QHBoxLayout" name="horizontalLayout_rhead">
-                                                <item>
-                                                    <widget class="QLabel" name="lblRightTitle">
-                                                        <property name="text">
-                                                            <string>WELL LOG COMPARISON</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:13px;font-weight:800;color:#1F4E79;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <spacer name="spacer_r">
-                                                        <property name="orientation">
-                                                            <enum>Qt::Horizontal</enum>
-                                                        </property>
-                                                        <property name="sizeHint" stdset="0">
-                                                            <size>
-                                                                <width>40</width>
-                                                                <height>20</height>
-                                                            </size>
-                                                        </property>
-                                                    </spacer>
-                                                </item>
-                                                <item>
-                                                    <widget class="QLabel" name="lblDepthBadge">
-                                                        <property name="text">
-                                                            <string>Depth: --</string>
-                                                        </property>
-                                                        <property name="alignment">
-                                                            <set>Qt::AlignCenter</set>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>background:#F3F7FC;color:#61788F;border:1px solid #D7E2EE;border-radius:12px;padding:6px 10px;font-size:11px;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                            </layout>
-                                        </item>
-                                        <item>
-                                            <widget class="QLabel" name="lblRightSub">
-                                                <property name="text">
-                                                    <string>Gamma Ray and Vsh from multiple models</string>
-                                                </property>
-                                                <property name="styleSheet">
-                                                    <string>font-size:11px;color:#5C718A;</string>
-                                                </property>
-                                            </widget>
-                                        </item>
-                                        <item>
-                                            <widget class="QWidget" name="_well_host">
-                                                <property name="sizePolicy">
-                                                    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                                                        <horstretch>0</horstretch>
-                                                        <verstretch>1</verstretch>
-                                                    </sizepolicy>
-                                                </property>
-                                            </widget>
-                                        </item>
-                                    </layout>
-                                </widget>
-                            </item>
-                            <item>
-                                <widget class="QFrame" name="insights_card">
-                                    <property name="frameShape">
-                                        <enum>QFrame::StyledPanel</enum>
-                                    </property>
-                                    <property name="styleSheet">
-                                        <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                                            <horstretch>0</horstretch>
-                                            <verstretch>3</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <layout class="QVBoxLayout" name="verticalLayout_ins">
-                                        <property name="spacing">
-                                            <number>12</number>
-                                        </property>
-                                        <property name="leftMargin">
-                                            <number>14</number>
-                                        </property>
-                                        <property name="topMargin">
-                                            <number>12</number>
-                                        </property>
-                                        <property name="rightMargin">
-                                            <number>14</number>
-                                        </property>
-                                        <property name="bottomMargin">
-                                            <number>14</number>
-                                        </property>
-                                        <item>
-                                            <widget class="QLabel" name="lblMod">
-                                                <property name="text">
-                                                    <string>MODELS</string>
-                                                </property>
-                                                <property name="styleSheet">
-                                                    <string>font-size:12px;font-weight:800;color:#42566C;</string>
-                                                </property>
-                                            </widget>
-                                        </item>
-                                        <item>
-                                            <widget class="QFrame" name="_legend_host">
-                                                <property name="frameShape">
-                                                    <enum>QFrame::StyledPanel</enum>
-                                                </property>
-                                                <property name="styleSheet">
-                                                    <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
-                                                </property>
-                                                <layout class="QVBoxLayout" name="_legend_layout">
-                                                    <property name="spacing">
-                                                        <number>8</number>
-                                                    </property>
-                                                    <property name="leftMargin">
-                                                        <number>10</number>
-                                                    </property>
-                                                    <property name="topMargin">
-                                                        <number>10</number>
-                                                    </property>
-                                                    <property name="rightMargin">
-                                                        <number>10</number>
-                                                    </property>
-                                                    <property name="bottomMargin">
-                                                        <number>10</number>
-                                                    </property>
-                                                </layout>
-                                            </widget>
-                                        </item>
-                                        <item>
-                                            <widget class="QLabel" name="lblQuickIns">
-                                                <property name="text">
-                                                    <string>QUICK INSIGHTS</string>
-                                                </property>
-                                                <property name="styleSheet">
-                                                    <string>font-size:12px;font-weight:800;color:#42566C;</string>
-                                                </property>
-                                            </widget>
-                                        </item>
-                                        <item>
-                                            <layout class="QGridLayout" name="gridLayout">
-                                                <property name="horizontalSpacing">
-                                                    <number>10</number>
-                                                </property>
-                                                <property name="verticalSpacing">
-                                                    <number>10</number>
-                                                </property>
-                                                <item row="0" column="0">
-                                                    <widget class="QLabel" name="lbl_t_lblCleanValue">
-                                                        <property name="text">
-                                                            <string>GR Clean</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="0" column="1">
-                                                    <widget class="QLabel" name="lblCleanValue">
-                                                        <property name="text">
-                                                            <string>--</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:14px;font-weight:800;color:#1F3653;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="0" column="2">
-                                                    <widget class="QLabel" name="lbl_t_lblShaleValue">
-                                                        <property name="text">
-                                                            <string>GR Shale</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="0" column="3">
-                                                    <widget class="QLabel" name="lblShaleValue">
-                                                        <property name="text">
-                                                            <string>--</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:14px;font-weight:800;color:#1F3653;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="1" column="0">
-                                                    <widget class="QLabel" name="lbl_t_lblModelsValue">
-                                                        <property name="text">
-                                                            <string>Models Plotted</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="1" column="1">
-                                                    <widget class="QLabel" name="lblModelsValue">
-                                                        <property name="text">
-                                                            <string>--</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:14px;font-weight:800;color:#1F3653;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="1" column="2">
-                                                    <widget class="QLabel" name="lbl_t_lblSamplesValue">
-                                                        <property name="text">
-                                                            <string>Depth Samples</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="1" column="3">
-                                                    <widget class="QLabel" name="lblSamplesValue">
-                                                        <property name="text">
-                                                            <string>--</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:14px;font-weight:800;color:#1F3653;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="2" column="0">
-                                                    <widget class="QLabel" name="lbl_t_lblSpreadValue">
-                                                        <property name="text">
-                                                            <string>Mean Spread</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="2" column="1">
-                                                    <widget class="QLabel" name="lblSpreadValue">
-                                                        <property name="text">
-                                                            <string>--</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:14px;font-weight:800;color:#1F3653;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="2" column="2">
-                                                    <widget class="QLabel" name="lbl_t_lblWindowValue">
-                                                        <property name="text">
-                                                            <string>Depth Window</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item row="2" column="3">
-                                                    <widget class="QLabel" name="lblWindowValue">
-                                                        <property name="text">
-                                                            <string>--</string>
-                                                        </property>
-                                                        <property name="styleSheet">
-                                                            <string>font-size:14px;font-weight:800;color:#1F3653;</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                            </layout>
-                                        </item>
-                                        <item>
-                                            <widget class="QLabel" name="txtInsight">
-                                                <property name="text">
-                                                    <string>Model selection insights will appear here after comparison generation.</string>
-                                                </property>
-                                                <property name="styleSheet">
-                                                    <string>background:#F3F7FC;border:1px solid #DCE7F2;border-radius:10px;padding:12px;color:#44576C;font-size:11px;</string>
-                                                </property>
-                                                <property name="wordWrap">
-                                                    <bool>true</bool>
-                                                </property>
-                                            </widget>
-                                        </item>
-                                        <item>
-                                            <spacer name="spacer_i">
-                                                <property name="orientation">
-                                                    <enum>Qt::Vertical</enum>
-                                                </property>
-                                                <property name="sizeHint" stdset="0">
-                                                    <size>
-                                                        <width>20</width>
-                                                        <height>40</height>
-                                                    </size>
-                                                </property>
-                                            </spacer>
-                                        </item>
-                                    </layout>
-                                </widget>
-                            </item>
-                        </layout>
-                    </item>
-                </layout>
-            </item>
-        </layout>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="controlsFrame">
+     <property name="styleSheet">
+      <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_controls">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <property name="leftMargin">
+       <number>16</number>
+      </property>
+      <property name="topMargin">
+       <number>14</number>
+      </property>
+      <property name="rightMargin">
+       <number>16</number>
+      </property>
+      <property name="bottomMargin">
+       <number>14</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_meta">
+        <property name="spacing">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="chipWell">
+          <property name="styleSheet">
+           <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_chipWell">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>8</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lbl_t_chipWell">
+             <property name="styleSheet">
+              <string>font-size:10px;color:#61788F;font-weight:700;</string>
+             </property>
+             <property name="text">
+              <string>Well</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblWellValue">
+             <property name="styleSheet">
+              <string>font-size:14px;color:#1F3653;font-weight:800;</string>
+             </property>
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="chipCurve">
+          <property name="styleSheet">
+           <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_chipCurve">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>8</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lbl_t_chipCurve">
+             <property name="styleSheet">
+              <string>font-size:10px;color:#61788F;font-weight:700;</string>
+             </property>
+             <property name="text">
+              <string>GR Curve</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblCurveValue">
+             <property name="styleSheet">
+              <string>font-size:14px;color:#1F3653;font-weight:800;</string>
+             </property>
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacer_meta">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_config">
+        <property name="spacing">
+         <number>14</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="spinCardClean">
+          <property name="styleSheet">
+           <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_spinCardClean">
+           <property name="spacing">
+            <number>8</number>
+           </property>
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lbl_st_spinCardClean">
+             <property name="styleSheet">
+              <string>font-size:12px;font-weight:700;color:#42566C;</string>
+             </property>
+             <property name="text">
+              <string>GR Clean (Sand Line)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="spinGrClean">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>36</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string>QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}</string>
+             </property>
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="minimum">
+              <double>-1000.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>10000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>23.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lbl_u_spinCardClean">
+             <property name="styleSheet">
+              <string>font-size:11px;color:#61788F;font-weight:700;</string>
+             </property>
+             <property name="text">
+              <string>API</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="spinCardShale">
+          <property name="styleSheet">
+           <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_spinCardShale">
+           <property name="spacing">
+            <number>8</number>
+           </property>
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lbl_st_spinCardShale">
+             <property name="styleSheet">
+              <string>font-size:12px;font-weight:700;color:#42566C;</string>
+             </property>
+             <property name="text">
+              <string>GR Shale (Shale Line)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="spinGrShale">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>36</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string>QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}</string>
+             </property>
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="minimum">
+              <double>-1000.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>10000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>160.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lbl_u_spinCardShale">
+             <property name="styleSheet">
+              <string>font-size:11px;color:#61788F;font-weight:700;</string>
+             </property>
+             <property name="text">
+              <string>API</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="models_card">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_mc">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_mch">
+             <item>
+              <widget class="QLabel" name="lbl_tm">
+               <property name="styleSheet">
+                <string>font-size:12px;font-weight:700;color:#42566C;</string>
+               </property>
+               <property name="text">
+                <string>Models to Display</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_mh">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnSelectAll">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string>QPushButton{background:transparent;color:#1F6FEB;border:none;font-weight:700;padding:2px 4px;}QPushButton:hover{color:#1658B8;}</string>
+               </property>
+               <property name="text">
+                <string>Select All</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_checks">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="chkLinear">
+               <property name="styleSheet">
+                <string>QCheckBox{color:#2DD4BF;font-weight:700;border:none;}</string>
+               </property>
+               <property name="text">
+                <string>Linear</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkLarionovTertiary">
+               <property name="styleSheet">
+                <string>QCheckBox{color:#2563EB;font-weight:700;border:none;}</string>
+               </property>
+               <property name="text">
+                <string>Larionov Tertiary</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkLarionovOlder">
+               <property name="styleSheet">
+                <string>QCheckBox{color:#7C3AED;font-weight:700;border:none;}</string>
+               </property>
+               <property name="text">
+                <string>Larionov Older</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkClavier">
+               <property name="styleSheet">
+                <string>QCheckBox{color:#1F2937;font-weight:700;border:none;}</string>
+               </property>
+               <property name="text">
+                <string>Clavier</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkSteiber">
+               <property name="styleSheet">
+                <string>QCheckBox{color:#F59E0B;font-weight:700;border:none;}</string>
+               </property>
+               <property name="text">
+                <string>Steiber</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_checks">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <item>
+         <spacer name="spacer_b">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnGenerate">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton{background:#1F6FEB;color:#FFFFFF;border:none;border-radius:9px;padding:8px 18px;font-weight:700;}QPushButton:hover{background:#1658B8;}</string>
+          </property>
+          <property name="text">
+           <string>Generate Comparison</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExport">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton{background:#FFFFFF;color:#42566C;border:1px solid #C9D7E6;border-radius:9px;padding:8px 18px;font-weight:700;}QPushButton:hover{background:#F8FBFE;}</string>
+          </property>
+          <property name="text">
+           <string>Export Figure</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnClose">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton{background:#FFFFFF;color:#42566C;border:1px solid #C9D7E6;border-radius:9px;padding:8px 18px;font-weight:700;}QPushButton:hover{background:#F8FBFE;}</string>
+          </property>
+          <property name="text">
+           <string>Close</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_content" stretch="0,0">
+     <property name="spacing">
+      <number>12</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="left_card">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>5</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_left">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>14</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>14</number>
+        </property>
+        <property name="bottomMargin">
+         <number>14</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblLeftTitle">
+          <property name="styleSheet">
+           <string>font-size:13px;font-weight:800;color:#1F4E79;</string>
+          </property>
+          <property name="text">
+           <string>THEORETICAL MODEL CURVES</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblLeftSub">
+          <property name="styleSheet">
+           <string>font-size:11px;color:#5C718A;</string>
+          </property>
+          <property name="text">
+           <string>Vsh vs Gamma Ray - model comparison</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="_theory_host" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_right_wrap">
+       <item>
+        <widget class="QFrame" name="right_card">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>5</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_right">
+          <property name="spacing">
+           <number>10</number>
+          </property>
+          <property name="leftMargin">
+           <number>14</number>
+          </property>
+          <property name="topMargin">
+           <number>12</number>
+          </property>
+          <property name="rightMargin">
+           <number>14</number>
+          </property>
+          <property name="bottomMargin">
+           <number>14</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_rhead">
+            <item>
+             <widget class="QLabel" name="lblRightTitle">
+              <property name="styleSheet">
+               <string>font-size:13px;font-weight:800;color:#1F4E79;</string>
+              </property>
+              <property name="text">
+               <string>WELL LOG COMPARISON</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="spacer_r">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblDepthBadge">
+              <property name="styleSheet">
+               <string>background:#F3F7FC;color:#61788F;border:1px solid #D7E2EE;border-radius:12px;padding:6px 10px;font-size:11px;font-weight:700;</string>
+              </property>
+              <property name="text">
+               <string>Depth: --</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblRightSub">
+            <property name="styleSheet">
+             <string>font-size:11px;color:#5C718A;</string>
+            </property>
+            <property name="text">
+             <string>Gamma Ray and Vsh from multiple models</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="_well_host" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
 </ui>
