@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import numpy as np
 
-
 def compute_vsh_gr(gr, gr_min=None, gr_max=None, model: str = "linear"):
     gr = np.asarray(gr, dtype=float)
     if gr_min is None:
