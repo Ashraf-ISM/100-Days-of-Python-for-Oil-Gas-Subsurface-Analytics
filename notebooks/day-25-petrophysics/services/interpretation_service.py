@@ -154,7 +154,6 @@ class InterpretationService:
 
         combo = getattr(self.ui, "vshMethodComboBox", None)
         if combo is not None:
-            self._set_checked_vsh_methods(["Linear"])
             if hasattr(combo, "setCurrentIndex"):
                 combo.setCurrentIndex(0)
 
@@ -2356,20 +2355,6 @@ class InterpretationService:
         self._vsh_hist_host = getattr(self.ui, "vshHistCanvas", None)
         self._vsh_box_host = getattr(self.ui, "vshBoxCanvas", None)
 
-        # Fallback for malformed .ui: create a dedicated track canvas host if missing.
-        if self._vsh_track_host is None:
-            track_frame = getattr(self.ui, "frameVshTrack", None)
-            if track_frame is not None:
-                track_layout = track_frame.layout()
-                if track_layout is None:
-                    track_layout = QtWidgets.QVBoxLayout(track_frame)
-                    track_layout.setContentsMargins(8, 8, 8, 8)
-                    track_layout.setSpacing(6)
-                self._vsh_track_host = QtWidgets.QWidget(track_frame)
-                self._vsh_track_host.setObjectName("vshTrackCanvas")
-                track_layout.addWidget(self._vsh_track_host, 1)
-                self.ui.vshTrackCanvas = self._vsh_track_host
-
         for host in (self._vsh_track_host, self._vsh_hist_host, self._vsh_box_host):
             if host is None:
                 continue
@@ -2382,13 +2367,16 @@ class InterpretationService:
         method_combo = getattr(self.ui, "comboVclMethod", None)
         if method_combo is not None:
             self.ui.vshMethodComboBox = method_combo
-            self._configure_vsh_method_selector(method_combo)
 
         self.ui.runVshBtn = getattr(self.ui, "btnCalcVsh", None)
         send_btn = getattr(self.ui, "btnUseVshWorkflow", None)
         self.ui.sendToWorkflowBtn = send_btn
         if send_btn is not None and hasattr(send_btn, "clicked"):
             send_btn.clicked.connect(self._send_vsh_to_workflow)
+
+        reset_header_btn = getattr(self.ui, "btnResetVshHeader", None)
+        if reset_header_btn is not None and hasattr(reset_header_btn, "clicked"):
+            reset_header_btn.clicked.connect(self.reset_vsh_panel)
 
         self.ui.grCleanSpinBox = getattr(self.ui, "spinVclGRmin", None)
         self.ui.grShaleSpinBox = getattr(self.ui, "spinVclGRmax", None)
@@ -2398,64 +2386,110 @@ class InterpretationService:
         if df is not None:
             self._sync_gr_curve_line(df)
 
+        self._show_vsh_placeholder(self._vsh_track_host, "Track View", "Compute Vsh to preview the GR and shale-volume tracks.")
+        self._show_vsh_placeholder(self._vsh_hist_host, "Distribution", "A Vsh distribution summary will appear here after computation.")
+
         self.ui._vsh_workspace_built = True
 
     def _update_vsh_kpis(self, gr_clean, gr_shale, method: str, stats: dict) -> None:
-        self._set_label_text("grCleanLabel", self._format_value(gr_clean, "Depth"))
-        self._set_label_text("grShaleLabel", self._format_value(gr_shale, "Depth"))
+        self._set_label_text("grCleanLabel", self._format_gr_value(gr_clean))
+        self._set_label_text("grShaleLabel", self._format_gr_value(gr_shale))
         self._set_label_text("methodLabel", method)
         self._set_label_text("vshMeanLabel", f"{stats['mean']:.3f}")
-        self._set_label_text("vshRangeLabel", f"{stats['min']:.3f}-{stats['max']:.3f}")
+        self._set_label_text("vshRangeLabel", f"{stats['min']:.3f} - {stats['max']:.3f}")
         self._set_label_text("shalePercentLabel", f"{stats['shale_percent']:.1f}%")
 
-    def _plot_vsh_track(self, df, gr_curve: str, method_columns: list[tuple[str, str]]) -> None:
+    def _plot_vsh_track(self, df, gr_curve: str, vsh_col: str, method_name: str, gr_clean, gr_shale) -> None:
         import pandas as pd
         from matplotlib.figure import Figure
 
         depth_col = self.data._depth_column(df)
         if depth_col is None:
+            self._show_vsh_placeholder(self._vsh_track_host, "Track View", "A depth curve is required to render the Vsh track.")
             return
 
         depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
         gr = pd.to_numeric(df.get(gr_curve), errors="coerce").to_numpy(dtype=float) if gr_curve in df.columns else None
+        vsh = pd.to_numeric(df.get(vsh_col), errors="coerce").to_numpy(dtype=float) if vsh_col in df.columns else None
 
-        method_arrays: list[tuple[str, np.ndarray]] = []
-        mask = np.isfinite(depth)
-        for method_name, col_name in method_columns:
-            vsh_values = pd.to_numeric(df.get(col_name), errors="coerce").to_numpy(dtype=float)
-            method_arrays.append((method_name, vsh_values))
-            mask &= np.isfinite(vsh_values)
+        if vsh is None:
+            self._show_vsh_placeholder(self._vsh_track_host, "Track View", "Vsh has not been computed for the current selection.")
+            return
+
+        mask = np.isfinite(depth) & np.isfinite(vsh)
+        if gr is not None:
+            mask &= np.isfinite(gr)
 
         if not np.any(mask):
+            self._show_vsh_placeholder(self._vsh_track_host, "Track View", "No valid GR/Vsh samples were found for the current interval.")
             return
+
         depth = depth[mask]
-        method_arrays = [(name, vals[mask]) for name, vals in method_arrays]
+        vsh = np.clip(vsh[mask], 0.0, 1.0)
         if gr is not None:
             gr = gr[mask]
 
-        n_methods = len(method_arrays)
-        fig = Figure(figsize=(max(6.2, 3.0 * n_methods), 8.8), dpi=100, constrained_layout=True)
-        axes = fig.subplots(1, n_methods, sharey=True)
-        if n_methods == 1:
-            axes = [axes]
+        fig = Figure(figsize=(9.8, 10.2), dpi=100, constrained_layout=True)
+        ax_gr, ax_vsh = fig.subplots(1, 2, sharey=True, gridspec_kw={"width_ratios": [1.0, 2.6]})
+        fig.patch.set_facecolor("white")
 
-        for idx, (ax, (method_name, vsh_vals)) in enumerate(zip(axes, method_arrays)):
-            ax.plot(vsh_vals, depth, color="#1F2937", linewidth=1.2)
-            ax.fill_betweenx(depth, 0, vsh_vals, where=(vsh_vals < 0.3), color="#16A34A", alpha=0.25)
-            ax.fill_betweenx(depth, 0, vsh_vals, where=((vsh_vals >= 0.3) & (vsh_vals <= 0.5)), color="#EAB308", alpha=0.25)
-            ax.fill_betweenx(depth, 0, vsh_vals, where=(vsh_vals > 0.5), color="#DC2626", alpha=0.25)
-            ax.set_xlim(0, 1)
-            ax.set_ylim(np.nanmax(depth), np.nanmin(depth))
-            ax.set_xlabel("Vsh", fontsize=9)
-            if idx == 0:
-                ax.set_ylabel(depth_col, fontsize=9)
-            ax.set_title(f"Vsh Track - {method_name}", fontsize=10)
-            ax.grid(True, linestyle="--", alpha=0.2)
+        show_clean = self._is_checked("checkVshShowCleanLine", True)
+        show_shale = self._is_checked("checkVshShowShaleLine", True)
+        highlight_high = self._is_checked("checkVshHighlightHigh", True)
 
-            if gr is not None and idx == 0:
-                ax2 = ax.twiny()
-                ax2.plot(gr, depth, color="#0EA5E9", linewidth=0.8, alpha=0.55)
-                ax2.set_xlabel(gr_curve, fontsize=8)
+        if gr is not None:
+            ax_gr.plot(gr, depth, color="#2EB67D", linewidth=1.05, label=gr_curve)
+            finite_gr = gr[np.isfinite(gr)]
+            if finite_gr.size:
+                gr_min_xlim = float(np.nanmin(finite_gr))
+                gr_max_xlim = float(np.nanmax(finite_gr))
+                margin = max(5.0, (gr_max_xlim - gr_min_xlim) * 0.12)
+                ax_gr.set_xlim(gr_min_xlim - margin, gr_max_xlim + margin)
+        if show_clean and gr_clean is not None:
+            ax_gr.axvline(float(gr_clean), color="#F59E0B", linestyle="--", linewidth=1.1, label="Sand Line")
+        if show_shale and gr_shale is not None:
+            ax_gr.axvline(float(gr_shale), color="#EF4444", linestyle="--", linewidth=1.1, label="Shale Line")
+
+        ax_gr.set_title(f"GR (API)\n{gr_curve}", fontsize=10, color="#1F3653", pad=10)
+        ax_gr.xaxis.set_label_position("top")
+        ax_gr.xaxis.tick_top()
+        ax_gr.set_xlabel("GR (API)", fontsize=9)
+        ax_gr.set_ylabel(depth_col, fontsize=9)
+        ax_gr.grid(True, linestyle="--", alpha=0.18)
+        ax_gr.tick_params(axis="both", labelsize=8)
+
+        ax_vsh.axvspan(0.0, 0.5, color="#E8F5EC", alpha=0.95)
+        ax_vsh.axvspan(0.5, 1.0, color="#FBE5E5", alpha=0.95)
+        ax_vsh.fill_betweenx(depth, 0.0, vsh, color="#D7E8FF", alpha=0.92, label="Vsh")
+        ax_vsh.plot(vsh, depth, color="#3B82F6", linewidth=1.05)
+        if highlight_high:
+            ax_vsh.fill_betweenx(depth, 0.5, vsh, where=(vsh >= 0.5), color="#93C5FD", alpha=0.55, label="Highlight Vsh > 0.5")
+
+        ax_vsh.set_xlim(0.0, 1.0)
+        ax_vsh.set_title(f"Vsh - {method_name}", fontsize=10, color="#1F3653", pad=10)
+        ax_vsh.xaxis.set_label_position("top")
+        ax_vsh.xaxis.tick_top()
+        ax_vsh.set_xlabel("Vsh", fontsize=9)
+        ax_vsh.grid(True, linestyle="--", alpha=0.18)
+        ax_vsh.tick_params(axis="both", labelsize=8)
+
+        max_depth = float(np.nanmax(depth))
+        min_depth = float(np.nanmin(depth))
+        ax_gr.set_ylim(max_depth, min_depth)
+
+        handles_gr, labels_gr = ax_gr.get_legend_handles_labels()
+        handles_vsh, labels_vsh = ax_vsh.get_legend_handles_labels()
+        legend_handles = handles_gr + handles_vsh
+        legend_labels = labels_gr + labels_vsh
+        if legend_handles:
+            fig.legend(
+                legend_handles,
+                legend_labels,
+                loc="upper center",
+                ncol=min(4, len(legend_handles)),
+                frameon=False,
+                fontsize=8,
+            )
 
         self._render_figure_to_host(self._vsh_track_host, fig)
 
@@ -2463,39 +2497,26 @@ class InterpretationService:
         import pandas as pd
         from matplotlib.figure import Figure
 
-        method_values: list[tuple[str, np.ndarray]] = []
-        for method_name, col_name in method_columns:
-            vals = pd.to_numeric(df.get(col_name), errors="coerce").dropna().to_numpy(dtype=float)
-            if vals.size:
-                method_values.append((method_name, vals))
-
-        if not method_values:
+        method_name, col_name = method_columns[0]
+        values = pd.to_numeric(df.get(col_name), errors="coerce").dropna().to_numpy(dtype=float)
+        if values.size == 0:
+            self._show_vsh_placeholder(self._vsh_hist_host, "Distribution", "No Vsh samples are available for the current interval.")
             return
 
-        n_methods = len(method_values)
-        hist_fig = Figure(figsize=(4.8, max(3.4, 2.2 * n_methods)), dpi=100, constrained_layout=True)
-        hist_axes = hist_fig.subplots(n_methods, 1)
-        if n_methods == 1:
-            hist_axes = [hist_axes]
-        for ax, (method_name, values) in zip(hist_axes, method_values):
-            ax.hist(values, bins=24, color="#3B82F6", alpha=0.8, edgecolor="#1D4ED8")
-            ax.set_title(f"Vsh Histogram - {method_name}", fontsize=9)
-            ax.set_xlabel("Vsh")
-            ax.set_ylabel("Count")
-            ax.grid(True, linestyle="--", alpha=0.2)
-
-        box_fig = Figure(figsize=(4.8, max(3.4, 2.2 * n_methods)), dpi=100, constrained_layout=True)
-        box_axes = box_fig.subplots(n_methods, 1)
-        if n_methods == 1:
-            box_axes = [box_axes]
-        for ax, (method_name, values) in zip(box_axes, method_values):
-            ax.boxplot(values, vert=False, patch_artist=True, boxprops={"facecolor": "#93C5FD", "edgecolor": "#1D4ED8"})
-            ax.set_title(f"Vsh Boxplot - {method_name}", fontsize=9)
-            ax.set_xlabel("Vsh")
-            ax.grid(True, axis="x", linestyle="--", alpha=0.2)
+        hist_fig = Figure(figsize=(4.2, 1.65), dpi=100, constrained_layout=True)
+        hist_fig.patch.set_facecolor("#F8FBFE")
+        ax = hist_fig.add_subplot(1, 1, 1)
+        ax.hist(values, bins=16, color="#7DAAF7", alpha=0.95, edgecolor="#4A7DD4")
+        ax.axvline(float(np.nanmean(values)), color="#1D4ED8", linewidth=1.2, linestyle="--")
+        ax.set_title(f"{method_name}", fontsize=8, color="#42566C")
+        ax.set_xlabel("Vsh", fontsize=8)
+        ax.set_ylabel("Count", fontsize=8)
+        ax.grid(True, axis="y", linestyle="--", alpha=0.18)
+        ax.tick_params(axis="both", labelsize=7)
 
         self._render_figure_to_host(self._vsh_hist_host, hist_fig)
-        self._render_figure_to_host(self._vsh_box_host, box_fig)
+        if self._vsh_box_host is not None:
+            self._show_vsh_placeholder(self._vsh_box_host, "Distribution", "Additional Vsh diagnostics can be rendered here.")
 
     def _clear_vsh_distribution_hosts(self) -> None:
         for host in (self._vsh_hist_host, self._vsh_box_host):
@@ -2541,6 +2562,10 @@ class InterpretationService:
             text = self._combo_text("comboVclMethod")
             return [text] if text else ["Linear"]
 
+        if combo.lineEdit() is None:
+            fallback = combo.currentText().strip()
+            return [fallback] if fallback else ["Linear"]
+
         selected: list[str] = []
         model = combo.model()
         if model is not None and hasattr(model, "item"):
@@ -2560,7 +2585,7 @@ class InterpretationService:
 
     def _set_checked_vsh_methods(self, methods: list[str]) -> None:
         combo = getattr(self.ui, "vshMethodComboBox", None)
-        if combo is None:
+        if combo is None or combo.lineEdit() is None:
             return
         model = combo.model()
         if model is None or not hasattr(model, "item"):
@@ -2619,6 +2644,48 @@ class InterpretationService:
         except Exception:
             pass
 
+    def _show_vsh_placeholder(self, host, title: str, message: str) -> None:
+        if host is None:
+            return
+        layout = host.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(host)
+            layout.setContentsMargins(0, 0, 0, 0)
+        self._clear_layout(layout)
+        label = QtWidgets.QLabel(f"{title}\n\n{message}", host)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setWordWrap(True)
+        label.setStyleSheet(
+            "background:#F8FBFE;border:1px dashed #C9D7E6;border-radius:10px;padding:18px;color:#6C7E90;font-size:12px;"
+        )
+        layout.addWidget(label, 1)
+
+    def _set_vsh_status(self, message: str, timestamp=None) -> None:
+        self._set_label_text("vshStatusLabel", message)
+        if timestamp is None:
+            self._set_label_text("vshStatusTimeLabel", "--")
+            return
+        if isinstance(timestamp, QtCore.QDateTime):
+            text = timestamp.toString("MMM d, hh:mm AP")
+        else:
+            text = str(timestamp)
+        self._set_label_text("vshStatusTimeLabel", text)
+
+    def _format_gr_value(self, value) -> str:
+        try:
+            return f"{float(value):.2f}"
+        except (TypeError, ValueError):
+            return "--"
+
+    def _is_checked(self, name: str, default: bool = False) -> bool:
+        widget = getattr(self.ui, name, None)
+        if widget is None or not hasattr(widget, "isChecked"):
+            return default
+        try:
+            return bool(widget.isChecked())
+        except RuntimeError:
+            return default
+
     def _send_vsh_to_workflow(self):
         well = self.data._get_current_well()
         if well is None:
@@ -2670,6 +2737,16 @@ class InterpretationService:
             return default
 
     def _sync_gr_curve_line(self, df) -> None:
+        curve_name = self._pick_gr_curve_name(df)
+
+        combo_widget = getattr(self.ui, "comboVclGR", None)
+        if combo_widget is not None and hasattr(combo_widget, "findText") and curve_name:
+            current_combo = self._combo_text("comboVclGR")
+            if current_combo not in getattr(df, "columns", []):
+                index = combo_widget.findText(curve_name)
+                if index >= 0:
+                    combo_widget.setCurrentIndex(index)
+
         line_widget = getattr(self.ui, "gRCurveLineEdit", None)
         if line_widget is None or not hasattr(line_widget, "setText"):
             return
@@ -2678,7 +2755,6 @@ class InterpretationService:
         if current and current in getattr(df, "columns", []):
             return
 
-        curve_name = self._pick_gr_curve_name(df)
         if curve_name:
             line_widget.setText(curve_name)
 
