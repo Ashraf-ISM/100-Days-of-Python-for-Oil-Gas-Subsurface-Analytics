@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 from calculations import vshale
 
+UI_PATH = Path(__file__).resolve().parent.parent / "ui" / "vsh_model_comparison.ui"
 
 class VshModelComparisonDialog(QtWidgets.QDialog):
     MODEL_SPECS = (
@@ -18,23 +19,31 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
 
     def __init__(self, parent: QtWidgets.QWidget | None, data_service):
         super().__init__(parent)
+        uic.loadUi(str(UI_PATH), self)
+        
         self.data_service = data_service
         self._well = None
         self._full_df = None
         self._visible_df = None
         self._gr_curve = "GR"
         self._latest_payload = None
-        self._theory_host = None
-        self._well_host = None
-        self._legend_layout = None
-        self._model_checks: dict[str, QtWidgets.QCheckBox] = {}
 
-        self.setModal(True)
-        self.setWindowTitle("Vsh Model Comparison")
-        self.resize(1460, 900)
-        self.setStyleSheet("QDialog{background:#F4F7FB;} QLabel{color:#24384D;} QPushButton{font-weight:600;}")
+        self._model_checks: dict[str, QtWidgets.QCheckBox] = {
+            "Linear": self.chkLinear,
+            "Larionov Tertiary": self.chkLarionovTertiary,
+            "Larionov Older": self.chkLarionovOlder,
+            "Clavier": self.chkClavier,
+            "Steiber": self.chkSteiber,
+        }
 
-        self._build_ui()
+        self.btnSelectAll.clicked.connect(self._select_all_models)
+        self.btnGenerate.clicked.connect(self.generate_comparison)
+        self.btnExport.clicked.connect(self._export_figure)
+        self.btnClose.clicked.connect(self.accept)
+
+        self._show_placeholder(self._theory_host, "Theoretical Model Curves", "Click Generate Comparison to compare model responses.")
+        self._show_placeholder(self._well_host, "Well Log Comparison", "Well-based comparison will appear here once a comparison is generated.")
+        self._update_legend([])
 
     def set_context(self, well, gr_curve: str, gr_clean: float, gr_shale: float) -> None:
         self._well = well
@@ -73,284 +82,6 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         self._update_legend(payload["models"])
         self._update_insights(payload)
         self._set_status("Ready - comparison generated.", "#E8F7EE", "#2F855A")
-
-    def _build_ui(self) -> None:
-        root = QtWidgets.QVBoxLayout(self)
-        root.setContentsMargins(14, 14, 14, 14)
-        root.setSpacing(12)
-
-        header = self._make_card()
-        header_layout = QtWidgets.QHBoxLayout(header)
-        header_layout.setContentsMargins(16, 14, 16, 14)
-        header_layout.setSpacing(12)
-
-        title_col = QtWidgets.QVBoxLayout()
-        title_col.setSpacing(2)
-        title = QtWidgets.QLabel("Vsh Model Comparison", header)
-        title.setStyleSheet("font-size:24px;font-weight:800;color:#1F3653;")
-        subtitle = QtWidgets.QLabel(
-            "Compare different shale volume models to understand sensitivity and uncertainty for the current well.",
-            header,
-        )
-        subtitle.setWordWrap(True)
-        subtitle.setStyleSheet("font-size:12px;color:#5C718A;")
-        title_col.addWidget(title)
-        title_col.addWidget(subtitle)
-        header_layout.addLayout(title_col, 1)
-
-        self.lblStatusBadge = QtWidgets.QLabel("Ready", header)
-        self.lblStatusBadge.setAlignment(QtCore.Qt.AlignCenter)
-        self.lblStatusBadge.setMinimumWidth(220)
-        self.lblStatusBadge.setStyleSheet(
-            "background:#E8F7EE;color:#2F855A;border:1px solid #CFE8D8;border-radius:16px;padding:8px 12px;font-weight:700;"
-        )
-        header_layout.addWidget(self.lblStatusBadge, 0, QtCore.Qt.AlignTop)
-        root.addWidget(header)
-
-        controls = self._make_card()
-        controls_layout = QtWidgets.QVBoxLayout(controls)
-        controls_layout.setContentsMargins(16, 14, 16, 14)
-        controls_layout.setSpacing(12)
-
-        meta_row = QtWidgets.QHBoxLayout()
-        meta_row.setSpacing(12)
-        meta_row.addWidget(self._make_meta_chip("Well", attr_name="lblWellValue"))
-        meta_row.addWidget(self._make_meta_chip("GR Curve", attr_name="lblCurveValue"))
-        meta_row.addStretch(1)
-        controls_layout.addLayout(meta_row)
-
-        config_row = QtWidgets.QHBoxLayout()
-        config_row.setSpacing(14)
-
-        config_row.addWidget(self._make_spin_card("GR Clean (Sand Line)", "spinGrClean", 23.0))
-        config_row.addWidget(self._make_spin_card("GR Shale (Shale Line)", "spinGrShale", 160.0))
-
-        models_card = QtWidgets.QFrame(controls)
-        models_card.setStyleSheet("background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;")
-        models_layout = QtWidgets.QVBoxLayout(models_card)
-        models_layout.setContentsMargins(12, 10, 12, 10)
-        models_layout.setSpacing(10)
-
-        models_header = QtWidgets.QHBoxLayout()
-        models_title = QtWidgets.QLabel("Models to Display", models_card)
-        models_title.setStyleSheet("font-size:12px;font-weight:700;color:#42566C;")
-        btn_select_all = QtWidgets.QPushButton("Select All", models_card)
-        btn_select_all.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        btn_select_all.setStyleSheet(
-            "QPushButton{background:transparent;color:#1F6FEB;border:none;font-weight:700;padding:2px 4px;}"
-            "QPushButton:hover{color:#1658B8;}"
-        )
-        btn_select_all.clicked.connect(self._select_all_models)
-        models_header.addWidget(models_title)
-        models_header.addStretch(1)
-        models_header.addWidget(btn_select_all)
-        models_layout.addLayout(models_header)
-
-        checks_row = QtWidgets.QHBoxLayout()
-        checks_row.setSpacing(12)
-        for spec in self.MODEL_SPECS:
-            check = QtWidgets.QCheckBox(spec["label"], models_card)
-            check.setChecked(True)
-            check.setStyleSheet(f"QCheckBox{{color:{spec['color']};font-weight:700;border:none;}}")
-            self._model_checks[spec["label"]] = check
-            checks_row.addWidget(check)
-        checks_row.addStretch(1)
-        models_layout.addLayout(checks_row)
-        config_row.addWidget(models_card, 1)
-        controls_layout.addLayout(config_row)
-
-        buttons_row = QtWidgets.QHBoxLayout()
-        buttons_row.setSpacing(10)
-        buttons_row.addStretch(1)
-
-        self.btnGenerate = QtWidgets.QPushButton("Generate Comparison", controls)
-        self.btnGenerate.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btnGenerate.setMinimumHeight(40)
-        self.btnGenerate.setStyleSheet(
-            "QPushButton{background:#1F6FEB;color:#FFFFFF;border:none;border-radius:9px;padding:8px 18px;font-weight:700;}"
-            "QPushButton:hover{background:#1658B8;}"
-        )
-        self.btnGenerate.clicked.connect(self.generate_comparison)
-
-        self.btnExport = QtWidgets.QPushButton("Export Figure", controls)
-        self.btnExport.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btnExport.setMinimumHeight(40)
-        self.btnExport.setStyleSheet(
-            "QPushButton{background:#FFFFFF;color:#42566C;border:1px solid #C9D7E6;border-radius:9px;padding:8px 18px;font-weight:700;}"
-            "QPushButton:hover{background:#F8FBFE;}"
-        )
-        self.btnExport.clicked.connect(self._export_figure)
-
-        btn_close = QtWidgets.QPushButton("Close", controls)
-        btn_close.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        btn_close.setMinimumHeight(40)
-        btn_close.setStyleSheet(
-            "QPushButton{background:#FFFFFF;color:#42566C;border:1px solid #C9D7E6;border-radius:9px;padding:8px 18px;font-weight:700;}"
-            "QPushButton:hover{background:#F8FBFE;}"
-        )
-        btn_close.clicked.connect(self.accept)
-
-        buttons_row.addWidget(self.btnGenerate)
-        buttons_row.addWidget(self.btnExport)
-        buttons_row.addWidget(btn_close)
-        controls_layout.addLayout(buttons_row)
-        root.addWidget(controls)
-
-        content_row = QtWidgets.QHBoxLayout()
-        content_row.setSpacing(12)
-
-        left_card = self._make_card()
-        left_layout = QtWidgets.QVBoxLayout(left_card)
-        left_layout.setContentsMargins(14, 12, 14, 14)
-        left_layout.setSpacing(10)
-        left_title = QtWidgets.QLabel("THEORETICAL MODEL CURVES", left_card)
-        left_title.setStyleSheet("font-size:13px;font-weight:800;color:#1F4E79;")
-        left_layout.addWidget(left_title)
-        left_subtitle = QtWidgets.QLabel("Vsh vs Gamma Ray - model comparison", left_card)
-        left_subtitle.setStyleSheet("font-size:11px;color:#5C718A;")
-        left_layout.addWidget(left_subtitle)
-        self._theory_host = QtWidgets.QWidget(left_card)
-        left_layout.addWidget(self._theory_host, 1)
-        content_row.addWidget(left_card, 5)
-
-        right_wrap = QtWidgets.QVBoxLayout()
-        right_wrap.setSpacing(12)
-
-        right_card = self._make_card()
-        right_layout = QtWidgets.QVBoxLayout(right_card)
-        right_layout.setContentsMargins(14, 12, 14, 14)
-        right_layout.setSpacing(10)
-        right_header = QtWidgets.QHBoxLayout()
-        right_title = QtWidgets.QLabel("WELL LOG COMPARISON", right_card)
-        right_title.setStyleSheet("font-size:13px;font-weight:800;color:#1F4E79;")
-        self.lblDepthBadge = QtWidgets.QLabel("Depth: --", right_card)
-        self.lblDepthBadge.setAlignment(QtCore.Qt.AlignCenter)
-        self.lblDepthBadge.setStyleSheet(
-            "background:#F3F7FC;color:#61788F;border:1px solid #D7E2EE;border-radius:12px;padding:6px 10px;font-size:11px;font-weight:700;"
-        )
-        right_header.addWidget(right_title)
-        right_header.addStretch(1)
-        right_header.addWidget(self.lblDepthBadge)
-        right_layout.addLayout(right_header)
-
-        right_subtitle = QtWidgets.QLabel("Gamma Ray and Vsh from multiple models", right_card)
-        right_subtitle.setStyleSheet("font-size:11px;color:#5C718A;")
-        right_layout.addWidget(right_subtitle)
-        self._well_host = QtWidgets.QWidget(right_card)
-        right_layout.addWidget(self._well_host, 1)
-        right_wrap.addWidget(right_card, 5)
-
-        insights_card = self._make_card()
-        insights_layout = QtWidgets.QVBoxLayout(insights_card)
-        insights_layout.setContentsMargins(14, 12, 14, 14)
-        insights_layout.setSpacing(12)
-
-        legend_title = QtWidgets.QLabel("MODELS", insights_card)
-        legend_title.setStyleSheet("font-size:12px;font-weight:800;color:#42566C;")
-        insights_layout.addWidget(legend_title)
-
-        legend_box = QtWidgets.QFrame(insights_card)
-        legend_box.setStyleSheet("background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;")
-        self._legend_layout = QtWidgets.QVBoxLayout(legend_box)
-        self._legend_layout.setContentsMargins(10, 10, 10, 10)
-        self._legend_layout.setSpacing(8)
-        insights_layout.addWidget(legend_box)
-
-        quick_title = QtWidgets.QLabel("QUICK INSIGHTS", insights_card)
-        quick_title.setStyleSheet("font-size:12px;font-weight:800;color:#42566C;")
-        insights_layout.addWidget(quick_title)
-
-        grid = QtWidgets.QGridLayout()
-        grid.setHorizontalSpacing(10)
-        grid.setVerticalSpacing(10)
-        self.lblCleanValue = self._make_stat_value()
-        self.lblShaleValue = self._make_stat_value()
-        self.lblModelsValue = self._make_stat_value()
-        self.lblSamplesValue = self._make_stat_value()
-        self.lblSpreadValue = self._make_stat_value()
-        self.lblWindowValue = self._make_stat_value()
-        for row, (title_text, widget) in enumerate(
-            (
-                ("GR Clean", self.lblCleanValue),
-                ("GR Shale", self.lblShaleValue),
-                ("Models Plotted", self.lblModelsValue),
-                ("Depth Samples", self.lblSamplesValue),
-                ("Mean Spread", self.lblSpreadValue),
-                ("Depth Window", self.lblWindowValue),
-            )
-        ):
-            title_label = QtWidgets.QLabel(title_text, insights_card)
-            title_label.setStyleSheet("font-size:11px;color:#61788F;font-weight:700;")
-            grid.addWidget(title_label, row // 2, (row % 2) * 2)
-            grid.addWidget(widget, row // 2, (row % 2) * 2 + 1)
-        insights_layout.addLayout(grid)
-
-        self.txtInsight = QtWidgets.QLabel(insights_card)
-        self.txtInsight.setWordWrap(True)
-        self.txtInsight.setStyleSheet(
-            "background:#F3F7FC;border:1px solid #DCE7F2;border-radius:10px;padding:12px;color:#44576C;font-size:11px;"
-        )
-        self.txtInsight.setText("Model selection insights will appear here after comparison generation.")
-        insights_layout.addWidget(self.txtInsight)
-        insights_layout.addStretch(1)
-        right_wrap.addWidget(insights_card, 3)
-
-        content_row.addLayout(right_wrap, 6)
-        root.addLayout(content_row, 1)
-
-        self._show_placeholder(self._theory_host, "Theoretical Model Curves", "Click Generate Comparison to compare model responses.")
-        self._show_placeholder(self._well_host, "Well Log Comparison", "Well-based comparison will appear here once a comparison is generated.")
-        self._update_legend([])
-
-    def _make_card(self) -> QtWidgets.QFrame:
-        card = QtWidgets.QFrame(self)
-        card.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        card.setStyleSheet("background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;")
-        return card
-
-    def _make_meta_chip(self, title: str, attr_name: str) -> QtWidgets.QFrame:
-        frame = QtWidgets.QFrame(self)
-        frame.setStyleSheet("background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;")
-        layout = QtWidgets.QVBoxLayout(frame)
-        layout.setContentsMargins(12, 8, 12, 8)
-        layout.setSpacing(2)
-        title_label = QtWidgets.QLabel(title, frame)
-        title_label.setStyleSheet("font-size:10px;color:#61788F;font-weight:700;")
-        value_label = QtWidgets.QLabel("--", frame)
-        value_label.setStyleSheet("font-size:14px;color:#1F3653;font-weight:800;")
-        setattr(self, attr_name, value_label)
-        layout.addWidget(title_label)
-        layout.addWidget(value_label)
-        return frame
-
-    def _make_spin_card(self, title: str, attr_name: str, value: float) -> QtWidgets.QFrame:
-        card = QtWidgets.QFrame(self)
-        card.setStyleSheet("background:#F8FBFE;border:1px solid #E1EAF2;border-radius:10px;")
-        layout = QtWidgets.QVBoxLayout(card)
-        layout.setContentsMargins(12, 10, 12, 10)
-        layout.setSpacing(8)
-        title_label = QtWidgets.QLabel(title, card)
-        title_label.setStyleSheet("font-size:12px;font-weight:700;color:#42566C;")
-        spin = QtWidgets.QDoubleSpinBox(card)
-        spin.setDecimals(2)
-        spin.setRange(-1000.0, 10000.0)
-        spin.setValue(value)
-        spin.setMinimumHeight(36)
-        spin.setStyleSheet(
-            "QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}"
-        )
-        unit_label = QtWidgets.QLabel("API", card)
-        unit_label.setStyleSheet("font-size:11px;color:#61788F;font-weight:700;")
-        setattr(self, attr_name, spin)
-        layout.addWidget(title_label)
-        layout.addWidget(spin)
-        layout.addWidget(unit_label)
-        return card
-
-    def _make_stat_value(self) -> QtWidgets.QLabel:
-        label = QtWidgets.QLabel("--", self)
-        label.setStyleSheet("font-size:14px;font-weight:800;color:#1F3653;")
-        return label
 
     def _set_insight_label(self, widget: QtWidgets.QLabel, text: str) -> None:
         widget.setText(text)
