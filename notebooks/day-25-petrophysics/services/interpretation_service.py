@@ -74,6 +74,7 @@ class InterpretationService:
             df[col_name] = vsh_values
             method_columns.append((method, col_name))
 
+
         primary_col = method_columns[0][1]
         df["VSH"] = df[primary_col].values
         df["Vsh"] = df[primary_col].values
