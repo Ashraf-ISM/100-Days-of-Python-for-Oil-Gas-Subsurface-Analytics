@@ -22,7 +22,7 @@ def compute_vsh_gr(gr, gr_min=None, gr_max=None, model: str = "linear"):
     elif "clavier" in name:
         second_term = 3.38 - np.square(igr + 0.7)
         vsh = 1.7 - np.sqrt(second_term)
-    elif "steiber" in name:
+    elif "steiber" in name: 
         vsh = igr / (3.0 - 2.0 * igr + 1e-9)
     else:
         vsh = igr
