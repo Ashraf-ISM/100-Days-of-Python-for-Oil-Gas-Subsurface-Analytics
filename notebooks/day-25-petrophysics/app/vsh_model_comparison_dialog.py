@@ -230,7 +230,7 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         ax_vsh.axvspan(0.0, 0.5, color="#E7F7EE", alpha=0.95)
         ax_vsh.axvspan(0.5, 1.0, color="#FCE8E8", alpha=0.95)
         for item in payload["models"]:
-            ax_vsh.plot(item["values"], payload["depth"], color=item["color"], linewidth=1.15)
+            ax_vsh.plot(item["values"], payload["depth"], color=item["color"], linewidth=1.15, label=item["label"])
         ax_vsh.set_xlim(0.0, 1.0)
         ax_vsh.set_title("Vsh - All Models", fontsize=10, color="#1F3653")
         ax_vsh.set_xlabel("Vsh", fontsize=9)
@@ -238,6 +238,7 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         ax_vsh.xaxis.tick_top()
         ax_vsh.grid(True, linestyle="--", alpha=0.16)
         ax_vsh.tick_params(axis="both", labelsize=8)
+        ax_vsh.legend(loc="lower right", fontsize=8, framealpha=0.9, facecolor="#F8FBFE", edgecolor="#D7E2EE")
 
         ax_gr.set_ylim(payload["depth_high"], payload["depth_low"])
         fig.patch.set_facecolor("white")
@@ -272,7 +273,7 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         layout.addWidget(label, 1)
 
     def _update_legend(self, models: list[dict]) -> None:
-        if self._legend_layout is None:
+        if not hasattr(self, "_legend_layout") or self._legend_layout is None:
             return
         self._clear_layout(self._legend_layout)
         if not models:
