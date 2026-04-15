@@ -297,13 +297,20 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         self._legend_layout.addStretch(1)
 
     def _update_insights(self, payload) -> None:
-        self._set_insight_label(self.lblCleanValue, f"{payload['gr_clean']:.2f} API")
-        self._set_insight_label(self.lblShaleValue, f"{payload['gr_shale']:.2f} API")
-        self._set_insight_label(self.lblModelsValue, str(len(payload["models"])))
-        self._set_insight_label(self.lblSamplesValue, f"{payload['sample_count']:,}")
-        self._set_insight_label(self.lblSpreadValue, f"{payload['spread']:.3f}")
-        self._set_insight_label(self.lblWindowValue, f"{payload['depth_low']:.0f} - {payload['depth_high']:.0f}")
-        self.lblDepthBadge.setText(f"Depth: {payload['depth_low']:.0f} - {payload['depth_high']:.0f}")
+        if hasattr(self, 'lblCleanValue'):
+            self._set_insight_label(self.lblCleanValue, f"{payload['gr_clean']:.2f} API")
+        if hasattr(self, 'lblShaleValue'):
+            self._set_insight_label(self.lblShaleValue, f"{payload['gr_shale']:.2f} API")
+        if hasattr(self, 'lblModelsValue'):
+            self._set_insight_label(self.lblModelsValue, str(len(payload["models"])))
+        if hasattr(self, 'lblSamplesValue'):
+            self._set_insight_label(self.lblSamplesValue, f"{payload['sample_count']:,}")
+        if hasattr(self, 'lblSpreadValue'):
+            self._set_insight_label(self.lblSpreadValue, f"{payload['spread']:.3f}")
+        if hasattr(self, 'lblWindowValue'):
+            self._set_insight_label(self.lblWindowValue, f"{payload['depth_low']:.0f} - {payload['depth_high']:.0f}")
+        if hasattr(self, 'lblDepthBadge'):
+            self.lblDepthBadge.setText(f"Depth: {payload['depth_low']:.0f} - {payload['depth_high']:.0f}")
 
         if payload["spread"] >= 0.14:
             sensitivity = "high"
@@ -315,10 +322,11 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
             sensitivity = "low"
             risk_note = "Most models are tracking closely over this interval."
 
-        self.txtInsight.setText(
-            f"{payload['dominant_model']} gives the highest average Vsh across the selected interval. "
-            f"Overall model sensitivity is {sensitivity}; {risk_note}"
-        )
+        if hasattr(self, 'txtInsight'):
+            self.txtInsight.setText(
+                f"{payload['dominant_model']} gives the highest average Vsh across the selected interval. "
+                f"Overall model sensitivity is {sensitivity}; {risk_note}"
+            )
 
     def _set_status(self, text: str, background: str, foreground: str) -> None:
         self.lblStatusBadge.setText(text)
