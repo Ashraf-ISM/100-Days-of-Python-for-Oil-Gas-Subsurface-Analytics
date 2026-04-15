@@ -104,6 +104,7 @@ class MainController:
 
         # Calculations (buttons in tab)
         self._connect_widget("btnCalcVsh", "clicked", self.interp.compute_vsh)
+        self._connect_widget("btnVshModelComparison", "clicked", self.interp.show_vsh_model_comparison_dialog)
         self._connect_widget("btnResetVsh", "clicked", self.interp.reset_vsh_panel)
         self._connect_widget("btnCalcPhi", "clicked", self.interp.compute_phi)
         self._connect_widget("btnResetPhi", "clicked", self.interp.reset_phi_panel)

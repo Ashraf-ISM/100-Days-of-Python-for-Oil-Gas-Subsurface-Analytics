@@ -3774,7 +3774,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
              <property name="minimumSize">
               <size>
                <width>170</width>
-               <height>38</height>
+               <height>40</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -4260,52 +4260,6 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
               </widget>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QFrame" name="frameVshHistogram">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>120</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <layout class="QVBoxLayout" name="layoutVshHistogram">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="leftMargin">
-               <number>10</number>
-              </property>
-              <property name="topMargin">
-               <number>10</number>
-              </property>
-              <property name="rightMargin">
-               <number>10</number>
-              </property>
-              <property name="bottomMargin">
-               <number>10</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="lblVshDistributionTitle">
-                <property name="styleSheet">
-                 <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
-                </property>
-                <property name="text">
-                 <string>VSH DISTRIBUTION</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QWidget" name="vshHistCanvas" native="true"/>
-              </item>
-             </layout>
-            </widget>
            </item>
           </layout>
          </widget>
