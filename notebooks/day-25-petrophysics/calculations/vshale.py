@@ -8,7 +8,7 @@ def compute_vsh_gr(gr, gr_min=None, gr_max=None, model: str = "linear"):
     if gr_min is None:
         gr_min = np.nanpercentile(gr, 5)  # GR Clean
     if gr_max is None:
-        gr_max = np.nanpercentile(gr, 95)  # GR Shale
+        gr_max = np.nanpercentile(gr, 95)  # GR Shale 
     igr = (gr - gr_min) / (gr_max - gr_min + 1e-9)
     igr = np.clip(igr, 0.0, 1.0)
 
