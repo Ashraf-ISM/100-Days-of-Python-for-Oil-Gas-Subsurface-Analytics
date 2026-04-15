@@ -26,5 +26,5 @@ def compute_vsh_gr(gr, gr_min=None, gr_max=None, model: str = "linear"):
         vsh = igr / (3.0 - 2.0 * igr + 1e-9)
     else:
         vsh = igr
-
+        
     return np.clip(vsh, 0.0, 1.0)
