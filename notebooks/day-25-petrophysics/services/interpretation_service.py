@@ -47,23 +47,24 @@ class InterpretationService:
     def run_vsh_workflow(self):
         well = self.data._get_current_well()
         if not well:
+            self._set_vsh_status("Load a well to compute shale volume.", timestamp=None)
             return
         df = getattr(well, "data", None)
         if df is None:
+            self._set_vsh_status("The selected well has no usable data.", timestamp=None)
             return
 
         self._sync_gr_curve_line(df)
 
         methods = self._selected_vsh_methods()
         primary_method = methods[0]
-        gr_curve = self._combo_text("comboVclGR") or self._line_text("gRCurveLineEdit") or "GR"
+        gr_curve = self._combo_text("comboVclGR") or self._line_text("gRCurveLineEdit") or self._pick_gr_curve_name(df) or "GR"
         if gr_curve not in df.columns:
             QtWidgets.QMessageBox.warning(self.ui, "Calculations", "GR curve not found.")
+            self._set_vsh_status("Select a valid GR curve before computing Vsh.", timestamp=None)
             return
         gr_min = self._spin_value(("spinVclGRmin",), None)
-        gr_max = self._spin_value(("spinVclGRmax",), None)
-        if gr_max is None:
-            gr_max = self._line_float("gRShaleLineEdit", None)
+        gr_max = self._spin_value(("spinVclGRmax",), self._line_float("gRShaleLineEdit", None))
         out_name = self._line_text("lineVclOutName") or "VSH"
 
         method_columns: list[tuple[str, str]] = []
@@ -84,13 +85,20 @@ class InterpretationService:
             visible = df.copy()
 
         stats = self.compute_vsh_stats(visible, value_col=primary_col)
-        method_text = ", ".join(methods)
-        self._update_vsh_kpis(gr_min, gr_max, method_text, stats)
-        self._plot_vsh_track(visible, gr_curve, method_columns)
-        self._clear_vsh_distribution_hosts()
+        self._update_vsh_kpis(gr_min, gr_max, primary_method, stats)
+        self._plot_vsh_track(visible, gr_curve, primary_col, primary_method, gr_min, gr_max)
+        self._plot_vsh_distribution(visible, [(primary_method, primary_col)])
         interpretation = self.generate_vsh_interpretation(stats, methods)
+        self._set_vsh_status(
+            f"Vsh computed successfully using {primary_method} method.",
+            timestamp=QtCore.QDateTime.currentDateTime(),
+        )
+        self._set_label_text(
+            "vshTrackMetaLabel",
+            f"Method: {primary_method}    |    GR Clean: {self._format_gr_value(gr_min)} API    |    GR Shale: {self._format_gr_value(gr_max)} API",
+        )
         interp_widget = getattr(self.ui, "vshInterpretationText", None)
-        if interp_widget is not None:
+        if interp_widget is not None and hasattr(interp_widget, "setPlainText"):
             interp_widget.setPlainText(interpretation)
 
         self.data._refresh_views()
@@ -150,8 +158,21 @@ class InterpretationService:
             if hasattr(combo, "setCurrentIndex"):
                 combo.setCurrentIndex(0)
 
+        for name, value in (
+            ("checkVshShowCleanLine", True),
+            ("checkVshShowShaleLine", True),
+            ("checkVshHighlightHigh", True),
+            ("checkVshShowZones", False),
+        ):
+            widget = getattr(self.ui, name, None)
+            if widget is not None and hasattr(widget, "setChecked"):
+                widget.setChecked(value)
+
         for name in ("grCleanLabel", "grShaleLabel", "methodLabel", "vshMeanLabel", "vshRangeLabel", "shalePercentLabel"):
             self._set_label_text(name, "--")
+
+        self._set_label_text("vshTrackMetaLabel", "Method: --    |    GR Clean: --    |    GR Shale: --")
+        self._set_vsh_status("Ready to compute shale volume.", timestamp=None)
 
         text = getattr(self.ui, "vshInterpretationText", None)
         if text is not None:
@@ -168,30 +189,11 @@ class InterpretationService:
                     widget.setParent(None)
                     widget.deleteLater()
 
+        self._show_vsh_placeholder(self._vsh_track_host, "Track View", "Compute Vsh to preview the GR and shale-volume tracks.")
+        self._show_vsh_placeholder(self._vsh_hist_host, "Distribution", "A Vsh distribution summary will appear here after computation.")
+
     def _compute_vsh_values(self, gr_values, gr_min, gr_max, method: str):
-        import numpy as np
-
-        gr = np.asarray(gr_values, dtype=float)
-        if gr_min is None:
-            gr_min = float(np.nanpercentile(gr, 5))
-        if gr_max is None:
-            gr_max = float(np.nanpercentile(gr, 95))
-
-        igr = (gr - float(gr_min)) / (float(gr_max) - float(gr_min) + 1e-9)
-        igr = np.clip(igr, 0.0, 1.0)
-        method_name = str(method or "Linear").strip().lower()
-
-        if "larionov" in method_name and "tertiary" in method_name:
-            vsh = 0.083 * (2 ** (3.7 * igr) - 1.0)
-        elif "larionov" in method_name:
-            vsh = 0.33 * (2 ** (2.0 * igr) - 1.0)
-        elif "clavier" in method_name:
-            inside = 3.38 - np.square(igr + 0.7)
-            vsh = 1.7 - np.sqrt(np.clip(inside, 0.0, None))
-        else:
-            vsh = igr
-
-        return np.clip(vsh, 0.0, 1.0)
+        return vshale.compute_vsh_gr(gr_values, gr_min=gr_min, gr_max=gr_max, model=method)
 
     def compute_phi(self):
         well = self.data._get_current_well()

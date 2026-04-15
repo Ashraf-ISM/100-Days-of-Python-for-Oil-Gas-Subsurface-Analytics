@@ -3160,636 +3160,1214 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
    </widget>
    <widget class="QWidget" name="tabShaleVolume">
     <attribute name="title">
-     <string>Shale Volume (Vcl)</string>
+     <string>Shale Volume (Vsh)</string>
     </attribute>
-    <layout class="QVBoxLayout" name="layoutVcl">
+    <layout class="QHBoxLayout" name="layoutVcl">
      <property name="spacing">
-      <number>8</number>
+      <number>10</number>
      </property>
      <property name="leftMargin">
-      <number>6</number>
+      <number>8</number>
      </property>
      <property name="topMargin">
-      <number>6</number>
+      <number>8</number>
      </property>
      <property name="rightMargin">
-      <number>6</number>
+      <number>8</number>
      </property>
      <property name="bottomMargin">
-      <number>6</number>
+      <number>8</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="layoutVshPlots">
-       <property name="spacing">
-        <number>8</number>
+      <widget class="QFrame" name="frameVshControlColumn">
+       <property name="minimumSize">
+        <size>
+         <width>440</width>
+         <height>0</height>
+        </size>
        </property>
-       <item>
-        <layout class="QVBoxLayout" name="layoutVshDistribution">
-         <property name="spacing">
-          <number>8</number>
-         </property>
-         <item>
-          <widget class="QFrame" name="frameVshHistogram">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>220</height>
-            </size>
+       <property name="maximumSize">
+        <size>
+         <width>520</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutVshControlColumn">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="frameVshInputCard">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutVshInputCard">
+           <property name="spacing">
+            <number>10</number>
            </property>
-           <property name="styleSheet">
-            <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string>
+           <property name="leftMargin">
+            <number>14</number>
            </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+           <property name="topMargin">
+            <number>14</number>
            </property>
-           <layout class="QVBoxLayout" name="layoutVshHistogram">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="leftMargin">
-             <number>8</number>
-            </property>
-            <property name="topMargin">
-             <number>8</number>
-            </property>
-            <property name="rightMargin">
-             <number>8</number>
-            </property>
-            <property name="bottomMargin">
-             <number>8</number>
-            </property>
-            <item>
-             <widget class="QWidget" name="vshHistCanvas" native="true">
-              <widget class="QWidget" name="layoutWidget">
-               <property name="geometry">
-                <rect>
-                 <x>0</x>
-                 <y>0</y>
-                 <width>1186</width>
-                 <height>211</height>
-                </rect>
+           <property name="rightMargin">
+            <number>14</number>
+           </property>
+           <property name="bottomMargin">
+            <number>14</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="layoutVshInputHeader">
+             <property name="spacing">
+              <number>8</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lblVshInputTitle">
+               <property name="styleSheet">
+                <string>color:#1F3653;font-size:13px;font-weight:700;border:none;</string>
                </property>
-               <layout class="QFormLayout" name="formVshInputs">
+               <property name="text">
+                <string>INPUT PARAMETERS</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacerVshHeader">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnResetVshHeader">
+               <property name="minimumSize">
+                <size>
+                 <width>92</width>
+                 <height>28</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string>QPushButton{background:#F8FBFE;color:#2B6CB0;border:1px solid #C9D7E6;border-radius:8px;font-weight:600;padding:4px 12px;}QPushButton:hover{background:#EEF5FC;}</string>
+               </property>
+               <property name="text">
+                <string>Reset All</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QFormLayout" name="formVshInputs">
+             <property name="horizontalSpacing">
+              <number>10</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>10</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblVshWell">
+               <property name="styleSheet">
+                <string>color:#4E627A;font-weight:600;border:none;</string>
+               </property>
+               <property name="text">
+                <string>Well</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboVclWell">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>34</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string>QComboBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 10px;color:#1F2937;}</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="gRCurveLabel">
+               <property name="styleSheet">
+                <string>color:#4E627A;font-weight:600;border:none;</string>
+               </property>
+               <property name="text">
+                <string>GR Curve</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="comboVclGR">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>34</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string>QComboBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 10px;color:#1F2937;}</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="layoutVshCutoffs">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <item>
+              <widget class="QFrame" name="frameVshGrCleanInput">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutVshGrCleanInput">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblVshGrCleanInputTitle">
+                  <property name="styleSheet">
+                   <string>color:#4E627A;font-size:11px;font-weight:600;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>GR Clean (Sand Line)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="layoutVshGrCleanInputRow">
+                  <property name="spacing">
+                   <number>8</number>
+                  </property>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="spinVclGRmin">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>34</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string>QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}</string>
+                    </property>
+                    <property name="decimals">
+                     <number>2</number>
+                    </property>
+                    <property name="maximum">
+                     <double>300.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>15.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lblVshGrCleanUnit">
+                    <property name="styleSheet">
+                     <string>color:#718096;font-size:11px;font-weight:600;border:none;</string>
+                    </property>
+                    <property name="text">
+                     <string>API</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frameVshGrShaleInput">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutVshGrShaleInput">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblVshGrShaleInputTitle">
+                  <property name="styleSheet">
+                   <string>color:#4E627A;font-size:11px;font-weight:600;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>GR Shale (Shale Line)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="layoutVshGrShaleInputRow">
+                  <property name="spacing">
+                   <number>8</number>
+                  </property>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="spinVclGRmax">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>34</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string>QDoubleSpinBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 8px;color:#1F2937;}</string>
+                    </property>
+                    <property name="decimals">
+                     <number>2</number>
+                    </property>
+                    <property name="maximum">
+                     <double>300.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>120.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lblVshGrShaleUnit">
+                    <property name="styleSheet">
+                     <string>color:#718096;font-size:11px;font-weight:600;border:none;</string>
+                    </property>
+                    <property name="text">
+                     <string>API</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QFormLayout" name="formVshMethod">
+             <property name="horizontalSpacing">
+              <number>10</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>10</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblVshMethod">
+               <property name="styleSheet">
+                <string>color:#4E627A;font-weight:600;border:none;</string>
+               </property>
+               <property name="text">
+                <string>Shale Volume Method</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboVclMethod">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>34</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string>QComboBox{background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;padding:6px 10px;color:#1F2937;}</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Linear</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Larionov Tertiary</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Larionov Older</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Clavier</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Steiber</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QFrame" name="frameVshOptions">
+             <property name="styleSheet">
+              <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <layout class="QVBoxLayout" name="layoutVshOptions">
+              <property name="spacing">
+               <number>8</number>
+              </property>
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lblVshOptionsTitle">
+                <property name="styleSheet">
+                 <string>color:#4E627A;font-size:11px;font-weight:700;border:none;</string>
+                </property>
+                <property name="text">
+                 <string>ADDITIONAL OPTIONS</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QGridLayout" name="gridVshOptions">
                 <property name="horizontalSpacing">
                  <number>12</number>
                 </property>
                 <property name="verticalSpacing">
-                 <number>6</number>
+                 <number>8</number>
                 </property>
                 <item row="0" column="0">
-                 <widget class="QLabel" name="lblVshWell">
+                 <widget class="QCheckBox" name="checkVshShowCleanLine">
+                  <property name="styleSheet">
+                   <string>color:#43546A;border:none;</string>
+                  </property>
                   <property name="text">
-                   <string>Well:</string>
+                   <string>Show Sand Line (GR Clean)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QComboBox" name="comboVclWell"/>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="gRCurveLabel">
+                 <widget class="QCheckBox" name="checkVshShowShaleLine">
+                  <property name="styleSheet">
+                   <string>color:#43546A;border:none;</string>
+                  </property>
                   <property name="text">
-                   <string>GR Curve</string>
+                   <string>Show Shale Line (GR Shale)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="lblVshGrClean">
+                <item row="1" column="0">
+                 <widget class="QCheckBox" name="checkVshHighlightHigh">
+                  <property name="styleSheet">
+                   <string>color:#43546A;border:none;</string>
+                  </property>
                   <property name="text">
-                   <string>GR Clean:</string>
+                   <string>Highlight Shale (Vsh &gt; 0.5)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0">
-                 <widget class="QLabel" name="gRShaleLabel">
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="checkVshShowZones">
+                  <property name="styleSheet">
+                   <string>color:#43546A;border:none;</string>
+                  </property>
                   <property name="text">
-                   <string>GR Shale</string>
+                   <string>Show Zones</string>
                   </property>
                  </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QLineEdit" name="gRShaleLineEdit"/>
-                </item>
-                <item row="7" column="0">
-                 <widget class="QLabel" name="lblVshMethod">
-                  <property name="text">
-                   <string>Method:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QDoubleSpinBox" name="spinVclGRmin">
-                  <property name="maximum">
-                   <double>300.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>15.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="1">
-                 <widget class="QComboBox" name="comboVclMethod">
-                  <item>
-                   <property name="text">
-                    <string>Linear</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Larionov Tertiary</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Larionov Older</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Clavier</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="gRCurveLineEdit"/>
                 </item>
                </layout>
-              </widget>
-              <widget class="QWidget" name="layoutWidget">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>210</y>
-                 <width>577</width>
-                 <height>172</height>
-                </rect>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameVshActionsCard">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutVshActionsCard">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <property name="leftMargin">
+            <number>14</number>
+           </property>
+           <property name="topMargin">
+            <number>14</number>
+           </property>
+           <property name="rightMargin">
+            <number>14</number>
+           </property>
+           <property name="bottomMargin">
+            <number>14</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblVshActionsTitle">
+             <property name="styleSheet">
+              <string>color:#1F3653;font-size:13px;font-weight:700;border:none;</string>
+             </property>
+             <property name="text">
+              <string>ACTIONS</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="layoutVshActions">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btnCalcVsh">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>38</height>
+                </size>
                </property>
-               <layout class="QHBoxLayout" name="layoutVshActions">
+               <property name="styleSheet">
+                <string>QPushButton{background-color:#2B6CB0;color:#FFFFFF;border:none;border-radius:8px;font-weight:700;padding:8px 14px;}QPushButton:hover{background-color:#215A96;}</string>
+               </property>
+               <property name="text">
+                <string>Compute Vsh</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnUseVshWorkflow">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>38</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string>QPushButton{background-color:#2F855A;color:#FFFFFF;border:none;border-radius:8px;font-weight:700;padding:8px 14px;}QPushButton:hover{background-color:#276749;}</string>
+               </property>
+               <property name="text">
+                <string>Apply to Interpretation</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnResetVsh">
+               <property name="minimumSize">
+                <size>
+                 <width>110</width>
+                 <height>38</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string>QPushButton{background-color:#F8FBFE;color:#46596F;border:1px solid #C9D7E6;border-radius:8px;font-weight:700;padding:8px 14px;}QPushButton:hover{background-color:#EEF5FC;}</string>
+               </property>
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameVshStatusCard">
+          <property name="styleSheet">
+           <string>background:#ECFDF3;border:1px solid #C6F6D5;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QHBoxLayout" name="layoutVshStatusCard">
+           <property name="spacing">
+            <number>8</number>
+           </property>
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="vshStatusLabel">
+             <property name="styleSheet">
+              <string>color:#256C49;font-weight:600;border:none;</string>
+             </property>
+             <property name="text">
+              <string>Ready to compute shale volume.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="spacerVshStatus">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="vshStatusTimeLabel">
+             <property name="styleSheet">
+              <string>color:#5C718A;font-size:11px;border:none;</string>
+             </property>
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frameVshSummaryCard">
+          <property name="styleSheet">
+           <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:10px;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <layout class="QVBoxLayout" name="layoutVshSummaryCard">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <property name="leftMargin">
+            <number>14</number>
+           </property>
+           <property name="topMargin">
+            <number>14</number>
+           </property>
+           <property name="rightMargin">
+            <number>14</number>
+           </property>
+           <property name="bottomMargin">
+            <number>14</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblVshSummaryTitle">
+             <property name="styleSheet">
+              <string>color:#1F3653;font-size:13px;font-weight:700;border:none;</string>
+             </property>
+             <property name="text">
+              <string>RESULT SUMMARY</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridVshKpis">
+             <property name="horizontalSpacing">
+              <number>10</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>10</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QFrame" name="cardGrClean">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutCardGrClean">
                 <property name="spacing">
+                 <number>2</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
                  <number>8</number>
                 </property>
                 <item>
-                 <widget class="QPushButton" name="btnCalcVsh">
+                 <widget class="QLabel" name="lblCardGrCleanTitle">
                   <property name="styleSheet">
-                   <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
+                   <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
                   </property>
                   <property name="text">
-                   <string>Compute Vsh</string>
+                   <string>GR CLEAN</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="btnUseVshWorkflow">
+                 <widget class="QLabel" name="grCleanLabel">
                   <property name="styleSheet">
-                   <string>background-color:#2F855A;color:#FFFFFF;font-weight:600;</string>
+                   <string>font-size:20px;font-weight:700;color:#2B6CB0;border:none;</string>
                   </property>
                   <property name="text">
-                   <string>Use in Interpretation</string>
+                   <string>--</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="btnResetVsh">
+                 <widget class="QLabel" name="lblCardGrCleanUnitValue">
                   <property name="styleSheet">
-                   <string>background-color:#718096;color:#FFFFFF;font-weight:600;</string>
+                   <string>color:#8A9AAC;font-size:10px;border:none;</string>
                   </property>
                   <property name="text">
-                   <string>Reset</string>
+                   <string>API</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                </layout>
               </widget>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="frameVshBoxplot">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>220</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <layout class="QVBoxLayout" name="layoutVshBoxplot">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="leftMargin">
-             <number>8</number>
-            </property>
-            <property name="topMargin">
-             <number>8</number>
-            </property>
-            <property name="rightMargin">
-             <number>8</number>
-            </property>
-            <property name="bottomMargin">
-             <number>8</number>
-            </property>
-            <item>
-             <widget class="QFrame" name="frameVshKpis">
-              <property name="styleSheet">
-               <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
+             </item>
+             <item row="0" column="1">
+              <widget class="QFrame" name="cardGrShale">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutCardGrShale">
+                <property name="spacing">
+                 <number>2</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblCardGrShaleTitle">
+                  <property name="styleSheet">
+                   <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>GR SHALE</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="grShaleLabel">
+                  <property name="styleSheet">
+                   <string>font-size:20px;font-weight:700;color:#E66A2C;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lblCardGrShaleUnitValue">
+                  <property name="styleSheet">
+                   <string>color:#8A9AAC;font-size:10px;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>API</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QFrame" name="cardMethod">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutCardMethod">
+                <property name="spacing">
+                 <number>2</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblCardMethodTitle">
+                  <property name="styleSheet">
+                   <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>METHOD USED</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="methodLabel">
+                  <property name="styleSheet">
+                   <string>font-size:18px;font-weight:700;color:#D97706;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lblCardMethodUnitValue">
+                  <property name="styleSheet">
+                   <string>color:#8A9AAC;font-size:10px;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>Selected model</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QFrame" name="cardVshMean">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutCardVshMean">
+                <property name="spacing">
+                 <number>2</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblCardVshMeanTitle">
+                  <property name="styleSheet">
+                   <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>VSH MEAN</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="vshMeanLabel">
+                  <property name="styleSheet">
+                   <string>font-size:20px;font-weight:700;color:#2F855A;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lblCardVshMeanUnitValue">
+                  <property name="styleSheet">
+                   <string>color:#8A9AAC;font-size:10px;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>Fraction</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QFrame" name="cardVshRange">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutCardVshRange">
+                <property name="spacing">
+                 <number>2</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblCardVshRangeTitle">
+                  <property name="styleSheet">
+                   <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>VSH MIN - MAX</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="vshRangeLabel">
+                  <property name="styleSheet">
+                   <string>font-size:18px;font-weight:700;color:#1F4E79;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lblCardVshRangeUnitValue">
+                  <property name="styleSheet">
+                   <string>color:#8A9AAC;font-size:10px;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>Fraction</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QFrame" name="cardShalePercent">
+               <property name="styleSheet">
+                <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="layoutCardShalePercent">
+                <property name="spacing">
+                 <number>2</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="lblCardShalePercentTitle">
+                  <property name="styleSheet">
+                   <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>SHALE % (VSH &gt; 0.5)</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="shalePercentLabel">
+                  <property name="styleSheet">
+                   <string>font-size:20px;font-weight:700;color:#1F4E79;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lblCardShalePercentUnitValue">
+                  <property name="styleSheet">
+                   <string>color:#8A9AAC;font-size:10px;border:none;</string>
+                  </property>
+                  <property name="text">
+                   <string>Percent</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QFrame" name="frameVshHistogram">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string>background:#F8FBFE;border:1px solid #E1EAF2;border-radius:8px;</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <layout class="QVBoxLayout" name="layoutVshHistogram">
+              <property name="spacing">
+               <number>6</number>
               </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
+              <property name="leftMargin">
+               <number>10</number>
               </property>
-              <layout class="QHBoxLayout" name="layoutVshKpis">
-               <property name="spacing">
-                <number>8</number>
-               </property>
-               <property name="leftMargin">
-                <number>8</number>
-               </property>
-               <property name="topMargin">
-                <number>8</number>
-               </property>
-               <property name="rightMargin">
-                <number>8</number>
-               </property>
-               <property name="bottomMargin">
-                <number>8</number>
-               </property>
-               <item>
-                <widget class="QFrame" name="cardGrClean">
-                 <property name="styleSheet">
-                  <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="layoutCardGrClean">
-                  <property name="spacing">
-                   <number>2</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>6</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>6</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="lblCardGrCleanTitle">
-                    <property name="styleSheet">
-                     <string>color:#61788F;font-size:10px;</string>
-                    </property>
-                    <property name="text">
-                     <string>GR Clean</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="grCleanLabel">
-                    <property name="styleSheet">
-                     <string>font-size:18px;font-weight:700;color:#2B6CB0;</string>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="cardGrShale">
-                 <property name="styleSheet">
-                  <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="layoutCardGrShale">
-                  <property name="spacing">
-                   <number>2</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>6</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>6</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="lblCardGrShaleTitle">
-                    <property name="styleSheet">
-                     <string>color:#61788F;font-size:10px;</string>
-                    </property>
-                    <property name="text">
-                     <string>GR Shale</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="grShaleLabel">
-                    <property name="styleSheet">
-                     <string>font-size:18px;font-weight:700;color:#17A673;</string>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="cardMethod">
-                 <property name="styleSheet">
-                  <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="layoutCardMethod">
-                  <property name="spacing">
-                   <number>2</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>6</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>6</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="lblCardMethodTitle">
-                    <property name="styleSheet">
-                     <string>color:#61788F;font-size:10px;</string>
-                    </property>
-                    <property name="text">
-                     <string>Method Used</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="methodLabel">
-                    <property name="styleSheet">
-                     <string>font-size:16px;font-weight:700;color:#D97706;</string>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="cardVshMean">
-                 <property name="styleSheet">
-                  <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="layoutCardVshMean">
-                  <property name="spacing">
-                   <number>2</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>6</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>6</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="lblCardVshMeanTitle">
-                    <property name="styleSheet">
-                     <string>color:#61788F;font-size:10px;</string>
-                    </property>
-                    <property name="text">
-                     <string>Vsh Mean</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="vshMeanLabel">
-                    <property name="styleSheet">
-                     <string>font-size:18px;font-weight:700;color:#2B6CB0;</string>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="cardVshRange">
-                 <property name="styleSheet">
-                  <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="layoutCardVshRange">
-                  <property name="spacing">
-                   <number>2</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>6</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>6</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="lblCardVshRangeTitle">
-                    <property name="styleSheet">
-                     <string>color:#61788F;font-size:10px;</string>
-                    </property>
-                    <property name="text">
-                     <string>Vsh Min / Max</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="vshRangeLabel">
-                    <property name="styleSheet">
-                     <string>font-size:16px;font-weight:700;color:#1F4E79;</string>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="cardShalePercent">
-                 <property name="styleSheet">
-                  <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="layoutCardShalePercent">
-                  <property name="spacing">
-                   <number>2</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>6</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>8</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>6</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="lblCardShalePercentTitle">
-                    <property name="styleSheet">
-                     <string>color:#61788F;font-size:10px;</string>
-                    </property>
-                    <property name="text">
-                     <string>Shale % (Vsh &gt; 0.5)</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="shalePercentLabel">
-                    <property name="styleSheet">
-                     <string>font-size:18px;font-weight:700;color:#1F4E79;</string>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QFrame" name="frameVshTrack">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>460</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <layout class="QVBoxLayout" name="layoutVshTrack">
-          <property name="spacing">
-           <number>6</number>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lblVshDistributionTitle">
+                <property name="styleSheet">
+                 <string>color:#61788F;font-size:10px;font-weight:700;border:none;</string>
+                </property>
+                <property name="text">
+                 <string>VSH DISTRIBUTION</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="vshHistCanvas" native="true"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacerVshBottom">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <property name="leftMargin">
-           <number>8</number>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-          <property name="topMargin">
-           <number>8</number>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frameVshTrack">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>640</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:10px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="layoutVshTrack">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>14</number>
+        </property>
+        <property name="topMargin">
+         <number>14</number>
+        </property>
+        <property name="rightMargin">
+         <number>14</number>
+        </property>
+        <property name="bottomMargin">
+         <number>14</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblVshTrackTitle">
+          <property name="styleSheet">
+           <string>color:#1F3653;font-size:13px;font-weight:700;border:none;</string>
           </property>
-          <property name="rightMargin">
-           <number>8</number>
+          <property name="text">
+           <string>VSH TRACK VISUALIZATION</string>
           </property>
-          <property name="bottomMargin">
-           <number>8</number>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="vshTrackMetaLabel">
+          <property name="styleSheet">
+           <string>color:#5C718A;font-size:11px;border:none;</string>
           </property>
-          <item>
-           <widget class="QLabel" name="lblVshTrackTitle">
-            <property name="styleSheet">
-             <string>font-weight:700;color:#24466B;</string>
-            </property>
-            <property name="text">
-             <string>VSH Track Visualization</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
+          <property name="text">
+           <string>Method: --    |    GR Clean: --    |    GR Shale: --</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="vshTrackCanvas" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </widget>
