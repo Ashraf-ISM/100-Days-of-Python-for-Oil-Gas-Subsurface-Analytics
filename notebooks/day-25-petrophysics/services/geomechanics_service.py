@@ -451,6 +451,7 @@ class GeomechanicsService:
             return
         try:
             from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
+            from plotting.plot_context_menu import install_plot_context_menu
         except Exception:
             return
 
@@ -469,3 +470,4 @@ class GeomechanicsService:
         canvas = FigureCanvas(fig)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
+        install_plot_context_menu(canvas, fig, host)

@@ -584,6 +584,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         try:
             from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
             from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar  # type: ignore
+            from plotting.plot_context_menu import install_plot_context_menu
         except Exception:
             return
 
@@ -609,6 +610,8 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         layout.addWidget(toolbar)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
+        install_plot_context_menu(canvas, fig, frame)
+
 
     def _notify_dashboard_refresh(self) -> None:
         try:
@@ -1165,6 +1168,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._three_d_well_axes = ax
         self._three_d_well_canvas = canvas
         canvas.draw_idle()
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, frame)
+        except Exception:
+            pass
 
     def _set_3d_camera(self, elev: float, azim: float) -> None:
         controller = getattr(self, "_well_3d_controller", None)

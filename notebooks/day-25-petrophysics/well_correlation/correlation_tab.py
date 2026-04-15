@@ -1289,6 +1289,11 @@ class WellCorrelationTab(QtWidgets.QWidget):
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
         self._canvas = canvas
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, self._canvas_frame)
+        except Exception:
+            pass
 
     # ── Export handlers ───────────────────────────────────────────────
     def _on_export(self) -> None:

@@ -905,6 +905,11 @@ class Well3DWorkspaceController(QtCore.QObject):
         self.canvas = canvas
         self._connect_canvas_events()
         canvas.draw_idle()
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, self._plot_host)
+        except Exception:
+            pass
 
     def _render_message(self, text: str) -> None:
         if self._plot_host is None:

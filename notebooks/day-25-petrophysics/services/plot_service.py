@@ -4,6 +4,7 @@ from __future__ import annotations
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from plotting import plot_tools
+from plotting.plot_context_menu import install_plot_context_menu
 
 
 class PlotService:
@@ -86,6 +87,7 @@ class PlotService:
         layout.addWidget(toolbar)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
+        install_plot_context_menu(canvas, fig, host)
 
     def _get_df(self):
         well = self.data._get_current_well()

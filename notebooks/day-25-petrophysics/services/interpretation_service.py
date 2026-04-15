@@ -729,6 +729,11 @@ class InterpretationService:
         canvas.draw_idle()
         self._net_pay_canvas = canvas
         self._net_pay_toolbar = toolbar
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, host)
+        except Exception:
+            pass
 
     def _fill_net_pay_table(self, table, df) -> None:
         import pandas as pd
@@ -2606,6 +2611,11 @@ class InterpretationService:
         canvas = FigureCanvas(fig)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, host)
+        except Exception:
+            pass
 
     def _send_vsh_to_workflow(self):
         well = self.data._get_current_well()

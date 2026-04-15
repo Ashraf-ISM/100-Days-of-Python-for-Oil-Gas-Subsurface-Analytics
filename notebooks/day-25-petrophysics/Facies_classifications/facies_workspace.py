@@ -703,6 +703,7 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
     def _embed_figure(self, frame_name: str, fig) -> None:
         try:
             from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+            from plotting.plot_context_menu import install_plot_context_menu
         except ImportError:
             return
         frame = getattr(self._ui, frame_name, None)
@@ -722,6 +723,7 @@ class FaciesClassificationWorkspaceController(QtCore.QObject):
         canvas.setStyleSheet("background:#FFFFFF;")
         layout.addWidget(canvas)
         canvas.draw_idle()
+        install_plot_context_menu(canvas, fig, frame)
 
     def _render_facies_track(self) -> None:
         if self._raw_df is None or self._labels is None:

@@ -1079,6 +1079,11 @@ class FormationEvaluationService:
         layout.addWidget(toolbar)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, frame)
+        except Exception:
+            pass
 
     def _clear_crossplot_canvas(self, message: str) -> None:
         frame = getattr(self, "frame_fe_crossplot_canvas", None)
@@ -1111,6 +1116,7 @@ class FormationEvaluationService:
     def _render_figure(self, frame_name: str, placeholder_name: str, fig) -> None:
         try:
             from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
+            from plotting.plot_context_menu import install_plot_context_menu
         except Exception:
             return
 
@@ -1129,6 +1135,7 @@ class FormationEvaluationService:
         canvas.setStyleSheet("background:#FFFFFF;border:0;")
         host.layout().addWidget(canvas)
         canvas.draw_idle()
+        install_plot_context_menu(canvas, fig, host)
 
     def _ensure_plot_host(self, frame_name: str, placeholder_name: str) -> QtWidgets.QWidget | None:
         frame = getattr(self.ui, frame_name, None)

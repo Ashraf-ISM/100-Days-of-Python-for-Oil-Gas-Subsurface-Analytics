@@ -1500,6 +1500,7 @@ th {{ background: #F8FBFE; }}
         try:
             from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
             from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar  # type: ignore
+            from plotting.plot_context_menu import install_plot_context_menu
         except Exception:
             return
 
@@ -1531,6 +1532,7 @@ th {{ background: #F8FBFE; }}
         layout.addWidget(toolbar)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
+        install_plot_context_menu(canvas, fig, frame)
 
     def _render_message_figure(self, frame: QtWidgets.QFrame, title: str, message: str) -> None:
         import matplotlib.pyplot as plt

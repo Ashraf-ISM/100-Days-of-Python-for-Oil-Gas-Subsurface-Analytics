@@ -1335,6 +1335,11 @@ class MultiWellCorrelationWorkspaceController(QtCore.QObject):
         canvas.mpl_connect("motion_notify_event", self._on_motion)
         canvas.mpl_connect("button_press_event", self._on_click)
         canvas.draw_idle()
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, frame)
+        except Exception:
+            pass
 
     def _render_minimap(self, plotted_depths: list[np.ndarray]) -> None:
         frame = self._widget("frameMinimapCanvas")
