@@ -17,7 +17,7 @@ def compute_vsh_gr(gr, gr_min=None, gr_max=None, model: str = "linear"):
         # Larionov for tertiary rocks
         vsh = 0.083 * (2 ** (3.7 * igr) - 1.0)
     elif "larionov" in name:
-        # Larionov for older rocks.
+        # Larionov for older rocks
         vsh = 0.33 * (2 ** (2.0 * igr) - 1.0)
     elif "clavier" in name:
         second_term = 3.38 - np.square(igr + 0.7)
