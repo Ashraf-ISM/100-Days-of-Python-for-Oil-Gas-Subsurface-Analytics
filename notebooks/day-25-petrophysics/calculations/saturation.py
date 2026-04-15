@@ -28,7 +28,7 @@ def compute_sw_simandoux(phi, rt, vsh, rw=0.1, rsh=2.0, a=1.0, m=2.0, n=2.0):
     sw = np.power(np.clip(sw_n, 0.0, None), 1.0 / max(float(n), 1e-6))
     return np.clip(sw, 0.0, 1.0)
 
-# Modified 
+# Modified simondox
 def compute_sw_modified_simandoux(phi, rt, vsh, rw=0.1, rsh=2.0, a=1.0, m=2.0, n=2.0):
     """Modified Simandoux with a simple clean-sand fraction correction."""
     phi = np.asarray(phi, dtype=float)
