@@ -36,59 +36,6 @@
     <number>14</number>
    </property>
    <item>
-    <widget class="QFrame" name="headerFrame">
-     <property name="styleSheet">
-      <string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:12px;</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_header">
-      <property name="spacing">
-       <number>12</number>
-      </property>
-      <property name="leftMargin">
-       <number>16</number>
-      </property>
-      <property name="topMargin">
-       <number>14</number>
-      </property>
-      <property name="rightMargin">
-       <number>16</number>
-      </property>
-      <property name="bottomMargin">
-       <number>14</number>
-      </property>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_title">
-        <property name="spacing">
-         <number>2</number>
-        </property>
-       </layout>
-      </item>
-      <item alignment="Qt::AlignTop">
-       <widget class="QLabel" name="lblStatusBadge">
-        <property name="minimumSize">
-         <size>
-          <width>220</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string>background:#E8F7EE;color:#2F855A;border:1px solid #CFE8D8;border-radius:16px;padding:8px 12px;font-weight:700;</string>
-        </property>
-        <property name="text">
-         <string>Ready</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_content" stretch="4,6">
      <property name="spacing">
       <number>12</number>
@@ -186,16 +133,6 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="QLabel" name="lbl_u_spinCardClean">
-                 <property name="styleSheet">
-                  <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                 </property>
-                 <property name="text">
-                  <string>API</string>
-                 </property>
-                </widget>
-               </item>
               </layout>
              </widget>
             </item>
@@ -255,16 +192,6 @@
                  </property>
                  <property name="value">
                   <double>160.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_u_spinCardShale">
-                 <property name="styleSheet">
-                  <string>font-size:11px;color:#61788F;font-weight:700;</string>
-                 </property>
-                 <property name="text">
-                  <string>API</string>
                  </property>
                 </widget>
                </item>

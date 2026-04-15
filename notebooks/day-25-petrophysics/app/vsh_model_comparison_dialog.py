@@ -329,10 +329,11 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
             )
 
     def _set_status(self, text: str, background: str, foreground: str) -> None:
-        self.lblStatusBadge.setText(text)
-        self.lblStatusBadge.setStyleSheet(
-            f"background:{background};color:{foreground};border:1px solid #D7E2EE;border-radius:16px;padding:8px 12px;font-weight:700;"
-        )
+        if hasattr(self, 'lblStatusBadge'):
+            self.lblStatusBadge.setText(text)
+            self.lblStatusBadge.setStyleSheet(
+                f"background:{background};color:{foreground};border:1px solid #D7E2EE;border-radius:16px;padding:8px 12px;font-weight:700;"
+            )
 
     def _export_figure(self) -> None:
         if not self._latest_payload or self._latest_payload.get("error"):
