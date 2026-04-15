@@ -1,4 +1,4 @@
-"""Shale volume calculations."""
+"""Shale volume calculations """
 from __future__ import annotations
 
 import numpy as np
