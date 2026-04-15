@@ -10,7 +10,7 @@ def compute_sw_archie(phi, rt, rw=0.1, a=1.0, m=2.0, n=2.0):
     sw = (a * rw / (rt * (phi ** m) + 1e-9)) ** (1.0 / n)
     return np.clip(sw, 0.0, 1.0)
 
-# Simandoux approach for water saturation
+# Simandoux approach for water-saturation
 def compute_sw_simandoux(phi, rt, vsh, rw=0.1, rsh=2.0, a=1.0, m=2.0, n=2.0):
     """Simple Simandoux-style Sw estimate.
 
