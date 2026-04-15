@@ -2451,7 +2451,7 @@ class InterpretationService:
         if show_shale and gr_shale is not None:
             ax_gr.axvline(float(gr_shale), color="#EF4444", linestyle="--", linewidth=1.1, label="Shale Line")
 
-        ax_gr.set_title(f"GR (API)\n{gr_curve}", fontsize=10, color="#1F3653", pad=10)
+        # ax_gr.set_title(f"GR (API)\n{gr_curve}", fontsize=10, color="#1F3653", pad=10)
         ax_gr.xaxis.set_label_position("top")
         ax_gr.xaxis.tick_top()
         ax_gr.set_xlabel("GR (API)", fontsize=9)

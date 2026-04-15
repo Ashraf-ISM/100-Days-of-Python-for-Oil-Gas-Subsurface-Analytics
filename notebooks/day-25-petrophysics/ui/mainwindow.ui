@@ -3770,12 +3770,18 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
             <number>10</number>
            </property>
            <item>
-            <widget class="QPushButton" name="Vshmodelcomparison">
+            <widget class="QPushButton" name="btnVshModelComparison">
+             <property name="minimumSize">
+              <size>
+               <width>170</width>
+               <height>38</height>
+              </size>
+             </property>
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(38, 162, 105);</string>
+              <string>QPushButton{background:#1F6FEB;color:#FFFFFF;border:none;border-radius:8px;font-weight:700;padding:8px 14px;}QPushButton:hover{background:#1658B8;}</string>
              </property>
              <property name="text">
-              <string>Model Comparison</string>
+              <string>Vsh Model Comparison</string>
              </property>
             </widget>
            </item>
