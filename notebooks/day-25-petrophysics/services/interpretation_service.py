@@ -44,6 +44,27 @@ class InterpretationService:
     def compute_vsh(self):
         self.run_vsh_workflow()
 
+    def show_vsh_model_comparison_dialog(self):
+        well = self.data._get_current_well()
+        if not well:
+            QtWidgets.QMessageBox.information(self.ui, "Vsh Model Comparison", "Load a well before opening model comparison.")
+            return
+
+        df = getattr(well, "data", None)
+        if df is None:
+            QtWidgets.QMessageBox.information(self.ui, "Vsh Model Comparison", "The active well does not contain usable data.")
+            return
+
+        gr_curve = self._combo_text("comboVclGR") or self._line_text("gRCurveLineEdit") or self._pick_gr_curve_name(df) or "GR"
+        gr_clean = self._spin_value(("spinVclGRmin",), 15.0) or 15.0
+        gr_shale = self._spin_value(("spinVclGRmax",), 120.0) or 120.0
+
+        from app.vsh_model_comparison_dialog import VshModelComparisonDialog
+
+        dialog = VshModelComparisonDialog(self.ui, self.data)
+        dialog.set_context(well, gr_curve=gr_curve, gr_clean=gr_clean, gr_shale=gr_shale)
+        dialog.exec_()
+
     def run_vsh_workflow(self):
         well = self.data._get_current_well()
         if not well:
