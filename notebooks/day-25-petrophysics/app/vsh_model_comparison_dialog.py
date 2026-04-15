@@ -54,8 +54,10 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         self._gr_curve = gr_curve or "GR"
 
         well_name = getattr(well, "name", "Unknown Well")
-        self.lblWellValue.setText(well_name)
-        self.lblCurveValue.setText(self._gr_curve)
+        if hasattr(self, 'lblWellValue'):
+            self.lblWellValue.setText(well_name)
+        if hasattr(self, 'lblCurveValue'):
+            self.lblCurveValue.setText(self._gr_curve)
         self.spinGrClean.setValue(float(gr_clean))
         self.spinGrShale.setValue(float(gr_shale))
         self._set_status("Ready - comparison initialized.", "#E8F7EE", "#2F855A")
