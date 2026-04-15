@@ -38,7 +38,7 @@ def compute_sw_modified_simandoux(phi, rt, vsh, rw=0.1, rsh=2.0, a=1.0, m=2.0, n
     effective_phi = np.clip(phi * (1.0 - np.clip(vsh, 0.0, 0.95)), 1e-6, None)
     return compute_sw_simandoux(effective_phi, rt, vsh, rw=rw, rsh=rsh, a=a, m=m, n=n)
 
-# Indo
+# Indonesian approach
 def compute_sw_indonesia(phi, rt, vsh, rw=0.1, rsh=2.0, a=1.0, m=2.0, n=2.0):
     """Lightweight Indonesia approximation.
 
