@@ -14,7 +14,7 @@ def compute_vsh_gr(gr, gr_min=None, gr_max=None, model: str = "linear"):
 
     name = str(model or "linear").strip().lower()
     if "larionov" in name and "tertiary" in name:
-        # Larionov for tertiary rocks.
+        # Larionov for tertiary rocks
         vsh = 0.083 * (2 ** (3.7 * igr) - 1.0)
     elif "larionov" in name:
         # Larionov for older rocks.
