@@ -1,4 +1,4 @@
-"""Water saturation calculations (Archie and shaly-sand variants)."""
+"""Water saturation calculations panel"""
 from __future__ import annotations
 
 import numpy as np
