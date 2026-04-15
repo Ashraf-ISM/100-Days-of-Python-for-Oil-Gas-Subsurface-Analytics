@@ -625,7 +625,7 @@
                 </widget>
             </item>
             <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_content">
+                <layout class="QHBoxLayout" name="horizontalLayout_content" stretch="5,6">
                     <property name="spacing">
                         <number>12</number>
                     </property>
@@ -1025,10 +1025,6 @@
                             </item>
                         </layout>
                     </item>
-                    <item/>
-                    <property name="stretch">
-                        <string>5,6</string>
-                    </property>
                 </layout>
             </item>
         </layout>
