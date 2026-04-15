@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1497</width>
-    <height>893</height>
+    <height>895</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -3268,7 +3268,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>92</width>
-                 <height>28</height>
+                 <height>34</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3304,7 +3304,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>34</height>
+                 <height>36</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3327,7 +3327,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>34</height>
+                 <height>36</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3386,7 +3386,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
-                      <height>34</height>
+                      <height>36</height>
                      </size>
                     </property>
                     <property name="styleSheet">
@@ -3462,7 +3462,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
-                      <height>34</height>
+                      <height>36</height>
                      </size>
                     </property>
                     <property name="styleSheet">
@@ -3519,7 +3519,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>34</height>
+                 <height>36</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3697,7 +3697,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>38</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3713,7 +3713,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>38</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3729,7 +3729,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
                <property name="minimumSize">
                 <size>
                  <width>110</width>
-                 <height>38</height>
+                 <height>42</height>
                 </size>
                </property>
                <property name="styleSheet">
@@ -3769,6 +3769,16 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            <property name="bottomMargin">
             <number>10</number>
            </property>
+           <item>
+            <widget class="QPushButton" name="Vshmodelcomparison">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(38, 162, 105);</string>
+             </property>
+             <property name="text">
+              <string>Model Comparison</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QLabel" name="vshStatusLabel">
              <property name="styleSheet">
@@ -3844,10 +3854,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
            </item>
            <item>
             <layout class="QGridLayout" name="gridVshKpis">
-             <property name="horizontalSpacing">
-              <number>10</number>
-             </property>
-             <property name="verticalSpacing">
+             <property name="spacing">
               <number>10</number>
              </property>
              <item row="0" column="0">
@@ -9658,8 +9665,6 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
     <property name="title">
      <string>&amp;Facies Classification</string>
     </property>
-    <addaction name="actionOpenFaciesWorkspace"/>
-    <addaction name="separator"/>
     <widget class="QMenu" name="menuUnsupervisedFacies">
      <property name="title">
       <string>Unsupervised Methods</string>
@@ -9675,6 +9680,8 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
      <addaction name="actionFaciesEnsemble"/>
      <addaction name="actionFaciesRandomForest"/>
     </widget>
+    <addaction name="actionOpenFaciesWorkspace"/>
+    <addaction name="separator"/>
     <addaction name="menuUnsupervisedFacies"/>
     <addaction name="menuSupervisedFacies"/>
     <addaction name="separator"/>
