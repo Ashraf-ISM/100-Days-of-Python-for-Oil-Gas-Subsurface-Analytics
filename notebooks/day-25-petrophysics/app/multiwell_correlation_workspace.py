@@ -1341,6 +1341,13 @@ class MultiWellCorrelationWorkspaceController(QtCore.QObject):
         except Exception:
             pass
 
+        # Close the figure to free up memory from the pyplot global manager
+        try:
+            import matplotlib.pyplot as plt
+            plt.close(fig)
+        except Exception:
+            pass
+
     def _render_minimap(self, plotted_depths: list[np.ndarray]) -> None:
         frame = self._widget("frameMinimapCanvas")
         if frame is None:
@@ -1386,6 +1393,13 @@ class MultiWellCorrelationWorkspaceController(QtCore.QObject):
         canvas.draw_idle()
         self._minimap_fig = fig
         self._minimap_canvas = canvas
+
+        # Close the figure to free up memory from the pyplot global manager
+        try:
+            import matplotlib.pyplot as plt
+            plt.close(fig)
+        except Exception:
+            pass
 
     def _render_message(self, frame: QtWidgets.QFrame, message: str) -> None:
         layout = frame.layout()

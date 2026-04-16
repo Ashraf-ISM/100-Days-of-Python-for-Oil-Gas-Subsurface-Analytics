@@ -223,10 +223,34 @@ class InterpretationService:
         df = getattr(well, "data", None)
         if df is None:
             return
+
+        # Fetch parameters from new UI widgets
         method = self._combo_text("comboPhiMethod")
-        rho_ma = self._spin_value(("spinPhiRhoma",), 2.65) or 2.65
-        rho_f = self._spin_value(("spinPhiRhof",), 1.0) or 1.0
+        matrix_type = self._combo_text("comboPoroMatrixType")
+        
+        # Override Matrix/Fluid defaults based on matrix type if needed
+        def_rhoma = 2.65
+        def_dtma = 55.5
+        if matrix_type == "Limestone":
+            def_rhoma = 2.71
+            def_dtma = 47.5
+        elif matrix_type == "Dolomite":
+            def_rhoma = 2.85
+            def_dtma = 43.5
+
+        rho_ma = self._spin_value(("spinPoroRhoma", "spinPhiRhoma"), def_rhoma) or def_rhoma
+        rho_f = self._spin_value(("spinPoroRhof", "spinPhiRhof"), 1.0) or 1.0
+        dt_ma = self._spin_value(("spinPoroDtma",), def_dtma) or def_dtma
+        dt_f = self._spin_value(("spinPoroDtf",), 189.0) or 189.0
+        
+        phi_sh = self._spin_value(("spinPoroPhish",), 0.1) or 0.1
+        vsh_cut = self._spin_value(("spinPoroVshCut",), 0.5) or 0.5
+        shale_corr = self._is_checked("checkPoroShaleCorr", False)
+        
         out_name = self._line_text("linePhiOutName") or "PHIE"
+
+        # VSH Input (Required for shale correction)
+        vsh_data = df.get("VSH", np.zeros(len(df)))
 
         if method == "Neutron (PHIN)" and "NPHI" in df.columns:
             phi = np.clip(np.asarray(df["NPHI"].values, dtype=float), 0.0, 1.0)
@@ -234,19 +258,27 @@ class InterpretationService:
             phi = porosity.compute_phi_from_density(df["RHOB"].values, rho_ma=rho_ma, rho_f=rho_f)
         elif method == "Sonic (DT)" and "DT" in df.columns:
             dt = np.asarray(df["DT"].values, dtype=float)
-            phi = np.clip((dt - 55.5) / (189.0 - 55.5 + 1e-9), 0.0, 1.0)
+            phi = np.clip((dt - dt_ma) / (dt_f - dt_ma + 1e-9), 0.0, 1.0)
         elif "NPHI" in df.columns and "RHOB" in df.columns:
             phi = porosity.compute_phi_combo(df["NPHI"].values, df["RHOB"].values, rho_ma=rho_ma, rho_f=rho_f)
         elif "RHOB" in df.columns:
             phi = porosity.compute_phi_from_density(df["RHOB"].values, rho_ma=rho_ma, rho_f=rho_f)
         else:
-            QtWidgets.QMessageBox.warning(self.ui, "Calculations", "NPHI/RHOB not found.")
             return
+
+        # Handle Shale Correction (Effective Porosity)
+        if shale_corr:
+            phi = phi - (vsh_data * phi_sh)
+            phi = np.clip(phi, 0.0, 1.0)
+
         df["PHIT"] = phi
         if out_name != "PHIT":
             df[out_name] = phi
-        self.data._refresh_views()
-        self._append_porosity_activity("Porosity calculated")
+            
+        # Add Activity
+        self._append_porosity_activity(f"Calculated {method} (Ma:{matrix_type})")
+        
+        # Trigger Workspace Refresh
         self.refresh_porosity_workspace()
 
     def reset_phi_panel(self):
@@ -1602,6 +1634,25 @@ class InterpretationService:
         self.ui.refresh_porosity_tab = self.refresh_porosity_workspace
         if getattr(self.ui, "btnCalcPorosityRun", None) is not None:
              self.ui.btnCalcPorosityRun.clicked.connect(self.compute_phi)
+
+        # Connect Parameter Change Signals for Real-time Updates
+        for spin_name in (
+            "spinPoroRhoma", "spinPoroRhof", "spinPoroDtma", "spinPoroDtf",
+            "spinPoroPhish", "spinPoroVshCut"
+        ):
+            widget = getattr(self.ui, spin_name, None)
+            if widget is not None:
+                widget.valueChanged.connect(lambda _: self.compute_phi())
+
+        for combo_name in ("comboPoroMatrixType", "comboPhiMethod"):
+            widget = getattr(self.ui, combo_name, None)
+            if widget is not None:
+                widget.currentIndexChanged.connect(lambda _: self.compute_phi())
+
+        for check_name in ("checkPoroShaleCorr",):
+            widget = getattr(self.ui, check_name, None)
+            if widget is not None:
+                widget.toggled.connect(lambda _: self.compute_phi())
 
         well_combo = getattr(self.ui, "comboPhiWell", None)
         if well_combo is not None:
