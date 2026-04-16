@@ -308,6 +308,54 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._update_activity_list(project_name, well, df)
         self._update_dashboard_charts(df)
 
+    def refresh_porosity_tab(self) -> None:
+        data_service = getattr(self.controller, "data", None)
+        well = None
+        if data_service is not None:
+            well = data_service._get_current_well()
+            
+        lbl_well = getattr(self, "lblActivePoroWell", None)
+        lbl_check = getattr(self, "lblActivePoroCheck", None)
+        
+        if lbl_well is not None and lbl_check is not None:
+            if well is not None:
+                lbl_well.setText(getattr(well, "name", "Unknown well"))
+                lbl_well.setStyleSheet("color: #2b2b2b; font-weight: bold;")
+                lbl_check.setText("✔")
+                lbl_check.setStyleSheet("color: #27ae60; font-weight: bold;")
+            else:
+                lbl_well.setText("No well loaded")
+                lbl_well.setStyleSheet("color: #7f8c8d; font-style: italic;")
+                lbl_check.setText("✖")
+                lbl_check.setStyleSheet("color: #c0392b; font-weight: bold;")
+                
+            # Also populate combo boxes if data is available
+            df = getattr(well, "data", None) if well is not None else None
+            curves = list(df.columns) if df is not None else []
+            
+            for combo_name, default_search in [
+                ("comboPoroDepth", ["DEPTH", "DEPT", "MD"]),
+                ("comboPoroRhob", ["RHOB", "ZDEN", "DEN"]),
+                ("comboPoroNphi", ["NPHI", "CNC", "NEUT"]),
+                ("comboPoroDt", ["DT", "AC", "SON"]),
+                ("comboPoroGr", ["GR", "GAM"])
+            ]:
+                combo = getattr(self, combo_name, None)
+                if combo is not None:
+                    combo.blockSignals(True)
+                    combo.clear()
+                    combo.addItems(curves)
+                    # Try to auto-select matching curve
+                    selected = False
+                    for search in default_search:
+                        for idx, curve in enumerate(curves):
+                            if search.upper() in curve.upper():
+                                combo.setCurrentIndex(idx)
+                                selected = True
+                                break
+                        if selected: break
+                    combo.blockSignals(False)
+
     def _clear_layout(self, layout: QtWidgets.QLayout) -> None:
         while layout.count():
             item = layout.takeAt(0)
