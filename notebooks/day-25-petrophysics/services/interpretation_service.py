@@ -30,7 +30,7 @@ class InterpretationService:
         self._porosity_quality_labels: dict[str, QtWidgets.QLabel] = {}
         self._porosity_method_buttons: dict[str, QtWidgets.QPushButton] = {}
         self._porosity_activity_items: list[str] = []
-        self._build_porosity_workspace()
+        self._init_porosity_bindings()
         self._sw_log_host = None
         self._sw_crossplot_host = None
         self._sw_qc_host = None
@@ -1540,447 +1540,59 @@ class InterpretationService:
         panel_layout.addStretch(1)
         layout.addWidget(panel, 1)
 
-    def _build_porosity_workspace(self) -> None:
+    def _init_porosity_bindings(self) -> None:
         if getattr(self.ui, "_porosity_workspace_built", False):
             return
 
-        tab = getattr(self.ui, "tabPorosity", None)
-        if tab is None:
-            return
+        poroPlotsCanvas = getattr(self.ui, "poroPlotsCanvas", None)
+        if poroPlotsCanvas is not None:
+            layout = poroPlotsCanvas.layout()
+            if layout is None:
+                layout = QtWidgets.QVBoxLayout(poroPlotsCanvas)
+                layout.setContentsMargins(0, 0, 0, 0)
+            
+            tab_widget = QtWidgets.QTabWidget(poroPlotsCanvas)
+            self.ui.tabPhiLogView = QtWidgets.QWidget(tab_widget)
+            self.ui.tabPhiCrossplot = QtWidgets.QWidget(tab_widget)
+            self.ui.tabPhiHistogram = QtWidgets.QWidget(tab_widget)
+            tab_widget.addTab(self.ui.tabPhiLogView, "Log View")
+            tab_widget.addTab(self.ui.tabPhiCrossplot, "Crossplot")
+            tab_widget.addTab(self.ui.tabPhiHistogram, "Histogram")
+            layout.addWidget(tab_widget)
+            
+            for page_name, page_widget in (
+                ("log", self.ui.tabPhiLogView),
+                ("crossplot", self.ui.tabPhiCrossplot),
+                ("histogram", self.ui.tabPhiHistogram),
+            ):
+                page_layout = QtWidgets.QVBoxLayout(page_widget)
+                page_layout.setContentsMargins(0, 0, 0, 0)
+                host = QtWidgets.QFrame(page_widget)
+                host.setMinimumHeight(340)
+                host_layout = QtWidgets.QVBoxLayout(host)
+                host_layout.setContentsMargins(10, 10, 10, 10)
+                page_layout.addWidget(host)
+                if page_name == "log":
+                    self._porosity_log_host = host
+                elif page_name == "crossplot":
+                    self._porosity_crossplot_host = host
+                else:
+                    self._porosity_hist_host = host
+                    
+        self._porosity_activity_list = None 
+        
+        self.ui.comboPoroDepth = getattr(self.ui, "comboPoroDepth", None)
+        self.ui.comboPoroRhob = getattr(self.ui, "comboPoroRhob", None)
+        self.ui.comboPoroNphi = getattr(self.ui, "comboPoroNphi", None)
+        self.ui.comboPoroDt = getattr(self.ui, "comboPoroDt", None)
+        self.ui.comboPoroGr = getattr(self.ui, "comboPoroGr", None)
 
-        layout = tab.layout()
-        if layout is None:
-            layout = QtWidgets.QVBoxLayout(tab)
-
-        while layout.count():
-            item = layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.setParent(None)
-                widget.deleteLater()
-
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-
-        scroll_area = QtWidgets.QScrollArea(tab)
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        scroll_area.setStyleSheet("border:0;background:transparent;")
-
-        content = QtWidgets.QWidget(scroll_area)
-        content_layout = QtWidgets.QVBoxLayout(content)
-        content_layout.setContentsMargins(14, 14, 14, 14)
-        content_layout.setSpacing(14)
-
-        panel_style = "QFrame { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:16px; }"
-        soft_panel_style = "QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:14px; }"
-        field_style = (
-            "QLineEdit, QComboBox, QDoubleSpinBox { background:#FFFFFF; border:1px solid #C9D7E6; border-radius:8px; padding:6px 10px; min-height:26px; }"
-            "QCheckBox { spacing:8px; color:#274B72; font-weight:600; }"
-        )
-        tab_style = (
-            "QTabWidget::pane { border:1px solid #D7E2EE; border-radius:14px; background:#FFFFFF; }"
-            "QTabBar::tab { background:#EEF4FA; color:#56708A; padding:9px 16px; margin-right:6px; border-top-left-radius:10px; border-top-right-radius:10px; min-width:88px; }"
-            "QTabBar::tab:selected { background:#FFFFFF; color:#1F4E79; font-weight:700; }"
-        )
-
-        def clear_layout(target_layout):
-            while target_layout.count():
-                item = target_layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.setParent(None)
-                    widget.deleteLater()
-
-        def build_card(parent, title: str, value: str, accent: str) -> tuple[QtWidgets.QFrame, QtWidgets.QLabel]:
-            card = QtWidgets.QFrame(parent)
-            card.setStyleSheet(panel_style)
-            card_layout = QtWidgets.QVBoxLayout(card)
-            card_layout.setContentsMargins(12, 10, 12, 10)
-            card_layout.setSpacing(4)
-            title_label = QtWidgets.QLabel(title, card)
-            title_label.setStyleSheet("font-size:11px;color:#5C718A;font-weight:700;letter-spacing:0.2px;")
-            value_label = QtWidgets.QLabel(value, card)
-            value_label.setStyleSheet(f"font-size:20px;font-weight:800;color:{accent};")
-            value_label.setWordWrap(True)
-            card_layout.addWidget(title_label)
-            card_layout.addWidget(value_label)
-            return card, value_label
-
-        def build_info_button(parent, tooltip: str) -> QtWidgets.QToolButton:
-            button = QtWidgets.QToolButton(parent)
-            button.setAutoRaise(True)
-            button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-            button.setToolTip(tooltip)
-            button.setIcon(self.ui.style().standardIcon(QtWidgets.QStyle.SP_MessageBoxInformation))
-            button.setIconSize(QtCore.QSize(16, 16))
-            button.setFixedSize(22, 22)
-            return button
-
-        def build_field_row(parent, label_text: str, widget: QtWidgets.QWidget, tooltip: str) -> QtWidgets.QWidget:
-            row = QtWidgets.QWidget(parent)
-            row_layout = QtWidgets.QHBoxLayout(row)
-            row_layout.setContentsMargins(0, 0, 0, 0)
-            row_layout.setSpacing(8)
-            label = QtWidgets.QLabel(label_text, row)
-            label.setStyleSheet("color:#355C7D;font-weight:700;")
-            info = build_info_button(row, tooltip)
-            row_layout.addWidget(label, 0)
-            row_layout.addStretch(1)
-            row_layout.addWidget(widget, 0)
-            row_layout.addWidget(info, 0)
-            return row
-
-        def build_section(parent, title: str, body_text: str | None = None) -> tuple[QtWidgets.QFrame, QtWidgets.QVBoxLayout]:
-            frame = QtWidgets.QFrame(parent)
-            frame.setStyleSheet(panel_style)
-            frame_layout = QtWidgets.QVBoxLayout(frame)
-            frame_layout.setContentsMargins(14, 14, 14, 14)
-            frame_layout.setSpacing(10)
-            title_label = QtWidgets.QLabel(title, frame)
-            title_label.setStyleSheet("font-size:15px;font-weight:800;color:#24466B;")
-            frame_layout.addWidget(title_label)
-            if body_text:
-                info_label = QtWidgets.QLabel(body_text, frame)
-                info_label.setWordWrap(True)
-                info_label.setStyleSheet("color:#6C7E90;font-size:12px;line-height:1.4;")
-                frame_layout.addWidget(info_label)
-            return frame, frame_layout
-
-        def style_method_button(button: QtWidgets.QPushButton, selected: bool) -> None:
-            if selected:
-                button.setStyleSheet(
-                    "QPushButton { background:#EAF2FF; border:1px solid #2B6CB0; border-radius:12px; color:#1F4E79; font-weight:800; padding:10px 12px; text-align:left; }"
-                )
-            else:
-                button.setStyleSheet(
-                    "QPushButton { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:12px; color:#355C7D; font-weight:700; padding:10px 12px; text-align:left; }"
-                    "QPushButton:hover { border-color:#9BB8D9; background:#F8FBFE; }"
-                )
-
-        hero_frame = QtWidgets.QFrame(content)
-        hero_frame.setStyleSheet(
-            "QFrame { background:qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #FFFFFF, stop:1 #F5F9FD); border:1px solid #D7E2EE; border-radius:18px; }"
-        )
-        hero_layout = QtWidgets.QHBoxLayout(hero_frame)
-        hero_layout.setContentsMargins(18, 16, 18, 16)
-        hero_layout.setSpacing(14)
-
-        hero_icon = QtWidgets.QLabel("PHIE", hero_frame)
-        hero_icon.setAlignment(QtCore.Qt.AlignCenter)
-        hero_icon.setFixedSize(58, 58)
-        hero_icon.setStyleSheet(
-            "background:#EAF2FF;color:#1F4E79;border:1px solid #BFD2EA;border-radius:14px;font-size:15px;font-weight:900;"
-        )
-        hero_layout.addWidget(hero_icon, 0)
-
-        hero_text = QtWidgets.QVBoxLayout()
-        hero_title = QtWidgets.QLabel("Porosity Calculation", hero_frame)
-        hero_title.setStyleSheet("font-size:24px;font-weight:900;color:#173A5E;")
-        hero_subtitle = QtWidgets.QLabel(
-            "Density-neutron centered porosity workspace for interpretation, preview, and quick quality review.",
-            hero_frame,
-        )
-        hero_subtitle.setWordWrap(True)
-        hero_subtitle.setStyleSheet("color:#5C718A;font-size:12px;")
-        hero_text.addWidget(hero_title)
-        hero_text.addWidget(hero_subtitle)
-        hero_text.addStretch(1)
-        hero_layout.addLayout(hero_text, 1)
-        content_layout.addWidget(hero_frame)
-
-        workspace_row = QtWidgets.QHBoxLayout()
-        workspace_row.setSpacing(14)
-
-        controls_frame = QtWidgets.QFrame(content)
-        controls_frame.setMinimumWidth(340)
-        controls_frame.setMaximumWidth(380)
-        controls_frame.setStyleSheet(panel_style)
-        controls_layout = QtWidgets.QVBoxLayout(controls_frame)
-        controls_layout.setContentsMargins(14, 14, 14, 14)
-        controls_layout.setSpacing(12)
-
-        controls_title = QtWidgets.QLabel("Porosity Inputs", controls_frame)
-        controls_title.setStyleSheet("font-size:18px;font-weight:900;color:#24466B;")
-        controls_layout.addWidget(controls_title)
-
-        well_combo = QtWidgets.QComboBox(controls_frame)
-        well_combo.setStyleSheet(field_style)
-        well_combo.setMinimumHeight(34)
-        self.ui.comboPhiWell = well_combo
-        controls_layout.addWidget(build_field_row(controls_frame, "Well", well_combo, "Choose the active well used for porosity preview and calculation."))
-
-        method_group = QtWidgets.QFrame(controls_frame)
-        method_group.setStyleSheet(soft_panel_style)
-        method_layout = QtWidgets.QVBoxLayout(method_group)
-        method_layout.setContentsMargins(12, 12, 12, 12)
-        method_layout.setSpacing(8)
-        method_header = QtWidgets.QHBoxLayout()
-        method_title = QtWidgets.QLabel("Method", method_group)
-        method_title.setStyleSheet("font-size:13px;font-weight:800;color:#355C7D;")
-        method_header.addWidget(method_title)
-        method_header.addStretch(1)
-        method_header.addWidget(build_info_button(method_group, "Method cards stay synchronized with the calculation engine."))
-        method_layout.addLayout(method_header)
-
-        method_combo = QtWidgets.QComboBox(method_group)
-        method_combo.addItems(["Density-Neutron (PHIE)", "Sonic (DT)", "Neutron (PHIN)"])
-        method_combo.hide()
-        self.ui.comboPhiMethod = method_combo
-
-        method_buttons = QtWidgets.QVBoxLayout()
-        method_buttons.setSpacing(8)
-        self._porosity_method_buttons = {}
-        method_specs = [
-            ("Density-Neutron (PHIE)", "Density-Neutron\nPHIE"),
-            ("Sonic (DT)", "Sonic\nDT"),
-            ("Neutron (PHIN)", "Neutron\nPHIN"),
-        ]
-        for method_text, button_text in method_specs:
-            button = QtWidgets.QPushButton(button_text, method_group)
-            button.setCheckable(True)
-            button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-            button.setMinimumHeight(56)
-            button.setProperty("methodText", method_text)
-            style_method_button(button, method_text == "Density-Neutron (PHIE)")
-            button.clicked.connect(lambda _checked=False, target=method_text: self._select_porosity_method(target))
-            self._porosity_method_buttons[method_text] = button
-            method_buttons.addWidget(button)
-        method_layout.addLayout(method_buttons)
-        controls_layout.addWidget(method_group)
-
-        rock_frame, rock_layout = build_section(controls_frame, "Rock Properties")
-        rho_ma_spin = QtWidgets.QDoubleSpinBox(rock_frame)
-        rho_ma_spin.setDecimals(3)
-        rho_ma_spin.setMinimum(2.0)
-        rho_ma_spin.setMaximum(3.5)
-        rho_ma_spin.setSingleStep(0.01)
-        rho_ma_spin.setValue(2.65)
-        rho_ma_spin.setStyleSheet(field_style)
-        self.ui.spinPhiRhoma = rho_ma_spin
-        rock_layout.addWidget(build_field_row(rock_frame, "Matrix Density (g/cc)", rho_ma_spin, "Typical limestone matrix density used for density-neutron porosity calculations."))
-        controls_layout.addWidget(rock_frame)
-
-        fluid_frame, fluid_layout = build_section(controls_frame, "Fluid Properties")
-        rho_f_spin = QtWidgets.QDoubleSpinBox(fluid_frame)
-        rho_f_spin.setDecimals(3)
-        rho_f_spin.setMinimum(0.80)
-        rho_f_spin.setMaximum(1.20)
-        rho_f_spin.setSingleStep(0.01)
-        rho_f_spin.setValue(1.00)
-        rho_f_spin.setStyleSheet(field_style)
-        self.ui.spinPhiRhof = rho_f_spin
-        fluid_layout.addWidget(build_field_row(fluid_frame, "Fluid Density (g/cc)", rho_f_spin, "Base fluid density used to convert RHOB into porosity."))
-        controls_layout.addWidget(fluid_frame)
-
-        correction_frame, correction_layout = build_section(controls_frame, "Corrections")
-        correction_row = QtWidgets.QWidget(correction_frame)
-        correction_row_layout = QtWidgets.QVBoxLayout(correction_row)
-        correction_row_layout.setContentsMargins(0, 0, 0, 0)
-        correction_row_layout.setSpacing(8)
-
-        vcl_toggle_row = QtWidgets.QHBoxLayout()
-        vcl_label = QtWidgets.QLabel("Vcl Correction", correction_row)
-        vcl_label.setStyleSheet("color:#355C7D;font-weight:700;")
-        vcl_toggle = QtWidgets.QCheckBox("Apply shale correction", correction_row)
-        vcl_toggle.setChecked(True)
-        vcl_toggle.setStyleSheet("color:#274B72;font-weight:600;")
-        vcl_toggle_row.addWidget(vcl_label)
-        vcl_toggle_row.addStretch(1)
-        vcl_toggle_row.addWidget(vcl_toggle)
-        correction_row_layout.addLayout(vcl_toggle_row)
-        self.ui.checkPhiVclCorr = vcl_toggle
-
-        out_name = QtWidgets.QLineEdit(correction_row)
-        out_name.setText("PHIE")
-        out_name.setStyleSheet(field_style)
-        self.ui.linePhiOutName = out_name
-        correction_row_layout.addWidget(build_field_row(correction_row, "Output Curve", out_name, "Name of the output porosity curve written back into the selected well."))
-        correction_layout.addWidget(correction_row)
-        controls_layout.addWidget(correction_frame)
-
-        hint = QtWidgets.QLabel(
-            "Density-neutron porosity is the default preview. Switch methods to compare alternative porosity estimates before export.",
-            controls_frame,
-        )
-        hint.setWordWrap(True)
-        hint.setStyleSheet("background:#F8FBFE;border:1px solid #D7E2EE;border-radius:10px;padding:10px;color:#5C718A;font-size:12px;")
-        controls_layout.addWidget(hint)
-        controls_layout.addStretch(1)
-
-        action_row = QtWidgets.QHBoxLayout()
-        action_row.setSpacing(10)
-        calc_btn = QtWidgets.QPushButton("Run Interpretation", controls_frame)
-        calc_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        calc_btn.setMinimumHeight(42)
-        calc_btn.setStyleSheet(
-            "QPushButton { background:#2B6CB0; color:#FFFFFF; border:none; border-radius:10px; font-size:13px; font-weight:800; }"
-            "QPushButton:hover { background:#245C96; }"
-        )
-        reset_btn = QtWidgets.QPushButton("Reset", controls_frame)
-        reset_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        reset_btn.setMinimumHeight(42)
-        reset_btn.setStyleSheet(
-            "QPushButton { background:#EEF4FA; color:#355C7D; border:1px solid #C9D7E6; border-radius:10px; font-size:13px; font-weight:800; }"
-            "QPushButton:hover { background:#E2EDF7; }"
-        )
-        action_row.addWidget(calc_btn)
-        action_row.addWidget(reset_btn)
-        controls_layout.addLayout(action_row)
-        self.ui.btnCalcPhi = calc_btn
-        self.ui.btnResetPhi = reset_btn
-
-        right_panel = QtWidgets.QVBoxLayout()
-        right_panel.setSpacing(14)
-
-        kpi_frame = QtWidgets.QFrame(content)
-        kpi_frame.setStyleSheet(panel_style)
-        kpi_layout = QtWidgets.QVBoxLayout(kpi_frame)
-        kpi_layout.setContentsMargins(14, 14, 14, 14)
-        kpi_layout.setSpacing(10)
-        kpi_header = QtWidgets.QHBoxLayout()
-        kpi_title = QtWidgets.QLabel("Porosity Summary", kpi_frame)
-        kpi_title.setStyleSheet("font-size:16px;font-weight:900;color:#24466B;")
-        kpi_header.addWidget(kpi_title)
-        kpi_header.addStretch(1)
-        kpi_header.addWidget(build_info_button(kpi_frame, "These values follow the active well and depth filter."))
-        kpi_layout.addLayout(kpi_header)
-        kpi_cards = QtWidgets.QHBoxLayout()
-        kpi_cards.setSpacing(10)
-        self._porosity_kpi_labels = {}
-        for title, key, value, accent in (
-            ("Average Porosity", "avg", "--", "#1F4E79"),
-            ("Max Porosity", "max", "--", "#0F8B8D"),
-            ("Min Porosity", "min", "--", "#D97706"),
-            ("Net Reservoir Thickness", "thickness", "--", "#2B6CB0"),
-        ):
-            card, value_label = build_card(kpi_frame, title, value, accent)
-            self._porosity_kpi_labels[key] = value_label
-            kpi_cards.addWidget(card)
-        kpi_layout.addLayout(kpi_cards)
-        right_panel.addWidget(kpi_frame, 0)
-
-        body_row = QtWidgets.QHBoxLayout()
-        body_row.setSpacing(14)
-
-        plot_frame = QtWidgets.QFrame(content)
-        plot_frame.setStyleSheet(panel_style)
-        plot_layout = QtWidgets.QVBoxLayout(plot_frame)
-        plot_layout.setContentsMargins(14, 14, 14, 14)
-        plot_layout.setSpacing(10)
-
-        tabs_header = QtWidgets.QHBoxLayout()
-        tabs_title = QtWidgets.QLabel("Log View", plot_frame)
-        tabs_title.setStyleSheet("font-size:16px;font-weight:900;color:#24466B;")
-        tabs_header.addWidget(tabs_title)
-        tabs_header.addStretch(1)
-        tabs_header.addWidget(build_info_button(plot_frame, "Use the tabs to inspect log view, crossplot, and histogram previews."))
-        plot_layout.addLayout(tabs_header)
-
-        tab_widget = QtWidgets.QTabWidget(plot_frame)
-        tab_widget.setStyleSheet(tab_style)
-        tab_widget.setDocumentMode(True)
-        self.ui.tabPhiLogView = QtWidgets.QWidget(tab_widget)
-        self.ui.tabPhiCrossplot = QtWidgets.QWidget(tab_widget)
-        self.ui.tabPhiHistogram = QtWidgets.QWidget(tab_widget)
-        tab_widget.addTab(self.ui.tabPhiLogView, "Log View")
-        tab_widget.addTab(self.ui.tabPhiCrossplot, "Crossplot")
-        tab_widget.addTab(self.ui.tabPhiHistogram, "Histogram")
-
-        for page_name, page_widget in (
-            ("log", self.ui.tabPhiLogView),
-            ("crossplot", self.ui.tabPhiCrossplot),
-            ("histogram", self.ui.tabPhiHistogram),
-        ):
-            page_layout = QtWidgets.QVBoxLayout(page_widget)
-            page_layout.setContentsMargins(0, 0, 0, 0)
-            page_layout.setSpacing(0)
-            host = QtWidgets.QFrame(page_widget)
-            host.setStyleSheet(soft_panel_style)
-            host.setMinimumHeight(340)
-            host_layout = QtWidgets.QVBoxLayout(host)
-            host_layout.setContentsMargins(10, 10, 10, 10)
-            host_layout.setSpacing(0)
-            page_layout.addWidget(host)
-            if page_name == "log":
-                self._porosity_log_host = host
-            elif page_name == "crossplot":
-                self._porosity_crossplot_host = host
-            else:
-                self._porosity_hist_host = host
-
-        plot_layout.addWidget(tab_widget, 1)
-        self.ui.framePhiPlotTabs = tab_widget
-
-        quality_frame, quality_layout = build_section(
-            content,
-            "Data Quality",
-            "Indicator cards summarize the active log coverage and missing curve handling for the current well.",
-        )
-        quality_frame.setMinimumWidth(260)
-        self._porosity_quality_labels = {}
-        for title, key, icon_pixmap in (
-            ("RHOB", "rhob", QtWidgets.QStyle.SP_DialogApplyButton),
-            ("NPHI", "nphi", QtWidgets.QStyle.SP_MessageBoxWarning),
-        ):
-            row = QtWidgets.QFrame(quality_frame)
-            row.setStyleSheet("QFrame { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; }")
-            row_layout = QtWidgets.QHBoxLayout(row)
-            row_layout.setContentsMargins(10, 10, 10, 10)
-            row_layout.setSpacing(10)
-            icon_label = QtWidgets.QLabel(row)
-            icon_label.setPixmap(self.ui.style().standardIcon(icon_pixmap).pixmap(16, 16))
-            text_box = QtWidgets.QVBoxLayout()
-            label = QtWidgets.QLabel(title, row)
-            label.setStyleSheet("font-size:12px;font-weight:900;color:#355C7D;")
-            value = QtWidgets.QLabel("--", row)
-            value.setWordWrap(True)
-            value.setStyleSheet("font-size:12px;color:#5C718A;")
-            text_box.addWidget(label)
-            text_box.addWidget(value)
-            row_layout.addWidget(icon_label, 0)
-            row_layout.addLayout(text_box, 1)
-            quality_layout.addWidget(row)
-            self._porosity_quality_labels[key] = value
-        quality_note = QtWidgets.QLabel("Missing curves are highlighted so you can see whether interpolation or fallback logic is being used.", quality_frame)
-        quality_note.setWordWrap(True)
-        quality_note.setStyleSheet("color:#5C718A;font-size:12px;")
-        quality_layout.addWidget(quality_note)
-
-        body_row.addWidget(plot_frame, 1)
-        body_row.addWidget(quality_frame, 0)
-        right_panel.addLayout(body_row, 1)
-
-        activity_frame, activity_layout = build_section(content, "Activity Log", "Recent porosity workflow events are kept in a compact desktop-style feed.")
-        activity_list = QtWidgets.QListWidget(activity_frame)
-        activity_list.setAlternatingRowColors(True)
-        activity_list.setStyleSheet(
-            "QListWidget { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; padding:6px; }"
-            "QListWidget::item { padding:8px 6px; }"
-        )
-        activity_layout.addWidget(activity_list)
-        self._porosity_activity_list = activity_list
-        right_panel.addWidget(activity_frame, 0)
-
-        workspace_row.addWidget(controls_frame, 0)
-        workspace_row.addLayout(right_panel, 1)
-        content_layout.addLayout(workspace_row, 1)
-
-        content_layout.addStretch(1)
-        scroll_area.setWidget(content)
-        layout.addWidget(scroll_area)
-
-        self.ui.comboPhiMethod.currentTextChanged.connect(lambda *_: self._sync_porosity_method_cards())
-        self.ui.comboPhiWell.currentTextChanged.connect(lambda *_: self.refresh_porosity_workspace())
         self.ui.refresh_porosity_tab = self.refresh_porosity_workspace
+        if getattr(self.ui, "btnCalcPorosityRun", None) is not None:
+             self.ui.btnCalcPorosityRun.clicked.connect(self.compute_phi)
 
-        self._populate_porosity_wells()
-        self._sync_porosity_method_cards()
-        if not self._porosity_activity_items:
-            self._porosity_activity_items = ["LAS loaded", "Porosity calculated", "Crossplot generated"]
         self.ui._porosity_workspace_built = True
         self.refresh_porosity_workspace()
-
     def refresh_porosity_workspace(self) -> None:
         if not getattr(self.ui, "_porosity_workspace_built", False):
             return
