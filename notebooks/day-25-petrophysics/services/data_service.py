@@ -1495,8 +1495,15 @@ th {{ background: #F8FBFE; }}
         label.setText("\n".join(f"- {note}" for note in notes[:4]))
 
     def _render_figure(self, frame: QtWidgets.QFrame, fig, title: str) -> None:
-        if fig is None:
+        if fig is None or frame is None:
             return
+        
+        try:
+            # Check if frame is still alive (Qt C++ object not deleted)
+            frame.objectName()
+        except RuntimeError:
+            return
+
         try:
             from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # type: ignore
             from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar  # type: ignore
@@ -1508,6 +1515,7 @@ th {{ background: #F8FBFE; }}
         if layout is None:
             layout = QtWidgets.QVBoxLayout(frame)
             layout.setContentsMargins(0, 0, 0, 0)
+        
         while layout.count():
             item = layout.takeAt(0)
             widget = item.widget()
@@ -1533,6 +1541,13 @@ th {{ background: #F8FBFE; }}
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
         install_plot_context_menu(canvas, fig, frame)
+
+        # Close the figure to free up memory from the pyplot global manager
+        try:
+            import matplotlib.pyplot as plt
+            plt.close(fig)
+        except Exception:
+            pass
 
     def _render_message_figure(self, frame: QtWidgets.QFrame, title: str, message: str) -> None:
         import matplotlib.pyplot as plt

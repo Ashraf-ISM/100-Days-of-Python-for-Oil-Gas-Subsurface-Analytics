@@ -1299,7 +1299,11 @@ class FormationEvaluationService:
     def _set_label(self, name: str, value: str) -> None:
         label = getattr(self.ui, name, None)
         if label is not None:
-            label.setText(value)
+            try:
+                label.setText(value)
+            except RuntimeError:
+                # Handle cases where the underlying C++ object has been deleted
+                pass
 
     @staticmethod
     def _fmt_number(value, decimals: int) -> str:

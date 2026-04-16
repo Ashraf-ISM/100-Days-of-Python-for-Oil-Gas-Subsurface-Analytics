@@ -1815,13 +1815,25 @@ class InterpretationService:
 
         labels = self._porosity_kpi_labels
         if labels.get("avg"):
-            labels["avg"].setText(f"{valid_phi.mean() * 100.0:.1f}%")
+            try:
+                labels["avg"].setText(f"{valid_phi.mean() * 100.0:.1f}%")
+            except RuntimeError:
+                pass
         if labels.get("max"):
-            labels["max"].setText(f"{valid_phi.max() * 100.0:.1f}%")
+            try:
+                labels["max"].setText(f"{valid_phi.max() * 100.0:.1f}%")
+            except RuntimeError:
+                pass
         if labels.get("min"):
-            labels["min"].setText(f"{valid_phi.min() * 100.0:.1f}%")
+            try:
+                labels["min"].setText(f"{valid_phi.min() * 100.0:.1f}%")
+            except RuntimeError:
+                pass
         if labels.get("thickness"):
-            labels["thickness"].setText(f"{thickness:.1f} m")
+            try:
+                labels["thickness"].setText(f"{thickness:.1f} m")
+            except RuntimeError:
+                pass
 
     def _set_porosity_quality(self, df) -> None:
         import pandas as pd
@@ -1838,10 +1850,16 @@ class InterpretationService:
         rhob_message = "Available" if rhob_ok else "Missing"
         nphi_message = "Available" if nphi_present else "Missing (interpolated)"
 
-        if "rhob" in self._porosity_quality_labels:
-            self._porosity_quality_labels["rhob"].setText(rhob_message)
-        if "nphi" in self._porosity_quality_labels:
-            self._porosity_quality_labels["nphi"].setText(nphi_message)
+        if self._porosity_quality_labels.get("rhob"):
+            try:
+                self._porosity_quality_labels["rhob"].setText(rhob_message)
+            except RuntimeError:
+                pass
+        if self._porosity_quality_labels.get("nphi"):
+            try:
+                self._porosity_quality_labels["nphi"].setText(nphi_message)
+            except RuntimeError:
+                pass
 
     def _show_porosity_placeholder(self, host, title: str, message: str) -> None:
         if host is None:
