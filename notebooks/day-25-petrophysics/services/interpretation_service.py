@@ -1587,9 +1587,29 @@ class InterpretationService:
         self.ui.comboPoroDt = getattr(self.ui, "comboPoroDt", None)
         self.ui.comboPoroGr = getattr(self.ui, "comboPoroGr", None)
 
+        # Map KPI labels
+        self._porosity_kpi_labels = {
+            "avg": getattr(self.ui, "valAvgPhiFinal", None),
+            "max": getattr(self.ui, "valPoroMax", None), # Fallback if added later
+            "min": getattr(self.ui, "valPoroMin", None), # Fallback if added later
+            "thickness": getattr(self.ui, "lblFENetIntervalValue", None), # Mapping to Net Interval
+        }
+        self._porosity_quality_labels = {
+            "rhob": getattr(self.ui, "lblPoroRhobQC", None),
+            "nphi": getattr(self.ui, "lblPoroNphiQC", None),
+        }
+
         self.ui.refresh_porosity_tab = self.refresh_porosity_workspace
         if getattr(self.ui, "btnCalcPorosityRun", None) is not None:
              self.ui.btnCalcPorosityRun.clicked.connect(self.compute_phi)
+
+        well_combo = getattr(self.ui, "comboPhiWell", None)
+        if well_combo is not None:
+            try:
+                well_combo.currentIndexChanged.disconnect()
+            except Exception:
+                pass
+            well_combo.currentIndexChanged.connect(self._on_porosity_well_changed)
 
         self.ui._porosity_workspace_built = True
         self.refresh_porosity_workspace()
@@ -1598,6 +1618,7 @@ class InterpretationService:
             return
 
         self._populate_porosity_wells()
+        self._populate_porosity_curves()
         self._sync_porosity_method_cards()
 
         well = self.data._get_current_well()
@@ -1653,6 +1674,54 @@ class InterpretationService:
         else:
             combo.addItem("No wells loaded")
         combo.blockSignals(False)
+
+    def _on_porosity_well_changed(self) -> None:
+        well_name = self._combo_text("comboPhiWell")
+        if well_name and well_name != "No wells loaded":
+            self.data.set_current_well(well_name)
+            self._populate_porosity_curves()
+            self.refresh_porosity_workspace()
+
+    def _populate_porosity_curves(self) -> None:
+        well = self.data._get_current_well()
+        if well is None:
+            return
+        df = getattr(well, "data", None)
+        if df is None:
+            return
+        
+        curves = sorted(df.columns.tolist())
+        combos = [
+            "comboPoroDepth", "comboPoroRhob", "comboPoroNphi", 
+            "comboPoroDt", "comboPoroGr"
+        ]
+        
+        defaults = {
+            "comboPoroDepth": ["DEPTH", "DEPT", "Depth"],
+            "comboPoroRhob": ["RHOB", "RHOZ", "DEN"],
+            "comboPoroNphi": ["NPHI", "Neutron", "PHIN"],
+            "comboPoroDt": ["DT", "DTCO", "Sonic"],
+            "comboPoroGr": ["GR", "Gamma", "GR_EDTC"]
+        }
+
+        for combo_name in combos:
+            combo = getattr(self.ui, combo_name, None)
+            if combo is not None:
+                current = combo.currentText()
+                combo.blockSignals(True)
+                combo.clear()
+                combo.addItems(curves)
+                
+                # Try to pick a default
+                picked = False
+                for d in defaults.get(combo_name, []):
+                    if d in curves:
+                        combo.setCurrentText(d)
+                        picked = True
+                        break
+                if not picked and current in curves:
+                    combo.setCurrentText(current)
+                combo.blockSignals(False)
 
     def _select_porosity_method(self, method_text: str) -> None:
         combo = getattr(self.ui, "comboPhiMethod", None)
@@ -1723,14 +1792,16 @@ class InterpretationService:
         import pandas as pd
 
         if df is None or phi_series is None or getattr(phi_series, "empty", True):
-            for key in self._porosity_kpi_labels:
-                self._porosity_kpi_labels[key].setText("--")
+            for label in self._porosity_kpi_labels.values():
+                if label:
+                    label.setText("--")
             return
 
         valid_phi = pd.to_numeric(phi_series, errors="coerce").dropna()
         if valid_phi.empty:
-            for key in self._porosity_kpi_labels:
-                self._porosity_kpi_labels[key].setText("--")
+            for label in self._porosity_kpi_labels.values():
+                if label:
+                    label.setText("--")
             return
 
         depth_col = self.data._depth_column(df)
@@ -1742,19 +1813,23 @@ class InterpretationService:
         phi_mask = pd.to_numeric(phi_series, errors="coerce") >= 0.10
         thickness = self._estimate_thickness(depth.to_numpy(dtype=float), phi_mask.fillna(False).to_numpy(dtype=bool))
 
-        self._porosity_kpi_labels["avg"].setText(f"{valid_phi.mean() * 100.0:.1f}%")
-        self._porosity_kpi_labels["max"].setText(f"{valid_phi.max() * 100.0:.1f}%")
-        self._porosity_kpi_labels["min"].setText(f"{valid_phi.min() * 100.0:.1f}%")
-        self._porosity_kpi_labels["thickness"].setText(f"{thickness:.1f} m")
+        labels = self._porosity_kpi_labels
+        if labels.get("avg"):
+            labels["avg"].setText(f"{valid_phi.mean() * 100.0:.1f}%")
+        if labels.get("max"):
+            labels["max"].setText(f"{valid_phi.max() * 100.0:.1f}%")
+        if labels.get("min"):
+            labels["min"].setText(f"{valid_phi.min() * 100.0:.1f}%")
+        if labels.get("thickness"):
+            labels["thickness"].setText(f"{thickness:.1f} m")
 
     def _set_porosity_quality(self, df) -> None:
         import pandas as pd
 
         if df is None or getattr(df, "empty", True):
-            if "rhob" in self._porosity_quality_labels:
-                self._porosity_quality_labels["rhob"].setText("No well loaded")
-            if "nphi" in self._porosity_quality_labels:
-                self._porosity_quality_labels["nphi"].setText("No well loaded")
+            for label in self._porosity_quality_labels.values():
+                if label:
+                    label.setText("No well loaded")
             return
 
         rhob_ok = "RHOB" in df.columns and pd.to_numeric(df["RHOB"], errors="coerce").dropna().size > 0
@@ -2275,6 +2350,13 @@ class InterpretationService:
         try:
             from plotting.plot_context_menu import install_plot_context_menu
             install_plot_context_menu(canvas, fig, host)
+        except Exception:
+            pass
+
+        # Close the figure to free memory from the pyplot global manager if it was registered
+        try:
+            import matplotlib.pyplot as plt
+            plt.close(fig)
         except Exception:
             pass
 

@@ -644,6 +644,13 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         canvas.draw_idle()
         install_plot_context_menu(canvas, fig, frame)
 
+        # Close the figure to free up memory from the pyplot global manager
+        try:
+            import matplotlib.pyplot as plt
+            plt.close(fig)
+        except Exception:
+            pass
+
 
     def _notify_dashboard_refresh(self) -> None:
         try:
