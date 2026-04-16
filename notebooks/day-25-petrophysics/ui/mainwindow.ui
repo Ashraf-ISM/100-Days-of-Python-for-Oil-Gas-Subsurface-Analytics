@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <ui version="4.0">
  <class>PetroAnalystMainWindow</class>
  <widget class="QMainWindow" name="PetroAnalystMainWindow">
@@ -27,7 +27,7 @@
 
 QMainWindow {
     background-color: #EBF0F6;
-    font-family: &quot;Segoe UI&quot;, &quot;Noto Sans&quot;, sans-serif;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
 }
 
 /* ---- Menu Bar ---- */
@@ -362,7 +362,7 @@ QMdiSubWindow::title {
 QPlainTextEdit {
     background-color: #F5F9FE;
     color: #1B2B40;
-    font-family: &quot;Consolas&quot;, &quot;Courier New&quot;, monospace;
+    font-family: "Consolas", "Courier New", monospace;
     font-size: 11px;
     border: none;
     border-radius: 0;
@@ -464,7 +464,7 @@ QSplitter::handle:vertical { height: 4px; }
 QSplitter::handle:hover { background-color: #3A72B5; }
 
 /* ---- Frame ---- */
-QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
+QFrame[frameShape="4"], QFrame[frameShape="5"] {
     color: #C2D0E0;
 }
    </string>
@@ -851,7 +851,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="comboLVCrossX"/>
+              <widget class="QComboBox" name="comboLVCrossX" />
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="lblLVCrossY">
@@ -861,7 +861,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QComboBox" name="comboLVCrossY"/>
+              <widget class="QComboBox" name="comboLVCrossY" />
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="lblLVCrossColor">
@@ -871,7 +871,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QComboBox" name="comboLVCrossColor"/>
+              <widget class="QComboBox" name="comboLVCrossColor" />
              </item>
              <item row="3" column="1">
               <widget class="QPushButton" name="btnLVPlotCrossplot">
@@ -906,7 +906,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="comboLVHistCurve"/>
+              <widget class="QComboBox" name="comboLVHistCurve" />
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="lblLVHistBins">
@@ -961,7 +961,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="CheckableCombobox" name="pairplotcomboBox"/>
+              <widget class="CheckableCombobox" name="pairplotcomboBox" />
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="colorbyLabel">
@@ -971,7 +971,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QLineEdit" name="pairplotcombocolorby"/>
+              <widget class="QLineEdit" name="pairplotcombocolorby" />
              </item>
             </layout>
            </widget>
@@ -1014,7 +1014,7 @@ background-color: rgb(26, 95, 180);</string>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="CheckableCombobox" name="violinplotcomboBox"/>
+              <widget class="CheckableCombobox" name="violinplotcomboBox" />
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="lblLVViolinHint">
@@ -1180,21 +1180,21 @@ Use the controls above to select well, template and depth range, then click Rend
            <property name="columnCount">
             <number>3</number>
            </property>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
            <column>
             <property name="text">
              <string>Field</string>
@@ -1398,7 +1398,7 @@ Use the controls above to select well, template and depth range, then click Rend
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboQCWell"/>
+            <widget class="QComboBox" name="comboQCWell" />
            </item>
            <item row="0" column="2">
             <widget class="QLabel" name="lblQCCurve">
@@ -1408,7 +1408,7 @@ Use the controls above to select well, template and depth range, then click Rend
             </widget>
            </item>
            <item row="0" column="3">
-            <widget class="QComboBox" name="comboQCCurve"/>
+            <widget class="QComboBox" name="comboQCCurve" />
            </item>
            <item row="0" column="4">
             <widget class="QLabel" name="lblQCMethod">
@@ -4331,7 +4331,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="vshTrackCanvas" native="true"/>
+         <widget class="QWidget" name="vshTrackCanvas" native="true" />
         </item>
        </layout>
       </widget>
@@ -4342,521 +4342,310 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
     <attribute name="title">
      <string>Porosity Calculation</string>
     </attribute>
-    <layout class="QHBoxLayout" name="layoutPhi">
-     <property name="spacing">
-      <number>8</number>
-     </property>
-     <property name="leftMargin">
-      <number>6</number>
-     </property>
-     <property name="topMargin">
-      <number>6</number>
-     </property>
-     <property name="rightMargin">
-      <number>6</number>
-     </property>
-     <property name="bottomMargin">
-      <number>6</number>
-     </property>
-     <item>
-      <widget class="QFrame" name="framePhiControls">
-       <property name="minimumSize">
-        <size>
-         <width>280</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>340</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <layout class="QVBoxLayout" name="layoutPhiControls">
-        <property name="spacing">
-         <number>10</number>
-        </property>
-        <property name="leftMargin">
-         <number>12</number>
-        </property>
-        <property name="topMargin">
-         <number>12</number>
-        </property>
-        <property name="rightMargin">
-         <number>12</number>
-        </property>
-        <property name="bottomMargin">
-         <number>12</number>
-        </property>
+    <layout class="QHBoxLayout" name="layoutPorosityMain">
+  <property name="spacing"><number>10</number></property>
+  <property name="leftMargin"><number>6</number></property>
+  <property name="topMargin"><number>6</number></property>
+  <property name="rightMargin"><number>6</number></property>
+  <property name="bottomMargin"><number>6</number></property>
+  <item>
+    <widget class="QFrame" name="porosityLeftPanel">
+      <property name="minimumSize"><size><width>320</width><height>0</height></size></property>
+      <property name="maximumSize"><size><width>340</width><height>16777215</height></size></property>
+      <property name="styleSheet"><string>QFrame { background:#F4F7FC; border:1px solid #D2DCE6; border-radius:8px; } QGroupBox { font-weight: bold; color: #2C3E50; border: 1px solid #cdd5e0; border-radius: 6px; margin-top: 10px; padding-top: 15px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 5px; left: 10px; color: #34495e; font-size: 11px; }</string></property>
+      <layout class="QVBoxLayout" name="layoutPoroLeft">
+        <property name="spacing"><number>12</number></property>
         <item>
-         <widget class="QLabel" name="lblPhiTitle">
-          <property name="styleSheet">
-           <string>font-size:16px;font-weight:700;color:#274B72;padding:2px 0;</string>
-          </property>
-          <property name="text">
-           <string>Porosity Inputs</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupPhiParams">
-          <property name="title">
-           <string>Method &amp; Well</string>
-          </property>
-          <layout class="QFormLayout" name="formPhi">
-           <item row="0" column="0">
-            <widget class="QLabel" name="auto_label_023">
-             <property name="text">
-              <string>Well:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboPhiWell">
-             <item>
-              <property name="text">
-               <string>CHr-1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tau-1</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="auto_label_024">
-             <property name="text">
-              <string>Method:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboPhiMethod">
-             <item>
-              <property name="text">
-               <string>Density (PHID)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Neutron (PHIN)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sonic (DT)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Density-Neutron (PHIE)</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupPhiRockFluid">
-          <property name="title">
-           <string>Rock / Fluid Properties</string>
-          </property>
-          <layout class="QFormLayout" name="formPhiRockFluid">
-           <item row="0" column="0">
-            <widget class="QLabel" name="auto_label_025">
-             <property name="text">
-              <string>Matrix Density (g/cc):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spinPhiRhoma">
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="minimum">
-              <double>2.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>3.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>2.650000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="auto_label_026">
-             <property name="text">
-              <string>Fluid Density (g/cc):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="spinPhiRhof">
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="minimum">
-              <double>0.800000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>1.200000000000000</double>
-             </property>
-             <property name="value">
-              <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="auto_label_027">
-             <property name="text">
-              <string>Vcl Correction:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QCheckBox" name="checkPhiVclCorr">
-             <property name="text">
-              <string>Apply</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="auto_label_028">
-             <property name="text">
-              <string>Output Name:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="linePhiOutName">
-             <property name="text">
-              <string>PHIE</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="lblPhiHint">
-          <property name="styleSheet">
-           <string>color:#6C7E90;font-size:12px;line-height:1.4;</string>
-          </property>
-          <property name="text">
-           <string>Compare density, neutron and corrected effective porosity in one place before feeding the output into Sw and permeability steps.</string>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="spacerPhiControls">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="layoutPhiActions">
-          <property name="spacing">
-           <number>8</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="btnCalcPhi">
-            <property name="styleSheet">
-             <string>background-color:#2B6CB0;color:#FFFFFF;font-weight:600;</string>
-            </property>
-            <property name="text">
-             <string>Run Porosity</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnResetPhi">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(38, 162, 105);</string>
-            </property>
-            <property name="text">
-             <string>Reset</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QFrame" name="framePhiWorkspace">
-       <property name="styleSheet">
-        <string>background:#F7FAFD;border:1px solid #C9D7E6;border-radius:8px;</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <layout class="QVBoxLayout" name="layoutPhiWorkspace">
-        <property name="spacing">
-         <number>8</number>
-        </property>
-        <property name="leftMargin">
-         <number>8</number>
-        </property>
-        <property name="topMargin">
-         <number>8</number>
-        </property>
-        <property name="rightMargin">
-         <number>8</number>
-        </property>
-        <property name="bottomMargin">
-         <number>8</number>
-        </property>
-        <item>
-         <layout class="QHBoxLayout" name="layoutPhiCards">
-          <property name="spacing">
-           <number>8</number>
-          </property>
-          <item>
-           <widget class="QFrame" name="cardPhiMethod">
-            <property name="styleSheet">
-             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <layout class="QVBoxLayout" name="layoutCardPhiMethod">
-             <item>
-              <widget class="QLabel" name="lblPhiMethodTitle">
-               <property name="styleSheet">
-                <string>color:#61788F;font-size:10px;</string>
-               </property>
-               <property name="text">
-                <string>Method</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lblPhiMethodValue">
-               <property name="styleSheet">
-                <string>font-size:14px;font-weight:700;color:#2B6CB0;</string>
-               </property>
-               <property name="text">
-                <string>Density-Neutron</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
+          <widget class="QGroupBox" name="groupLoadWellData">
+            <property name="title"><string>1. LOAD WELL LOG DATA</string></property>
+            <property name="styleSheet"><string>QGroupBox::title { color: #1565C0; }</string></property>
+            <layout class="QVBoxLayout" name="layoutLoadWell">
+              <item>
+                <widget class="QPushButton" name="btnBrowsePoroWell">
+                  <property name="text"><string>Browse LAS / CSV File</string></property>
+                  <property name="styleSheet"><string>background-color: #2E8B57; color: white; border-radius: 4px; padding: 6px; font-weight: bold;</string></property>
+                </widget>
+              </item>
+              <item>
+                <layout class="QHBoxLayout" name="layoutWellName">
+                  <item>
+                    <widget class="QLabel" name="lblActivePoroWell">
+                      <property name="text"><string>No well loaded</string></property>
+                      <property name="styleSheet"><string>color: #2b2b2b; font-weight: bold; border: none; background: transparent;</string></property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="lblActivePoroCheck">
+                      <property name="text"><string>✔</string></property>
+                      <property name="styleSheet"><string>color: #27ae60; font-weight: bold; border: none; background: transparent;</string></property>
+                      <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+                    </widget>
+                  </item>
+                </layout>
+              </item>
             </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="cardPhiRhoma">
-            <property name="styleSheet">
-             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <layout class="QVBoxLayout" name="layoutCardPhiRhoma">
-             <item>
-              <widget class="QLabel" name="lblPhiRhomaTitle">
-               <property name="styleSheet">
-                <string>color:#61788F;font-size:10px;</string>
-               </property>
-               <property name="text">
-                <string>rho_ma</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lblPhiRhomaValue">
-               <property name="styleSheet">
-                <string>font-size:16px;font-weight:700;color:#17A673;</string>
-               </property>
-               <property name="text">
-                <string>2.65</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="cardPhiRhof">
-            <property name="styleSheet">
-             <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <layout class="QVBoxLayout" name="layoutCardPhiRhof">
-             <item>
-              <widget class="QLabel" name="lblPhiRhofTitle">
-               <property name="styleSheet">
-                <string>color:#61788F;font-size:10px;</string>
-               </property>
-               <property name="text">
-                <string>rho_f</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lblPhiRhofValue">
-               <property name="styleSheet">
-                <string>font-size:16px;font-weight:700;color:#D97706;</string>
-               </property>
-               <property name="text">
-                <string>1.00</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
+          </widget>
         </item>
         <item>
-         <widget class="QFrame" name="framePhiCanvas">
-          <property name="styleSheet">
-           <string>background:#FFFFFF;border:1px solid #C2D0E0;border-radius:8px;</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <layout class="QVBoxLayout" name="layoutPhiCanvas">
-           <property name="leftMargin">
-            <number>10</number>
-           </property>
-           <property name="topMargin">
-            <number>10</number>
-           </property>
-           <property name="rightMargin">
-            <number>10</number>
-           </property>
-           <property name="bottomMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="lblPhiPlotTitle">
-             <property name="styleSheet">
-              <string>font-weight:700;color:#2A4E77;</string>
-             </property>
-             <property name="text">
-              <string>Porosity Track Preview</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lblPhiPlaceholder">
-             <property name="styleSheet">
-              <string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string>
-             </property>
-             <property name="text">
-              <string>Porosity preview log canvas showing PHID, PHIN and corrected effective porosity</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+          <widget class="QGroupBox" name="groupSelectCurves">
+            <property name="title"><string>2. SELECT LOG CURVES</string></property>
+            <property name="styleSheet"><string>QGroupBox::title { color: #8E44AD; }</string></property>
+            <layout class="QFormLayout" name="formSelectCurves">
+              <item row="0" column="0"><widget class="QLabel" name="lblCurveDepth"><property name="text"><string>Depth:</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="0" column="1"><widget class="QComboBox" name="comboPoroDepth" /></item>
+              <item row="1" column="0"><widget class="QLabel" name="lblCurveRhob"><property name="text"><string>Density (RHOB):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="1" column="1"><widget class="QComboBox" name="comboPoroRhob" /></item>
+              <item row="2" column="0"><widget class="QLabel" name="lblCurveNphi"><property name="text"><string>Neutron (NPHI):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="2" column="1"><widget class="QComboBox" name="comboPoroNphi" /></item>
+              <item row="3" column="0"><widget class="QLabel" name="lblCurveDt"><property name="text"><string>Sonic (DT):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="3" column="1"><widget class="QComboBox" name="comboPoroDt" /></item>
+              <item row="4" column="0"><widget class="QLabel" name="lblCurveGr"><property name="text"><string>Gamma Ray (GR):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="4" column="1"><widget class="QComboBox" name="comboPoroGr" /></item>
+            </layout>
+          </widget>
         </item>
         <item>
-         <widget class="QFrame" name="framePhiSummary">
-          <property name="styleSheet">
-           <string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <layout class="QVBoxLayout" name="layoutPhiSummary">
-           <property name="leftMargin">
-            <number>10</number>
-           </property>
-           <property name="topMargin">
-            <number>10</number>
-           </property>
-           <property name="rightMargin">
-            <number>10</number>
-           </property>
-           <property name="bottomMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="lblPhiSummaryTitle">
-             <property name="styleSheet">
-              <string>font-weight:700;color:#2A4E77;</string>
-             </property>
-             <property name="text">
-              <string>Calculation Guide</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lblPhiSummaryText">
-             <property name="styleSheet">
-              <string>color:#6C7E90;font-size:12px;</string>
-             </property>
-             <property name="text">
-              <string>Use density-neutron porosity for a fast effective porosity estimate, then compare it to shale-corrected responses before water saturation.</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+          <widget class="QGroupBox" name="groupInputParams">
+            <property name="title"><string>3. INPUT PARAMETERS</string></property>
+            <property name="styleSheet"><string>QGroupBox::title { color: #E67E22; }</string></property>
+            <layout class="QFormLayout" name="formInputParams">
+              <item row="0" column="0"><widget class="QLabel" name="lblParamMatrix"><property name="text"><string>Matrix Type:</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="0" column="1"><widget class="QComboBox" name="comboPoroMatrixType"><item><property name="text"><string>Sandstone</string></property></item><item><property name="text"><string>Limestone</string></property></item><item><property name="text"><string>Dolomite</string></property></item></widget></item>
+              
+              <item row="1" column="0"><widget class="QLabel" name="lblParamRhoma"><property name="text"><string>Matrix Density (&amp;rho;ma):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="1" column="1"><widget class="QDoubleSpinBox" name="spinPoroRhoma"><property name="decimals"><number>2</number></property><property name="value"><double>2.65</double></property><property name="suffix"><string> g/cc</string></property></widget></item>
+              
+              <item row="2" column="0"><widget class="QLabel" name="lblParamRhof"><property name="text"><string>Fluid Density (&amp;rho;f):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="2" column="1"><widget class="QDoubleSpinBox" name="spinPoroRhof"><property name="decimals"><number>2</number></property><property name="value"><double>1.00</double></property><property name="suffix"><string> g/cc</string></property></widget></item>
+              
+              <item row="3" column="0"><widget class="QLabel" name="lblParamDtma"><property name="text"><string>Matrix Transit Time (&amp;Delta;tma):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPoroDtma"><property name="decimals"><number>2</number></property><property name="maximum"><double>1000.0</double></property><property name="value"><double>55.50</double></property><property name="suffix"><string> &amp;mu;s/ft</string></property></widget></item>
+              
+              <item row="4" column="0"><widget class="QLabel" name="lblParamDtf"><property name="text"><string>Fluid Transit Time (&amp;Delta;tf):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="4" column="1"><widget class="QDoubleSpinBox" name="spinPoroDtf"><property name="decimals"><number>2</number></property><property name="maximum"><double>1000.0</double></property><property name="value"><double>189.00</double></property><property name="suffix"><string> &amp;mu;s/ft</string></property></widget></item>
+              
+              <item row="5" column="0"><widget class="QLabel" name="lblParamPhish"><property name="text"><string>Shale Porosity (&amp;phi;sh):</string></property><property name="styleSheet"><string>border:none;background:transparent;</string></property></widget></item>
+              <item row="5" column="1"><widget class="QDoubleSpinBox" name="spinPoroPhish"><property name="decimals"><number>2</number></property><property name="value"><double>0.20</double></property></widget></item>
+            </layout>
+          </widget>
         </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+        <item>
+          <widget class="QGroupBox" name="groupCalcOptions">
+            <property name="title"><string>4. CALCULATION OPTIONS</string></property>
+            <property name="styleSheet"><string>QGroupBox::title { color: #27AE60; } QCheckBox { border:none; background:transparent; }</string></property>
+            <layout class="QVBoxLayout" name="layoutCalcOptions">
+              <item>
+                <widget class="QCheckBox" name="checkPoroShaleCorr">
+                  <property name="text"><string>Apply Shale Correction</string></property>
+                  <property name="checked"><bool>true</bool></property>
+                  <property name="styleSheet"><string>border:none;background:transparent; font-weight: bold;</string></property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QLabel" name="lblPoroVshMethod">
+                 <property name="text"><string>Shale Volume Method:</string></property>
+                 <property name="styleSheet"><string>border:none;background:transparent; font-size: 11px;</string></property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QComboBox" name="comboPoroVshMethod">
+                  <item><property name="text"><string>From GR (Larionov)</string></property></item>
+                  <item><property name="text"><string>From GR (Linear)</string></property></item>
+                  <item><property name="text"><string>From GR (Clavier)</string></property></item>
+                  <item><property name="text"><string>From GR (Steiber)</string></property></item>
+                </widget>
+              </item>
+              <item>
+                <widget class="QLabel" name="lblPoroComboMethod">
+                 <property name="text"><string>Porosity Combination:</string></property>
+                 <property name="styleSheet"><string>border:none;background:transparent; font-size: 11px;</string></property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QComboBox" name="comboPoroComboMethod">
+                  <item><property name="text"><string>Average (Density + Neutron)</string></property></item>
+                  <item><property name="text"><string>RMS (Density + Neutron)</string></property></item>
+                  <item><property name="text"><string>Density Only</string></property></item>
+                  <item><property name="text"><string>Neutron Only</string></property></item>
+                  <item><property name="text"><string>Sonic Only</string></property></item>
+                </widget>
+              </item>
+            </layout>
+          </widget>
+        </item>
+        <item>
+          <layout class="QVBoxLayout" name="layoutPoroActions">
+            <property name="spacing"><number>8</number></property>
+            <item>
+              <widget class="QPushButton" name="btnCalcPorosityRun">
+                <property name="text"><string>▶ CALCULATE POROSITY</string></property>
+                <property name="styleSheet"><string>background-color: #00B16A; color: white; border-radius: 4px; padding: 10px; font-weight: bold; font-size: 13px;</string></property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QPushButton" name="btnCalcPorosityReset">
+                <property name="text"><string>⟲ RESET</string></property>
+                <property name="styleSheet"><string>background-color: #ECF0F1; color: #7F8C8D; border: 1px solid #BDC3C7; border-radius: 4px; padding: 6px; font-weight: bold;</string></property>
+              </widget>
+            </item>
+          </layout>
+        </item>
+        <item>
+          <spacer name="spacerLeftPanelBottom">
+            <property name="orientation"><enum>Qt::Vertical</enum></property>
+            <property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property>
+          </spacer>
+        </item>
+      </layout>
+    </widget>
+  </item>
+  <item>
+    <widget class="QFrame" name="porosityMainArea">
+      <property name="styleSheet"><string>QFrame { background:#FFFFFF; border:1px solid #D2DCE6; border-radius:8px; }</string></property>
+      <layout class="QVBoxLayout" name="layoutPoroMainArea">
+         <property name="spacing"><number>10</number></property>
+         <item>
+           <layout class="QHBoxLayout" name="layoutMainTopRow">
+             <item>
+               <widget class="QGroupBox" name="groupFormulas">
+                 <property name="title"><string>CALCULATION FORMULAS</string></property>
+                 <property name="styleSheet"><string>QGroupBox { background:#F8F9F9; border: 1px solid #DDE2E5; font-weight: bold; color: #34495E; margin-top: 15px;} QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 5px; background: white; }</string></property>
+                 <layout class="QVBoxLayout" name="layoutFormulas">
+                   <item>
+                     <widget class="QLabel" name="lblFormulasImg">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;
+                        &lt;p style="font-size:10pt;"&gt;&lt;b&gt;Density Porosity:&lt;/b&gt; &amp;phi;&lt;sub&gt;d&lt;/sub&gt; = (&amp;rho;&lt;sub&gt;ma&lt;/sub&gt; - &amp;rho;&lt;sub&gt;b&lt;/sub&gt;) / (&amp;rho;&lt;sub&gt;ma&lt;/sub&gt; - &amp;rho;&lt;sub&gt;fl&lt;/sub&gt;)&lt;/p&gt;
+                        &lt;p style="font-size:10pt;"&gt;&lt;b&gt;Sonic Porosity (Wyllie):&lt;/b&gt; &amp;phi;&lt;sub&gt;s&lt;/sub&gt; = (&amp;Delta;t - &amp;Delta;t&lt;sub&gt;ma&lt;/sub&gt;) / (&amp;Delta;t&lt;sub&gt;fl&lt;/sub&gt; - &amp;Delta;t&lt;sub&gt;ma&lt;/sub&gt;)&lt;/p&gt;
+                        &lt;p style="font-size:10pt;"&gt;&lt;b&gt;Shale Correction:&lt;/b&gt; &amp;phi;&lt;sub&gt;corrected&lt;/sub&gt; = &amp;phi;&lt;sub&gt;log&lt;/sub&gt; - V&lt;sub&gt;sh&lt;/sub&gt; &amp;times; &amp;phi;&lt;sub&gt;sh&lt;/sub&gt;&lt;/p&gt;
+                        &lt;p style="font-size:10pt;"&gt;&lt;b&gt;Porosity Combination:&lt;/b&gt; &amp;phi;&lt;sub&gt;final&lt;/sub&gt; = (&amp;phi;&lt;sub&gt;d&lt;/sub&gt; + &amp;phi;&lt;sub&gt;n&lt;/sub&gt;) / 2&lt;/p&gt;
+                        &lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="textFormat"><enum>Qt::RichText</enum></property>
+                       <property name="wordWrap"><bool>true</bool></property>
+                       <property name="styleSheet"><string>border:none;background:transparent;</string></property>
+                     </widget>
+                   </item>
+                 </layout>
+               </widget>
+             </item>
+             <item>
+               <widget class="QGroupBox" name="groupQuickTips">
+                 <property name="title"><string>QUICK TIPS</string></property>
+                 <property name="styleSheet"><string>QGroupBox { background:#EAF2F8; border: 1px solid #D4E6F1; font-weight: bold; color: #2E86C1; margin-top: 15px;} QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 5px; background: white; }</string></property>
+                 <layout class="QVBoxLayout" name="layoutTips">
+                   <item>
+                     <widget class="QLabel" name="lblTipsText">
+                       <property name="text">
+                        <string>&lt;ul style="font-size:9pt; color:#34495E; margin:0px; padding-left:15px;"&gt;
+                        &lt;li&gt;Check log quality before calculation&lt;/li&gt;
+                        &lt;li&gt;Use proper matrix density for your lithology&lt;/li&gt;
+                        &lt;li&gt;Gas zones show density-neutron crossover&lt;/li&gt;
+                        &lt;li&gt;Apply shale correction for shaly formations&lt;/li&gt;
+                        &lt;li&gt;Compare with core data when available&lt;/li&gt;
+                        &lt;/ul&gt;</string>
+                       </property>
+                       <property name="textFormat"><enum>Qt::RichText</enum></property>
+                       <property name="wordWrap"><bool>true</bool></property>
+                       <property name="styleSheet"><string>border:none;background:transparent;</string></property>
+                     </widget>
+                   </item>
+                 </layout>
+               </widget>
+             </item>
+           </layout>
+         </item>
+         <item>
+           <widget class="QGroupBox" name="groupPoroResultsPlots">
+             <property name="title"><string>POROSITY RESULTS</string></property>
+             <property name="styleSheet"><string>QGroupBox { border: none; font-weight: bold; color: #34495E; margin-top: 15px; } QGroupBox::title { subcontrol-origin: margin; left: 5px; padding: 0; background: transparent; }</string></property>
+             <layout class="QVBoxLayout" name="layoutPoroResultsPlots">
+               <property name="leftMargin"><number>0</number></property>
+               <property name="rightMargin"><number>0</number></property>
+               <item>
+                 <widget class="QWidget" name="poroPlotsCanvas" native="true">
+                   <property name="minimumSize"><size><width>0</width><height>300</height></size></property>
+                   <property name="styleSheet"><string>background: #FAFAFA; border: 1px solid #E0E0E0;</string></property>
+                 </widget>
+               </item>
+             </layout>
+           </widget>
+         </item>
+         <item>
+           <widget class="QGroupBox" name="groupPoroSummary">
+             <property name="title"><string>POROSITY SUMMARY</string></property>
+             <property name="styleSheet"><string>QGroupBox { border: none; font-weight: bold; color: #34495E; margin-top: 15px; } QGroupBox::title { subcontrol-origin: margin; left: 5px; padding: 0; background: transparent; }</string></property>
+             <layout class="QVBoxLayout" name="layoutPoroSummary">
+               <property name="leftMargin"><number>0</number></property>
+               <property name="rightMargin"><number>0</number></property>
+               <item>
+                 <layout class="QHBoxLayout" name="layoutSummaryCards">
+                   <property name="spacing"><number>10</number></property>
+                   <item>
+                    <widget class="QFrame" name="cardAvgPhiD">
+                      <property name="styleSheet"><string>background:#E3F2FD; border-radius:6px;</string></property>
+                      <layout class="QVBoxLayout">
+                        <item><widget class="QLabel" name="lblAvgPhiDTitle"><property name="text"><string>AVG DENSITY POROSITY</string></property><property name="styleSheet"><string>color:#1565C0; font-size:9px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="valAvgPhiD"><property name="text"><string>--</string></property><property name="styleSheet"><string>color:#1565C0; font-size:18px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="lblAvgPhiDUnit"><property name="text"><string>v/v</string></property><property name="styleSheet"><string>color:#1565C0; font-size:9px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                      </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="cardAvgPhiN">
+                      <property name="styleSheet"><string>background:#FFEBEE; border-radius:6px;</string></property>
+                      <layout class="QVBoxLayout">
+                        <item><widget class="QLabel" name="lblAvgPhiNTitle"><property name="text"><string>AVG NEUTRON POROSITY</string></property><property name="styleSheet"><string>color:#C62828; font-size:9px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="valAvgPhiN"><property name="text"><string>--</string></property><property name="styleSheet"><string>color:#C62828; font-size:18px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="lblAvgPhiNUnit"><property name="text"><string>v/v</string></property><property name="styleSheet"><string>color:#C62828; font-size:9px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                      </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="cardAvgPhiS">
+                      <property name="styleSheet"><string>background:#F3E5F5; border-radius:6px;</string></property>
+                      <layout class="QVBoxLayout">
+                        <item><widget class="QLabel" name="lblAvgPhiSTitle"><property name="text"><string>AVG SONIC POROSITY</string></property><property name="styleSheet"><string>color:#6A1B9A; font-size:9px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="valAvgPhiS"><property name="text"><string>--</string></property><property name="styleSheet"><string>color:#6A1B9A; font-size:18px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="lblAvgPhiSUnit"><property name="text"><string>v/v</string></property><property name="styleSheet"><string>color:#6A1B9A; font-size:9px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                      </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="cardAvgPhiFinal">
+                      <property name="styleSheet"><string>background:#E8F5E9; border-radius:6px;</string></property>
+                      <layout class="QVBoxLayout">
+                        <item><widget class="QLabel" name="lblAvgPhiFinalTitle"><property name="text"><string>AVG FINAL POROSITY</string></property><property name="styleSheet"><string>color:#2E7D32; font-size:9px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="valAvgPhiFinal"><property name="text"><string>--</string></property><property name="styleSheet"><string>color:#2E7D32; font-size:18px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="lblAvgPhiFinalUnit"><property name="text"><string>v/v</string></property><property name="styleSheet"><string>color:#2E7D32; font-size:9px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                      </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="cardShaleStatus">
+                      <property name="styleSheet"><string>background:#FFF8E1; border-radius:6px;</string></property>
+                      <layout class="QVBoxLayout">
+                        <item><widget class="QLabel" name="lblShaleStatusTitle"><property name="text"><string>SHALY SAND CORRECTED</string></property><property name="styleSheet"><string>color:#F57F17; font-size:9px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                        <item><widget class="QLabel" name="valShaleCorrStatus"><property name="text"><string>✔️ Applied</string></property><property name="styleSheet"><string>color:#2E7D32; font-size:14px; font-weight:bold;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                      </layout>
+                    </widget>
+                   </item>
+                 </layout>
+               </item>
+               <item>
+                 <widget class="QTableWidget" name="tablePoroSummary">
+                   <property name="styleSheet"><string>QTableWidget { font-size: 11px; background: white; border: 1px solid #E0E0E0; } QHeaderView::section { background-color: #34495E; color: white; font-weight: bold; }</string></property>
+                   <attribute name="horizontalHeaderStretchLastSection"><bool>true</bool></attribute>
+                   <attribute name="verticalHeaderVisible"><bool>false</bool></attribute>
+                 </widget>
+               </item>
+             </layout>
+           </widget>
+         </item>
+      </layout>
+    </widget>
+  </item>
+</layout></widget>
    <widget class="QWidget" name="tabWaterSaturation">
     <attribute name="title">
      <string>Water Saturation (Sw)</string>
@@ -8360,9 +8149,9 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
                   <property name="columnCount">
                    <number>6</number>
                   </property>
-                  <row/>
-                  <row/>
-                  <row/>
+                  <row />
+                  <row />
+                  <row />
                   <column>
                    <property name="text">
                     <string>Depth</string>
@@ -9322,71 +9111,71 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
      <property name="title">
       <string>Import Data</string>
      </property>
-     <addaction name="actionImportLAS"/>
-     <addaction name="actionImportDLIS"/>
-     <addaction name="actionImportLIS"/>
-     <addaction name="separator"/>
-     <addaction name="actionImportASCII"/>
-     <addaction name="actionImportCSV"/>
-     <addaction name="actionImportExcel"/>
-     <addaction name="separator"/>
-     <addaction name="actionImportWITSML"/>
-     <addaction name="actionImportSEGY"/>
-     <addaction name="actionImportXML"/>
-     <addaction name="actionImportODM"/>
+     <addaction name="actionImportLAS" />
+     <addaction name="actionImportDLIS" />
+     <addaction name="actionImportLIS" />
+     <addaction name="separator" />
+     <addaction name="actionImportASCII" />
+     <addaction name="actionImportCSV" />
+     <addaction name="actionImportExcel" />
+     <addaction name="separator" />
+     <addaction name="actionImportWITSML" />
+     <addaction name="actionImportSEGY" />
+     <addaction name="actionImportXML" />
+     <addaction name="actionImportODM" />
     </widget>
     <widget class="QMenu" name="menuExportData">
      <property name="title">
       <string>Export Data</string>
      </property>
-     <addaction name="actionExportLAS"/>
-     <addaction name="actionExportCSV"/>
-     <addaction name="actionExportExcel"/>
-     <addaction name="separator"/>
-     <addaction name="actionExportPDF"/>
-     <addaction name="actionExportImageFile"/>
-     <addaction name="actionExportDatabase"/>
+     <addaction name="actionExportLAS" />
+     <addaction name="actionExportCSV" />
+     <addaction name="actionExportExcel" />
+     <addaction name="separator" />
+     <addaction name="actionExportPDF" />
+     <addaction name="actionExportImageFile" />
+     <addaction name="actionExportDatabase" />
     </widget>
     <widget class="QMenu" name="menuRecentProjects">
      <property name="title">
       <string>Recent Projects</string>
      </property>
-     <addaction name="actionRecent1"/>
-     <addaction name="actionRecent2"/>
-     <addaction name="actionRecent3"/>
-     <addaction name="separator"/>
-     <addaction name="actionClearRecent"/>
+     <addaction name="actionRecent1" />
+     <addaction name="actionRecent2" />
+     <addaction name="actionRecent3" />
+     <addaction name="separator" />
+     <addaction name="actionClearRecent" />
     </widget>
-    <addaction name="actionNewProject"/>
-    <addaction name="actionOpenProject"/>
-    <addaction name="actionSaveProject"/>
-    <addaction name="actionSaveProjectAs"/>
-    <addaction name="separator"/>
-    <addaction name="menuImportData"/>
-    <addaction name="menuExportData"/>
-    <addaction name="separator"/>
-    <addaction name="actionPrint"/>
-    <addaction name="actionPrintPreview"/>
-    <addaction name="separator"/>
-    <addaction name="menuRecentProjects"/>
-    <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="actionNewProject" />
+    <addaction name="actionOpenProject" />
+    <addaction name="actionSaveProject" />
+    <addaction name="actionSaveProjectAs" />
+    <addaction name="separator" />
+    <addaction name="menuImportData" />
+    <addaction name="menuExportData" />
+    <addaction name="separator" />
+    <addaction name="actionPrint" />
+    <addaction name="actionPrintPreview" />
+    <addaction name="separator" />
+    <addaction name="menuRecentProjects" />
+    <addaction name="separator" />
+    <addaction name="actionExit" />
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionUndo"/>
-    <addaction name="actionRedo"/>
-    <addaction name="separator"/>
-    <addaction name="actionCut"/>
-    <addaction name="actionCopy"/>
-    <addaction name="actionPaste"/>
-    <addaction name="actionDelete"/>
-    <addaction name="separator"/>
-    <addaction name="actionSelectAll"/>
-    <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
+    <addaction name="actionUndo" />
+    <addaction name="actionRedo" />
+    <addaction name="separator" />
+    <addaction name="actionCut" />
+    <addaction name="actionCopy" />
+    <addaction name="actionPaste" />
+    <addaction name="actionDelete" />
+    <addaction name="separator" />
+    <addaction name="actionSelectAll" />
+    <addaction name="separator" />
+    <addaction name="actionPreferences" />
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -9396,230 +9185,230 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
      <property name="title">
       <string>Depth Scale</string>
      </property>
-     <addaction name="actionDepthMD"/>
-     <addaction name="actionDepthTVD"/>
-     <addaction name="actionDepthTVDSS"/>
+     <addaction name="actionDepthMD" />
+     <addaction name="actionDepthTVD" />
+     <addaction name="actionDepthTVDSS" />
     </widget>
     <widget class="QMenu" name="menuToolbarsToggle">
      <property name="title">
       <string>Toolbars</string>
      </property>
-     <addaction name="actionToggleMainToolbar"/>
-     <addaction name="actionToggleWellToolbar"/>
-     <addaction name="actionToggleAnalysisToolbar"/>
+     <addaction name="actionToggleMainToolbar" />
+     <addaction name="actionToggleWellToolbar" />
+     <addaction name="actionToggleAnalysisToolbar" />
     </widget>
     <widget class="QMenu" name="menuPanelsToggle">
      <property name="title">
       <string>Panels</string>
      </property>
-     <addaction name="actionToggleBrowser"/>
-     <addaction name="actionToggleProperties"/>
-     <addaction name="actionToggleConsole"/>
+     <addaction name="actionToggleBrowser" />
+     <addaction name="actionToggleProperties" />
+     <addaction name="actionToggleConsole" />
     </widget>
-    <addaction name="actionZoomIn"/>
-    <addaction name="actionZoomOut"/>
-    <addaction name="actionZoomFit"/>
-    <addaction name="actionZoomReset"/>
-    <addaction name="separator"/>
-    <addaction name="menuDepthScale"/>
-    <addaction name="separator"/>
-    <addaction name="actionShowGrid"/>
-    <addaction name="actionShowDepthLabels"/>
-    <addaction name="actionShowScaleBar"/>
-    <addaction name="separator"/>
-    <addaction name="menuToolbarsToggle"/>
-    <addaction name="menuPanelsToggle"/>
-    <addaction name="separator"/>
-    <addaction name="actionFullScreen"/>
+    <addaction name="actionZoomIn" />
+    <addaction name="actionZoomOut" />
+    <addaction name="actionZoomFit" />
+    <addaction name="actionZoomReset" />
+    <addaction name="separator" />
+    <addaction name="menuDepthScale" />
+    <addaction name="separator" />
+    <addaction name="actionShowGrid" />
+    <addaction name="actionShowDepthLabels" />
+    <addaction name="actionShowScaleBar" />
+    <addaction name="separator" />
+    <addaction name="menuToolbarsToggle" />
+    <addaction name="menuPanelsToggle" />
+    <addaction name="separator" />
+    <addaction name="actionFullScreen" />
    </widget>
    <widget class="QMenu" name="menuWell">
     <property name="title">
      <string>&amp;Well</string>
     </property>
-    <addaction name="actionAddWell"/>
-    <addaction name="actionWellProperties"/>
-    <addaction name="actionSetActiveWell"/>
-    <addaction name="separator"/>
-    <addaction name="actionWellTops"/>
-    <addaction name="actionWellTrajectory"/>
-    <addaction name="actionCasingCompletion"/>
-    <addaction name="separator"/>
-    <addaction name="actionCoreData"/>
-    <addaction name="actionDSTData"/>
-    <addaction name="actionFluidAnalysis"/>
-    <addaction name="separator"/>
-    <addaction name="actionMudLog"/>
-    <addaction name="separator"/>
-    <addaction name="actionDeleteWell"/>
+    <addaction name="actionAddWell" />
+    <addaction name="actionWellProperties" />
+    <addaction name="actionSetActiveWell" />
+    <addaction name="separator" />
+    <addaction name="actionWellTops" />
+    <addaction name="actionWellTrajectory" />
+    <addaction name="actionCasingCompletion" />
+    <addaction name="separator" />
+    <addaction name="actionCoreData" />
+    <addaction name="actionDSTData" />
+    <addaction name="actionFluidAnalysis" />
+    <addaction name="separator" />
+    <addaction name="actionMudLog" />
+    <addaction name="separator" />
+    <addaction name="actionDeleteWell" />
    </widget>
    <widget class="QMenu" name="menuPlot">
     <property name="title">
      <string>&amp;Plot</string>
     </property>
-    <addaction name="actionNewLogPlot"/>
-    <addaction name="actionNewCrossplot"/>
-    <addaction name="actionNewHistogram"/>
-    <addaction name="actionNewRoseDiagram"/>
-    <addaction name="actionNewTadpolePlot"/>
-    <addaction name="actionNewStarPlot"/>
-    <addaction name="actionNewPolarPlot"/>
-    <addaction name="separator"/>
-    <addaction name="actiondatainfo"/>
-    <addaction name="actionRemoveTrack"/>
-    <addaction name="actionTrackProperties"/>
-    <addaction name="separator"/>
-    <addaction name="actionAddCurve"/>
-    <addaction name="actionCurveProperties"/>
-    <addaction name="actionCurveFillOptions"/>
-    <addaction name="separator"/>
-    <addaction name="actionSavePlotTemplate"/>
-    <addaction name="actionLoadPlotTemplate"/>
-    <addaction name="actionManageTemplates"/>
+    <addaction name="actionNewLogPlot" />
+    <addaction name="actionNewCrossplot" />
+    <addaction name="actionNewHistogram" />
+    <addaction name="actionNewRoseDiagram" />
+    <addaction name="actionNewTadpolePlot" />
+    <addaction name="actionNewStarPlot" />
+    <addaction name="actionNewPolarPlot" />
+    <addaction name="separator" />
+    <addaction name="actiondatainfo" />
+    <addaction name="actionRemoveTrack" />
+    <addaction name="actionTrackProperties" />
+    <addaction name="separator" />
+    <addaction name="actionAddCurve" />
+    <addaction name="actionCurveProperties" />
+    <addaction name="actionCurveFillOptions" />
+    <addaction name="separator" />
+    <addaction name="actionSavePlotTemplate" />
+    <addaction name="actionLoadPlotTemplate" />
+    <addaction name="actionManageTemplates" />
    </widget>
    <widget class="QMenu" name="menuInterpretation">
     <property name="title">
      <string>&amp;Interpretation</string>
     </property>
-    <addaction name="actionShaleVolume"/>
-    <addaction name="actionPorosityCalc"/>
-    <addaction name="actionWaterSaturation"/>
-    <addaction name="actionPermeability"/>
-    <addaction name="separator"/>
-    <addaction name="actionLithology"/>
-    <addaction name="actionRockTyping"/>
-    <addaction name="actionNetPay"/>
-    <addaction name="separator"/>
-    <addaction name="actionFluidSubstitution"/>
-    <addaction name="actionContactPicking"/>
-    <addaction name="separator"/>
-    <addaction name="actionZoneDefinition"/>
-    <addaction name="actionDepthShiftCorr"/>
-    <addaction name="actionSpliceCurves"/>
-    <addaction name="actionQualityControl"/>
+    <addaction name="actionShaleVolume" />
+    <addaction name="actionPorosityCalc" />
+    <addaction name="actionWaterSaturation" />
+    <addaction name="actionPermeability" />
+    <addaction name="separator" />
+    <addaction name="actionLithology" />
+    <addaction name="actionRockTyping" />
+    <addaction name="actionNetPay" />
+    <addaction name="separator" />
+    <addaction name="actionFluidSubstitution" />
+    <addaction name="actionContactPicking" />
+    <addaction name="separator" />
+    <addaction name="actionZoneDefinition" />
+    <addaction name="actionDepthShiftCorr" />
+    <addaction name="actionSpliceCurves" />
+    <addaction name="actionQualityControl" />
    </widget>
    <widget class="QMenu" name="menuCalculation">
     <property name="title">
      <string>&amp;Calculation</string>
     </property>
-    <addaction name="actionBasicArithmetic"/>
-    <addaction name="actionRockPhysicsModels"/>
-    <addaction name="actionFluidProperties"/>
-    <addaction name="separator"/>
-    <addaction name="actionFormulaEditor"/>
-    <addaction name="actionCustomFormula"/>
-    <addaction name="separator"/>
-    <addaction name="actionNMRCalc"/>
-    <addaction name="actionDielectricCalc"/>
-    <addaction name="actionThermalCalc"/>
-    <addaction name="separator"/>
-    <addaction name="actionBatchProcess"/>
+    <addaction name="actionBasicArithmetic" />
+    <addaction name="actionRockPhysicsModels" />
+    <addaction name="actionFluidProperties" />
+    <addaction name="separator" />
+    <addaction name="actionFormulaEditor" />
+    <addaction name="actionCustomFormula" />
+    <addaction name="separator" />
+    <addaction name="actionNMRCalc" />
+    <addaction name="actionDielectricCalc" />
+    <addaction name="actionThermalCalc" />
+    <addaction name="separator" />
+    <addaction name="actionBatchProcess" />
    </widget>
    <widget class="QMenu" name="menuAdvancedInterp">
     <property name="title">
      <string>&amp;Advanced Interpretation</string>
     </property>
-    <addaction name="actionAdvRockPhysics"/>
-    <addaction name="actionMultimineralAnalysis"/>
-    <addaction name="actionNMRAnalysis"/>
-    <addaction name="actionDielectricInterp"/>
-    <addaction name="separator"/>
-    <addaction name="actionPressureAnalysis"/>
-    <addaction name="actionTemperatureGradient"/>
-    <addaction name="actionFormationTesting"/>
-    <addaction name="separator"/>
-    <addaction name="actionSeismicPetro"/>
-    <addaction name="actionAVOAnalysis"/>
+    <addaction name="actionAdvRockPhysics" />
+    <addaction name="actionMultimineralAnalysis" />
+    <addaction name="actionNMRAnalysis" />
+    <addaction name="actionDielectricInterp" />
+    <addaction name="separator" />
+    <addaction name="actionPressureAnalysis" />
+    <addaction name="actionTemperatureGradient" />
+    <addaction name="actionFormationTesting" />
+    <addaction name="separator" />
+    <addaction name="actionSeismicPetro" />
+    <addaction name="actionAVOAnalysis" />
    </widget>
    <widget class="QMenu" name="menuImageAnalysis">
     <property name="title">
      <string>Image &amp;Analysis</string>
     </property>
-    <addaction name="actionBoreholeImage"/>
-    <addaction name="actionFMIAnalysis"/>
-    <addaction name="actionDipAnalysis"/>
-    <addaction name="actionTadpoleDisplay"/>
-    <addaction name="separator"/>
-    <addaction name="actionStaticNormalization"/>
-    <addaction name="actionDynamicNormalization"/>
-    <addaction name="separator"/>
-    <addaction name="actionFractureDetection"/>
-    <addaction name="actionSedStructures"/>
-    <addaction name="actionStrikeAzimuth"/>
+    <addaction name="actionBoreholeImage" />
+    <addaction name="actionFMIAnalysis" />
+    <addaction name="actionDipAnalysis" />
+    <addaction name="actionTadpoleDisplay" />
+    <addaction name="separator" />
+    <addaction name="actionStaticNormalization" />
+    <addaction name="actionDynamicNormalization" />
+    <addaction name="separator" />
+    <addaction name="actionFractureDetection" />
+    <addaction name="actionSedStructures" />
+    <addaction name="actionStrikeAzimuth" />
    </widget>
    <widget class="QMenu" name="menuGeomechanics">
     <property name="title">
      <string>&amp;Geomechanics</string>
     </property>
-    <addaction name="actionStressAnalysis"/>
-    <addaction name="actionWellboreStability"/>
-    <addaction name="actionFractureAnalysis"/>
-    <addaction name="actionPorePressure"/>
-    <addaction name="separator"/>
-    <addaction name="actionUCS"/>
-    <addaction name="actionYoungsModulus"/>
-    <addaction name="actionPoissonRatio"/>
-    <addaction name="actionBrittlenessIndex"/>
-    <addaction name="separator"/>
-    <addaction name="actionMudWeightWindow"/>
+    <addaction name="actionStressAnalysis" />
+    <addaction name="actionWellboreStability" />
+    <addaction name="actionFractureAnalysis" />
+    <addaction name="actionPorePressure" />
+    <addaction name="separator" />
+    <addaction name="actionUCS" />
+    <addaction name="actionYoungsModulus" />
+    <addaction name="actionPoissonRatio" />
+    <addaction name="actionBrittlenessIndex" />
+    <addaction name="separator" />
+    <addaction name="actionMudWeightWindow" />
    </widget>
    <widget class="QMenu" name="menuMultiWell">
     <property name="title">
      <string>&amp;Multi-Well</string>
     </property>
-    <addaction name="actionWellCorrelation"/>
-    <addaction name="actionCrossSection"/>
-    <addaction name="actionFenceSection"/>
-    <addaction name="separator"/>
-    <addaction name="actionStatisticalAnalysis"/>
-    <addaction name="actionWellComparison"/>
-    <addaction name="actionBasinAnalysis"/>
-    <addaction name="separator"/>
-    <addaction name="actionVolumetricsCalc"/>
+    <addaction name="actionWellCorrelation" />
+    <addaction name="actionCrossSection" />
+    <addaction name="actionFenceSection" />
+    <addaction name="separator" />
+    <addaction name="actionStatisticalAnalysis" />
+    <addaction name="actionWellComparison" />
+    <addaction name="actionBasinAnalysis" />
+    <addaction name="separator" />
+    <addaction name="actionVolumetricsCalc" />
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>&amp;Tools</string>
     </property>
-    <addaction name="actionUnitConverter"/>
-    <addaction name="actionFormulaEditorTool"/>
-    <addaction name="actionTemplateManager"/>
-    <addaction name="actionDatabaseManager"/>
-    <addaction name="separator"/>
-    <addaction name="actionCurveSmoother"/>
-    <addaction name="actionDepthShiftTool"/>
-    <addaction name="actionOutlierDetection"/>
-    <addaction name="actionDeSpikeTool"/>
-    <addaction name="separator"/>
-    <addaction name="actionPythonConsole"/>
-    <addaction name="actionMacroRecorder"/>
-    <addaction name="separator"/>
-    <addaction name="actionPluginManager"/>
+    <addaction name="actionUnitConverter" />
+    <addaction name="actionFormulaEditorTool" />
+    <addaction name="actionTemplateManager" />
+    <addaction name="actionDatabaseManager" />
+    <addaction name="separator" />
+    <addaction name="actionCurveSmoother" />
+    <addaction name="actionDepthShiftTool" />
+    <addaction name="actionOutlierDetection" />
+    <addaction name="actionDeSpikeTool" />
+    <addaction name="separator" />
+    <addaction name="actionPythonConsole" />
+    <addaction name="actionMacroRecorder" />
+    <addaction name="separator" />
+    <addaction name="actionPluginManager" />
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
      <string>&amp;Window</string>
     </property>
-    <addaction name="actionTileWindows"/>
-    <addaction name="actionCascadeWindows"/>
-    <addaction name="actionCloseAllWindows"/>
-    <addaction name="separator"/>
-    <addaction name="actionNextWindow"/>
-    <addaction name="actionPrevWindow"/>
+    <addaction name="actionTileWindows" />
+    <addaction name="actionCascadeWindows" />
+    <addaction name="actionCloseAllWindows" />
+    <addaction name="separator" />
+    <addaction name="actionNextWindow" />
+    <addaction name="actionPrevWindow" />
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionDocumentation"/>
-    <addaction name="actionTutorials"/>
-    <addaction name="actionVideoGuides"/>
-    <addaction name="separator"/>
-    <addaction name="actionKeyboardShortcuts"/>
-    <addaction name="separator"/>
-    <addaction name="actionLicenseManager"/>
-    <addaction name="actionCheckUpdates"/>
-    <addaction name="separator"/>
-    <addaction name="actionAbout"/>
+    <addaction name="actionDocumentation" />
+    <addaction name="actionTutorials" />
+    <addaction name="actionVideoGuides" />
+    <addaction name="separator" />
+    <addaction name="actionKeyboardShortcuts" />
+    <addaction name="separator" />
+    <addaction name="actionLicenseManager" />
+    <addaction name="actionCheckUpdates" />
+    <addaction name="separator" />
+    <addaction name="actionAbout" />
    </widget>
    <widget class="QMenu" name="menuFacies_Classification">
     <property name="title">
@@ -9629,40 +9418,40 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
      <property name="title">
       <string>Unsupervised Methods</string>
      </property>
-     <addaction name="actionFaciesKMeans"/>
-     <addaction name="actionFaciesGMM"/>
-     <addaction name="actionFaciesSOM"/>
+     <addaction name="actionFaciesKMeans" />
+     <addaction name="actionFaciesGMM" />
+     <addaction name="actionFaciesSOM" />
     </widget>
     <widget class="QMenu" name="menuSupervisedFacies">
      <property name="title">
       <string>Supervised Methods</string>
      </property>
-     <addaction name="actionFaciesEnsemble"/>
-     <addaction name="actionFaciesRandomForest"/>
+     <addaction name="actionFaciesEnsemble" />
+     <addaction name="actionFaciesRandomForest" />
     </widget>
-    <addaction name="actionOpenFaciesWorkspace"/>
-    <addaction name="separator"/>
-    <addaction name="menuUnsupervisedFacies"/>
-    <addaction name="menuSupervisedFacies"/>
-    <addaction name="separator"/>
-    <addaction name="actionSupervised"/>
-    <addaction name="actionUnsupervised"/>
+    <addaction name="actionOpenFaciesWorkspace" />
+    <addaction name="separator" />
+    <addaction name="menuUnsupervisedFacies" />
+    <addaction name="menuSupervisedFacies" />
+    <addaction name="separator" />
+    <addaction name="actionSupervised" />
+    <addaction name="actionUnsupervised" />
    </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
-   <addaction name="menuWell"/>
-   <addaction name="menuPlot"/>
-   <addaction name="menuInterpretation"/>
-   <addaction name="menuCalculation"/>
-   <addaction name="menuAdvancedInterp"/>
-   <addaction name="menuFacies_Classification"/>
-   <addaction name="menuImageAnalysis"/>
-   <addaction name="menuGeomechanics"/>
-   <addaction name="menuMultiWell"/>
-   <addaction name="menuTools"/>
-   <addaction name="menuWindow"/>
-   <addaction name="menuHelp"/>
+   <addaction name="menuFile" />
+   <addaction name="menuEdit" />
+   <addaction name="menuView" />
+   <addaction name="menuWell" />
+   <addaction name="menuPlot" />
+   <addaction name="menuInterpretation" />
+   <addaction name="menuCalculation" />
+   <addaction name="menuAdvancedInterp" />
+   <addaction name="menuFacies_Classification" />
+   <addaction name="menuImageAnalysis" />
+   <addaction name="menuGeomechanics" />
+   <addaction name="menuMultiWell" />
+   <addaction name="menuTools" />
+   <addaction name="menuWindow" />
+   <addaction name="menuHelp" />
   </widget>
   <widget class="QToolBar" name="toolBarMain">
    <property name="windowTitle">
@@ -9683,17 +9472,17 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionNewProject"/>
-   <addaction name="actionOpenProject"/>
-   <addaction name="actionSaveProject"/>
-   <addaction name="separator"/>
-   <addaction name="actionImportLAS"/>
-   <addaction name="actionExportPDF"/>
-   <addaction name="separator"/>
-   <addaction name="actionUndo"/>
-   <addaction name="actionRedo"/>
-   <addaction name="separator"/>
-   <addaction name="actionPrint"/>
+   <addaction name="actionNewProject" />
+   <addaction name="actionOpenProject" />
+   <addaction name="actionSaveProject" />
+   <addaction name="separator" />
+   <addaction name="actionImportLAS" />
+   <addaction name="actionExportPDF" />
+   <addaction name="separator" />
+   <addaction name="actionUndo" />
+   <addaction name="actionRedo" />
+   <addaction name="separator" />
+   <addaction name="actionPrint" />
   </widget>
   <widget class="QDockWidget" name="dockBrowser">
    <property name="features">
@@ -10384,12 +10173,12 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
            <property name="columnCount">
             <number>5</number>
            </property>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
-           <row/>
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
+           <row />
            <column>
             <property name="text">
              <string>Zone Name</string>
@@ -11742,7 +11531,7 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
    <header location="global">checkablecombobox.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources />
  <connections>
   <connection>
    <sender>actionNewLogPlot</sender>
