@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import numpy as np
 
-
 def compute_phi_from_density(rhob, rho_ma=2.65, rho_f=1.0):
     rhob = np.asarray(rhob, dtype=float)
     phi = (rho_ma - rhob) / (rho_ma - rho_f + 1e-9)
