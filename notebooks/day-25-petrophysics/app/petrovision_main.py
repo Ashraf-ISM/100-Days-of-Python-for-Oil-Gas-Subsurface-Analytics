@@ -197,8 +197,20 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         quick_section = self._make_section("Quick Actions")
         quick_grid = QtWidgets.QGridLayout()
         quick_grid.setSpacing(10)
+
+        # + Well / Import Well buttons – exposed as named attributes so the
+        # controller can wire them after it is constructed.
+        btn_add_well = self._make_launch_button("+ Well", self._add_new_well, "#0E7A63")
+        btn_add_well.setObjectName("btnDashAddWell")
+        setattr(self, "btnDashAddWell", btn_add_well)
+
+        btn_import_well = self._make_launch_button("Import Well", self._add_new_well, "#2F6FB3")
+        btn_import_well.setObjectName("btnDashImportWell")
+        setattr(self, "btnDashImportWell", btn_import_well)
+
         self._dashboard_quick_buttons = [
-            self._make_launch_button("Import Data", lambda: self._trigger_widget_click("btnDashImportLAS"), "#2F6FB3"),
+            btn_add_well,
+            btn_import_well,
             self._make_launch_button("Load Demo Data", self._load_demo_data, "#FF6B6B"),
             self._make_launch_button("Data Downloader", self._open_data_downloader, "#5E35B1"),
             self._make_launch_button("Log Viewer", lambda: self._call_controller_action("_go_to_logviewer_tab"), "#1FA67A"),
@@ -252,6 +264,20 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             "QFrame#dashCard { background: #FFFFFF; border: 1px solid #D7E2EE; border-radius: 14px; }"
         )
 
+
+    def _add_new_well(self) -> None:
+        """Trigger the well-import dialog (used by '+ Well' / 'Import Well' buttons
+        on the dashboard and the Well ▸ Add New Well menu action)."""
+        data_svc = getattr(getattr(self, "controller", None), "data", None)
+        if data_svc is not None and callable(getattr(data_svc, "import_data", None)):
+            imported = data_svc.import_data()
+            if imported:
+                projects_svc = getattr(getattr(self, "controller", None), "projects", None)
+                if projects_svc is not None and callable(getattr(projects_svc, "mark_modified", None)):
+                    projects_svc.mark_modified()
+        else:
+            # controller not yet ready – queue for after init
+            QtCore.QTimer.singleShot(200, self._add_new_well)
 
     def _load_demo_data(self) -> None:
         data_svc = getattr(self.controller, "data", None)

@@ -65,6 +65,22 @@ class MainController:
             self._connect_action(name, self._import_and_track)
         self._connect_action("actionDeleteWell", self._delete_well_and_track)
 
+        # ── Well menu ─────────────────────────────────────────────────────────
+        self._connect_action("actionAddWell", self._import_and_track)          # Add New Well
+        self._connect_action("actionWellProperties", self._show_well_properties)
+        self._connect_action("actionSetActiveWell", self._show_set_active_well)
+        self._connect_action("actionWellTops", self._show_well_tops_info)
+        self._connect_action("actionWellTrajectory", self._go_to_3d_well_tab)
+        self._connect_action("actionCasingCompletion", self._show_casing_info)
+        self._connect_action("actionCoreData", self._show_core_data_info)
+        self._connect_action("actionDSTData", self._show_dst_data_info)
+        self._connect_action("actionFluidAnalysis", self._show_fluid_analysis_info)
+        self._connect_action("actionMudLog", self._show_mud_log_info)
+
+        # Dashboard ‘+ Well’ / ‘Import Well’ buttons (created dynamically in _build_dashboard)
+        self._connect_widget("btnDashAddWell", "clicked", self._import_and_track)
+        self._connect_widget("btnDashImportWell", "clicked", self._import_and_track)
+
         # Plotting
         self._connect_action("actionNewLogPlot", self.plots.new_log_plot)
         self._connect_action("actionNewCrossplot", self.plots.new_crossplot)
@@ -275,3 +291,115 @@ class MainController:
         handler = getattr(self.ui, "show_help_dialog", None)
         if callable(handler):
             handler()
+
+    # ── Well menu handlers ────────────────────────────────────────────────────
+
+    def _show_well_properties(self) -> None:
+        """Display properties of the currently active well."""
+        well = self.data._get_current_well()
+        if well is None:
+            QtWidgets.QMessageBox.information(
+                self.ui, "Well Properties", "No well is currently loaded.\nUse Well ▸ Add New Well to import a LAS file."
+            )
+            return
+        df = getattr(well, "data", None)
+        name = getattr(well, "name", "Unknown")
+        log_info = getattr(well, "log_info", {}) or {}
+        header_info = getattr(well, "header_info", {}) or {}
+
+        # Build a readable summary
+        lines = [f"Well: {name}"]
+        if df is not None:
+            curves = list(df.columns)
+            depth_col = next((c for c in curves if str(c).upper() in {"DEPTH", "DEPT", "MD"}), None)
+            if depth_col:
+                import pandas as pd
+                depths = pd.to_numeric(df[depth_col], errors="coerce").dropna()
+                if not depths.empty:
+                    lines.append(f"Depth range: {depths.min():.1f} – {depths.max():.1f} m")
+            lines.append(f"Number of curves: {len(curves)}")
+            lines.append(f"Total samples: {len(df):,}")
+        for key in ("company", "field", "country", "well", "uwi"):
+            val = header_info.get(key, "") or header_info.get(key.upper(), "")
+            if val:
+                lines.append(f"{key.capitalize()}: {val}")
+
+        QtWidgets.QMessageBox.information(self.ui, "Well Properties", "\n".join(lines))
+
+    def _show_set_active_well(self) -> None:
+        """Show a dialog to pick which loaded well should be the active well."""
+        wells = sorted(getattr(self.data, "_wells", {}).keys())
+        if not wells:
+            QtWidgets.QMessageBox.information(
+                self.ui, "Set Active Well", "No wells are loaded.\nUse Well ▸ Add New Well to import a well."
+            )
+            return
+
+        current = self.data._current_well or wells[0]
+        item, ok = QtWidgets.QInputDialog.getItem(
+            self.ui, "Set Active Well", "Select the well to make active:", wells,
+            wells.index(current) if current in wells else 0, False
+        )
+        if ok and item:
+            self.data.set_current_well(item)
+
+    def _show_well_tops_info(self) -> None:
+        """Placeholder – opens the Well Tops information panel."""
+        well = self.data._get_current_well()
+        name = getattr(well, "name", "N/A") if well else "N/A"
+        QtWidgets.QMessageBox.information(
+            self.ui, "Well Tops",
+            f"Well Tops for: {name}\n\nWell tops import / editing will be"
+            " available in a future release.\nYou can currently load LAS files"
+            " that include formation marker columns."
+        )
+
+    def _go_to_3d_well_tab(self) -> None:
+        """Switch to the 3D Well Viewer tab."""
+        tab_widget = getattr(self.ui, "centralTabWidget", None)
+        if tab_widget is None:
+            return
+        tab = getattr(self.ui, "tab3DWell", None)
+        if tab is not None:
+            idx = tab_widget.indexOf(tab)
+            if idx >= 0:
+                tab_widget.setCurrentIndex(idx)
+                return
+        # Fallback: try common indices
+        tab_widget.setCurrentIndex(3)
+
+    def _show_casing_info(self) -> None:
+        """Placeholder for Casing & Completion data."""
+        QtWidgets.QMessageBox.information(
+            self.ui, "Casing & Completion",
+            "Casing & Completion data management will be available in a future release."
+        )
+
+    def _show_core_data_info(self) -> None:
+        """Placeholder for Core Data viewer."""
+        QtWidgets.QMessageBox.information(
+            self.ui, "Core Data",
+            "Core data import and display will be available in a future release.\n"
+            "CSV-format core plug data can currently be loaded via File ▸ Import Data ▸ Import CSV."
+        )
+
+    def _show_dst_data_info(self) -> None:
+        """Placeholder for DST Data viewer."""
+        QtWidgets.QMessageBox.information(
+            self.ui, "DST Data",
+            "Drill Stem Test data management will be available in a future release."
+        )
+
+    def _show_fluid_analysis_info(self) -> None:
+        """Placeholder for Fluid Analysis."""
+        QtWidgets.QMessageBox.information(
+            self.ui, "Fluid Analysis",
+            "Fluid analysis / PVT data tools will be available in a future release."
+        )
+
+    def _show_mud_log_info(self) -> None:
+        """Placeholder for Mud Log viewer."""
+        QtWidgets.QMessageBox.information(
+            self.ui, "Mud Log",
+            "Mud log import and viewer will be available in a future release."
+        )
