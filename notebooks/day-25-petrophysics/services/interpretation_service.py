@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from calculations import vshale, porosity, saturation, permeability, net_pay
@@ -86,6 +87,7 @@ class InterpretationService:
             return
         gr_min = self._spin_value(("spinVclGRmin",), None)
         gr_max = self._spin_value(("spinVclGRmax",), self._line_float("gRShaleLineEdit", None))
+        
         out_name = self._line_text("lineVclOutName") or "VSH"
 
         method_columns: list[tuple[str, str]] = []
@@ -97,6 +99,8 @@ class InterpretationService:
 
 
         primary_col = method_columns[0][1]
+        primary_method = method_columns[0][0]
+        
         df["VSH"] = df[primary_col].values
         df["Vsh"] = df[primary_col].values
         if out_name != "VSH":
@@ -109,7 +113,18 @@ class InterpretationService:
         stats = self.compute_vsh_stats(visible, value_col=primary_col)
         self._update_vsh_kpis(gr_min, gr_max, primary_method, stats)
         self._plot_vsh_track(visible, gr_curve, primary_col, primary_method, gr_min, gr_max)
-        self._plot_vsh_distribution(visible, [(primary_method, primary_col)])
+        self._plot_gr_histogram(visible)
+        self._calculate_vsh_comparison(visible, gr_curve, gr_min, gr_max)
+        
+        # Hot Shale Warning logic
+        high_gr = visible[gr_curve].max()
+        warning_frame = getattr(self.ui, "frameHotShaleWarning", None)
+        if warning_frame:
+            if high_gr > 190:
+                warning_frame.show()
+                self._set_label_text("lblHotShaleText", f"High GR values ({high_gr:.1f} API) found.")
+            else:
+                warning_frame.hide()
         interpretation = self.generate_vsh_interpretation(stats, methods)
         self._set_vsh_status(
             f"Vsh computed successfully using {primary_method} method.",
@@ -183,14 +198,26 @@ class InterpretationService:
             ("checkVshShowCleanLine", True),
             ("checkVshShowShaleLine", True),
             ("checkVshHighlightHigh", True),
+            ("checkVshFlagHotShale", True),
             ("checkVshShowZones", False),
         ):
             widget = getattr(self.ui, name, None)
             if widget is not None and hasattr(widget, "setChecked"):
                 widget.setChecked(value)
 
-        for name in ("grCleanLabel", "grShaleLabel", "methodLabel", "vshMeanLabel", "vshRangeLabel", "shalePercentLabel"):
-            self._set_label_text(name, "--")
+        # Reset KPI labels
+        for lbl in ("valMeanVsh", "valNetSand", "valHighShale", "valVshRange", "valMethodUsed", "valConfidence", 
+                    "vshMeanLabel", "vshRangeLabel", "shalePercentLabel", "grCleanLabel", "grShaleLabel", "methodLabel"):
+            self._set_label_text(lbl, "--")
+
+        # Clear comparison table
+        table = getattr(self.ui, "tableVshComparison", None)
+        if table is not None:
+            table.setRowCount(0)
+
+        # Clear canvases
+        self._show_vsh_placeholder(self._vsh_track_host, "Track View", "Compute Vsh to preview the GR and shale-volume tracks.")
+        self._show_vsh_placeholder(self._vsh_hist_host, "GR Distribution", "A Gamma Ray histogram with sand/shale baselines will appear here.")
 
         self._set_label_text("vshTrackMetaLabel", "Method: --    |    GR Clean: --    |    GR Shale: --")
         self._set_vsh_status("Ready to compute shale volume.", timestamp=None)
@@ -2159,13 +2186,24 @@ class InterpretationService:
         self.ui.grCleanSpinBox = getattr(self.ui, "spinVclGRmin", None)
         self.ui.grShaleSpinBox = getattr(self.ui, "spinVclGRmax", None)
 
+        # Connect new buttons
+        btn_auto_clean = getattr(self.ui, "btnAutoGrClean", None)
+        if btn_auto_clean:
+            btn_auto_clean.clicked.connect(lambda: self._on_auto_baseline_clicked("clean"))
+        
+        btn_auto_shale = getattr(self.ui, "btnAutoGrShale", None)
+        if btn_auto_shale:
+            btn_auto_shale.clicked.connect(lambda: self._on_auto_baseline_clicked("shale"))
+
         well = self.data._get_current_well()
         df = getattr(well, "data", None) if well is not None else None
         if df is not None:
             self._sync_gr_curve_line(df)
+            self._plot_gr_histogram(df)
 
         self._show_vsh_placeholder(self._vsh_track_host, "Track View", "Compute Vsh to preview the GR and shale-volume tracks.")
-        self._show_vsh_placeholder(self._vsh_hist_host, "Distribution", "A Vsh distribution summary will appear here after computation.")
+        placeholder_msg = "A Gamma Ray histogram with sand/shale baselines will appear here."
+        self._show_vsh_placeholder(self._vsh_hist_host, "GR Distribution", placeholder_msg)
 
         self.ui._vsh_workspace_built = True
 
@@ -2173,6 +2211,16 @@ class InterpretationService:
         self._set_label_text("grCleanLabel", self._format_gr_value(gr_clean))
         self._set_label_text("grShaleLabel", self._format_gr_value(gr_shale))
         self._set_label_text("methodLabel", method)
+        
+        # New UI labels
+        self._set_label_text("valMeanVsh", f"{stats['mean']:.3f}")
+        self._set_label_text("valVshRange", f"{stats['min']:.3f} - {stats['max']:.3f}")
+        self._set_label_text("valHighShale", f"{stats['shale_percent']:.1f}%")
+        self._set_label_text("valNetSand", f"{100.0 - stats['shale_percent']:.1f}%")
+        self._set_label_text("valMethodUsed", method)
+        self._set_label_text("valConfidence", "Medium" if stats['mean'] < 0.8 else "Low")
+
+        # Legacy labels for compatibility
         self._set_label_text("vshMeanLabel", f"{stats['mean']:.3f}")
         self._set_label_text("vshRangeLabel", f"{stats['min']:.3f} - {stats['max']:.3f}")
         self._set_label_text("shalePercentLabel", f"{stats['shale_percent']:.1f}%")
@@ -2309,6 +2357,104 @@ class InterpretationService:
                 if widget is not None:
                     widget.setParent(None)
                     widget.deleteLater()
+
+    def _on_auto_baseline_clicked(self, curve_type: str) -> None:
+        well = self.data._get_current_well()
+        df = getattr(well, "data", None) if well is not None else None
+        if df is None:
+            return
+        
+        gr_curve = self._combo_text("comboVclGR") or self._line_text("gRCurveLineEdit") or self._pick_gr_curve_name(df)
+        if not gr_curve or gr_curve not in df.columns:
+            return
+            
+        values = pd.to_numeric(df[gr_curve], errors="coerce").dropna().values
+        if values.size == 0:
+            return
+            
+        if curve_type == "clean":
+            val = float(np.percentile(values, 5))
+            spin = getattr(self.ui, "spinVclGRmin", None)
+            if spin:
+                spin.setValue(val)
+        else:
+            val = float(np.percentile(values, 95))
+            spin = getattr(self.ui, "spinVclGRmax", None)
+            if spin:
+                spin.setValue(val)
+        
+        self._plot_gr_histogram(df)
+
+    def _plot_gr_histogram(self, df) -> None:
+        import pandas as pd
+        from matplotlib.figure import Figure
+        
+        host = getattr(self.ui, "vshHistCanvas", self._vsh_hist_host)
+        if host is None:
+            return
+            
+        gr_curve = self._combo_text("comboVclGR") or self._line_text("gRCurveLineEdit") or self._pick_gr_curve_name(df)
+        if not gr_curve or gr_curve not in df.columns:
+            self._show_vsh_placeholder(host, "GR Distribution", "Select a valid GR curve.")
+            return
+            
+        values = pd.to_numeric(df[gr_curve], errors="coerce").dropna().values
+        if values.size == 0:
+            self._show_vsh_placeholder(host, "GR Distribution", "No valid samples.")
+            return
+            
+        # Update P5/P50/P95 labels
+        p5, p50, p95 = np.percentile(values, [5, 50, 95])
+        self._set_label_text("lblGrP5", f"P5: {p5:.1f} API")
+        self._set_label_text("lblGrP50", f"P50: {p50:.1f} API")
+        self._set_label_text("lblGrP95", f"P95: {p95:.1f} API")
+        
+        fig = Figure(figsize=(4.5, 2.5), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("#F8FBFE")
+        ax = fig.add_subplot(1, 1, 1)
+        
+        ax.hist(values, bins=40, color="#7DAAF7", alpha=0.7, edgecolor="#4A7DD4")
+        
+        gr_min = self._spin_value(("spinVclGRmin",), None)
+        gr_max = self._spin_value(("spinVclGRmax",), None)
+        
+        if gr_min is not None:
+            ax.axvline(gr_min, color="#F59E0B", linestyle="--", linewidth=1.5, label="GR Clean")
+            # ax.text(gr_min, ax.get_ylim()[1]*0.9, f" {gr_min:.1f}", color="#B45309", fontweight="bold")
+            
+        if gr_max is not None:
+            ax.axvline(gr_max, color="#EF4444", linestyle="--", linewidth=1.5, label="GR Shale")
+            # ax.text(gr_max, ax.get_ylim()[1]*0.9, f" {gr_max:.1f}", color="#B91C1C", fontweight="bold")
+            
+        ax.set_xlabel("Gamma Ray (API)", fontsize=8)
+        ax.set_ylabel("Frequency", fontsize=8)
+        ax.tick_params(labelsize=7)
+        ax.grid(True, linestyle="--", alpha=0.3)
+        
+        self._render_figure_to_host(host, fig)
+
+    def _calculate_vsh_comparison(self, df, gr_curve, gr_min, gr_max) -> None:
+        table = getattr(self.ui, "tableVshComparison", None)
+        if table is None:
+            return
+            
+        methods = ["Linear", "Larionov Tertiary", "Larionov Older", "Clavier", "Steiber"]
+        depth_col = self.data._depth_column(df)
+        
+        # Take a subset for display in the table
+        display_df = df.iloc[::50].head(50).copy() # Show every 50th sample
+        
+        table.setRowCount(len(display_df))
+        for i, (idx, row) in enumerate(display_df.iterrows()):
+            depth = row.get(depth_col, 0)
+            gr_val = row.get(gr_curve, 0)
+            
+            table.setItem(i, 0, QtWidgets.QTableWidgetItem(f"{depth:.1f}"))
+            
+            for j, method in enumerate(methods):
+                vsh = vshale.compute_vsh_gr(gr_val, gr_min=gr_min, gr_max=gr_max, model=method)
+                table.setItem(i, j+1, QtWidgets.QTableWidgetItem(f"{vsh:.3f}"))
+
 
     def _configure_vsh_method_selector(self, combo: QtWidgets.QComboBox) -> None:
         if combo is None:
