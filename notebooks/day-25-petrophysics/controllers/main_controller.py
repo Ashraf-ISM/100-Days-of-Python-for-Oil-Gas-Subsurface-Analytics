@@ -77,10 +77,6 @@ class MainController:
         self._connect_action("actionFluidAnalysis", self._show_fluid_analysis_info)
         self._connect_action("actionMudLog", self._show_mud_log_info)
 
-        # Dashboard ‘+ Well’ / ‘Import Well’ buttons (created dynamically in _build_dashboard)
-        self._connect_widget("btnDashAddWell", "clicked", self._import_and_track)
-        self._connect_widget("btnDashImportWell", "clicked", self._import_and_track)
-
         # Plotting
         self._connect_action("actionNewLogPlot", self.plots.new_log_plot)
         self._connect_action("actionNewCrossplot", self.plots.new_crossplot)
