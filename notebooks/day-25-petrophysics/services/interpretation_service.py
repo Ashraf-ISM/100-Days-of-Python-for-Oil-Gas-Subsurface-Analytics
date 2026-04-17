@@ -1603,14 +1603,14 @@ class InterpretationService:
         if getattr(self.ui, "_porosity_workspace_built", False):
             return
 
-        poroPlotsCanvas = getattr(self.ui, "poroPlotsCanvas", None)
-        if poroPlotsCanvas is not None:
-            layout = poroPlotsCanvas.layout()
+        poroplotcanva = getattr(self.ui, "poroplotcanva", None)
+        if poroplotcanva is not None:
+            layout = poroplotcanva.layout()
             if layout is None:
-                layout = QtWidgets.QVBoxLayout(poroPlotsCanvas)
+                layout = QtWidgets.QVBoxLayout(poroplotcanva)
                 layout.setContentsMargins(0, 0, 0, 0)
             
-            tab_widget = QtWidgets.QTabWidget(poroPlotsCanvas)
+            tab_widget = QtWidgets.QTabWidget(poroplotcanva)
             self.ui.tabPhiLogView = QtWidgets.QWidget(tab_widget)
             self.ui.tabPhiCrossplot = QtWidgets.QWidget(tab_widget)
             self.ui.tabPhiHistogram = QtWidgets.QWidget(tab_widget)
