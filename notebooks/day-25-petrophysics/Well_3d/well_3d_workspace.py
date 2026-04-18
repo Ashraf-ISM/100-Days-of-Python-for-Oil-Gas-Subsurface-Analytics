@@ -1199,6 +1199,108 @@ class Well3DWorkspaceController(QtCore.QObject):
         combo.setCurrentText(target)
         self.refresh()
 
+    # ------------------------------------------------------------------ #
+    #  Visualisation-mode button handler                                    #
+    # ------------------------------------------------------------------ #
+
+    def _on_vis_mode_clicked(self, btn_name: str) -> None:
+        """Sync cmbTrajStyle with the vis-mode panel button that was clicked."""
+        vis_map = getattr(self, "_vis_mode_map", {})
+        style_text = vis_map.get(btn_name, "Tube / Cylinder")
+
+        # Special handling: ColorTube vs Radius – both map to 'Tube / Cylinder'
+        # but ColorTube keeps chkShowLogRibbon on, Radius disables it.
+        if btn_name == "btnVisModeRadius":
+            chk = self._widget("chkShowLogRibbon")
+            if chk is not None:
+                chk.blockSignals(True)
+                chk.setChecked(False)
+                chk.blockSignals(False)
+        elif btn_name in ("btnVisModeColorTube", "btnVisModeColorOnly"):
+            chk = self._widget("chkShowLogRibbon")
+            if chk is not None:
+                chk.blockSignals(True)
+                chk.setChecked(btn_name == "btnVisModeColorTube")
+                chk.blockSignals(False)
+        elif btn_name == "btnVisModeRibbon":
+            chk = self._widget("chkShowLogRibbon")
+            if chk is not None:
+                chk.blockSignals(True)
+                chk.setChecked(True)
+                chk.blockSignals(False)
+        elif btn_name == "btnVisModePoints":
+            # Points mode – use scatter only (disable ribbon tube look)
+            style_text = "Dotted / Dashed"
+        elif btn_name == "btnVisModeTrack":
+            style_text = "Line"
+
+        combo = self._widget("cmbTrajStyle")
+        if combo is not None:
+            idx = combo.findText(style_text)
+            if idx >= 0:
+                combo.blockSignals(True)
+                combo.setCurrentIndex(idx)
+                combo.blockSignals(False)
+        self.refresh()
+
+    # ------------------------------------------------------------------ #
+    #  Custom range handler                                                  #
+    # ------------------------------------------------------------------ #
+
+    def _on_custom_range(self) -> None:
+        """Open a simple dialog to enter custom min / max for the colormap."""
+        spin_min = self._widget("spinCmapMin")
+        spin_max = self._widget("spinCmapMax")
+        if spin_min is None or spin_max is None:
+            return
+        current_min = spin_min.value()
+        current_max = spin_max.value()
+
+        dialog = QtWidgets.QDialog(self.window)
+        dialog.setWindowTitle("Custom Colormap Range")
+        dialog.setFixedWidth(280)
+        layout = QtWidgets.QFormLayout(dialog)
+        layout.setContentsMargins(14, 14, 14, 10)
+        layout.setVerticalSpacing(8)
+
+        from PyQt5.QtWidgets import QDoubleSpinBox
+        sb_min = QDoubleSpinBox(dialog)
+        sb_min.setRange(-1e9, 1e9)
+        sb_min.setDecimals(3)
+        sb_min.setValue(current_min)
+        sb_max = QDoubleSpinBox(dialog)
+        sb_max.setRange(-1e9, 1e9)
+        sb_max.setDecimals(3)
+        sb_max.setValue(current_max)
+        layout.addRow("Min:", sb_min)
+        layout.addRow("Max:", sb_max)
+
+        btn_row = QtWidgets.QHBoxLayout()
+        btn_ok     = QtWidgets.QPushButton("Apply")
+        btn_cancel = QtWidgets.QPushButton("Cancel")
+        btn_ok.setStyleSheet(
+            "background:#1B6CA8;color:#FFF;border:none;border-radius:4px;padding:5px 14px;"
+        )
+        btn_ok.clicked.connect(dialog.accept)
+        btn_cancel.clicked.connect(dialog.reject)
+        btn_row.addStretch()
+        btn_row.addWidget(btn_ok)
+        btn_row.addWidget(btn_cancel)
+        layout.addRow(btn_row)
+
+        if dialog.exec_() == QtWidgets.QDialog.Accepted:
+            new_min = sb_min.value()
+            new_max = sb_max.value()
+            if new_max <= new_min:
+                new_max = new_min + 1.0
+            spin_min.blockSignals(True)
+            spin_max.blockSignals(True)
+            spin_min.setValue(new_min)
+            spin_max.setValue(new_max)
+            spin_min.blockSignals(False)
+            spin_max.blockSignals(False)
+            self.refresh()
+
     def _update_mode_status(self) -> None:
         for name, label in (
             ("btnModeRotate",  "Rotate"),
