@@ -138,7 +138,9 @@ class Well3DWorkspaceController(QtCore.QObject):
         self._connect_signal("spinCmapMin", "valueChanged", lambda _value: self.refresh())
         self._connect_signal("spinCmapMax", "valueChanged", lambda _value: self.refresh())
         self._connect_button("btnAutoRange", self.auto_range_from_data)
+        self._connect_button("btnCustomRange", self._on_custom_range)
 
+        # ── interaction-mode button group ────────────────────────────── #
         mode_buttons = QtWidgets.QButtonGroup(self)
         mode_buttons.setExclusive(True)
         for name in ("btnModeRotate", "btnModePan", "btnModeZoom", "btnModePick", "btnModeMeasure"):
@@ -150,6 +152,39 @@ class Well3DWorkspaceController(QtCore.QObject):
         rotate_button = self._widget("btnModeRotate")
         if rotate_button is not None:
             rotate_button.setChecked(True)
+
+        # ── view-preset button group ─────────────────────────────────── #
+        view_buttons = QtWidgets.QButtonGroup(self)
+        view_buttons.setExclusive(True)
+        for name in ("btnViewPerspective", "btnViewTop", "btnViewFront",
+                     "btnViewSide", "btnViewIso"):
+            button = self._widget(name)
+            if button is not None:
+                view_buttons.addButton(button)
+
+        # ── visualisation-mode button group ──────────────────────────── #
+        # Maps each button to the matching cmbTrajStyle entry text
+        self._vis_mode_map: dict[str, str] = {
+            "btnVisModeColorTube": "Tube / Cylinder",
+            "btnVisModeColorOnly": "Line",
+            "btnVisModeRadius":    "Tube / Cylinder",
+            "btnVisModeRibbon":    "Ribbon",
+            "btnVisModePoints":    "Dotted / Dashed",
+            "btnVisModeTrack":     "Line",
+        }
+        vis_group = QtWidgets.QButtonGroup(self)
+        vis_group.setExclusive(True)
+        for btn_name in self._vis_mode_map:
+            button = self._widget(btn_name)
+            if button is not None:
+                vis_group.addButton(button)
+                button.clicked.connect(
+                    lambda _checked=False, bname=btn_name: self._on_vis_mode_clicked(bname)
+                )
+        # Default: check first button
+        first_vis = self._widget("btnVisModeColorTube")
+        if first_vis is not None:
+            first_vis.setChecked(True)
 
     # ------------------------------------------------------------------ #
     #  Public API                                                           #
@@ -397,6 +432,10 @@ class Well3DWorkspaceController(QtCore.QObject):
         self._apply_view_preset("perspective", refresh=False)
         self._set_text("lblStatusRenderer", "Renderer: Matplotlib 3D  |  Tube Engine")
         self._reset_pick_labels()
+        # Ensure first vis-mode button appears checked
+        first_vis = self._widget("btnVisModeColorTube")
+        if first_vis is not None and hasattr(first_vis, "setChecked"):
+            first_vis.setChecked(True)
 
     def _build_plot_host(self) -> None:
         gl_widget = self._widget("glWidget3D")
@@ -1837,8 +1876,12 @@ class Well3DWorkspaceController(QtCore.QObject):
         self._set_text("lblDepthMaxVal",    str(self._value("sliderDepthMax", 5000)))
         self._set_text("lblVExagVal",       f"{self._value('sliderVExag', 1)}x")
         self._set_text("lblCrossSectionVal",f"{self._value('sliderCrossSection', 50)}%")
-        self._set_text("lblTrajRadiusVal",  str(self._value("sliderTrajRadius", 5)))
-        self._set_text("lblOpacityVal",     f"{self._value('sliderOpacity', 100)}%")
+        # Tube radius shown in "pixels" to match screenshot label
+        self._set_text("lblTrajRadiusVal",  f"{self._value('sliderTrajRadius', 5)} px")
+        # Opacity slider in new UI represents *transparency* – invert for display
+        opacity_pct = self._value('sliderOpacity', 100)
+        transparency_pct = max(0, 100 - opacity_pct)
+        self._set_text("lblOpacityVal",     f"{transparency_pct}%")
         self._set_text("lblAzimuthVal",     f"{self._value('sliderAzimuth', 45)}°")
         self._set_text("lblElevationVal",   f"{self._value('sliderElevation', 30)}°")
         self._set_text("lblFOVVal",         f"{self._value('sliderFOV', 60)}°")
