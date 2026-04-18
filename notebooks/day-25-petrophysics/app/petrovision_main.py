@@ -61,7 +61,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self.actionDataDownloader.triggered.connect(self._open_data_downloader)
 
     def _open_data_downloader(self) -> None:
-        from app.data_downloader_dialog import DataDownloaderWindow
+        from data.data_downloader_dialog import DataDownloaderWindow
         if not hasattr(self, '_data_downloader_win'):
             self._data_downloader_win = DataDownloaderWindow(self)
         self._data_downloader_win.show()
