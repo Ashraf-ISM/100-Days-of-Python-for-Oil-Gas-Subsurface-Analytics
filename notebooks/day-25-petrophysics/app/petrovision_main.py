@@ -16,7 +16,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from controllers.main_controller import MainController  # noqa: E402
-from app.multiwell_correlation_workspace import MultiWellCorrelationWorkspaceController  # noqa: E402
+from well_correlation.multiwell_correlation_workspace import MultiWellCorrelationWorkspaceController  # noqa: E402
 from Well_3d.well_3d_workspace import Well3DWorkspaceController  # noqa: E402
 
 from extra.dialogs import AboutHelpDialog
