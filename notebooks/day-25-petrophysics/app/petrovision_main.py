@@ -35,7 +35,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_pore_pressure_tab()
         self._embed_3d_well_tab()
         self._embed_well_correlation_tab()
-        self._init_facies_window()      # standalone separate window (not a tab)
+        self._init_facies_window()      # standalone separate window (not a tab) 
         self._reorder_tabs()
         self._install_3d_well_action()
         self._connect_tab_switches()
