@@ -60,7 +60,7 @@ class InterpretationService:
         gr_clean = self._spin_value(("spinVclGRmin",), 15.0) or 15.0
         gr_shale = self._spin_value(("spinVclGRmax",), 120.0) or 120.0
 
-        from app.vsh_model_comparison_dialog import VshModelComparisonDialog
+        from calculations.vsh_model_comparison_dialog import VshModelComparisonDialog
 
         dialog = VshModelComparisonDialog(self.ui, self.data)
         dialog.set_context(well, gr_curve=gr_curve, gr_clean=gr_clean, gr_shale=gr_shale)
