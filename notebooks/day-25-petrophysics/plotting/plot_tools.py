@@ -429,7 +429,7 @@ def plot_multitrack(
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
 
         # Add bitsize on the caliper log on value 8.5 
-        # Caliper reference line
+        # Caliper reference line 
         if curve_upper in ["CALI", "CAL", "HCAL", "CALD"]:
             ax.axvline(
                 8.5,
