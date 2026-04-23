@@ -455,7 +455,7 @@ def plot_multitrack(
                     edgecolor="none",
                     pad=2
                 ))
-                
+
             # Fill caliper log
             ax.fill_betweenx(
                 depth[mask],
