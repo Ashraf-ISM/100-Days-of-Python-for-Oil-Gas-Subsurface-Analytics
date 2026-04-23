@@ -313,10 +313,6 @@ def plot_multitrack(
     track_widths: dict | None = None,
     computed_curves: dict | None = None,
     export: str | None = None,
-
-    # 🔥 NEW
-    add_bad_hole: bool = True,
-    bit_size: float = 8.5,
 ):
     import numpy as np
     import matplotlib.pyplot as plt
@@ -341,11 +337,6 @@ def plot_multitrack(
     else:
         curves = [c for c in curves if c in df.columns and c != depth_col]
 
-    # ----------------------------
-    # 🚨 Add BAD HOLE track
-    # ----------------------------
-    if add_bad_hole and "CALI" in df.columns:
-        curves = ["BADHOLE"] + curves
 
     if not curves:
         fig = _empty_figure("Multi-Track Log Plot", "No curves available")
@@ -363,10 +354,7 @@ def plot_multitrack(
     # ----------------------------
     widths = []
     for c in curves:
-        if c == "BADHOLE":
-            widths.append(0.4)  # narrow track
-        else:
-            widths.append(track_widths.get(c, 1) if track_widths else 1)
+        widths.append(track_widths.get(c, 1) if track_widths else 1)
 
     fig = plt.figure(figsize=(max(3.2 * n_tracks, 10), 9.5))
     gs = GridSpec(1, n_tracks, width_ratios=widths, figure=fig)
@@ -409,35 +397,6 @@ def plot_multitrack(
     # ----------------------------
     for i, (ax, curve) in enumerate(zip(axes, curves)):
 
-        # ----------------------------
-        # 🚨 BAD HOLE TRACK
-        # ----------------------------
-        if curve == "BADHOLE":
-            cali = df["CALI"]
-
-            bad = (
-                (cali > bit_size * 1.2) |
-                (cali < bit_size * 0.8)
-            )
-
-            ax.fill_betweenx(
-                depth,
-                0,
-                bad.astype(int),
-                where=bad,
-                color="red",
-                alpha=0.6
-            )
-
-            ax.set_xlim(0, 1)
-            ax.set_xticks([])
-            ax.set_xlabel("BH", fontsize=8, color="red")
-
-            # minimal styling
-            ax.set_ylabel(depth_label if i == 0 else "")
-            ax.invert_yaxis()
-
-            continue
 
         # ----------------------------
         # 📈 Normal curve logic
