@@ -436,19 +436,25 @@ def plot_multitrack(
                 8.5,
                 color="red",
                 linestyle="--",
-                linewidth=1.2,
+                linewidth=1.4,
                 alpha=0.8,
             )
-        # Add label of curve on caliper
+            # Label at upper-right corner
             ax.text(
-            8.5,                  # x-position 
-            1.22,                 # slightly above track 
-            "Bit Size (8.5\")",
-            color="red",
-            fontsize=8,
-            fontweight="bold",
-            ha="center",
-            transform=ax.get_xaxis_transform()
+                0.98, 0.98,                 # top-right corner
+                'Bit Size = 8.5"',
+                transform=ax.transAxes,
+                ha="right",
+                va="top",
+                fontsize=8,
+                fontweight="bold",
+                color="red",
+                bbox=dict(
+                    facecolor="white",
+                    alpha=0.7,
+                    edgecolor="none",
+                    pad=2
+                )
             )
 
         # 🪨 GR shading
