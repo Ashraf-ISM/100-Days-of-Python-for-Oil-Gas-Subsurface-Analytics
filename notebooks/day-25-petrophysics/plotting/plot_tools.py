@@ -442,7 +442,7 @@ def plot_multitrack(
         # Add label of curve on caliper
             ax.text(
             8.5,                  # x-position 
-            1.12,                 # slightly above track 
+            1.22,                 # slightly above track 
             "Bit Size (8.5\")",
             color="red",
             fontsize=8,
