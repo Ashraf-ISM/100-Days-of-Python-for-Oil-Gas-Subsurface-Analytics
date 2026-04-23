@@ -457,7 +457,7 @@ def plot_multitrack(
                 )
             )
 
-        # 🪨 GR shading
+        #  GR shading
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             mask = np.isfinite(values) & np.isfinite(depth)
         
