@@ -438,8 +438,18 @@ def plot_multitrack(
                 linewidth=1.2,
                 alpha=0.8,
             )
-        # Add label of curve
-        
+        # Add label of curve on caliper
+        ax.text(
+        8.5,                  # x-position
+        1.02,                 # slightly above track
+        "Bit Size (8.5\")",
+        color="red",
+        fontsize=8,
+        fontweight="bold",
+        ha="center",
+        transform=ax.get_xaxis_transform()
+        )
+
         # 🪨 GR shading
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             mask = np.isfinite(values) & np.isfinite(depth)
