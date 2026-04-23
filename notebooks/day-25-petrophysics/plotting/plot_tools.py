@@ -437,7 +437,6 @@ def plot_multitrack(
                 linestyle="--",
                 linewidth=1.2,
                 alpha=0.8,
-            
             )
 
         # 🪨 GR shading
