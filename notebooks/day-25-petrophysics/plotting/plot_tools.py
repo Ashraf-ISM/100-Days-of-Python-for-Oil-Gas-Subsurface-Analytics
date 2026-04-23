@@ -458,7 +458,7 @@ def plot_multitrack(
             # Fill caliper log
             ax.fill_betweenx(
                 depth[mask],
-                0,                      # fill from GR baseline
+                0,                      # fill from Cali baseline
                 values[mask],
                 color="purple",
                 alpha=0.30
