@@ -430,20 +430,7 @@ def plot_multitrack(
 
         # Add bitsize on the caliper log on value 8.5 
         # Caliper reference line
-        CALIPER_MNEMONICS = [
-        "CALI",
-        "CAL",
-        "CALIPER",
-        "BS",
-        "ASSOC_CAL",
-        "HCAL",
-        "BHC",
-        "HOLE_SIZE",
-        "BIT_SIZE",
-        "C1",
-        "C2",
-        "C1_S",
-        "C2_S"]    
+        CALIPER_MNEMONICS = ["CALI","CAL","CALIPER","BS","ASSOC_CAL","HCAL","BHC","HOLE_SIZE","BIT_SIZE","C1","C2","C1_S","C2_S"]    
         if curve_upper in CALIPER_MNEMONICS:
             
             ax.axvline(
