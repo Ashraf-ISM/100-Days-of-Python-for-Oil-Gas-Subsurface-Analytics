@@ -432,7 +432,6 @@ def plot_multitrack(
         # Caliper reference line
         CALIPER_MNEMONICS = ["CALI","CAL","CALIPER","BS","ASSOC_CAL","HCAL","BHC","HOLE_SIZE","BIT_SIZE","C1","C2","C1_S","C2_S"]    
         if curve_upper in CALIPER_MNEMONICS:
-            
             ax.axvline(
                 8.5,
                 color="red",
