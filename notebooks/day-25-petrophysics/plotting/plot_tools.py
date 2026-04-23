@@ -428,6 +428,17 @@ def plot_multitrack(
         # 📈 Plot curve
         _plot_curve(ax, df, depth, curve, color, linewidth=1.55)
 
+        # Add bitsize on the caliper log on value 8.5 
+        # Caliper reference line
+        if curve_upper in ["CALI", "CAL", "HCAL", "CALD"]:
+            ax.axvline(
+                8.5,
+                color="red",
+                linestyle="--",
+                linewidth=1.2,
+                alpha=0.8
+            )
+
         # 🪨 GR shading
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             mask = np.isfinite(values) & np.isfinite(depth)
@@ -447,8 +458,7 @@ def plot_multitrack(
                 color="black",
                 linestyle="--",
                 linewidth=1.1,
-                alpha=0.75,
-                cutoffs={"CALI": 8.5}
+                alpha=0.75
             )
 
         # Label
