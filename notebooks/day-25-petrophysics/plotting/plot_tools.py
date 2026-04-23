@@ -430,21 +430,14 @@ def plot_multitrack(
 
         # 🪨 GR shading
         if any(curve_upper.startswith(k) for k in GR_KEYS):
+            mask = np.isfinite(values) & np.isfinite(depth)
+        
             ax.fill_betweenx(
-                depth,
-                values,
-                gr_cutoff,
-                where=(values < gr_cutoff),
-                color="#F5C518",
-                alpha=0.35
-            )
-            ax.fill_betweenx(
-                depth,
-                values,
-                gr_cutoff,
-                where=(values >= gr_cutoff),
-                color="#8B7355",
-                alpha=0.25
+                depth[mask],
+                0,                      # fill from GR baseline
+                values[mask],
+                color="green",
+                alpha=0.30
             )
 
         # 📏 Cutoff
@@ -454,7 +447,8 @@ def plot_multitrack(
                 color="black",
                 linestyle="--",
                 linewidth=1.1,
-                alpha=0.75
+                alpha=0.75,
+                cutoffs={"CALI": 8.5}
             )
 
         # Label
