@@ -454,8 +454,7 @@ def plot_multitrack(
                     alpha=0.7,
                     edgecolor="none",
                     pad=2
-                )
-            )
+                ))
 
         #  GR shading
         if any(curve_upper.startswith(k) for k in GR_KEYS):
