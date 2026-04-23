@@ -456,15 +456,6 @@ def plot_multitrack(
                     pad=2
                 ))
 
-            # Fill caliper log
-            ax.fill_betweenx(
-                depth[mask],
-                0,                      # fill from Cali baseline
-                values[mask],
-                color="purple",
-                alpha=0.30
-            )
-
         #  GR shading
         if any(curve_upper.startswith(k) for k in GR_KEYS):
             mask = np.isfinite(values) & np.isfinite(depth)
