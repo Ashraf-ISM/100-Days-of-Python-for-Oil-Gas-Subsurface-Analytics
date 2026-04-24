@@ -767,19 +767,47 @@ class ProjectService:
 
         def _spin(name: str, default: float) -> float:
             w = getattr(ui, name, None)
-            return float(w.value()) if w is not None and hasattr(w, "value") else default
+            if w is None:
+                return default
+            try:
+                return float(w.value())
+            except RuntimeError:
+                return default
+            except Exception:
+                return default
 
         def _combo(name: str, default: str) -> str:
             w = getattr(ui, name, None)
-            return w.currentText() if w is not None and hasattr(w, "currentText") else default
+            if w is None:
+                return default
+            try:
+                return w.currentText()
+            except RuntimeError:
+                return default
+            except Exception:
+                return default
 
         def _line(name: str, default: str) -> str:
             w = getattr(ui, name, None)
-            return w.text().strip() if w is not None and hasattr(w, "text") else default
+            if w is None:
+                return default
+            try:
+                return w.text().strip()
+            except RuntimeError:
+                return default
+            except Exception:
+                return default
 
         def _checked(name: str, default: bool) -> bool:
             w = getattr(ui, name, None)
-            return bool(w.isChecked()) if w is not None and hasattr(w, "isChecked") else default
+            if w is None:
+                return default
+            try:
+                return bool(w.isChecked())
+            except RuntimeError:
+                return default
+            except Exception:
+                return default
 
         # Vsh
         s.vsh_gr_curve    = _combo("comboVclGR", "")
