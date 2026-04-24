@@ -640,7 +640,7 @@ def plot_crossplot(
             x_values[mask],
             y_values[mask],
             s=25,
-            alpha=0.65,
+            alpha=0.7,
             color=PALETTE[0],
             edgecolors="white",
             linewidths=0.35,
