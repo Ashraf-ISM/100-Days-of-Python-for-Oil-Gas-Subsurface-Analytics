@@ -639,7 +639,7 @@ def plot_crossplot(
         ax.scatter(
             x_values[mask],
             y_values[mask],
-            s=16,
+            s=25,
             alpha=0.65,
             color=PALETTE[0],
             edgecolors="white",
