@@ -28,7 +28,13 @@ class MainController:
         # Store references for cross-service access
         self.ui._data_service = self.data
         self.ui._project_service = self.projects
-        
+        self.ui._interp_service = self.interp
+
+        # Post-load callback — called by ProjectService after a project is
+        # successfully opened so that all interpretation workspaces are
+        # re-rendered from the loaded DataFrame + restored AppState values.
+        self.ui.on_project_loaded = self._on_project_loaded
+
         self._wire_actions()
         self._initialize_ui()
 
@@ -181,6 +187,55 @@ class MainController:
     def _initialize_ui(self) -> None:
         """Initialize UI state."""
         self.projects.refresh_recent_projects()
+
+    def _on_project_loaded(self) -> None:
+        """Re-render all interpretation workspaces after a project is opened.
+
+        The well DataFrames (including previously computed VSH, PHIT, SW, PERM,
+        NET_PAY curves) are already in memory at this point.  AppState has also
+        been restored to the UI widgets.  We just need to tell each workspace
+        to repaint itself and, where a dedicated re-render function exists, call it.
+        """
+        well = self.data._get_current_well()
+        if well is None:
+            return
+
+        df = getattr(well, "data", None)
+        if df is None:
+            return
+
+        cols_upper = {str(c).upper() for c in df.columns}
+
+        # ── Vsh / Shale Volume ────────────────────────────────────────────────
+        # run_vsh_workflow re-reads the restored GR-curve / GR-min / GR-max
+        # widgets and replots the track; the VSH column already in the
+        # DataFrame will be overwritten with the same values.
+        if "VSH" in cols_upper or "VSH_LINEAR" in cols_upper:
+            try:
+                self.interp.run_vsh_workflow()
+            except Exception as exc:
+                print(f"[PostLoad] Vsh refresh skipped: {exc}")
+
+        # ── Porosity ──────────────────────────────────────────────────────────
+        if any(c in cols_upper for c in ("PHIT", "PHIE")):
+            try:
+                self.interp.refresh_porosity_workspace()
+            except Exception as exc:
+                print(f"[PostLoad] Porosity refresh skipped: {exc}")
+
+        # ── Water Saturation ──────────────────────────────────────────────────
+        if "SW" in cols_upper:
+            try:
+                self.interp.refresh_sw_workspace()
+            except Exception as exc:
+                print(f"[PostLoad] Sw refresh skipped: {exc}")
+
+        # ── Net Pay ───────────────────────────────────────────────────────────
+        if "NET_PAY" in cols_upper or "PAYFLAG" in cols_upper:
+            try:
+                self.interp.compute_net_pay()
+            except Exception as exc:
+                print(f"[PostLoad] Net Pay refresh skipped: {exc}")
 
     def _connect_action(self, name: str, handler):
         action = getattr(self.ui, name, None)

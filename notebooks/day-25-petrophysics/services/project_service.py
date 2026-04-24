@@ -627,7 +627,18 @@ class ProjectService:
         summary = LoadSummaryDialog(project, wells, self.ui)
         summary.exec_()
 
+        # ── Trigger interpretation workspace re-render ────────────────────────
+        # Deferred by 300 ms so the main event loop fully processes the dialog
+        # close before the matplotlib canvases try to paint.  The callback
+        # (registered by MainController) detects which computed curves are
+        # present in the loaded DataFrame and re-renders the Vsh track,
+        # Porosity workspace, Sw workspace, and Net Pay panel accordingly.
+        post_load = getattr(self.ui, "on_project_loaded", None)
+        if callable(post_load):
+            QtCore.QTimer.singleShot(300, post_load)
+
         return True
+
 
     def load_recent_project(self, path: str) -> bool:
         """Load a project from the recent list; path may be empty string."""
