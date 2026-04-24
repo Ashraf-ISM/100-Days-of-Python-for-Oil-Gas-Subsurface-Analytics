@@ -1,7 +1,7 @@
 """Project lifecycle — create / open / save with .ash archive format.
 
 This service owns the entire project workflow:
-  • New project (professional styled dialog)
+  • New project 
   • Open project (file dialog → load_ash → full state restore)
   • Save / Save As (collect AppState snapshot → save_ash → progress dialog)
   • Load-summary dialog shown after a successful open
