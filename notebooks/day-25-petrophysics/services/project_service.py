@@ -27,7 +27,7 @@ from core.project_manager import (
     save_ash,
 )
 
-# ── Colour palette used throughout the dialogs ────────────────────────────────
+# ── Colour palette used throughout the dialogs ──────────────────────────────── 
 _CLR_BG        = "#0F1B2D"
 _CLR_SURFACE   = "#152236"
 _CLR_CARD      = "#1A2D45"
