@@ -605,250 +605,57 @@ def plot_triple_combo_tracks(
     return fig
 
 # Cross plot 
-# def plot_crossplot(
-#     df,
-#     x_curve: str,
-#     y_curve: str,
-#     color_curve: str | None = None,
-#     *,
-#     show: bool = True,
-# ):
-#     fig, ax = plt.subplots(figsize=(7, 6))
-#     if y_curve.upper() == "RHOB":
-#         ax.invert_yaxis()
-#     _style_figure(fig, "Crossplot")
-#     x_values = _get_curve_values(df, x_curve)
-#     y_values = _get_curve_values(df, y_curve)
-#     mask = np.isfinite(x_values) & np.isfinite(y_values)
-#     if color_curve and color_curve in df.columns:
-#         color_values = _get_curve_values(df, color_curve)
-#         mask = mask & np.isfinite(color_values)
-#         scatter = ax.scatter(
-#             x_values[mask],
-#             y_values[mask],
-#             c=color_values[mask],
-#             cmap="viridis",
-#             s=18,
-#             alpha=0.72,
-#             edgecolors="white",
-#             linewidths=0.3,
-#         )
-#         colorbar = fig.colorbar(scatter, ax=ax, shrink=0.92, pad=0.02)
-#         colorbar.set_label(color_curve, fontsize=9, color="#18344F")
-#         colorbar.ax.tick_params(labelsize=8)
-#     else:
-#         ax.scatter(
-#             x_values[mask],
-#             y_values[mask],
-#             s=25,
-#             alpha=0.7,
-#             color=PALETTE[0],
-#             edgecolors="white",
-#             linewidths=0.35,
-#         )
-#     ax.set_xlabel(x_curve, fontsize=10, fontweight="bold", color="#18344F")
-#     ax.set_ylabel(y_curve, fontsize=10, fontweight="bold", color="#18344F")
-#     ax.set_facecolor("#FAFBFC")
-#     fig.patch.set_facecolor("white")
-#     ax.grid(True, color="#D9E2EC", alpha=0.8, linewidth=0.7)
-#     for spine in ax.spines.values():
-#         spine.set_color("#C8D2DC")
-#     fig.subplots_adjust(left=0.12, right=0.97, bottom=0.12, top=0.90)
-#     if show:
-#         plt.show()
-#     return fig
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import linregress
-
-
 def plot_crossplot(
     df,
     x_curve: str,
     y_curve: str,
-    color_curve: str = None,
-    plot_type="scatter",          # scatter / hexbin
-    show_trend=True,
-    show_stats=True,
-    log_x=False,
-    log_y=False,
-    show=True
+    color_curve: str | None = None,
+    *,
+    show: bool = True,
 ):
-    
-    # ---------------------------
-    # Fetch data
-    # ---------------------------
+    fig, ax = plt.subplots(figsize=(7, 6))
+    if y_curve.upper() == "RHOB":
+        ax.invert_yaxis()
+    _style_figure(fig, "Crossplot")
     x_values = _get_curve_values(df, x_curve)
     y_values = _get_curve_values(df, y_curve)
-
     mask = np.isfinite(x_values) & np.isfinite(y_values)
-
     if color_curve and color_curve in df.columns:
         color_values = _get_curve_values(df, color_curve)
-        mask &= np.isfinite(color_values)
+        mask = mask & np.isfinite(color_values)
+        scatter = ax.scatter(
+            x_values[mask],
+            y_values[mask],
+            c=color_values[mask],
+            cmap="viridis",
+            s=18,
+            alpha=0.72,
+            edgecolors="white",
+            linewidths=0.3,
+        )
+        colorbar = fig.colorbar(scatter, ax=ax, shrink=0.92, pad=0.02)
+        colorbar.set_label(color_curve, fontsize=9, color="#18344F")
+        colorbar.ax.tick_params(labelsize=8)
     else:
-        color_values = None
-
-    x = x_values[mask]
-    y = y_values[mask]
-
-    if color_values is not None:
-        c = color_values[mask]
-
-    # ---------------------------
-    # Figure setup
-    # ---------------------------
-    fig, ax = plt.subplots(figsize=(9, 7))
-    _style_figure(fig, "Crossplot")
-
+        ax.scatter(
+            x_values[mask],
+            y_values[mask],
+            s=25,
+            alpha=0.7,
+            color=PALETTE[0],
+            edgecolors="white",
+            linewidths=0.35,
+        )
+    ax.set_xlabel(x_curve, fontsize=10, fontweight="bold", color="#18344F")
+    ax.set_ylabel(y_curve, fontsize=10, fontweight="bold", color="#18344F")
     ax.set_facecolor("#FAFBFC")
     fig.patch.set_facecolor("white")
-
-    # ---------------------------
-    # Scatter / Hexbin
-    # ---------------------------
-    if plot_type == "hexbin":
-        hb = ax.hexbin(
-            x,
-            y,
-            gridsize=45,
-            cmap="viridis",
-            mincnt=1
-        )
-
-        cbar = fig.colorbar(hb, ax=ax, pad=0.02)
-        cbar.set_label("Point Density", fontsize=10)
-
-    else:
-        if color_values is not None:
-            scatter = ax.scatter(
-                x,
-                y,
-                c=c,
-                cmap="viridis",
-                s=28,
-                alpha=0.75,
-                edgecolors="black",
-                linewidths=0.2
-            )
-
-            cbar = fig.colorbar(scatter, ax=ax, pad=0.02)
-            cbar.set_label(
-                f"{color_curve}",
-                fontsize=10,
-                fontweight="bold"
-            )
-
-        else:
-            scatter = ax.scatter(
-                x,
-                y,
-                s=28,
-                alpha=0.7,
-                color="#1f77b4",
-                edgecolors="black",
-                linewidths=0.2
-            )
-
-    # ---------------------------
-    # Trendline
-    # ---------------------------
-    if show_trend and len(x) > 2:
-        slope, intercept, r_value, _, _ = linregress(x, y)
-
-        x_line = np.linspace(x.min(), x.max(), 100)
-        y_line = slope * x_line + intercept
-
-        ax.plot(
-            x_line,
-            y_line,
-            color="red",
-            linestyle="--",
-            linewidth=2,
-            label=f"Trend (r={r_value:.2f})"
-        )
-
-        ax.legend(
-            loc="upper left",
-            frameon=True,
-            fontsize=9
-        )
-
-    # ---------------------------
-    # Statistics box
-    # ---------------------------
-    if show_stats:
-        stats_text = (
-            f"Points: {len(x):,}\n"
-            f"X Range: {x.min():.2f} - {x.max():.2f}\n"
-            f"Y Range: {y.min():.2f} - {y.max():.2f}\n"
-            f"Mean {y_curve}: {np.mean(y):.2f}\n"
-            f"Std Dev: {np.std(y):.2f}"
-        )
-
-        ax.text(
-            0.98,
-            0.95,
-            stats_text,
-            transform=ax.transAxes,
-            fontsize=9,
-            verticalalignment='top',
-            horizontalalignment='right',
-            bbox=dict(
-                boxstyle="round,pad=0.5",
-                facecolor="white",
-                edgecolor="#B0BEC5",
-                alpha=0.95
-            )
-        )
-
-    # ---------------------------
-    # Axis formatting
-    # ---------------------------
-    ax.set_xlabel(
-        x_curve,
-        fontsize=11,
-        fontweight="bold",
-        color="#18344F"
-    )
-
-    ax.set_ylabel(
-        y_curve,
-        fontsize=11,
-        fontweight="bold",
-        color="#18344F"
-    )
-
-    # invert only if plotting depth
-    if y_curve.upper() == "DEPTH":
-        ax.invert_yaxis()
-
-    if log_x:
-        ax.set_xscale("log")
-
-    if log_y:
-        ax.set_yscale("log")
-
-    # ---------------------------
-    # Grid styling
-    # ---------------------------
-    ax.grid(
-        True,
-        linestyle="--",
-        alpha=0.4,
-        linewidth=0.8
-    )
-
+    ax.grid(True, color="#D9E2EC", alpha=0.8, linewidth=0.7)
     for spine in ax.spines.values():
-        spine.set_color("#D0D7DE")
-
-    ax.tick_params(labelsize=9)
-
-    plt.tight_layout()
-
+        spine.set_color("#C8D2DC")
+    fig.subplots_adjust(left=0.12, right=0.97, bottom=0.12, top=0.90)
     if show:
         plt.show()
-
     return fig
 
 
