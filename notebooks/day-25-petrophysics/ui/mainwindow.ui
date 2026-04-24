@@ -884,7 +884,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="advance_cross_plot">
                <property name="styleSheet">
                 <string notr="true">background-color: rgb(26, 95, 180);</string>
                </property>

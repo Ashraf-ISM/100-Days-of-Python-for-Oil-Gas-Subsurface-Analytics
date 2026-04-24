@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CrossplotWidget</class>
+ <widget class="QWidget" name="CrossplotWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>780</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PetroARX — Crossplot Analysis</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ── Global ── */
+QWidget {
+    background-color: #F4F6FA;
+    color: #1A2340;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+}
+
+/* ── Side panels ── */
+#leftPanel, #rightPanel {
+    background-color: #FFFFFF;
+    border: 1px solid #D8DEE9;
+    border-radius: 6px;
+}
+
+/* ── Section labels ── */
+#lblCrossplotSetup, #lblTemplates, #lblPlotStatistics, #lblExportPlot {
+    color: #1A56DB;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 0px 2px 0px;
+    border-bottom: 2px solid #1A56DB;
+}
+
+#lblAxisOptions, #lblDisplayOptions {
+    color: #1A2340;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 0px 2px 0px;
+}
+
+/* ── Field labels ── */
+QLabel {
+    color: #374151;
+    font-size: 11px;
+}
+
+/* ── ComboBoxes ── */
+QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #1A2340;
+    selection-background-color: #1A56DB;
+    min-height: 26px;
+}
+QComboBox:hover  { border-color: #1A56DB; }
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #6B7280;
+    width: 0; height: 0;
+    margin-right: 5px;
+}
+
+/* ── CheckBoxes ── */
+QCheckBox {
+    spacing: 6px;
+    color: #374151;
+    font-size: 11px;
+}
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #9CA3AF;
+    border-radius: 3px;
+    background: #FFFFFF;
+}
+QCheckBox::indicator:checked {
+    background-color: #1A56DB;
+    border-color: #1A56DB;
+}
+
+/* ── Plot style toggle buttons ── */
+#btnScatter, #btnHexbin {
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    padding: 5px 0px;
+    font-size: 11px;
+    font-weight: 500;
+    min-height: 28px;
+}
+#btnScatter {
+    background-color: #1A56DB;
+    color: #FFFFFF;
+    border-color: #1A56DB;
+}
+#btnHexbin {
+    background-color: #FFFFFF;
+    color: #374151;
+}
+#btnScatter:hover { background-color: #1648C0; }
+#btnHexbin:hover  { background-color: #F1F5F9; }
+
+/* ── Plot Crossplot button ── */
+#btnPlotCrossplot {
+    background-color: #1A56DB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 8px 0px;
+    min-height: 38px;
+}
+#btnPlotCrossplot:hover  { background-color: #1648C0; }
+#btnPlotCrossplot:pressed { background-color: #133AAA; }
+
+/* ── Toolbar ── */
+#plotToolbar {
+    background-color: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 2px 4px;
+}
+#plotToolbar QToolButton {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 6px;
+    color: #374151;
+    font-size: 14px;
+}
+#plotToolbar QToolButton:hover  { background: #E8EFF9; border-color: #B0C4DE; }
+#plotToolbar QToolButton:pressed { background: #D0DCF5; }
+
+/* ── Plot title bar ── */
+#lblPlotTitle {
+    color: #1A2340;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 6px 0px;
+    qproperty-alignment: AlignCenter;
+}
+
+/* ── Plot canvas frame ── */
+#plotFrame {
+    background-color: #FFFFFF;
+    border: 1px solid #D8DEE9;
+    border-radius: 6px;
+}
+
+/* ── Template list ── */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #D8DEE9;
+    border-radius: 4px;
+    outline: none;
+}
+QListWidget::item {
+    padding: 8px 10px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #374151;
+    font-size: 11px;
+}
+QListWidget::item:selected {
+    background-color: #1A56DB;
+    color: #FFFFFF;
+    border-radius: 3px;
+}
+QListWidget::item:hover:!selected { background-color: #EBF2FF; }
+
+/* ── Statistics table ── */
+#statsTable {
+    background-color: #FFFFFF;
+    border: 1px solid #D8DEE9;
+    border-radius: 4px;
+    gridline-color: #F1F5F9;
+}
+#statsTable QHeaderView::section {
+    background-color: #F4F6FA;
+    border: none;
+    border-bottom: 1px solid #D8DEE9;
+    font-weight: bold;
+    font-size: 10px;
+    padding: 4px;
+    color: #6B7280;
+}
+#statsTable::item { padding: 4px 8px; font-size: 11px; }
+#statsTable::item:alternate { background-color: #F8FAFC; }
+
+/* ── Quick info box ── */
+#quickInfoFrame {
+    background-color: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 5px;
+    padding: 6px;
+}
+#lblQuickInfoTitle {
+    color: #1A56DB;
+    font-size: 11px;
+    font-weight: bold;
+}
+#lblQuickInfoBody {
+    color: #1E3A6E;
+    font-size: 10px;
+    qproperty-wordWrap: true;
+}
+
+/* ── Export buttons ── */
+#btnExportPNG, #btnExportPDF, #btnExportSVG, #btnExportCSV {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 5px;
+    color: #374151;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 6px 2px;
+    min-height: 46px;
+}
+#btnExportPNG:hover, #btnExportPDF:hover,
+#btnExportSVG:hover, #btnExportCSV:hover {
+    background-color: #EBF2FF;
+    border-color: #1A56DB;
+    color: #1A56DB;
+}
+
+/* ── Separators ── */
+QFrame[frameShape="4"],   /* HLine */
+QFrame[frameShape="5"] {  /* VLine */
+    color: #E2E8F0;
+}
+
+/* ── Scrollbars ── */
+QScrollBar:vertical {
+    width: 8px;
+    background: #F4F6FA;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical {
+    background: #CBD5E1;
+    border-radius: 4px;
+    min-height: 20px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+   </string>
+  </property>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ROOT HORIZONTAL LAYOUT  [Left | Center | Right]
+       ═══════════════════════════════════════════════════════════ -->
+  <layout class="QHBoxLayout" name="rootLayout">
+   <property name="spacing"><number>8</number></property>
+   <property name="leftMargin"><number>8</number></property>
+   <property name="topMargin"><number>8</number></property>
+   <property name="rightMargin"><number>8</number></property>
+   <property name="bottomMargin"><number>8</number></property>
+
+   <!-- ╔══════════════════════════════╗
+        ║        LEFT PANEL            ║
+        ╚══════════════════════════════╝ -->
+   <item>
+    <widget class="QWidget" name="leftPanel">
+     <property name="minimumWidth"><number>248</number></property>
+     <property name="maximumWidth"><number>260</number></property>
+     <layout class="QVBoxLayout" name="leftLayout">
+      <property name="spacing"><number>6</number></property>
+      <property name="leftMargin"><number>10</number></property>
+      <property name="topMargin"><number>10</number></property>
+      <property name="rightMargin"><number>10</number></property>
+      <property name="bottomMargin"><number>10</number></property>
+
+      <!-- Section title -->
+      <item>
+       <widget class="QLabel" name="lblCrossplotSetup">
+        <property name="text"><string>Crossplot Setup</string></property>
+       </widget>
+      </item>
+
+      <item><widget class="QFrame" name="line1"><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+
+      <!-- Crossplot Type -->
+      <item>
+       <widget class="QLabel" name="lblCrossplotType">
+        <property name="text"><string>Crossplot Type</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cboCrossplotType">
+        <item><property name="text"><string>Density - Neutron</string></property></item>
+        <item><property name="text"><string>Pickett Plot</string></property></item>
+        <item><property name="text"><string>M-N Plot</string></property></item>
+        <item><property name="text"><string>Buckles Plot</string></property></item>
+        <item><property name="text"><string>Generic Crossplot</string></property></item>
+       </widget>
+      </item>
+
+      <!-- X Curve -->
+      <item>
+       <widget class="QLabel" name="lblXCurve">
+        <property name="text"><string>X Curve (Neutron Porosity)</string></property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="xCurveLayout">
+        <property name="spacing"><number>4</number></property>
+        <item>
+         <widget class="QComboBox" name="cboXCurve">
+          <item><property name="text"><string>NPHI</string></property></item>
+          <item><property name="text"><string>TNPH</string></property></item>
+          <item><property name="text"><string>CNCF</string></property></item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cboXUnit">
+          <property name="maximumWidth"><number>65</number></property>
+          <item><property name="text"><string>v/v</string></property></item>
+          <item><property name="text"><string>%</string></property></item>
+          <item><property name="text"><string>dec</string></property></item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <!-- Y Curve -->
+      <item>
+       <widget class="QLabel" name="lblYCurve">
+        <property name="text"><string>Y Curve (Bulk Density)</string></property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="yCurveLayout">
+        <property name="spacing"><number>4</number></property>
+        <item>
+         <widget class="QComboBox" name="cboYCurve">
+          <item><property name="text"><string>RHOB</string></property></item>
+          <item><property name="text"><string>DEN</string></property></item>
+          <item><property name="text"><string>ZDEN</string></property></item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cboYUnit">
+          <property name="maximumWidth"><number>65</number></property>
+          <item><property name="text"><string>g/cc</string></property></item>
+          <item><property name="text"><string>kg/m3</string></property></item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <!-- Color By -->
+      <item>
+       <widget class="QLabel" name="lblColorBy">
+        <property name="text"><string>Color By (Optional)</string></property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="colorByLayout">
+        <property name="spacing"><number>4</number></property>
+        <item>
+         <widget class="QComboBox" name="cboColorBy">
+          <item><property name="text"><string>GR</string></property></item>
+          <item><property name="text"><string>Sw</string></property></item>
+          <item><property name="text"><string>PHIE</string></property></item>
+          <item><property name="text"><string>Vcl</string></property></item>
+          <item><property name="text"><string>None</string></property></item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cboColorUnit">
+          <property name="maximumWidth"><number>65</number></property>
+          <item><property name="text"><string>GAPI</string></property></item>
+          <item><property name="text"><string>v/v</string></property></item>
+          <item><property name="text"><string>%</string></property></item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <!-- Plot Style -->
+      <item>
+       <widget class="QLabel" name="lblPlotStyle">
+        <property name="text"><string>Plot Style</string></property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="plotStyleLayout">
+        <property name="spacing"><number>0</number></property>
+        <item>
+         <widget class="QPushButton" name="btnScatter">
+          <property name="text"><string>Scatter</string></property>
+          <property name="checkable"><bool>true</bool></property>
+          <property name="checked"><bool>true</bool></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnHexbin">
+          <property name="text"><string>Hexbin</string></property>
+          <property name="checkable"><bool>true</bool></property>
+          <property name="checked"><bool>false</bool></property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <item><widget class="QFrame" name="line2"><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+
+      <!-- Display Options -->
+      <item>
+       <widget class="QLabel" name="lblDisplayOptions">
+        <property name="text"><string>Display Options</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkLithologyTemplates">
+        <property name="text"><string>Show Lithology Templates</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkGasEffectZone">
+        <property name="text"><string>Show Gas Effect Zone</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkStatisticsBox">
+        <property name="text"><string>Show Statistics Box</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkGrid">
+        <property name="text"><string>Grid</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+
+      <item><widget class="QFrame" name="line3"><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+
+      <!-- Axis Options -->
+      <item>
+       <widget class="QLabel" name="lblAxisOptions">
+        <property name="text"><string>Axis Options</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkInvertX">
+        <property name="text"><string>Invert X Axis</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkInvertY">
+        <property name="text"><string>Invert Y Axis</string></property>
+        <property name="checked"><bool>true</bool></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkLogX">
+        <property name="text"><string>Log Scale X</string></property>
+        <property name="checked"><bool>false</bool></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkLogY">
+        <property name="text"><string>Log Scale Y</string></property>
+        <property name="checked"><bool>false</bool></property>
+       </widget>
+      </item>
+
+      <item><spacer name="leftSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+
+      <!-- Plot Button -->
+      <item>
+       <widget class="QPushButton" name="btnPlotCrossplot">
+        <property name="text"><string>📈  Plot Crossplot</string></property>
+       </widget>
+      </item>
+
+     </layout>
+    </widget>
+   </item>
+
+   <!-- ╔══════════════════════════════╗
+        ║       CENTER PANEL           ║
+        ╚══════════════════════════════╝ -->
+   <item>
+    <widget class="QWidget" name="centerPanel">
+     <layout class="QVBoxLayout" name="centerLayout">
+      <property name="spacing"><number>0</number></property>
+      <property name="leftMargin"><number>0</number></property>
+      <property name="topMargin"><number>0</number></property>
+      <property name="rightMargin"><number>0</number></property>
+      <property name="bottomMargin"><number>0</number></property>
+
+      <!-- Plot title -->
+      <item>
+       <widget class="QLabel" name="lblPlotTitle">
+        <property name="text"><string>Density - Neutron Crossplot (NPHI vs RHOB)  |  Color: GR (GAPI)</string></property>
+        <property name="alignment"><set>Qt::AlignCenter</set></property>
+        <property name="styleSheet"><string>font-size:13px; font-weight:bold; color:#1A2340; padding:6px 0px;</string></property>
+       </widget>
+      </item>
+
+      <!-- Plot frame containing toolbar + canvas -->
+      <item>
+       <widget class="QFrame" name="plotFrame">
+        <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+        <layout class="QVBoxLayout" name="plotFrameLayout">
+         <property name="spacing"><number>0</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>0</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>0</number></property>
+
+         <!-- Toolbar -->
+         <item>
+          <widget class="QWidget" name="plotToolbar">
+           <property name="minimumHeight"><number>38</number></property>
+           <layout class="QHBoxLayout" name="toolbarLayout">
+            <property name="spacing"><number>2</number></property>
+            <property name="leftMargin"><number>6</number></property>
+            <property name="topMargin"><number>2</number></property>
+            <property name="rightMargin"><number>6</number></property>
+            <property name="bottomMargin"><number>2</number></property>
+            <item>
+             <widget class="QToolButton" name="btnHome">
+              <property name="text"><string>⌂</string></property>
+              <property name="toolTip"><string>Reset View</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnBack">
+              <property name="text"><string>←</string></property>
+              <property name="toolTip"><string>Previous View</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnForward">
+              <property name="text"><string>→</string></property>
+              <property name="toolTip"><string>Next View</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnPan">
+              <property name="text"><string>✛</string></property>
+              <property name="toolTip"><string>Pan</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnZoom">
+              <property name="text"><string>🔍</string></property>
+              <property name="toolTip"><string>Zoom to Rectangle</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnSubplots">
+              <property name="text"><string>⚙</string></property>
+              <property name="toolTip"><string>Configure Subplots</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnSaveFig">
+              <property name="text"><string>💾</string></property>
+              <property name="toolTip"><string>Save Figure</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btnCopyFig">
+              <property name="text"><string>📷</string></property>
+              <property name="toolTip"><string>Copy to Clipboard</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="toolbarSpacer">
+              <property name="orientation"><enum>Qt::Horizontal</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+             </spacer>
+            </item>
+            <!-- Coord display -->
+            <item>
+             <widget class="QLabel" name="lblCoords">
+              <property name="text"><string>NPHI: —   RHOB: —</string></property>
+              <property name="styleSheet"><string>color:#6B7280; font-size:10px; font-family:monospace;</string></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- Canvas placeholder -->
+         <item>
+          <widget class="QWidget" name="matplotlibCanvas">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>1</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string>background-color:#FFFFFF;</string>
+           </property>
+           <!-- Placeholder label shown before first plot -->
+           <layout class="QVBoxLayout" name="canvasInnerLayout">
+            <item>
+             <spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblCanvasPlaceholder">
+              <property name="text"><string>📊  Click  "Plot Crossplot"  to render the chart</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="styleSheet"><string>color:#9CA3AF; font-size:14px;</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+        </layout>
+       </widget>
+      </item>
+
+     </layout>
+    </widget>
+   </item>
+
+   <!-- ╔══════════════════════════════╗
+        ║       RIGHT PANEL            ║
+        ╚══════════════════════════════╝ -->
+   <item>
+    <widget class="QWidget" name="rightPanel">
+     <property name="minimumWidth"><number>248</number></property>
+     <property name="maximumWidth"><number>270</number></property>
+     <layout class="QVBoxLayout" name="rightLayout">
+      <property name="spacing"><number>6</number></property>
+      <property name="leftMargin"><number>10</number></property>
+      <property name="topMargin"><number>10</number></property>
+      <property name="rightMargin"><number>10</number></property>
+      <property name="bottomMargin"><number>10</number></property>
+
+      <!-- Templates title -->
+      <item>
+       <widget class="QLabel" name="lblTemplates">
+        <property name="text"><string>Crossplot Templates</string></property>
+       </widget>
+      </item>
+
+      <!-- Template list -->
+      <item>
+       <widget class="QListWidget" name="listTemplates">
+        <property name="maximumHeight"><number>160</number></property>
+        <item>
+         <property name="text"><string>  ☐  Density - Neutron</string></property>
+        </item>
+        <item>
+         <property name="text"><string>  Pickett Plot</string></property>
+        </item>
+        <item>
+         <property name="text"><string>  M-N Plot</string></property>
+        </item>
+        <item>
+         <property name="text"><string>  Buckles Plot</string></property>
+        </item>
+        <item>
+         <property name="text"><string>  Generic Crossplot</string></property>
+        </item>
+       </widget>
+      </item>
+
+      <item><widget class="QFrame" name="line4"><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+
+      <!-- Plot Statistics title -->
+      <item>
+       <widget class="QLabel" name="lblPlotStatistics">
+        <property name="text"><string>Plot Statistics</string></property>
+       </widget>
+      </item>
+
+      <!-- Stats table -->
+      <item>
+       <widget class="QTableWidget" name="statsTable">
+        <property name="maximumHeight"><number>185</number></property>
+        <property name="columnCount"><number>2</number></property>
+        <property name="rowCount"><number>6</number></property>
+        <property name="showGrid"><bool>false</bool></property>
+        <property name="alternatingRowColors"><bool>true</bool></property>
+        <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+        <property name="selectionMode"><enum>QAbstractItemView::NoSelection</enum></property>
+        <attribute name="horizontalHeaderVisible"><bool>false</bool></attribute>
+        <attribute name="verticalHeaderVisible"><bool>false</bool></attribute>
+        <!-- Row 0 -->
+        <item row="0" column="0"><property name="text"><string>Points Plotted</string></property></item>
+        <item row="0" column="1"><property name="text"><string>4,821</string></property></item>
+        <!-- Row 1 -->
+        <item row="1" column="0"><property name="text"><string>X Range (v/v)</string></property></item>
+        <item row="1" column="1"><property name="text"><string>-0.15 – 0.60</string></property></item>
+        <!-- Row 2 -->
+        <item row="2" column="0"><property name="text"><string>Y Range (g/cc)</string></property></item>
+        <item row="2" column="1"><property name="text"><string>1.60 – 3.20</string></property></item>
+        <!-- Row 3 -->
+        <item row="3" column="0"><property name="text"><string>Mean NPHI (v/v)</string></property></item>
+        <item row="3" column="1"><property name="text"><string>0.18</string></property></item>
+        <!-- Row 4 -->
+        <item row="4" column="0"><property name="text"><string>Mean RHOB (g/cc)</string></property></item>
+        <item row="4" column="1"><property name="text"><string>2.35</string></property></item>
+        <!-- Row 5 -->
+        <item row="5" column="0"><property name="text"><string>Std Dev RHOB</string></property></item>
+        <item row="5" column="1"><property name="text"><string>0.22</string></property></item>
+       </widget>
+      </item>
+
+      <item><widget class="QFrame" name="line5"><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+
+      <!-- Quick Info box -->
+      <item>
+       <widget class="QFrame" name="quickInfoFrame">
+        <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+        <layout class="QVBoxLayout" name="quickInfoLayout">
+         <property name="spacing"><number>4</number></property>
+         <property name="leftMargin"><number>8</number></property>
+         <property name="topMargin"><number>6</number></property>
+         <property name="rightMargin"><number>8</number></property>
+         <property name="bottomMargin"><number>6</number></property>
+         <item>
+          <layout class="QHBoxLayout">
+           <item>
+            <widget class="QLabel" name="lblQuickInfoIcon">
+             <property name="text"><string>ℹ</string></property>
+             <property name="styleSheet"><string>color:#1A56DB; font-size:14px; font-weight:bold;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblQuickInfoTitle">
+             <property name="text"><string>Quick Info</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>5</height></size></property></spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblQuickInfoBody">
+           <property name="text"><string>Density-Neutron crossplot is used for lithology identification and gas effect evaluation. Gas sands typically plot below the sandstone line (separation between NPHI and RHOB).</string></property>
+           <property name="wordWrap"><bool>true</bool></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+      <item><widget class="QFrame" name="line6"><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+
+      <!-- Export Plot -->
+      <item>
+       <widget class="QLabel" name="lblExportPlot">
+        <property name="text"><string>Export Plot</string></property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="exportLayout">
+        <property name="spacing"><number>4</number></property>
+        <item>
+         <widget class="QPushButton" name="btnExportPNG">
+          <property name="text"><string>🖼
+PNG</string></property>
+          <property name="toolTip"><string>Export as PNG image</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExportPDF">
+          <property name="text"><string>📄
+PDF</string></property>
+          <property name="toolTip"><string>Export as PDF document</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExportSVG">
+          <property name="text"><string>◈
+SVG</string></property>
+          <property name="toolTip"><string>Export as SVG vector</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExportCSV">
+          <property name="text"><string>📊
+CSV</string></property>
+          <property name="toolTip"><string>Export data as CSV</string></property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <item>
+       <spacer name="rightSpacer">
+        <property name="orientation"><enum>Qt::Vertical</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property>
+       </spacer>
+      </item>
+
+     </layout>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+
+ <!-- ═══════════════════════════════════════════
+      TAB ORDER
+      ═══════════════════════════════════════════ -->
+ <tabstops>
+  <tabstop>cboCrossplotType</tabstop>
+  <tabstop>cboXCurve</tabstop>
+  <tabstop>cboXUnit</tabstop>
+  <tabstop>cboYCurve</tabstop>
+  <tabstop>cboYUnit</tabstop>
+  <tabstop>cboColorBy</tabstop>
+  <tabstop>cboColorUnit</tabstop>
+  <tabstop>btnScatter</tabstop>
+  <tabstop>btnHexbin</tabstop>
+  <tabstop>chkLithologyTemplates</tabstop>
+  <tabstop>chkGasEffectZone</tabstop>
+  <tabstop>chkStatisticsBox</tabstop>
+  <tabstop>chkGrid</tabstop>
+  <tabstop>chkInvertX</tabstop>
+  <tabstop>chkInvertY</tabstop>
+  <tabstop>chkLogX</tabstop>
+  <tabstop>chkLogY</tabstop>
+  <tabstop>btnPlotCrossplot</tabstop>
+  <tabstop>listTemplates</tabstop>
+  <tabstop>btnExportPNG</tabstop>
+  <tabstop>btnExportPDF</tabstop>
+  <tabstop>btnExportSVG</tabstop>
+  <tabstop>btnExportCSV</tabstop>
+ </tabstops>
+
+ <resources/>
+ <connections/>
+</ui>
