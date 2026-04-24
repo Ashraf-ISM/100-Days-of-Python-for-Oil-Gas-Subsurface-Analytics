@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from app.advanced_crossplot_window import AdvancedCrossplotWindow
 from plotting import plot_tools
 from plotting.plot_context_menu import install_plot_context_menu
 
@@ -12,6 +13,7 @@ class PlotService:
         self.ui = ui
         self.data = data_service
         self._plot_host: QtWidgets.QWidget | None = None
+        self._advanced_crossplot_window: AdvancedCrossplotWindow | None = None
 
     def _ensure_log_viewer_host(self):
         frame = getattr(self.ui, "frameLogViewerCanvas", None)
@@ -95,6 +97,9 @@ class PlotService:
             return None
         return getattr(well, "data", None)
 
+    def _get_current_well(self):
+        return self.data._get_current_well()
+
     def new_log_plot(self):
         df = self._get_df()
         if df is None:
@@ -122,6 +127,21 @@ class PlotService:
         if color_curve:
             title += f" | Color: {color_curve}"
         self._render_plot(fig, title)
+
+    def open_advanced_crossplot(self):
+        well = self._get_current_well()
+        if well is None or getattr(well, "data", None) is None:
+            QtWidgets.QMessageBox.information(
+                self.ui,
+                "Advanced Crossplot",
+                "Load a well first, then open the advanced crossplot workspace.",
+            )
+            return
+
+        if self._advanced_crossplot_window is None:
+            self._advanced_crossplot_window = AdvancedCrossplotWindow(self.ui)
+
+        self._advanced_crossplot_window.show_with_well(well)
 
     def new_histogram(self):
         df = self._get_df()
