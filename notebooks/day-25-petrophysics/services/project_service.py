@@ -5,7 +5,7 @@ This service owns the entire project workflow:
   • Open project (file dialog → load_ash → full state restore)
   • Save / Save As (collect AppState snapshot → save_ash → progress dialog)
   • Load-summary dialog shown after a successful open
-  • Recent-projects registry + dashboard button refresh
+  • Recent-projects registry + dashboard button refresh 
 """
 from __future__ import annotations
 
