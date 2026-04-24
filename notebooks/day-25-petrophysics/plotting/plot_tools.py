@@ -604,7 +604,7 @@ def plot_triple_combo_tracks(
         plt.show()
     return fig
 
-# Cross plot 
+# Cross plot  
 def plot_crossplot(
     df,
     x_curve: str,
