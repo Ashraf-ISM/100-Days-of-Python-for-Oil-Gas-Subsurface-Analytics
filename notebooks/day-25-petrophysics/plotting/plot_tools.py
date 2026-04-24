@@ -605,58 +605,58 @@ def plot_triple_combo_tracks(
     return fig
 
 # Cross plot 
-def plot_crossplot(
-    df,
-    x_curve: str,
-    y_curve: str,
-    color_curve: str | None = None,
-    *,
-    show: bool = True,
-):
-    fig, ax = plt.subplots(figsize=(7, 6))
-    if y_curve.upper() == "RHOB":
-        ax.invert_yaxis()
-    _style_figure(fig, "Crossplot")
-    x_values = _get_curve_values(df, x_curve)
-    y_values = _get_curve_values(df, y_curve)
-    mask = np.isfinite(x_values) & np.isfinite(y_values)
-    if color_curve and color_curve in df.columns:
-        color_values = _get_curve_values(df, color_curve)
-        mask = mask & np.isfinite(color_values)
-        scatter = ax.scatter(
-            x_values[mask],
-            y_values[mask],
-            c=color_values[mask],
-            cmap="viridis",
-            s=18,
-            alpha=0.72,
-            edgecolors="white",
-            linewidths=0.3,
-        )
-        colorbar = fig.colorbar(scatter, ax=ax, shrink=0.92, pad=0.02)
-        colorbar.set_label(color_curve, fontsize=9, color="#18344F")
-        colorbar.ax.tick_params(labelsize=8)
-    else:
-        ax.scatter(
-            x_values[mask],
-            y_values[mask],
-            s=25,
-            alpha=0.7,
-            color=PALETTE[0],
-            edgecolors="white",
-            linewidths=0.35,
-        )
-    ax.set_xlabel(x_curve, fontsize=10, fontweight="bold", color="#18344F")
-    ax.set_ylabel(y_curve, fontsize=10, fontweight="bold", color="#18344F")
-    ax.set_facecolor("#FAFBFC")
-    fig.patch.set_facecolor("white")
-    ax.grid(True, color="#D9E2EC", alpha=0.8, linewidth=0.7)
-    for spine in ax.spines.values():
-        spine.set_color("#C8D2DC")
-    fig.subplots_adjust(left=0.12, right=0.97, bottom=0.12, top=0.90)
-    if show:
-        plt.show()
-    return fig
+# def plot_crossplot(
+#     df,
+#     x_curve: str,
+#     y_curve: str,
+#     color_curve: str | None = None,
+#     *,
+#     show: bool = True,
+# ):
+#     fig, ax = plt.subplots(figsize=(7, 6))
+#     if y_curve.upper() == "RHOB":
+#         ax.invert_yaxis()
+#     _style_figure(fig, "Crossplot")
+#     x_values = _get_curve_values(df, x_curve)
+#     y_values = _get_curve_values(df, y_curve)
+#     mask = np.isfinite(x_values) & np.isfinite(y_values)
+#     if color_curve and color_curve in df.columns:
+#         color_values = _get_curve_values(df, color_curve)
+#         mask = mask & np.isfinite(color_values)
+#         scatter = ax.scatter(
+#             x_values[mask],
+#             y_values[mask],
+#             c=color_values[mask],
+#             cmap="viridis",
+#             s=18,
+#             alpha=0.72,
+#             edgecolors="white",
+#             linewidths=0.3,
+#         )
+#         colorbar = fig.colorbar(scatter, ax=ax, shrink=0.92, pad=0.02)
+#         colorbar.set_label(color_curve, fontsize=9, color="#18344F")
+#         colorbar.ax.tick_params(labelsize=8)
+#     else:
+#         ax.scatter(
+#             x_values[mask],
+#             y_values[mask],
+#             s=25,
+#             alpha=0.7,
+#             color=PALETTE[0],
+#             edgecolors="white",
+#             linewidths=0.35,
+#         )
+#     ax.set_xlabel(x_curve, fontsize=10, fontweight="bold", color="#18344F")
+#     ax.set_ylabel(y_curve, fontsize=10, fontweight="bold", color="#18344F")
+#     ax.set_facecolor("#FAFBFC")
+#     fig.patch.set_facecolor("white")
+#     ax.grid(True, color="#D9E2EC", alpha=0.8, linewidth=0.7)
+#     for spine in ax.spines.values():
+#         spine.set_color("#C8D2DC")
+#     fig.subplots_adjust(left=0.12, right=0.97, bottom=0.12, top=0.90)
+#     if show:
+#         plt.show()
+#     return fig
 
 
 def plot_histogram(df, curve: str, bins: int = 40, *, show: bool = True):
