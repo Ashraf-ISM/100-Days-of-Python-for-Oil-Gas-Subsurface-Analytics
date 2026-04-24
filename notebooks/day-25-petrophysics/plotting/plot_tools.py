@@ -648,7 +648,7 @@ def plot_crossplot(
         )
     ax.set_xlabel(x_curve, fontsize=10, fontweight="bold", color="#18344F")
     ax.set_ylabel(y_curve, fontsize=10, fontweight="bold", color="#18344F")
-    ax.set_facecolor("#FBFCFE")
+    ax.set_facecolor("#FAFBFC")
     ax.grid(True, color="#D9E2EC", alpha=0.8, linewidth=0.7)
     for spine in ax.spines.values():
         spine.set_color("#C8D2DC")
