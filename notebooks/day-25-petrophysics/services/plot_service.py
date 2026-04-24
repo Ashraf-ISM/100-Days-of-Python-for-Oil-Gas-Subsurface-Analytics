@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from app.advanced_crossplot_window import AdvancedCrossplotWindow
+from plotting.advanced_crossplot_window import AdvancedCrossplotWindow
 from plotting import plot_tools
 from plotting.plot_context_menu import install_plot_context_menu
 
