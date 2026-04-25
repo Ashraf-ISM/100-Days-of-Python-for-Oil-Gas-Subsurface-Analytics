@@ -18,6 +18,7 @@ if str(ROOT_DIR) not in sys.path:
 from controllers.main_controller import MainController  # noqa: E402
 from well_correlation.multiwell_correlation_workspace import MultiWellCorrelationWorkspaceController  # noqa: E402
 from Well_3d.well_3d_workspace import Well3DWorkspaceController  # noqa: E402
+from plotting.log_availability_radar import build_log_availability_radar_figure  # noqa: E402
 
 from extra.dialogs import AboutHelpDialog
 
@@ -606,86 +607,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._render_figure_to_frame(frame, fig)
 
     def _render_log_availability_radar(self, frame: QtWidgets.QFrame, df) -> None:
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import pandas as pd
-
         if df is None or getattr(df, "empty", True):
             self._render_dashboard_message(frame, "No data loaded yet.")
             return
 
-        alias_map = {
-            "GR": ("GR", "GAMMA", "GAMMA_RAY", "GAMMARAY", "SGR", "CGR", "GAPI", "API"),
-            "RHOB": ("RHOB", "RHOZ", "RHO", "DEN", "DENS"),
-            "NPHI": ("NPHI", "TNPH", "NEU", "NPHI_LS"),
-            "DT": ("DT", "DTC", "SONIC", "AC"),
-            "RT": ("RT", "ILD", "LLD", "RES", "RESD", "AT90"),
-            "CALI": ("CALI", "CAL", "CALIPER"),
-            "SP": ("SP", "SPONT", "SPONTANEOUS"),
-            "PEF": ("PEF", "PE", "PEFZ"),
-        }
-
-        normalized_columns = {
-            str(column).strip().upper(): column
-            for column in df.columns
-        }
-
-        labels = []
-        availability = []
-        for label, aliases in alias_map.items():
-            matched_column = None
-            for alias in aliases:
-                candidate = normalized_columns.get(alias)
-                if candidate is not None and pd.api.types.is_numeric_dtype(df[candidate]):
-                    matched_column = candidate
-                    break
-
-            score = 0.0
-            if matched_column is not None:
-                series = pd.to_numeric(df[matched_column], errors="coerce")
-                score = float(series.notna().mean() * 100.0)
-
-            labels.append(label)
-            availability.append(score)
-
-        if not any(score > 0 for score in availability):
-            self._render_dashboard_message(frame, "No standard log curves available for the radar chart.")
-            return
-
-        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
-        closed_angles = angles + angles[:1]
-        closed_values = availability + availability[:1]
-
-        fig, ax = plt.subplots(
-            figsize=(4.8, 3.3),
-            subplot_kw={"projection": "polar"},
-            constrained_layout=True,
-        )
-        fig.patch.set_facecolor("#FFFFFF")
-        ax.set_facecolor("#FFFFFF")
-        ax.set_theta_offset(np.pi / 2)
-        ax.set_theta_direction(-1)
-        ax.set_ylim(0, 100)
-        ax.set_yticks([25, 50, 75, 100])
-        ax.set_yticklabels(["25", "50", "75", "100"], fontsize=7, color="#7A8BA4")
-        ax.set_rlabel_position(0)
-        ax.grid(color="#DDE8F2", linewidth=0.8)
-        ax.spines["polar"].set_color("#DDE8F2")
-        ax.spines["polar"].set_linewidth(1.0)
-
-        ax.plot(closed_angles, closed_values, color="#2F80FF", linewidth=2.0)
-        ax.fill(closed_angles, closed_values, color="#2F80FF", alpha=0.18)
-        ax.scatter(angles, availability, s=22, color="#2F80FF", edgecolors="#FFFFFF", linewidths=0.9, zorder=3)
-
-        ax.set_xticks(angles)
-        ax.set_xticklabels(
-            [f"{label}\n{int(round(value))}%" for label, value in zip(labels, availability)],
-            fontsize=8,
-            fontweight="600",
-            color="#274B72",
-        )
-        ax.tick_params(axis="x", pad=12)
-        ax.set_title("Log Intelligence (Availability Radar)", fontsize=12, fontweight="600", color="#274B72", pad=18)
+        fig = build_log_availability_radar_figure(df)
         self._render_figure_to_frame(frame, fig)
 
     def _render_figure_to_frame(self, frame: QtWidgets.QFrame, fig) -> None:
