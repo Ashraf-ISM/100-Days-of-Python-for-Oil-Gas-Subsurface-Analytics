@@ -171,7 +171,7 @@ LIGHT_THEME = RadarTheme(
 class LogAvailabilityItem:
     """Per-curve availability statistics."""
 
-    label: str          # Canonical mnemonic or display name
+    label: str          # Canonical mnemonic or display name 
     column: str         # Original DataFrame column name
     availability: float # 0–100 %
     is_standard: bool   # True if matched against STANDARD_LOG_ALIASES
