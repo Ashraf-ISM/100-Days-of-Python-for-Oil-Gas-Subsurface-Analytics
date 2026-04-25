@@ -256,7 +256,7 @@ class AvailabilityReport:
 # ── Internal helpers ──────────────────────────────────────────────────────────
 
 def _empty_figure(message: str, theme: RadarTheme = DARK_THEME) -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(3.0, 2.0), facecolor=theme.fig_bg)
+    fig, ax = plt.subplots(figsize=(7.0, 5.0), facecolor=theme.fig_bg)
     ax.set_facecolor(theme.fig_bg)
     ax.axis("off")
     ax.text(
@@ -338,7 +338,7 @@ def compute_log_availability(
 
     Returns
     -------
-    AvailabilityReport
+    AvailabilityReport 
     """
     thresholds = thresholds or QualityThresholds()
     empty = AvailabilityReport(items=[], well_name=well_name, thresholds=thresholds)
