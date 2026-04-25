@@ -514,7 +514,7 @@ def build_log_availability_radar_figure(
     well_name: str = "Unknown Well",
     theme: RadarTheme = DARK_THEME,
     thresholds: QualityThresholds | None = None,
-    figsize: tuple[float, float] = (6.5, 5.0),  #(9.5, 7.5)
+    figsize: tuple[float, float] = (6.0, 6.0),  #(9.5, 7.5)
     show_non_standard: bool = True,
     max_logs: int = 16,
 ) -> plt.Figure:
@@ -899,7 +899,7 @@ def build_multi_well_availability_figure(
                         fontsize=8, color=theme.muted_color,
                         fontfamily="monospace")
             else:
-                txt_color = "#FFFFFF" if val < 65 else "#090F1C"
+                txt_color = "#000000" if val < 65 else "#090F1C"
                 ax.text(j, k, f"{val:.0f}%", ha="center", va="center",
                         fontsize=7.5, fontweight="700",
                         color=txt_color, fontfamily="monospace")
