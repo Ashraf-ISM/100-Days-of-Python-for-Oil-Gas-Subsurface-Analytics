@@ -954,4 +954,4 @@ def build_multi_well_availability_figure(
 
     plt.tight_layout()
     _stamp(fig, theme)
-    return fig
+    return fig 
