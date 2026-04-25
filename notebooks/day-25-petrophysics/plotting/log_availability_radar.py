@@ -73,8 +73,7 @@ STANDARD_LOG_ALIASES: dict[str, tuple[str, ...]] = {
 
 DEPTH_TOKENS: frozenset[str] = frozenset({
     "DEPTH", "DEPT", "MD", "TVD", "TVDSS", "MDRKB", "TVDRKB",
-    "TIME", "DATE", "DATETIME", "INDEX", "SAMPLE", "ROW",
-})
+    "TIME", "DATE", "DATETIME", "INDEX", "SAMPLE", "ROW",})
 
 
 # ── Quality configuration ─────────────────────────────────────────────────────
