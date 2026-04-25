@@ -48,8 +48,8 @@ print_banner() {
     echo
     echo -e "${BG_NAVY}${FG_AMBER}${BOLD}"
     echo -e "  ╔══════════════════════════════════════════════════════════╗  "
-    echo -e "  ║   ⬡  GIT AUTOPUSH  ·  PRO EDITION                      ║  "
-    echo -e "  ║   ─────────────────────────────────────────────────     ║  "
+    echo -e "  ║   ⬡  GIT AUTOPUSH  ·                                     ║  "
+    echo -e "  ║   ─────────────────────────────────────────────────      ║  "
     echo -e "  ║   ${FG_CYAN}Branch${FG_AMBER} › ${FG_WHITE}${BRANCH}${FG_AMBER}   ${FG_CYAN}Remote${FG_AMBER} › ${FG_WHITE}${REMOTE}${FG_AMBER}                        ║  "
     echo -e "  ║   ${FG_GRAY}Author${FG_AMBER} · Md Ashraf                                   ║  "
     echo -e "  ╚══════════════════════════════════════════════════════════╝  "

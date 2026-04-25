@@ -247,8 +247,8 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
         for spine in ax.spines.values():
             spine.set_color("#CBD5E1")
 
-        canvas_host = self._workspace.matplotlibCanvas
-        canvas_layout = canvas_host.layout()
+        canvas_host = self._workspace.plotFrame
+        canvas_layout = self._workspace.canvasInnerLayout
         while canvas_layout.count():
             item = canvas_layout.takeAt(0)
             widget = item.widget()
@@ -285,12 +285,6 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
     def _wire_controls(self) -> None:
         workspace = self._workspace
 
-        button_group = QtWidgets.QButtonGroup(self)
-        button_group.setExclusive(True)
-        button_group.addButton(workspace.btnScatter)
-        button_group.addButton(workspace.btnHexbin)
-        self._plot_mode_group = button_group
-
         workspace.btnPlotCrossplot.clicked.connect(self.plot_current_crossplot)
         workspace.cboCrossplotType.currentTextChanged.connect(self._on_template_changed)
         workspace.listTemplates.currentRowChanged.connect(self._on_template_row_changed)
@@ -298,8 +292,7 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
         for widget_name in ("cboXCurve", "cboYCurve", "cboColorBy"):
             getattr(workspace, widget_name).currentTextChanged.connect(self._on_curve_changed)
 
-        workspace.btnScatter.clicked.connect(self._update_title)
-        workspace.btnHexbin.clicked.connect(self._update_title)
+        workspace.plot_style_for_cross_plot_comboBox.currentTextChanged.connect(self._update_title)
 
         workspace.btnHome.clicked.connect(lambda: self._toolbar_action("home"))
         workspace.btnBack.clicked.connect(lambda: self._toolbar_action("back"))
@@ -526,8 +519,8 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
         table.horizontalHeader().setStretchLastSection(True)
 
     def _reset_plot_state(self, message: str) -> None:
-        canvas_host = self._workspace.matplotlibCanvas
-        canvas_layout = canvas_host.layout()
+        canvas_host = self._workspace.plotFrame
+        canvas_layout = self._workspace.canvasInnerLayout
         while canvas_layout.count():
             item = canvas_layout.takeAt(0)
             widget = item.widget()
@@ -661,7 +654,7 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
         return self._workspace.cboCrossplotType.currentText().strip() or "Generic Crossplot"
 
     def _is_hexbin_mode(self) -> bool:
-        return self._workspace.btnHexbin.isChecked()
+        return self._workspace.plot_style_for_cross_plot_comboBox.currentText() == "Hexbin Plot"
 
     def _combo_text(self, combo_name: str) -> str:
         combo = getattr(self._workspace, combo_name, None)
