@@ -104,7 +104,7 @@ class RadarTheme:
 
     # Canvas
     fig_bg: str = "#E5E7EB" #"#0A1628"
-    panel_bg: str = "#0E1E35"
+    panel_bg: str = "#FFFFFF" #"#0E1E35"
 
     # Radar polygon
     primary_color: str = "#4DCFFF"
