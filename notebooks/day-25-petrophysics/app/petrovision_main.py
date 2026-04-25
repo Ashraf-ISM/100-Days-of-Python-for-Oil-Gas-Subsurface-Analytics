@@ -162,9 +162,9 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         visual_grid = QtWidgets.QGridLayout()
         visual_grid.setSpacing(12)
         self._dashboard_hist_frame = self._make_chart_card("GR Distribution")
-        self._dashboard_lith_frame = self._make_chart_card("Lithology Breakdown")
+        self._dashboard_radar_frame = self._make_chart_card("Dynamic Log Availability Radar Chart")
         visual_grid.addWidget(self._dashboard_hist_frame, 0, 0)
-        visual_grid.addWidget(self._dashboard_lith_frame, 0, 1)
+        visual_grid.addWidget(self._dashboard_radar_frame, 0, 1)
         visual_section.layout().addLayout(visual_grid)
         left_col.addWidget(visual_section, 3)
 
@@ -558,22 +558,15 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
     def _update_dashboard_charts(self, df) -> None:
         if df is None or getattr(df, "empty", True):
             self._render_dashboard_message(self._dashboard_hist_frame, "No data loaded yet.")
-            self._render_dashboard_message(self._dashboard_lith_frame, "No data loaded yet.")
+            self._render_dashboard_message(self._dashboard_radar_frame, "No data loaded yet.")
             return
 
-        import numpy as np
         import pandas as pd
-
-        depth_col = None
-        for name in df.columns:
-            if str(name).strip().upper() in {"DEPTH", "DEPT", "MD"}:
-                depth_col = name
-                break
 
         numeric_columns = [column for column in df.columns if pd.api.types.is_numeric_dtype(df[column])]
         if not numeric_columns:
             self._render_dashboard_message(self._dashboard_hist_frame, "No numeric curves found.")
-            self._render_dashboard_message(self._dashboard_lith_frame, "No numeric curves found.")
+            self._render_dashboard_message(self._dashboard_radar_frame, "No numeric curves found.")
             return
 
         gr_curve = None
@@ -585,7 +578,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             gr_curve = numeric_columns[0]
 
         self._render_histogram_chart(self._dashboard_hist_frame, df[gr_curve], gr_curve)
-        self._render_lithology_chart(self._dashboard_lith_frame, df[gr_curve], gr_curve)
+        self._render_log_availability_radar(self._dashboard_radar_frame, df)
 
     def _render_dashboard_message(self, frame: QtWidgets.QFrame, message: str) -> None:
         import matplotlib.pyplot as plt
@@ -612,30 +605,87 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         ax.grid(axis="y", alpha=0.16)
         self._render_figure_to_frame(frame, fig)
 
-    def _render_lithology_chart(self, frame: QtWidgets.QFrame, series, curve_name: str) -> None:
+    def _render_log_availability_radar(self, frame: QtWidgets.QFrame, df) -> None:
         import matplotlib.pyplot as plt
+        import numpy as np
         import pandas as pd
 
-        numeric = pd.to_numeric(series, errors="coerce").dropna()
-        if numeric.empty:
-            self._render_dashboard_message(frame, f"No valid samples found for {curve_name}.")
+        if df is None or getattr(df, "empty", True):
+            self._render_dashboard_message(frame, "No data loaded yet.")
             return
 
-        q1, q2, q3 = numeric.quantile([0.25, 0.5, 0.75]).tolist()
-        bins = [numeric.min(), q1, q2, q3, numeric.max()]
-        counts = [
-            int(((numeric >= bins[0]) & (numeric <= bins[1])).sum()),
-            int(((numeric > bins[1]) & (numeric <= bins[2])).sum()),
-            int(((numeric > bins[2]) & (numeric <= bins[3])).sum()),
-            int(((numeric > bins[3]) & (numeric <= bins[4])).sum()),
-        ]
-        labels = ["Sandstone", "Limestone", "Shale", "Dolomite"]
-        colors = ["#4AA3DF", "#7E8BFF", "#4FD1C5", "#F5B661"]
+        alias_map = {
+            "GR": ("GR", "GAMMA", "GAMMA_RAY", "GAMMARAY", "SGR", "CGR", "GAPI", "API"),
+            "RHOB": ("RHOB", "RHOZ", "RHO", "DEN", "DENS"),
+            "NPHI": ("NPHI", "TNPH", "NEU", "NPHI_LS"),
+            "DT": ("DT", "DTC", "SONIC", "AC"),
+            "RT": ("RT", "ILD", "LLD", "RES", "RESD", "AT90"),
+            "CALI": ("CALI", "CAL", "CALIPER"),
+            "SP": ("SP", "SPONT", "SPONTANEOUS"),
+            "PEF": ("PEF", "PE", "PEFZ"),
+        }
 
-        fig, ax = plt.subplots(figsize=(4.8, 3.0), constrained_layout=True)
-        ax.pie(counts, startangle=90, colors=colors, wedgeprops={"width": 0.42, "edgecolor": "white"})
-        ax.set_title(f"{curve_name} Breakdown", fontsize=12, fontweight="600")
-        ax.legend(labels, loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=False, fontsize=8)
+        normalized_columns = {
+            str(column).strip().upper(): column
+            for column in df.columns
+        }
+
+        labels = []
+        availability = []
+        for label, aliases in alias_map.items():
+            matched_column = None
+            for alias in aliases:
+                candidate = normalized_columns.get(alias)
+                if candidate is not None and pd.api.types.is_numeric_dtype(df[candidate]):
+                    matched_column = candidate
+                    break
+
+            score = 0.0
+            if matched_column is not None:
+                series = pd.to_numeric(df[matched_column], errors="coerce")
+                score = float(series.notna().mean() * 100.0)
+
+            labels.append(label)
+            availability.append(score)
+
+        if not any(score > 0 for score in availability):
+            self._render_dashboard_message(frame, "No standard log curves available for the radar chart.")
+            return
+
+        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+        closed_angles = angles + angles[:1]
+        closed_values = availability + availability[:1]
+
+        fig, ax = plt.subplots(
+            figsize=(4.8, 3.3),
+            subplot_kw={"projection": "polar"},
+            constrained_layout=True,
+        )
+        fig.patch.set_facecolor("#FFFFFF")
+        ax.set_facecolor("#FFFFFF")
+        ax.set_theta_offset(np.pi / 2)
+        ax.set_theta_direction(-1)
+        ax.set_ylim(0, 100)
+        ax.set_yticks([25, 50, 75, 100])
+        ax.set_yticklabels(["25", "50", "75", "100"], fontsize=7, color="#7A8BA4")
+        ax.set_rlabel_position(0)
+        ax.grid(color="#DDE8F2", linewidth=0.8)
+        ax.spines["polar"].set_color("#DDE8F2")
+        ax.spines["polar"].set_linewidth(1.0)
+
+        ax.plot(closed_angles, closed_values, color="#2F80FF", linewidth=2.0)
+        ax.fill(closed_angles, closed_values, color="#2F80FF", alpha=0.18)
+        ax.scatter(angles, availability, s=22, color="#2F80FF", edgecolors="#FFFFFF", linewidths=0.9, zorder=3)
+
+        ax.set_xticks(angles)
+        ax.set_xticklabels(
+            [f"{label}\n{int(round(value))}%" for label, value in zip(labels, availability)],
+            fontsize=8,
+            fontweight="600",
+            color="#274B72",
+        )
+        ax.tick_params(axis="x", pad=12)
+        ax.set_title("Log Intelligence (Availability Radar)", fontsize=12, fontweight="600", color="#274B72", pad=18)
         self._render_figure_to_frame(frame, fig)
 
     def _render_figure_to_frame(self, frame: QtWidgets.QFrame, fig) -> None:
@@ -646,9 +696,10 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         except Exception:
             return
 
-        layout = frame.layout()
+        host = getattr(frame, "_canvas_host", frame)
+        layout = host.layout()
         if layout is None:
-            layout = QtWidgets.QVBoxLayout(frame)
+            layout = QtWidgets.QVBoxLayout(host)
             layout.setContentsMargins(0, 0, 0, 0)
 
         while layout.count():
@@ -660,7 +711,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
 
         canvas = FigureCanvas(fig)
         canvas.setStyleSheet("background:#FFFFFF;")
-        toolbar = NavigationToolbar(canvas, frame)
+        toolbar = NavigationToolbar(canvas, host)
         toolbar.setStyleSheet(
             "QToolBar { background:#F7FAFD; border:0; border-bottom:1px solid #D5E1EC; }"
         )
@@ -668,7 +719,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         layout.addWidget(toolbar)
         layout.addWidget(canvas, 1)
         canvas.draw_idle()
-        install_plot_context_menu(canvas, fig, frame)
+        install_plot_context_menu(canvas, fig, host)
 
         # Close the figure to free up memory from the pyplot global manager
         try:
