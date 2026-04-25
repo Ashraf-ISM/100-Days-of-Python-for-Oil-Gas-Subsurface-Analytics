@@ -103,7 +103,7 @@ class RadarTheme:
     """All colour / typography tokens for the chart family."""
 
     # Canvas
-    fig_bg: str = "#0A1628"
+    fig_bg: str = "#E5E7EB" #"#0A1628"
     panel_bg: str = "#0E1E35"
 
     # Radar polygon
