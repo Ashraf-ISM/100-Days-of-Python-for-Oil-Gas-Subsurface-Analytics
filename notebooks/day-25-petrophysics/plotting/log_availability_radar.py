@@ -1,7 +1,6 @@
 """
 log_availability_radar.py
 =========================
-Production-grade well-log availability intelligence for PetroARX.
 
 Features
 --------
