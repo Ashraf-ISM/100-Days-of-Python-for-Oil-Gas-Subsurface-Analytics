@@ -15,7 +15,7 @@ UI_FILE = "advance_crossplot_widget.ui"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from plotting.plot_context_menu import install_plot_context_menu  # noqa: E402
+from plotting.plot_context_menu import install_plot_context_menu  # noqa: E402 
 
 
 class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
