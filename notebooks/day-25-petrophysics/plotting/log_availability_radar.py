@@ -514,7 +514,7 @@ def build_log_availability_radar_figure(
     well_name: str = "Unknown Well",
     theme: RadarTheme = DARK_THEME,
     thresholds: QualityThresholds | None = None,
-    figsize: tuple[float, float] = (7.5, 5.5),  #(9.5, 7.5)
+    figsize: tuple[float, float] = (6.5, 4.5),  #(9.5, 7.5)
     show_non_standard: bool = True,
     max_logs: int = 16,
 ) -> plt.Figure:
