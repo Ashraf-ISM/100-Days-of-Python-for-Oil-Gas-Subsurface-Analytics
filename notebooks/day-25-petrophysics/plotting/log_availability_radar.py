@@ -545,7 +545,7 @@ def build_log_availability_radar_figure(
 
     Returns
     -------
-    matplotlib.figure.Figure
+    matplotlib.figure.Figure 
     """
     thresholds = thresholds or QualityThresholds()
     report = compute_log_availability(df, well_name=well_name, thresholds=thresholds)
