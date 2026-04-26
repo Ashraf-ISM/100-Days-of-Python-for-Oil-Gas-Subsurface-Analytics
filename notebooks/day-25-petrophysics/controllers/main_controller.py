@@ -165,7 +165,7 @@ class MainController:
         self._connect_widget("btnResetFE", "clicked", self.fe.reset_evaluation)
         
 
-        # QC
+        # QC — existing controls
         self._connect_widget("btnRunQC", "clicked", self.qc.run_qc)
         self._connect_widget("btnResetQC", "clicked", self.qc.reset_qc)
         self._connect_widget("btnExportQC", "clicked", self.qc.export_qc)
@@ -183,6 +183,11 @@ class MainController:
         self._connect_widget("btnLVRunQC", "clicked", self.qc.run_qc)
         self._connect_widget("btnLVResetQC", "clicked", self.qc.reset_qc)
         self._connect_widget("btnLVExportQC", "clicked", self.qc.export_qc)
+        # QC — new spike engine controls (safe fallback: silently ignored if absent)
+        self._connect_widget("comboQCSpikeMode", "currentTextChanged", self.qc.run_qc)
+        self._connect_widget("spinQCConfidence",  "valueChanged",       self.qc.run_qc)
+        self._connect_widget("checkQCCrossLog",   "toggled",            self.qc.run_qc)
+        self._connect_widget("comboQCCorrection", "currentTextChanged", self.qc.run_qc)
 
     def _initialize_ui(self) -> None:
         """Initialize UI state."""
