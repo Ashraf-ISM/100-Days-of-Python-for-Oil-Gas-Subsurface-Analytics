@@ -983,7 +983,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             np.linspace(0, 2 * np.pi, n_sides, endpoint=False)
         ))                                                  # 1 at top/bottom, 0 at sides
         silhouette = 1.0 - (1.0 - edge_mask) * 0.35        # darken sides by up to 35 %
-        face_rgba[:, :-1, :3] *= silhouette[np.newaxis, :, np.newaxis]
+        face_rgba[:, :, :3] *= silhouette[np.newaxis, :, np.newaxis]
         face_rgba = np.clip(face_rgba, 0.0, 1.0)
 
         try:
