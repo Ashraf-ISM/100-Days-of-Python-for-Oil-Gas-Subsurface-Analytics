@@ -7,7 +7,6 @@ Maps petrophysical curve mnemonics to their known physical operating ranges.
 Resistivity curves use a log10 transform because of their multi-decade dynamic
 range — comparing raw Ohm-m values would make short-circuit statistics useless.
 
-
 Usage
 -----
     from qc.physical_rules import get_limits, PhysicalLimit
