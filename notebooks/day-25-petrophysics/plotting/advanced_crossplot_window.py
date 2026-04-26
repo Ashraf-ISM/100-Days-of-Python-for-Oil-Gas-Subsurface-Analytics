@@ -461,7 +461,7 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
                 neutron,
                 gas_lower,
                 gas_upper,
-                color="#F59E0B",
+                color="#F59E0B", 
                 alpha=0.15,
                 label="Gas Effect Zone",
             )
