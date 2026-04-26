@@ -677,6 +677,19 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
       <number>0</number>
      </property>
      <item>
+      <widget class="QLabel" name="lblPlotTitle">
+       <property name="styleSheet">
+        <string>font-size:13px; font-weight:bold; color:#1A2340; padding:6px 0px;</string>
+       </property>
+       <property name="text">
+        <string>Density - Neutron Crossplot (NPHI vs RHOB)  |  Color: GR (GAPI)</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QFrame" name="plotFrame">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
