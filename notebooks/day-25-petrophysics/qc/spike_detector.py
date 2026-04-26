@@ -440,7 +440,6 @@ class SpikeDetector:
         return scores
 
     # ── Stage 7 ───────────────────────────────────────────────────────────────
-
     @staticmethod
     def _stage7_correction(
         values: np.ndarray,
