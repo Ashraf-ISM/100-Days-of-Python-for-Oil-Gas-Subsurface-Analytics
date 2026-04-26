@@ -150,7 +150,7 @@ class QCService:
                 lower = q1 - threshold * iqr
                 upper = q3 + threshold * iqr
                 outlier_mask = finite_mask & ((curve_series < lower) | (curve_series > upper))
-
+ 
             else:  # Global Z-Score
                 # FIX: use robust statistics (median / MAD) instead of mean/std
                 # so that the presence of outliers doesn't inflate the baseline.
