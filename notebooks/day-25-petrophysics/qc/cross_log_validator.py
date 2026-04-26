@@ -152,7 +152,7 @@ class CrossLogValidator:
                         cols.append(original)
                         break
         return cols
-
+ 
     @staticmethod
     def _local_mad_flags(values: np.ndarray, window: int, multiplier: float) -> np.ndarray:
         """Rolling MAD anomaly detection (same logic as Stage 1)."""
