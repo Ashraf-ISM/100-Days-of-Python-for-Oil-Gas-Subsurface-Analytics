@@ -175,4 +175,4 @@ class CrossLogValidator:
             if abs(values[i] - local_med) > multiplier * local_std:
                 flags[i] = True
 
-        return flags
+        return flags 
