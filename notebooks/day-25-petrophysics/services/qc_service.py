@@ -5,6 +5,12 @@ import numpy as np
 import pandas as pd
 from PyQt5 import QtWidgets
 
+try:
+    from qc.spike_detector import SpikeDetector, DetectionMode
+    _SPIKE_DETECTOR_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _SPIKE_DETECTOR_AVAILABLE = False
+
 
 class QCService:
     def __init__(self, ui: QtWidgets.QMainWindow, data_service=None):
@@ -80,6 +86,14 @@ class QCService:
         window = max(int(self._spin_value(("spinQCWindow", "spinLVQCWindow"), 5) or 5), 3)
         method = self._combo_text("comboQCMethod", "comboLVQCMethod") or "Isolation Forest"
         smoothing = self._combo_text("comboQCSmoothing", "comboLVQCSmoothing") or "None"
+        # New spike-specific controls (graceful fallback when widgets absent)
+        spike_mode  = self._combo_text("comboQCSpikeMode") or "Standard"
+        spike_conf  = float(self._spin_value("spinQCConfidence", 0.5) or 0.5) / 100.0 \
+                      if self._spin_value("spinQCConfidence", None) is not None \
+                         and self._spin_value("spinQCConfidence", 50) > 1 \
+                      else float(self._spin_value("spinQCConfidence", 0.5) or 0.5)
+        cross_log   = self._is_checked("checkQCCrossLog", True)
+        correction  = self._combo_text("comboQCCorrection") or "local_median"
 
         visible_mask = depth_series.notna()
         if start_depth not in (None, 0):
@@ -99,6 +113,7 @@ class QCService:
         missing_mask = visible_mask & curve_series.isna() if self._is_checked(("checkQCMissing", "checkLVQCMissing"), True) else pd.Series(False, index=df.index)
         outlier_mask = pd.Series(False, index=df.index)
         spike_mask = pd.Series(False, index=df.index)
+        spike_confidence_series = pd.Series(np.nan, index=df.index, dtype=float)
         negative_mask = pd.Series(False, index=df.index)
 
         valid_index = df.index[finite_mask]
@@ -145,34 +160,40 @@ class QCService:
                 zscore = (curve_series - median) / robust_std
                 outlier_mask = visible_mask & zscore.abs().gt(threshold).fillna(False)
 
-        # ── SPIKE DETECTION ─────────────────────────────────────────────────
-        # FIX: a petrophysical spike is a point that deviates sharply from BOTH
-        # its predecessor and its successor (up-then-back-down pattern).
-        # The old code used a single forward-diff which only caught steps/jumps.
-        # New approach: for each interior point compute the deviation from the
-        # local median of its neighbours; flag when that deviation exceeds
-        #   threshold × MAD_of_neighbourhood × 1.4826
-        # This is symmetric, robust to skewed distributions, and correctly
-        # ignores genuine trend changes.
+        # ── SPIKE DETECTION (enterprise 7-stage engine) ─────────────────────
         if self._is_checked(("checkQCSpikes", "checkLVQCSpikes"), True) and valid_values.size >= 5:
-            n = len(valid_values)
-            spike_detected = np.zeros(n, dtype=bool)
-            half_w = max(window // 2, 2)
-
-            for i in range(1, n - 1):
-                lo = max(0, i - half_w)
-                hi = min(n, i + half_w + 1)
-                # neighbours exclude the candidate point itself
-                neighbours = np.concatenate([valid_values[lo:i], valid_values[i + 1:hi]])
-                if neighbours.size < 2:
-                    continue
-                local_med = np.median(neighbours)
-                local_mad = np.median(np.abs(neighbours - local_med))
-                local_std = max(local_mad * 1.4826, 1e-9)
-                if abs(valid_values[i] - local_med) > threshold * local_std:
-                    spike_detected[i] = True
-
-            spike_mask.loc[valid_index] = spike_detected
+            if _SPIKE_DETECTOR_AVAILABLE:
+                spike_result = SpikeDetector().detect(
+                    curve_series=curve_series.loc[valid_index],
+                    depth_series=depth_series.loc[valid_index],
+                    curve_name=curve,
+                    all_curves_df=df,
+                    mode=spike_mode,
+                    window=window,
+                    mad_multiplier=threshold,
+                    confidence_threshold=spike_conf,
+                    cross_log_validation=cross_log,
+                    correction=correction,
+                )
+                spike_mask.loc[valid_index] = spike_result.is_spike
+                spike_confidence_series.loc[valid_index] = spike_result.confidence
+            else:
+                # Fallback: legacy rolling-median/MAD (single-pass)
+                n = len(valid_values)
+                spike_detected = np.zeros(n, dtype=bool)
+                half_w = max(window // 2, 2)
+                for i in range(1, n - 1):
+                    lo = max(0, i - half_w)
+                    hi = min(n, i + half_w + 1)
+                    neighbours = np.concatenate([valid_values[lo:i], valid_values[i + 1:hi]])
+                    if neighbours.size < 2:
+                        continue
+                    local_med = np.median(neighbours)
+                    local_mad = np.median(np.abs(neighbours - local_med))
+                    local_std = max(local_mad * 1.4826, 1e-9)
+                    if abs(valid_values[i] - local_med) > threshold * local_std:
+                        spike_detected[i] = True
+                spike_mask.loc[valid_index] = spike_detected
 
         # ── NEGATIVE VALUE DETECTION ─────────────────────────────────────────
         if self._is_checked(("checkQCNegative", "checkLVQCNegative"), True):
@@ -195,6 +216,7 @@ class QCService:
             outlier_mask=outlier_mask,
             spike_mask=spike_mask,
             negative_mask=negative_mask,
+            spike_confidence=spike_confidence_series,
         )
 
         export_frame = pd.DataFrame(
@@ -202,10 +224,11 @@ class QCService:
                 depth_label: depth_series.where(visible_mask),
                 curve: curve_series.where(visible_mask),
                 f"{curve}_cleaned": cleaned_series.where(visible_mask),
-                "missing_flag":  missing_mask.where(visible_mask, False).astype(int),
-                "outlier_flag":  outlier_mask.where(visible_mask, False).astype(int),
-                "spike_flag":    spike_mask.where(visible_mask, False).astype(int),
-                "negative_flag": negative_mask.where(visible_mask, False).astype(int),
+                "missing_flag":      missing_mask.where(visible_mask, False).astype(int),
+                "outlier_flag":      outlier_mask.where(visible_mask, False).astype(int),
+                "spike_flag":        spike_mask.where(visible_mask, False).astype(int),
+                "spike_confidence":  spike_confidence_series.where(visible_mask),
+                "negative_flag":     negative_mask.where(visible_mask, False).astype(int),
             }
         ).loc[visible_mask].reset_index(drop=True)
 
@@ -231,6 +254,29 @@ class QCService:
             combo.clear()
             combo.addItems(["Isolation Forest", "Moving Z-Score", "Z-Score", "IQR Rule"])
             combo.setCurrentText("Isolation Forest")
+
+        # Spike mode selector
+        spike_mode_combo = self._get_widget("comboQCSpikeMode")
+        if spike_mode_combo is not None and hasattr(spike_mode_combo, "clear"):
+            spike_mode_combo.blockSignals(True)
+            spike_mode_combo.clear()
+            spike_mode_combo.addItems(["Standard", "Advanced", "ML"])
+            spike_mode_combo.setCurrentText("Standard")
+            spike_mode_combo.blockSignals(False)
+
+        # Correction method selector
+        correction_combo = self._get_widget("comboQCCorrection")
+        if correction_combo is not None and hasattr(correction_combo, "clear"):
+            correction_combo.blockSignals(True)
+            correction_combo.clear()
+            correction_combo.addItems(["local_median", "linear", "cubic", "keep"])
+            correction_combo.setCurrentText("local_median")
+            correction_combo.blockSignals(False)
+
+        # Confidence spinner default (0–100 integer % in UI)
+        conf_spin = self._get_widget("spinQCConfidence")
+        if conf_spin is not None and hasattr(conf_spin, "setValue"):
+            conf_spin.setValue(50)
 
     def _depth_series(self, df) -> tuple[str, pd.Series]:
         if "DEPTH" in df.columns:
@@ -289,12 +335,13 @@ class QCService:
         outlier_mask: pd.Series,
         spike_mask: pd.Series,
         negative_mask: pd.Series,
+        spike_confidence: pd.Series | None = None,
     ) -> list[tuple[str, str, str, str]]:
         rows: list[tuple[str, str, str, str]] = []
+
         for mask, issue, action in (
             (missing_mask,  "Missing",  "Flagged"),
             (outlier_mask,  "Outlier",  "Review"),
-            (spike_mask,    "Spike",    "Smooth"),
             (negative_mask, "Negative", "Flagged"),
         ):
             for index in depth_series.index[mask][:250]:
@@ -306,6 +353,30 @@ class QCService:
                         action,
                     )
                 )
+
+        # Spikes get a confidence-annotated action label: "Smooth [87%]"
+        for index in depth_series.index[spike_mask][:250]:
+            conf_val = None
+            if spike_confidence is not None and index in spike_confidence.index:
+                cv = spike_confidence.loc[index]
+                try:
+                    cv = float(cv)
+                    if not np.isnan(cv):
+                        conf_val = cv
+                except Exception:  # noqa: BLE001
+                    pass
+            if conf_val is not None:
+                action_str = f"Smooth [{int(round(conf_val * 100))}%]"
+            else:
+                action_str = "Smooth"
+            rows.append(
+                (
+                    self._fmt_depth(depth_series.loc[index]),
+                    "Spike",
+                    self._fmt_value(values.loc[index]),
+                    action_str,
+                )
+            )
 
         rows.sort(key=lambda row: self._safe_float(row[0]))
         return rows[:250]
