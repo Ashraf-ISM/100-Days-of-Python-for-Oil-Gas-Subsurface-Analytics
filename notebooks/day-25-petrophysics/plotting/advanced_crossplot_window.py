@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
 UI_DIR = ROOT_DIR / "ui"
-UI_FILE = "advance_crossplot_widget.ui"
+UI_FILE = "advance_crossplot_widget.ui" 
 
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
