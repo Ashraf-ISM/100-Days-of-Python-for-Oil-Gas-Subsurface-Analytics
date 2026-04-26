@@ -22,7 +22,7 @@ class PickResult:
     y: float
     values: dict[str, float | None]
 
- 
+
 class Well3DWorkspaceController(QtCore.QObject):
     def __init__(self, window: QtWidgets.QMainWindow, page: QtWidgets.QWidget):
         super().__init__(page)
@@ -48,7 +48,7 @@ class Well3DWorkspaceController(QtCore.QObject):
         self.refresh()
 
     # ------------------------------------------------------------------ #
-    #  Signal wiring or Signal/Sloting                                      #
+    #  Signal wiring                                                        #
     # ------------------------------------------------------------------ #
 
     def connect_signals(self) -> None:
@@ -140,7 +140,6 @@ class Well3DWorkspaceController(QtCore.QObject):
         self._connect_button("btnAutoRange", self.auto_range_from_data)
         self._connect_button("btnCustomRange", self._on_custom_range)
 
-        # ── interaction-mode button group ────────────────────────────── #
         mode_buttons = QtWidgets.QButtonGroup(self)
         mode_buttons.setExclusive(True)
         for name in ("btnModeRotate", "btnModePan", "btnModeZoom", "btnModePick", "btnModeMeasure"):
@@ -153,7 +152,6 @@ class Well3DWorkspaceController(QtCore.QObject):
         if rotate_button is not None:
             rotate_button.setChecked(True)
 
-        # ── view-preset button group ─────────────────────────────────── #
         view_buttons = QtWidgets.QButtonGroup(self)
         view_buttons.setExclusive(True)
         for name in ("btnViewPerspective", "btnViewTop", "btnViewFront",
@@ -162,8 +160,6 @@ class Well3DWorkspaceController(QtCore.QObject):
             if button is not None:
                 view_buttons.addButton(button)
 
-        # ── visualisation-mode button group ──────────────────────────── #
-        # Maps each button to the matching cmbTrajStyle entry text
         self._vis_mode_map: dict[str, str] = {
             "btnVisModeColorTube": "Tube / Cylinder",
             "btnVisModeColorOnly": "Line",
@@ -181,7 +177,6 @@ class Well3DWorkspaceController(QtCore.QObject):
                 button.clicked.connect(
                     lambda _checked=False, bname=btn_name: self._on_vis_mode_clicked(bname)
                 )
-        # Default: check first button
         first_vis = self._widget("btnVisModeColorTube")
         if first_vis is not None:
             first_vis.setChecked(True)
@@ -302,11 +297,11 @@ class Well3DWorkspaceController(QtCore.QObject):
             ("chkShowAxes", True),
             ("chkShowDepthScale", True),
             ("chkShowCompass", False),
+            ("rdoBgDark", True),
             ("chkShowWellNames", True),
             ("chkShowDepthLabels", True),
             ("chkShowValueLabels", True),
             ("chkShowColorbar", True),
-            ("rdoBgDark", True),
         ):
             widget = self._widget(name)
             if widget is not None and hasattr(widget, "setChecked"):
@@ -405,7 +400,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             if arr.size:
                 values.append(arr)
         if not values:
-            self._set_status(f"3D Well Visualization  |  No numeric '{property_name}' values available for auto range")
+            self._set_status(f"3D Well Visualization  |  No numeric '{property_name}' values available")
             return
         merged = np.concatenate(values)
         min_value = float(np.nanmin(merged))
@@ -430,9 +425,8 @@ class Well3DWorkspaceController(QtCore.QObject):
         self._update_slider_labels()
         self._update_mode_status()
         self._apply_view_preset("perspective", refresh=False)
-        self._set_text("lblStatusRenderer", "Renderer: Matplotlib 3D  |  Tube Engine")
+        self._set_text("lblStatusRenderer", "Renderer: Matplotlib 3D  |  Tube Engine  |  Phong Lighting")
         self._reset_pick_labels()
-        # Ensure first vis-mode button appears checked
         first_vis = self._widget("btnVisModeColorTube")
         if first_vis is not None and hasattr(first_vis, "setChecked"):
             first_vis.setChecked(True)
@@ -447,7 +441,7 @@ class Well3DWorkspaceController(QtCore.QObject):
         layout = parent.layout()
         host = QtWidgets.QFrame(parent)
         host.setObjectName("frame3DPlotHost")
-        host.setStyleSheet("background:#07101E;border:none;")
+        host.setStyleSheet("background:#050D1A;border:none;")
         host_layout = QtWidgets.QVBoxLayout(host)
         host_layout.setContentsMargins(0, 0, 0, 0)
         if layout is not None:
@@ -463,40 +457,53 @@ class Well3DWorkspaceController(QtCore.QObject):
     # ------------------------------------------------------------------ #
 
     def _plot_scene(self, trajectories: dict[str, pd.DataFrame]) -> None:
+        import matplotlib
         import matplotlib.pyplot as plt
         import matplotlib.cm as cm
         from matplotlib import colors as mcolors
         from matplotlib.cm import ScalarMappable
         from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+        from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
         bg_mode = self._background_mode()
         figure_face, axes_face, font_color, grid_color = self._background_palette(bg_mode)
 
-        fig = plt.figure(figsize=(9.4, 6.6), constrained_layout=True)
+        # ── figure with narrow margins for maximum viewport use ────────── #
+        fig = plt.figure(figsize=(10.2, 7.2), facecolor=figure_face)
         fig.patch.set_facecolor(figure_face)
-        ax = fig.add_subplot(111, projection="3d")
+
+        # Leave right margin for colorbar breathing room
+        ax = fig.add_axes([0.04, 0.06, 0.84, 0.88], projection="3d")
         ax.set_facecolor(axes_face)
 
         try:
-            ax.set_proj_type("persp" if bg_mode != "light" else "ortho")
+            ax.set_proj_type("persp")
         except Exception:
             pass
 
-        alpha       = max(0.25, min(self._value("sliderOpacity", 100) / 100.0, 1.0))
-        v_exag      = max(self._value("sliderVExag", 1), 1)
-        base_radius = max(1, self._value("sliderTrajRadius", 5)) * 1.2
-        style_text  = self._current_text("cmbTrajStyle", "Tube / Cylinder")
-        color_mode  = self._current_text("cmbTrajColorBy", "Well (Unique)")
-        cmap_name   = self._matplotlib_cmap_name(self._current_text("cmbColormap", "Viridis"))
-        use_tube    = style_text in ("Tube / Cylinder", "Ribbon")
-        show_cb     = self._is_checked("chkShowColorbar", True)
-        show_labels = self._is_checked("chkShowWellNames", True)
-        show_td_lbl = self._is_checked("chkShowDepthLabels", True)
-        show_rings  = self._is_checked("chkShowDepthScale", True)
-        show_head   = self._is_checked("chkShowWellHead", True)
-        show_td     = self._is_checked("chkShowTD", True)
-        show_ribbon = self._is_checked("chkShowLogRibbon", True)
-        relief_scale = 0.35 if style_text == "Ribbon" else 0.50
+        alpha        = max(0.20, min(self._value("sliderOpacity", 100) / 100.0, 1.0))
+        v_exag       = max(self._value("sliderVExag", 1), 1)
+        base_radius  = max(1, self._value("sliderTrajRadius", 5)) * 1.35
+        style_text   = self._current_text("cmbTrajStyle", "Tube / Cylinder")
+        color_mode   = self._current_text("cmbTrajColorBy", "Well (Unique)")
+        cmap_name    = self._matplotlib_cmap_name(self._current_text("cmbColormap", "Viridis"))
+        use_tube     = style_text in ("Tube / Cylinder", "Ribbon")
+        show_cb      = self._is_checked("chkShowColorbar", True)
+        show_labels  = self._is_checked("chkShowWellNames", True)
+        show_td_lbl  = self._is_checked("chkShowDepthLabels", True)
+        show_rings   = self._is_checked("chkShowDepthScale", True)
+        show_head    = self._is_checked("chkShowWellHead", True)
+        show_td      = self._is_checked("chkShowTD", True)
+        show_ribbon  = self._is_checked("chkShowLogRibbon", True)
+        show_perf    = self._is_checked("chkShowPerforations", False)
+        show_casing  = self._is_checked("chkShowCasing", False)
+        show_pay     = self._is_checked("chkShowPayZones", False)
+        relief_scale = 0.30 if style_text == "Ribbon" else 0.45
+
+        # Lighting parameters from sliders (0–100 → 0–1)
+        ambient_k  = self._value("sliderAmbient",  40) / 100.0
+        diffuse_k  = self._value("sliderDiffuse",  70) / 100.0
+        specular_k = self._value("sliderSpecular", 25) / 100.0
 
         all_xyz: list[np.ndarray] = []
         sm_for_colorbar: ScalarMappable | None = None
@@ -510,7 +517,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             "meta": [],
         }
 
-        # ── first pass: compute shared colour range across all wells ───── #
+        # ── first pass: shared colour range ──────────────────────────── #
         all_color_vals: list[np.ndarray] = []
         for name in trajectories:
             traj = trajectories[name]
@@ -521,9 +528,9 @@ class Well3DWorkspaceController(QtCore.QObject):
                     all_color_vals.append(finite)
 
         if all_color_vals:
-            merged = np.concatenate(all_color_vals)
-            v_min = float(np.nanmin(merged))
-            v_max = float(np.nanmax(merged))
+            merged  = np.concatenate(all_color_vals)
+            v_min   = float(np.nanmin(merged))
+            v_max   = float(np.nanmax(merged))
             if v_max <= v_min:
                 v_max = v_min + 1.0
             if self._is_log_scale() and v_min > 0:
@@ -540,39 +547,66 @@ class Well3DWorkspaceController(QtCore.QObject):
 
         # ── second pass: render each well ─────────────────────────────── #
         for idx, (well_name, trajectory) in enumerate(trajectories.items()):
-            n_full = len(trajectory)
-            x_full = trajectory["x"].to_numpy(dtype=float)
-            y_full = trajectory["y"].to_numpy(dtype=float)
-            z_full = trajectory["tvd"].to_numpy(dtype=float) * v_exag
+            n_full  = len(trajectory)
+            x_full  = trajectory["x"].to_numpy(dtype=float)
+            y_full  = trajectory["y"].to_numpy(dtype=float)
+            z_full  = trajectory["tvd"].to_numpy(dtype=float) * v_exag
             all_xyz.append(np.column_stack([x_full, y_full, z_full]))
 
-            # colour values ------------------------------------------------
+            well_color = self._well_palette(idx)
+
+            # colour values ----------------------------------------------- #
             cv, norm_local, use_cmap = self._color_values_for_plot(trajectory, color_mode)
             if use_cmap and cv is not None:
                 norm_use = global_norm or norm_local
                 vals_use = cv
             else:
-                # fall back to depth colouring for visual appeal
-                vals_use = z_full.copy()
-                norm_use = global_norm or mcolors.Normalize(
+                vals_use  = z_full.copy()
+                norm_use  = global_norm or mcolors.Normalize(
                     vmin=float(z_full.min()), vmax=float(z_full.max())
                 )
 
-            # downsample for tube geometry (performance) ------------------
-            max_pts = 280
-            step = max(1, n_full // max_pts)
-            x_ds = x_full[::step]
-            y_ds = y_full[::step]
-            z_ds = z_full[::step]
-            v_ds = vals_use[::step] if len(vals_use) == n_full else vals_use
+            # downsample for tube geometry -------------------------------- #
+            max_pts = 320
+            step    = max(1, n_full // max_pts)
+            x_ds    = x_full[::step]
+            y_ds    = y_full[::step]
+            z_ds    = z_full[::step]
+            v_ds    = vals_use[::step] if len(vals_use) == n_full else vals_use
 
-            # ── tube / fallback line ──────────────────────────────────── #
+            # ── floor projection shadow (subtle, depth-grounding) ─────── #
+            if self._is_checked("chkShowDeviation", True) and len(x_ds) > 1:
+                floor_z = float(np.max(z_full)) * 1.06
+                ax.plot(
+                    x_ds, y_ds,
+                    zs=floor_z, zdir="z",
+                    color=well_color,
+                    linewidth=1.0,
+                    linestyle=":",
+                    alpha=0.22,
+                )
+                # vertical leader line from wellhead to floor
+                ax.plot(
+                    [x_full[0], x_full[0]],
+                    [y_full[0], y_full[0]],
+                    [z_full[0], floor_z],
+                    color=well_color,
+                    linewidth=0.55,
+                    linestyle="--",
+                    alpha=0.30,
+                )
+
+            # ── tube / fallback line ─────────────────────────────────── #
             if use_tube and len(x_ds) >= 3:
                 surf = self._render_tube_surface(
                     ax,
                     x_ds, y_ds, z_ds, v_ds,
                     cmap_name, norm_use, alpha,
                     base_radius, relief_scale,
+                    ambient_k=ambient_k,
+                    diffuse_k=diffuse_k,
+                    specular_k=specular_k,
+                    n_sides=24,
                 )
                 if surf is not None and show_cb and sm_for_colorbar is None:
                     sm_for_colorbar = ScalarMappable(cmap=cmap_name, norm=norm_use)
@@ -580,126 +614,204 @@ class Well3DWorkspaceController(QtCore.QObject):
                     global_cmap = cmap_name
             else:
                 line_style, line_w = self._line_style_from_ui(style_text)
-                base_color = self._well_palette(idx)
                 ax.plot(
                     x_ds, y_ds, z_ds,
-                    color=base_color,
-                    linewidth=max(2.0, base_radius * 0.4 * line_w),
+                    color=well_color,
+                    linewidth=max(2.0, base_radius * 0.42 * line_w),
                     linestyle=line_style,
                     alpha=alpha,
+                    solid_capstyle="round",
                 )
 
-            # ── log ribbon (scatter overlay) ──────────────────────────── #
+            # ── log ribbon overlay (scatter) ─────────────────────────── #
             if show_ribbon:
                 ov_vals = self._overlay_values(trajectory)
                 if ov_vals is not None:
-                    ov_ds = ov_vals[::step]
+                    ov_ds   = ov_vals[::step]
                     ov_norm = self._build_norm(ov_vals)
                     scat = ax.scatter(
                         x_ds, y_ds, z_ds,
                         c=ov_ds, cmap=cmap_name, norm=ov_norm,
-                        s=max(20, base_radius * 7),
-                        alpha=min(1.0, alpha + 0.1),
-                        linewidths=0.2, edgecolors="#C8DFF2",
+                        s=max(22, base_radius * 7.5),
+                        alpha=min(1.0, alpha + 0.12),
+                        linewidths=0.25,
+                        edgecolors="#B8D4F0",
                         zorder=6,
                     )
                     if show_cb and sm_for_colorbar is None:
                         sm_for_colorbar = ScalarMappable(cmap=cmap_name, norm=ov_norm)
                         sm_for_colorbar.set_array(ov_ds[np.isfinite(ov_ds)])
 
-            # ── depth rings (borehole-style horizontal bands) ─────────── #
-            if show_rings and len(x_ds) >= 4:
-                self._draw_depth_rings(ax, x_ds, y_ds, z_ds, base_radius, font_color)
+            # ── casing shoe marker ────────────────────────────────────── #
+            if show_casing and len(x_ds) > 4:
+                shoe_idx = min(int(len(x_ds) * 0.22), len(x_ds) - 2)
+                self._draw_casing_shoe(
+                    ax, x_ds[shoe_idx], y_ds[shoe_idx], z_ds[shoe_idx],
+                    base_radius * 2.0, font_color
+                )
 
-            # ── well-head sphere ──────────────────────────────────────── #
+            # ── perforation cluster markers ───────────────────────────── #
+            if show_perf and len(x_ds) > 6:
+                perf_indices = np.linspace(int(len(x_ds) * 0.55),
+                                           int(len(x_ds) * 0.78),
+                                           min(4, len(x_ds) // 3), dtype=int)
+                for pi in perf_indices:
+                    self._draw_perforation(
+                        ax, x_ds[pi], y_ds[pi], z_ds[pi],
+                        base_radius * 1.6
+                    )
+
+            # ── pay zone highlight band ───────────────────────────────── #
+            if show_pay and len(x_ds) > 8:
+                pay_start = int(len(x_ds) * 0.58)
+                pay_end   = min(int(len(x_ds) * 0.72), len(x_ds) - 1)
+                self._draw_pay_zone_band(
+                    ax,
+                    x_ds[pay_start:pay_end],
+                    y_ds[pay_start:pay_end],
+                    z_ds[pay_start:pay_end],
+                    base_radius * 2.2,
+                )
+
+            # ── depth rings ───────────────────────────────────────────── #
+            if show_rings and len(x_ds) >= 5:
+                self._draw_depth_rings(ax, x_ds, y_ds, z_ds,
+                                       base_radius, font_color, n_rings=8)
+
+            # ── well-head sphere + glow ───────────────────────────────── #
             if show_head:
-                self._draw_sphere_marker(ax, x_full[0], y_full[0], z_full[0],
-                                         base_radius * 1.8, "#4FD1C5", alpha=0.95)
+                self._draw_glow_sphere(ax, x_full[0], y_full[0], z_full[0],
+                                       base_radius * 2.0, "#4FD1C5",
+                                       glow_color="#1AFFF0", alpha=0.96)
 
-            # ── TD cone / sphere ──────────────────────────────────────── #
+            # ── TD cone / sphere + glow ───────────────────────────────── #
             if show_td:
-                self._draw_sphere_marker(ax, x_full[-1], y_full[-1], z_full[-1],
-                                         base_radius * 1.8, "#FF8A3D", alpha=0.95)
+                self._draw_glow_sphere(ax, x_full[-1], y_full[-1], z_full[-1],
+                                       base_radius * 2.0, "#FF8A3D",
+                                       glow_color="#FFB870", alpha=0.96)
 
-            # ── vertical projection line to base plane ────────────────── #
-            if self._is_checked("chkShowDeviation", True) and len(x_ds) > 1:
-                base_z = z_full[-1] + max(10, (z_full[-1] - z_full[0]) * 0.04)
-                ax.plot(
-                    [x_full[0], x_full[-1]],
-                    [y_full[0], y_full[-1]],
-                    [z_full[0], z_full[-1]],
-                    color="#3A6A8C", linewidth=0.6, linestyle=":", alpha=0.45,
-                )
-
-            # ── labels ───────────────────────────────────────────────── #
+            # ── well labels with leader lines ─────────────────────────── #
             if show_labels:
+                lbl_offset_x = base_radius * 3.5
+                lbl_offset_z = -base_radius * 2.5
+                ax.plot(
+                    [x_full[0], x_full[0] + lbl_offset_x],
+                    [y_full[0], y_full[0]],
+                    [z_full[0], z_full[0] + lbl_offset_z],
+                    color=well_color, linewidth=0.7, alpha=0.60, zorder=19,
+                )
                 ax.text(
-                    x_full[0], y_full[0], z_full[0],
+                    x_full[0] + lbl_offset_x,
+                    y_full[0],
+                    z_full[0] + lbl_offset_z,
                     f"  {well_name}",
-                    color=font_color, fontsize=9, fontweight="bold",
+                    color="#FFFFFF",
+                    fontsize=9,
+                    fontweight="bold",
+                    fontfamily="monospace",
                     bbox=dict(
-                        boxstyle="round,pad=0.25",
-                        facecolor="#0D1E36",
-                        edgecolor="#4A90D9",
-                        alpha=0.80,
-                        linewidth=0.8,
+                        boxstyle="round,pad=0.32",
+                        facecolor="#0B1E38",
+                        edgecolor=well_color,
+                        alpha=0.88,
+                        linewidth=1.2,
                     ),
-                    zorder=20,
+                    zorder=22,
                 )
 
+            # ── TD depth label ────────────────────────────────────────── #
             if show_td_lbl:
                 ax.text(
-                    x_full[-1], y_full[-1], z_full[-1],
-                    f"  TD {trajectory['md'].iloc[-1]:,.0f} m",
-                    color="#FFB26B", fontsize=7.5,
+                    x_full[-1] + base_radius * 2.0,
+                    y_full[-1],
+                    z_full[-1],
+                    f" ▼ TD {trajectory['md'].iloc[-1]:,.0f} m",
+                    color="#FFB870",
+                    fontsize=7.8,
+                    fontfamily="monospace",
                     bbox=dict(
-                        boxstyle="round,pad=0.20",
-                        facecolor="#1A1208",
+                        boxstyle="round,pad=0.22",
+                        facecolor="#1C0E00",
                         edgecolor="#FF8A3D",
-                        alpha=0.75,
-                        linewidth=0.7,
+                        alpha=0.80,
+                        linewidth=0.9,
                     ),
-                    zorder=20,
+                    zorder=22,
                 )
 
             self._append_pick_points(well_name, trajectory, z_full)
 
-        # ── colorbar ─────────────────────────────────────────────────── #
+        # ── professional colorbar ─────────────────────────────────────── #
         if sm_for_colorbar is not None and show_cb:
             try:
                 cbar = fig.colorbar(
                     sm_for_colorbar, ax=ax,
-                    pad=0.04, shrink=0.72, aspect=18,
+                    pad=0.02, shrink=0.68, aspect=22,
                     orientation="vertical",
+                    drawedges=False,
                 )
                 prop_label = self._current_property_name()
-                cbar.set_label(prop_label, color=font_color, fontsize=9, labelpad=8)
-                cbar.ax.yaxis.set_tick_params(color=font_color, labelsize=8)
-                plt.setp(cbar.ax.get_yticklabels(), color=font_color)
-                cbar.outline.set_edgecolor(grid_color)
+                cbar.set_label(
+                    prop_label, color=font_color,
+                    fontsize=9.5, labelpad=10,
+                    fontweight="bold", fontfamily="monospace",
+                )
+                cbar.ax.yaxis.set_tick_params(color=font_color, labelsize=8, length=3)
+                plt.setp(cbar.ax.get_yticklabels(), color=font_color, fontfamily="monospace")
+                cbar.outline.set_edgecolor("#2A4A6A")
+                cbar.outline.set_linewidth(0.9)
                 cbar.ax.set_facecolor(axes_face)
+                # min / max annotation pins
+                norm_obj = sm_for_colorbar.norm
+                arr = sm_for_colorbar.get_array()
+                if arr is not None and arr.size:
+                    cbar.ax.text(
+                        1.55, 0.01, f"{float(np.nanmin(arr)):.3g}",
+                        transform=cbar.ax.transAxes,
+                        color="#7AAFD4", fontsize=7, fontfamily="monospace", va="bottom",
+                    )
+                    cbar.ax.text(
+                        1.55, 0.99, f"{float(np.nanmax(arr)):.3g}",
+                        transform=cbar.ax.transAxes,
+                        color="#7AAFD4", fontsize=7, fontfamily="monospace", va="top",
+                    )
             except Exception:
                 pass
 
         # ── cross-section plane ───────────────────────────────────────── #
         self._draw_cross_section(ax, trajectories, v_exag)
 
-        # ── axes & camera ──────────────────────────────────────────────  #
+        # ── base floor plane (structural grounding) ───────────────────── #
+        self._draw_floor_plane(ax, all_xyz, font_color, grid_color)
+
+        # ── axes styling & camera ─────────────────────────────────────── #
         self._style_axes(ax, font_color, grid_color)
         self._set_axis_limits(ax, all_xyz)
         self._apply_camera_to_axes(ax)
 
-        ax.set_title("3D Well Visualization", fontsize=13, fontweight="bold",
-                     color=font_color, pad=16)
-        ax.set_xlabel("X Offset (m)", color=font_color, labelpad=10)
-        ax.set_ylabel("Y Offset (m)", color=font_color, labelpad=10)
-        ax.set_zlabel(f"TVD ×{v_exag:.0f} (m)", color=font_color, labelpad=12)
+        # ── title block ───────────────────────────────────────────────── #
+        ax.set_title(
+            "3D Well Trajectory Visualization",
+            fontsize=13, fontweight="bold",
+            color=font_color, pad=18,
+            fontfamily="monospace",
+        )
+        ax.set_xlabel("X Offset  (m)", color=font_color, labelpad=12, fontsize=9)
+        ax.set_ylabel("Y Offset  (m)", color=font_color, labelpad=12, fontsize=9)
+        ax.set_zlabel(f"TVD  ×{v_exag:.0f}  (m)", color=font_color, labelpad=14, fontsize=9)
+
+        # ── renderer info watermark ───────────────────────────────────── #
+        fig.text(
+            0.01, 0.01,
+            "PetroAnalystPro  |  3D Well Module  |  Tube Engine  |  Phong Shading",
+            color="#2A4A6A", fontsize=6.5, fontfamily="monospace", alpha=0.70,
+        )
 
         self._disconnect_canvas_events()
         self._render_canvas(FigureCanvas(fig), fig, ax)
 
     # ------------------------------------------------------------------ #
-    #  3-D tube geometry engine                                             #
+    #  3-D tube geometry engine — Phong-lit, Bishop-framed                  #
     # ------------------------------------------------------------------ #
 
     def _render_tube_surface(
@@ -713,14 +825,19 @@ class Well3DWorkspaceController(QtCore.QObject):
         norm,
         alpha: float,
         base_radius: float,
-        relief_scale: float = 0.50,
-        n_sides: int = 20,
+        relief_scale: float = 0.45,
+        n_sides: int = 24,
+        ambient_k: float = 0.40,
+        diffuse_k: float = 0.70,
+        specular_k: float = 0.25,
+        shininess: float = 18.0,
     ):
         """
-        Render the well as a 3-D tube/cylinder with per-face colouring and
-        optional radial relief mapping (exactly like WLD 3D Visualizer).
-
-        Uses parallel-transport (Bishop) frames to avoid twisting artefacts.
+        Render a 3-D lit borehole tube using:
+          - Parallel-transport (Bishop) frames to eliminate twist artefacts
+          - Radial relief mapping from log values
+          - Per-face Phong diffuse + specular simulation
+          - Edge darkening for visual depth cues
         """
         import matplotlib.cm as cm
         from matplotlib import colors as mcolors
@@ -731,22 +848,21 @@ class Well3DWorkspaceController(QtCore.QObject):
 
         positions = np.column_stack([x_vals, y_vals, z_vals])
 
-        # ── tangent vectors (central differences) ────────────────────── #
+        # ── tangent vectors ───────────────────────────────────────────── #
         tangents = np.empty_like(positions)
         tangents[1:-1] = positions[2:] - positions[:-2]
-        tangents[0] = positions[1] - positions[0]
-        tangents[-1] = positions[-1] - positions[-2]
-        t_norms = np.linalg.norm(tangents, axis=1, keepdims=True)
-        t_norms = np.maximum(t_norms, 1e-10)
-        tangents /= t_norms
+        tangents[0]    = positions[1]  - positions[0]
+        tangents[-1]   = positions[-1] - positions[-2]
+        t_norms        = np.linalg.norm(tangents, axis=1, keepdims=True)
+        tangents       /= np.maximum(t_norms, 1e-10)
 
-        # ── Bishop / parallel-transport frame ────────────────────────── #
+        # ── Bishop / parallel-transport frame ─────────────────────────── #
         normals = np.empty_like(positions)
         ref = np.array([0.0, 0.0, 1.0])
         if abs(float(tangents[0, 2])) > 0.85:
             ref = np.array([1.0, 0.0, 0.0])
-        n0 = ref - np.dot(ref, tangents[0]) * tangents[0]
-        n_mag = np.linalg.norm(n0)
+        n0     = ref - np.dot(ref, tangents[0]) * tangents[0]
+        n_mag  = float(np.linalg.norm(n0))
         normals[0] = n0 / max(n_mag, 1e-10)
 
         for i in range(1, n):
@@ -761,20 +877,18 @@ class Well3DWorkspaceController(QtCore.QObject):
                 angle  = float(np.arccos(np.clip(np.dot(t_prev, t_cur), -1.0, 1.0)))
                 c, s   = np.cos(angle), np.sin(angle)
                 n_prev = normals[i - 1]
-                # Rodrigues' rotation formula
                 normals[i] = (
                     n_prev * c
                     + np.cross(axis, n_prev) * s
                     + axis * np.dot(axis, n_prev) * (1.0 - c)
                 )
-            n_mag = float(np.linalg.norm(normals[i]))
-            normals[i] /= max(n_mag, 1e-10)
+            normals[i] /= max(float(np.linalg.norm(normals[i])), 1e-10)
 
-        binormals = np.cross(tangents, normals)
-        bn_mags   = np.linalg.norm(binormals, axis=1, keepdims=True)
-        binormals /= np.maximum(bn_mags, 1e-10)
+        binormals  = np.cross(tangents, normals)
+        bn_mags    = np.linalg.norm(binormals, axis=1, keepdims=True)
+        binormals  /= np.maximum(bn_mags, 1e-10)
 
-        # ── sanitise colour values ───────────────────────────────────── #
+        # ── sanitise colour values ────────────────────────────────────── #
         if values is not None and np.isfinite(values).any():
             finite_vals = values[np.isfinite(values)]
             fill_val    = float(np.nanmedian(finite_vals))
@@ -782,7 +896,6 @@ class Well3DWorkspaceController(QtCore.QObject):
         else:
             vals = z_vals.copy()
 
-        # ── normalised relief amplitude (0–1) ────────────────────────── #
         v_lo = float(np.nanmin(vals))
         v_hi = float(np.nanmax(vals))
         if v_hi > v_lo:
@@ -790,42 +903,88 @@ class Well3DWorkspaceController(QtCore.QObject):
         else:
             relief = np.zeros(n)
 
-        # ── build tube mesh: shape (n, n_sides+1) ────────────────────── #
+        # ── tube mesh ─────────────────────────────────────────────────── #
         thetas = np.linspace(0.0, 2.0 * np.pi, n_sides, endpoint=False)
         TX = np.empty((n, n_sides + 1))
         TY = np.empty((n, n_sides + 1))
         TZ = np.empty((n, n_sides + 1))
         CV = np.empty((n, n_sides + 1))
+        # Outward normals for Phong lighting
+        NX = np.empty((n, n_sides + 1))
+        NY = np.empty((n, n_sides + 1))
+        NZ = np.empty((n, n_sides + 1))
 
         for j, theta in enumerate(thetas):
-            r = base_radius * (1.0 + relief_scale * relief)    # relief mapping
-            ct, st = np.cos(theta), np.sin(theta)
-            TX[:, j] = positions[:, 0] + r * (ct * normals[:, 0] + st * binormals[:, 0])
-            TY[:, j] = positions[:, 1] + r * (ct * normals[:, 1] + st * binormals[:, 1])
-            TZ[:, j] = positions[:, 2] + r * (ct * normals[:, 2] + st * binormals[:, 2])
-            CV[:, j] = vals
+            r  = base_radius * (1.0 + relief_scale * relief)
+            ct = np.cos(theta)
+            st = np.sin(theta)
+            # radial outward normal at this circumferential angle
+            outward_x = ct * normals[:, 0] + st * binormals[:, 0]
+            outward_y = ct * normals[:, 1] + st * binormals[:, 1]
+            outward_z = ct * normals[:, 2] + st * binormals[:, 2]
+            TX[:, j]  = positions[:, 0] + r * outward_x
+            TY[:, j]  = positions[:, 1] + r * outward_y
+            TZ[:, j]  = positions[:, 2] + r * outward_z
+            CV[:, j]  = vals
+            NX[:, j]  = outward_x
+            NY[:, j]  = outward_y
+            NZ[:, j]  = outward_z
 
-        # close the tube circumferentially
-        TX[:, -1] = TX[:, 0]
-        TY[:, -1] = TY[:, 0]
-        TZ[:, -1] = TZ[:, 0]
+        # close circumferentially
+        TX[:, -1] = TX[:, 0];  TY[:, -1] = TY[:, 0];  TZ[:, -1] = TZ[:, 0]
         CV[:, -1] = CV[:, 0]
+        NX[:, -1] = NX[:, 0];  NY[:, -1] = NY[:, 0];  NZ[:, -1] = NZ[:, 0]
 
-        # ── per-face colours (average of 4 quad corners) ─────────────── #
+        # ── per-face values (quad corner average) ─────────────────────── #
         face_vals = (
             CV[:-1, :-1] + CV[1:, :-1] + CV[:-1, 1:] + CV[1:, 1:]
-        ) / 4.0                                          # shape (n-1, n_sides)
+        ) / 4.0
 
+        # per-face outward normals
+        fn_x = (NX[:-1, :-1] + NX[1:, :-1] + NX[:-1, 1:] + NX[1:, 1:]) / 4.0
+        fn_y = (NY[:-1, :-1] + NY[1:, :-1] + NY[:-1, 1:] + NY[1:, 1:]) / 4.0
+        fn_z = (NZ[:-1, :-1] + NZ[1:, :-1] + NZ[:-1, 1:] + NZ[1:, 1:]) / 4.0
+        fn_len = np.sqrt(fn_x**2 + fn_y**2 + fn_z**2)
+        fn_len = np.maximum(fn_len, 1e-10)
+        fn_x /= fn_len;  fn_y /= fn_len;  fn_z /= fn_len
+
+        # ── Phong shading: key light + fill + rim ─────────────────────── #
+        key_light  = np.array([0.6,  0.4, -0.7]);  key_light  /= np.linalg.norm(key_light)
+        fill_light = np.array([-0.4, 0.3, -0.3]);  fill_light /= np.linalg.norm(fill_light)
+        rim_light  = np.array([0.0, -0.5,  0.5]);  rim_light  /= np.linalg.norm(rim_light)
+
+        diff_key   = np.clip( fn_x*key_light[0]  + fn_y*key_light[1]  + fn_z*key_light[2],  0, 1)
+        diff_fill  = np.clip( fn_x*fill_light[0] + fn_y*fill_light[1] + fn_z*fill_light[2], 0, 1) * 0.38
+        diff_rim   = np.clip( fn_x*rim_light[0]  + fn_y*rim_light[1]  + fn_z*rim_light[2],  0, 1) * 0.22
+        diffuse    = diffuse_k * (diff_key + diff_fill + diff_rim)
+
+        # specular (Blinn-Phong halfway vector with view from top-right)
+        view_dir  = np.array([0.5, 0.5, -0.7]);  view_dir /= np.linalg.norm(view_dir)
+        halfway   = key_light + view_dir;          halfway  /= np.linalg.norm(halfway)
+        spec_dot  = np.clip( fn_x*halfway[0] + fn_y*halfway[1] + fn_z*halfway[2], 0, 1)
+        specular  = specular_k * (spec_dot ** shininess)
+
+        intensity = np.clip(ambient_k + diffuse + specular, 0.0, 1.0)
+
+        # ── map values → RGBA then modulate by lighting ───────────────── #
         cmap_obj = cm.get_cmap(cmap_name)
-        from matplotlib import colors as mcolors
-
         if norm is None:
             norm_obj = mcolors.Normalize(vmin=v_lo, vmax=v_hi)
         else:
             norm_obj = norm
 
-        face_rgba = cmap_obj(norm_obj(face_vals))        # (n-1, n_sides, 4)
-        face_rgba[:, :, 3] = alpha                       # apply opacity
+        face_rgba = cmap_obj(norm_obj(face_vals)).copy()   # (n-1, n_sides, 4)
+        face_rgba[:, :, :3] *= intensity[:, :, np.newaxis]
+        face_rgba[:, :, 3]   = alpha
+
+        # ── edge silhouette darkening (depth cue) ─────────────────────── #
+        # Columns near 0° and 180° of circumference are silhouette edges
+        edge_mask = np.abs(np.cos(
+            np.linspace(0, 2 * np.pi, n_sides, endpoint=False)
+        ))                                                  # 1 at top/bottom, 0 at sides
+        silhouette = 1.0 - (1.0 - edge_mask) * 0.35        # darken sides by up to 35 %
+        face_rgba[:, :-1, :3] *= silhouette[np.newaxis, :, np.newaxis]
+        face_rgba = np.clip(face_rgba, 0.0, 1.0)
 
         try:
             surf = ax.plot_surface(
@@ -833,14 +992,58 @@ class Well3DWorkspaceController(QtCore.QObject):
                 facecolors=face_rgba,
                 linewidth=0,
                 antialiased=True,
-                shade=True,
+                shade=False,          # we supply our own shading
             )
             return surf
         except Exception:
-            # Graceful fallback – render as a coloured line
             ax.plot(x_vals, y_vals, z_vals,
-                    color=self._well_palette(0), linewidth=2.0, alpha=alpha)
+                    color=self._well_palette(0), linewidth=2.2, alpha=alpha)
             return None
+
+    # ------------------------------------------------------------------ #
+    #  Floor plane — structural grounding element                            #
+    # ------------------------------------------------------------------ #
+
+    def _draw_floor_plane(
+        self,
+        ax,
+        point_blocks: list[np.ndarray],
+        font_color: str,
+        grid_color: str,
+    ) -> None:
+        if not point_blocks:
+            return
+        stacked = np.vstack(point_blocks)
+        mins   = stacked.min(axis=0)
+        maxs   = stacked.max(axis=0)
+        span   = float(np.max(maxs[:2] - mins[:2]))
+        pad    = span * 0.12
+        floor_z = float(maxs[2]) * 1.10
+
+        xl = [mins[0] - pad, maxs[0] + pad]
+        yl = [mins[1] - pad, maxs[1] + pad]
+        xx, yy = np.meshgrid(xl, yl)
+        zz = np.full_like(xx, floor_z)
+
+        ax.plot_surface(
+            xx, yy, zz,
+            color="#0D2540", alpha=0.18, linewidth=0, antialiased=False,
+        )
+
+        # faint grid lines on floor
+        n_grid = 6
+        xs = np.linspace(xl[0], xl[1], n_grid)
+        ys = np.linspace(yl[0], yl[1], n_grid)
+        for xv in xs:
+            ax.plot([xv, xv], [yl[0], yl[1]], [floor_z, floor_z],
+                    color=grid_color, linewidth=0.35, alpha=0.25)
+        for yv in ys:
+            ax.plot([xl[0], xl[1]], [yv, yv], [floor_z, floor_z],
+                    color=grid_color, linewidth=0.35, alpha=0.25)
+
+    # ------------------------------------------------------------------ #
+    #  Depth rings with tick labels                                          #
+    # ------------------------------------------------------------------ #
 
     def _draw_depth_rings(
         self,
@@ -850,21 +1053,28 @@ class Well3DWorkspaceController(QtCore.QObject):
         z_vals: np.ndarray,
         radius: float,
         font_color: str,
-        n_rings: int = 7,
+        n_rings: int = 8,
     ) -> None:
-        """
-        Draw horizontal rings around the tube at regular depth intervals,
-        mimicking the borehole-image depth-tick style in WLD 3D Visualizer.
-        """
         n = len(x_vals)
-        if n < 3:
+        if n < 4:
             return
-
         indices = np.linspace(1, n - 2, min(n_rings, n - 2), dtype=int)
         for ri in indices:
-            rx, ry, rz = self._build_ring_geometry(x_vals, y_vals, z_vals, ri, radius * 1.08)
-            if rx is not None:
-                ax.plot(rx, ry, rz, color="#4A7FA5", linewidth=0.55, alpha=0.55)
+            rx, ry, rz = self._build_ring_geometry(x_vals, y_vals, z_vals,
+                                                    ri, radius * 1.12)
+            if rx is None:
+                continue
+            ax.plot(rx, ry, rz, color="#3E7AAF", linewidth=0.65, alpha=0.60)
+            # tick label on ring
+            ax.text(
+                rx[0], ry[0], rz[0],
+                f" {z_vals[ri]:,.0f}m",
+                color="#5A96C8",
+                fontsize=6.5,
+                fontfamily="monospace",
+                alpha=0.75,
+                zorder=14,
+            )
 
     def _build_ring_geometry(
         self,
@@ -873,9 +1083,8 @@ class Well3DWorkspaceController(QtCore.QObject):
         z_vals: np.ndarray,
         idx: int,
         radius: float,
-        n_pts: int = 36,
+        n_pts: int = 40,
     ):
-        """Return ring circle vertices at the given trajectory index."""
         n = len(x_vals)
         if idx <= 0 or idx >= n - 1:
             return None, None, None
@@ -891,38 +1100,143 @@ class Well3DWorkspaceController(QtCore.QObject):
             return None, None, None
         tangent /= t_mag
 
-        ref = np.array([0.0, 0.0, 1.0]) if abs(tangent[2]) < 0.85 else np.array([1.0, 0.0, 0.0])
-        normal   = ref - np.dot(ref, tangent) * tangent
-        n_mag    = float(np.linalg.norm(normal))
+        ref    = np.array([0.0, 0.0, 1.0]) if abs(tangent[2]) < 0.85 else np.array([1.0, 0.0, 0.0])
+        normal = ref - np.dot(ref, tangent) * tangent
+        n_mag  = float(np.linalg.norm(normal))
         if n_mag < 1e-10:
             return None, None, None
         normal  /= n_mag
         binormal = np.cross(tangent, normal)
 
-        thetas = np.linspace(0.0, 2.0 * np.pi, n_pts)
-        ring_x = pos[0] + radius * (np.cos(thetas) * normal[0] + np.sin(thetas) * binormal[0])
-        ring_y = pos[1] + radius * (np.cos(thetas) * normal[1] + np.sin(thetas) * binormal[1])
-        ring_z = pos[2] + radius * (np.cos(thetas) * normal[2] + np.sin(thetas) * binormal[2])
+        thetas  = np.linspace(0.0, 2.0 * np.pi, n_pts)
+        ring_x  = pos[0] + radius * (np.cos(thetas) * normal[0] + np.sin(thetas) * binormal[0])
+        ring_y  = pos[1] + radius * (np.cos(thetas) * normal[1] + np.sin(thetas) * binormal[1])
+        ring_z  = pos[2] + radius * (np.cos(thetas) * normal[2] + np.sin(thetas) * binormal[2])
         return ring_x, ring_y, ring_z
 
-    def _draw_sphere_marker(
+    # ------------------------------------------------------------------ #
+    #  Glow sphere — well-head / TD markers                                 #
+    # ------------------------------------------------------------------ #
+
+    def _draw_glow_sphere(
         self,
         ax,
         cx: float, cy: float, cz: float,
         radius: float,
         color: str,
+        glow_color: str = "#FFFFFF",
         alpha: float = 1.0,
-        n_lat: int = 10,
-        n_lon: int = 12,
+        n_lat: int = 12,
+        n_lon: int = 16,
     ) -> None:
-        """Draw a small sphere at well-head / TD positions for a professional look."""
+        """Sphere with a larger translucent halo for a professional 'glow' look."""
+        # Halo pass (large, very transparent)
         u = np.linspace(0.0, np.pi, n_lat)
         v = np.linspace(0.0, 2.0 * np.pi, n_lon)
+        r_halo = radius * 1.65
+        sx = cx + r_halo * np.outer(np.sin(u), np.cos(v))
+        sy = cy + r_halo * np.outer(np.sin(u), np.sin(v))
+        sz = cz + r_halo * np.outer(np.cos(u), np.ones(n_lon))
+        ax.plot_surface(sx, sy, sz,
+                        color=glow_color, alpha=0.10,
+                        linewidth=0, antialiased=True,
+                        shade=False, zorder=14)
+        # Core sphere
         sx = cx + radius * np.outer(np.sin(u), np.cos(v))
         sy = cy + radius * np.outer(np.sin(u), np.sin(v))
         sz = cz + radius * np.outer(np.cos(u), np.ones(n_lon))
-        ax.plot_surface(sx, sy, sz, color=color, alpha=alpha,
-                        linewidth=0, antialiased=True, shade=True, zorder=15)
+        ax.plot_surface(sx, sy, sz,
+                        color=color, alpha=alpha,
+                        linewidth=0, antialiased=True,
+                        shade=True, zorder=16)
+
+    # ------------------------------------------------------------------ #
+    #  Casing shoe marker                                                    #
+    # ------------------------------------------------------------------ #
+
+    def _draw_casing_shoe(
+        self,
+        ax,
+        cx: float, cy: float, cz: float,
+        radius: float,
+        font_color: str,
+    ) -> None:
+        """Draw a casing shoe as a double-ring band."""
+        for r_scale, lw, col in ((1.0, 1.2, "#A0C0E0"), (0.82, 0.7, "#6090B0")):
+            ring_x, ring_y, ring_z = self._build_ring_geometry(
+                np.array([cx, cx, cx]),
+                np.array([cy, cy, cy]),
+                np.array([cz - 0.5, cz, cz + 0.5]),
+                1, radius * r_scale, n_pts=32
+            )
+            if ring_x is not None:
+                ax.plot(ring_x, ring_y, ring_z,
+                        color=col, linewidth=lw, alpha=0.80, zorder=12)
+        ax.text(cx + radius * 1.4, cy, cz,
+                " ◈ Casing",
+                color="#8AB8D8", fontsize=6.5, fontfamily="monospace",
+                alpha=0.75, zorder=18)
+
+    # ------------------------------------------------------------------ #
+    #  Perforation cluster marker                                             #
+    # ------------------------------------------------------------------ #
+
+    def _draw_perforation(
+        self,
+        ax,
+        cx: float, cy: float, cz: float,
+        radius: float,
+    ) -> None:
+        """Perforation shown as a star-shaped scatter burst."""
+        n_perf = 6
+        thetas = np.linspace(0, 2 * np.pi, n_perf, endpoint=False)
+        for theta in thetas:
+            dx = radius * 0.60 * np.cos(theta)
+            dy = radius * 0.60 * np.sin(theta)
+            ax.scatter(
+                cx + dx, cy + dy, cz,
+                c="#FF4444", s=9, alpha=0.85,
+                edgecolors="#FF8888", linewidths=0.4, zorder=18,
+            )
+        ax.scatter(cx, cy, cz, c="#FF2222", s=16,
+                   alpha=0.90, edgecolors="#FFAAAA",
+                   linewidths=0.6, marker="*", zorder=19)
+
+    # ------------------------------------------------------------------ #
+    #  Pay zone band                                                          #
+    # ------------------------------------------------------------------ #
+
+    def _draw_pay_zone_band(
+        self,
+        ax,
+        x_seg: np.ndarray,
+        y_seg: np.ndarray,
+        z_seg: np.ndarray,
+        radius: float,
+    ) -> None:
+        """Translucent green band highlighting the pay zone interval."""
+        if len(x_seg) < 2:
+            return
+        from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+        verts = []
+        n_pts = 20
+        thetas = np.linspace(0, 2 * np.pi, n_pts)
+        # Build cylinder caps at start and end of pay segment
+        for idx in range(len(x_seg) - 1):
+            cx, cy, cz = x_seg[idx], y_seg[idx], z_seg[idx]
+            nx, ny, nz = x_seg[idx + 1], y_seg[idx + 1], z_seg[idx + 1]
+            # simple ring quad strip approximation
+            ax.plot(
+                [cx, nx], [cy, ny], [cz, nz],
+                color="#22FF88", linewidth=radius * 0.6,
+                alpha=0.18, solid_capstyle="butt",
+            )
+        ax.text(
+            x_seg[0], y_seg[0], z_seg[0],
+            " ▶ Net Pay",
+            color="#44FF99", fontsize=6.5, fontfamily="monospace",
+            alpha=0.80, zorder=18,
+        )
 
     # ------------------------------------------------------------------ #
     #  Canvas management                                                    #
@@ -963,7 +1277,10 @@ class Well3DWorkspaceController(QtCore.QObject):
         label = QtWidgets.QLabel(text, self._plot_host)
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
-        label.setStyleSheet("color:#C9DDF2;font-size:12px;font-weight:600;padding:20px;")
+        label.setStyleSheet(
+            "color:#5A8FBE;font-size:12px;font-weight:600;"
+            "font-family:monospace;padding:24px;letter-spacing:0.5px;"
+        )
         layout.addWidget(label, 1)
         self.figure = None
         self.axes   = None
@@ -1015,7 +1332,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             if self._measure_anchor is None:
                 self._measure_anchor = pick
                 self._set_status(
-                    f"3D Well Visualization  |  Measure start fixed at {pick.well_name} MD {pick.md:,.1f} m"
+                    f"3D Well Visualization  |  Measure start: {pick.well_name} MD {pick.md:,.1f} m"
                 )
                 return
             dx = pick.x   - self._measure_anchor.x
@@ -1096,8 +1413,8 @@ class Well3DWorkspaceController(QtCore.QObject):
         trajectory: pd.DataFrame,
         z_vals: np.ndarray,
     ) -> None:
-        step   = max(1, len(trajectory) // 1500)
-        sampled = trajectory.iloc[::step].reset_index(drop=True)
+        step     = max(1, len(trajectory) // 1500)
+        sampled  = trajectory.iloc[::step].reset_index(drop=True)
         sampled_z = z_vals[::step]
         self._pick_points["x"] = np.concatenate(
             [self._pick_points["x"], sampled["x"].to_numpy(dtype=float)]
@@ -1115,17 +1432,15 @@ class Well3DWorkspaceController(QtCore.QObject):
             values = {}
             for key in property_keys:
                 values[key] = float(row[key]) if key in row and pd.notna(row[key]) else None
-            self._pick_points["meta"].append(
-                {
-                    "well_name": well_name,
-                    "index":     row_idx,
-                    "md":        float(row["md"]),
-                    "tvd":       float(row["tvd"]),
-                    "x":         float(row["x"]),
-                    "y":         float(row["y"]),
-                    "values":    values,
-                }
-            )
+            self._pick_points["meta"].append({
+                "well_name": well_name,
+                "index":     row_idx,
+                "md":        float(row["md"]),
+                "tvd":       float(row["tvd"]),
+                "x":         float(row["x"]),
+                "y":         float(row["y"]),
+                "values":    values,
+            })
 
     # ------------------------------------------------------------------ #
     #  File I/O                                                             #
@@ -1137,8 +1452,9 @@ class Well3DWorkspaceController(QtCore.QObject):
         try:
             Path(file_path).parent.mkdir(parents=True, exist_ok=True)
             self.figure.savefig(
-                file_path, dpi=220, bbox_inches="tight",
-                facecolor=self.figure.get_facecolor()
+                file_path, dpi=240, bbox_inches="tight",
+                facecolor=self.figure.get_facecolor(),
+                edgecolor="none",
             )
             QtWidgets.QMessageBox.information(
                 self.window, "3D Well Export",
@@ -1204,18 +1520,13 @@ class Well3DWorkspaceController(QtCore.QObject):
     # ------------------------------------------------------------------ #
 
     def _on_vis_mode_clicked(self, btn_name: str) -> None:
-        """Sync cmbTrajStyle with the vis-mode panel button that was clicked."""
-        vis_map = getattr(self, "_vis_mode_map", {})
+        vis_map    = getattr(self, "_vis_mode_map", {})
         style_text = vis_map.get(btn_name, "Tube / Cylinder")
 
-        # Special handling: ColorTube vs Radius – both map to 'Tube / Cylinder'
-        # but ColorTube keeps chkShowLogRibbon on, Radius disables it.
         if btn_name == "btnVisModeRadius":
             chk = self._widget("chkShowLogRibbon")
             if chk is not None:
-                chk.blockSignals(True)
-                chk.setChecked(False)
-                chk.blockSignals(False)
+                chk.blockSignals(True);  chk.setChecked(False);  chk.blockSignals(False)
         elif btn_name in ("btnVisModeColorTube", "btnVisModeColorOnly"):
             chk = self._widget("chkShowLogRibbon")
             if chk is not None:
@@ -1225,11 +1536,8 @@ class Well3DWorkspaceController(QtCore.QObject):
         elif btn_name == "btnVisModeRibbon":
             chk = self._widget("chkShowLogRibbon")
             if chk is not None:
-                chk.blockSignals(True)
-                chk.setChecked(True)
-                chk.blockSignals(False)
+                chk.blockSignals(True);  chk.setChecked(True);  chk.blockSignals(False)
         elif btn_name == "btnVisModePoints":
-            # Points mode – use scatter only (disable ribbon tube look)
             style_text = "Dotted / Dashed"
         elif btn_name == "btnVisModeTrack":
             style_text = "Line"
@@ -1238,17 +1546,14 @@ class Well3DWorkspaceController(QtCore.QObject):
         if combo is not None:
             idx = combo.findText(style_text)
             if idx >= 0:
-                combo.blockSignals(True)
-                combo.setCurrentIndex(idx)
-                combo.blockSignals(False)
+                combo.blockSignals(True);  combo.setCurrentIndex(idx);  combo.blockSignals(False)
         self.refresh()
 
     # ------------------------------------------------------------------ #
-    #  Custom range handler                                                  #
+    #  Custom range dialog                                                   #
     # ------------------------------------------------------------------ #
 
     def _on_custom_range(self) -> None:
-        """Open a simple dialog to enter custom min / max for the colormap."""
         spin_min = self._widget("spinCmapMin")
         spin_max = self._widget("spinCmapMax")
         if spin_min is None or spin_max is None:
@@ -1258,28 +1563,38 @@ class Well3DWorkspaceController(QtCore.QObject):
 
         dialog = QtWidgets.QDialog(self.window)
         dialog.setWindowTitle("Custom Colormap Range")
-        dialog.setFixedWidth(280)
+        dialog.setFixedWidth(290)
+        dialog.setStyleSheet(
+            "QDialog{background:#0D1E38;border:1px solid #1E4070;}"
+            "QLabel{color:#C0D8F0;font-family:monospace;font-size:11px;}"
+            "QDoubleSpinBox{background:#0A1828;color:#C0D8F0;border:1px solid #2A4A6A;"
+            "border-radius:4px;padding:4px;font-family:monospace;}"
+            "QPushButton{border-radius:4px;padding:5px 16px;font-family:monospace;}"
+        )
         layout = QtWidgets.QFormLayout(dialog)
-        layout.setContentsMargins(14, 14, 14, 10)
-        layout.setVerticalSpacing(8)
+        layout.setContentsMargins(16, 16, 16, 12)
+        layout.setVerticalSpacing(10)
 
         from PyQt5.QtWidgets import QDoubleSpinBox
         sb_min = QDoubleSpinBox(dialog)
         sb_min.setRange(-1e9, 1e9)
-        sb_min.setDecimals(3)
+        sb_min.setDecimals(4)
         sb_min.setValue(current_min)
         sb_max = QDoubleSpinBox(dialog)
         sb_max.setRange(-1e9, 1e9)
-        sb_max.setDecimals(3)
+        sb_max.setDecimals(4)
         sb_max.setValue(current_max)
         layout.addRow("Min:", sb_min)
         layout.addRow("Max:", sb_max)
 
-        btn_row = QtWidgets.QHBoxLayout()
+        btn_row    = QtWidgets.QHBoxLayout()
         btn_ok     = QtWidgets.QPushButton("Apply")
         btn_cancel = QtWidgets.QPushButton("Cancel")
         btn_ok.setStyleSheet(
-            "background:#1B6CA8;color:#FFF;border:none;border-radius:4px;padding:5px 14px;"
+            "background:#1B6CA8;color:#FFF;border:1px solid #2A90D0;"
+        )
+        btn_cancel.setStyleSheet(
+            "background:#1A2A3A;color:#8AADCC;border:1px solid #2A4A6A;"
         )
         btn_ok.clicked.connect(dialog.accept)
         btn_cancel.clicked.connect(dialog.reject)
@@ -1293,12 +1608,8 @@ class Well3DWorkspaceController(QtCore.QObject):
             new_max = sb_max.value()
             if new_max <= new_min:
                 new_max = new_min + 1.0
-            spin_min.blockSignals(True)
-            spin_max.blockSignals(True)
-            spin_min.setValue(new_min)
-            spin_max.setValue(new_max)
-            spin_min.blockSignals(False)
-            spin_max.blockSignals(False)
+            for sp, val in ((spin_min, new_min), (spin_max, new_max)):
+                sp.blockSignals(True);  sp.setValue(val);  sp.blockSignals(False)
             self.refresh()
 
     def _update_mode_status(self) -> None:
@@ -1375,44 +1686,52 @@ class Well3DWorkspaceController(QtCore.QObject):
         half   = max(span / max(zoom, 0.1) / 2.0, 1.0)
         ax.set_xlim(center[0] - half, center[0] + half)
         ax.set_ylim(center[1] - half, center[1] + half)
-        ax.set_zlim(center[2] + half, center[2] - half)
+        ax.set_zlim(center[2] + half * 1.15, center[2] - half * 0.05)
 
     def _style_axes(self, ax, font_color: str, grid_color: str) -> None:
         show_grid        = self._is_checked("chkShowReferenceGrid", True)
-        show_axes        = self._is_checked("chkShowAxes", True)
+        show_axes_flag   = self._is_checked("chkShowAxes", True)
         show_depth_scale = self._is_checked("chkShowDepthScale", True)
-        ax.grid(show_grid, alpha=0.20 if show_grid else 0.0)
+
+        ax.grid(show_grid, alpha=0.15 if show_grid else 0.0, linestyle=":")
 
         for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
             try:
                 axis.label.set_color(font_color)
-                axis.set_pane_color((0.10, 0.16, 0.26, 0.06))
-                axis._axinfo["grid"]["color"]  = grid_color
-                axis._axinfo["tick"]["color"]  = font_color
+                axis.label.set_fontfamily("monospace")
+                axis.set_pane_color((0.06, 0.12, 0.22, 0.04))
+                axis._axinfo["grid"]["color"]     = grid_color
+                axis._axinfo["grid"]["linewidth"] = 0.4
+                axis._axinfo["tick"]["color"]     = font_color
+                axis._axinfo["axisline"]["color"] = grid_color
             except Exception:
                 pass
 
-        if not show_axes:
+        if not show_axes_flag:
             ax.set_axis_off()
             return
 
-        ax.tick_params(colors=font_color, labelsize=7)
+        ax.tick_params(colors=font_color, labelsize=7.5, length=2.5, width=0.6)
+        for lbl in ax.get_xticklabels() + ax.get_yticklabels() + ax.get_zticklabels():
+            lbl.set_fontfamily("monospace")
+            lbl.set_fontsize(7)
+
         if not show_depth_scale:
             ax.set_zticklabels([])
 
         if self._is_checked("chkShowCompass", False):
-            ax.text2D(0.03, 0.96, "N", transform=ax.transAxes,
-                      color=font_color, fontsize=10, weight="bold")
+            ax.text2D(0.03, 0.96, "▲ N",
+                      transform=ax.transAxes,
+                      color=font_color, fontsize=10, fontweight="bold",
+                      fontfamily="monospace")
 
     def _draw_cross_section(
         self, ax, trajectories: dict[str, pd.DataFrame], vertical_exag: float
     ) -> None:
         cross_section = self._current_text("cmbCrossSection", "None")
         if cross_section == "None":
-            self._set_text(
-                "lblCrossSectionVal",
-                f"{self._value('sliderCrossSection', 50)}%"
-            )
+            self._set_text("lblCrossSectionVal",
+                           f"{self._value('sliderCrossSection', 50)}%")
             return
 
         stacked = np.vstack([
@@ -1448,10 +1767,16 @@ class Well3DWorkspaceController(QtCore.QObject):
             xx, yy = np.meshgrid(x, y)
             zz = np.full_like(xx, zv)
 
-        ax.plot_surface(xx, yy, zz, color="#7EC8E3", alpha=0.10, linewidth=0)
+        ax.plot_surface(xx, yy, zz,
+                        color="#5AAED0", alpha=0.08,
+                        linewidth=0, antialiased=False)
+        # cross-section edge outline
+        ax.plot_wireframe(xx, yy, zz,
+                          color="#3A7EA8", alpha=0.30,
+                          linewidth=0.6, rstride=1, cstride=1)
 
     # ------------------------------------------------------------------ #
-    #  Well data access Panel                                            #
+    #  Well data access                                                     #
     # ------------------------------------------------------------------ #
 
     def _widget(self, name: str):
@@ -1499,8 +1824,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             data_service = self._data_service()
             current      = (
                 getattr(data_service, "_current_well", None)
-                if data_service is not None
-                else None
+                if data_service is not None else None
             )
             if current:
                 previous = [current]
@@ -1560,8 +1884,8 @@ class Well3DWorkspaceController(QtCore.QObject):
         slider_max = self._widget("sliderDepthMax")
         if slider_min is None or slider_max is None:
             return
-        lower = int(np.floor(min_tvd))
-        upper = int(np.ceil(max_tvd))
+        lower   = int(np.floor(min_tvd))
+        upper   = int(np.ceil(max_tvd))
         if upper <= lower:
             upper = lower + 1
         cur_min = max(lower, min(slider_min.value(), upper))
@@ -1730,7 +2054,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             trajectory["tvd"] -= float(trajectory["tvd"].iloc[0])
             notes.append(f"TVD from '{tvd_col}'")
         elif "deviation" in trajectory:
-            deviation_rad    = np.radians(trajectory["deviation"].fillna(0.0).to_numpy())
+            deviation_rad     = np.radians(trajectory["deviation"].fillna(0.0).to_numpy())
             trajectory["tvd"] = np.cumsum(delta_md * np.cos(deviation_rad))
             notes.append(f"TVD estimated from '{dev_col}'")
         else:
@@ -1753,7 +2077,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             lateral       = delta_md * np.sin(deviation_rad)
             trajectory["x"] = np.cumsum(lateral * np.sin(azimuth_rad))
             trajectory["y"] = np.cumsum(lateral * np.cos(azimuth_rad))
-            notes.append(f"Lateral offsets estimated from '{dev_col}' and '{azi_col}'")
+            notes.append(f"Lateral offsets from '{dev_col}' and '{azi_col}'")
         else:
             trajectory["x"] = 0.0
             trajectory["y"] = 0.0
@@ -1898,12 +2222,12 @@ class Well3DWorkspaceController(QtCore.QObject):
         if not np.isfinite(tvd):
             return "--"
         if tvd < 500:
-            return "Shallow interval"
+            return "Shallow  (<500 m)"
         if tvd < 1500:
-            return "Intermediate interval"
+            return "Intermediate  (500–1500 m)"
         if tvd < 3000:
-            return "Reservoir interval"
-        return "Deep interval"
+            return "Reservoir  (1500–3000 m)"
+        return "Deep  (>3000 m)"
 
     # ------------------------------------------------------------------ #
     #  Style helpers                                                         #
@@ -1916,24 +2240,36 @@ class Well3DWorkspaceController(QtCore.QObject):
             return "-", 1.6
         if text == "Dotted / Dashed":
             return "--", 0.9
-        return "-", 1.35
+        return "-", 1.4
 
     def _well_palette(self, index: int) -> str:
-        palette = ["#4AA3DF", "#7E8BFF", "#4FD1C5", "#F5B661",
-                   "#FF6B6B", "#95D26A", "#9B7BFF"]
+        # Carefully chosen palette with good contrast on dark backgrounds
+        palette = [
+            "#4DC8E8",   # ice blue
+            "#85D96B",   # soft green
+            "#F5A623",   # amber
+            "#E86262",   # warm red
+            "#B57BFF",   # lavender
+            "#F5E642",   # yellow
+            "#FF8A3D",   # orange
+            "#4FD1C5",   # teal
+            "#C0A080",   # sandy
+        ]
         return palette[index % len(palette)]
 
     def _matplotlib_cmap_name(self, text: str) -> str:
         mapping = {
-            "Rainbow":       "rainbow",
-            "Jet":           "jet",
-            "Viridis":       "viridis",
-            "Plasma":        "plasma",
-            "Inferno":       "inferno",
-            "Hot":           "hot",
-            "RdYlGn":        "RdYlGn",
-            "Seismic":       "seismic",
-            "Petro (Custom)":"turbo",
+            "Rainbow":        "rainbow",
+            "Jet":            "jet",
+            "Viridis":        "viridis",
+            "Plasma":         "plasma",
+            "Inferno":        "inferno",
+            "Hot":            "hot",
+            "RdYlGn":         "RdYlGn",
+            "Seismic":        "seismic",
+            "Petro (Custom)": "turbo",
+            "Magma":          "magma",
+            "Cividis":        "cividis",
         }
         cmap = mapping.get(text, "viridis")
         if self._is_checked("chkInvertCmap", False):
@@ -1949,17 +2285,18 @@ class Well3DWorkspaceController(QtCore.QObject):
 
     def _background_palette(self, mode: str) -> tuple[str, str, str, str]:
         if mode == "light":
-            return "#F8FBFE", "#FFFFFF", "#163B61", "#BFD2E2"
+            return "#EEF4FB", "#F8FCFF", "#112233", "#B0C8DE"
         if mode == "gradient":
-            return "#0B1830", "#122742", "#D8E6F5", "#4A637A"
-        return "#07101E", "#07101E", "#DCEBFA", "#385066"
+            return "#09152A", "#0F1E36", "#C8DCF0", "#3E5A72"
+        # dark (default) — deep navy
+        return "#050D1A", "#050D1A", "#C8DCF0", "#263D55"
 
     def _camera_status_text(self) -> str:
         return (
             f"{self._projection_label}  |  "
-            f"Az: {self._value('sliderAzimuth', 45)}°  "
-            f"El: {self._value('sliderElevation', 30)}°  |  "
-            f"Zoom: {self._value('sliderZoom', 100)}%"
+            f"Az {self._value('sliderAzimuth', 45)}°  "
+            f"El {self._value('sliderElevation', 30)}°  |  "
+            f"Zoom {self._value('sliderZoom', 100)}%"
         )
 
     def _update_status_renderer(self) -> None:
@@ -1969,29 +2306,26 @@ class Well3DWorkspaceController(QtCore.QObject):
         shadows  = " + Shadows" if self._is_checked("chkShadows", False) else ""
         self._set_text(
             "lblStatusRenderer",
-            f"Renderer: Matplotlib 3D  |  Tube Engine  |  "
-            f"Light {ambient}/{diffuse}/{specular}{shadows}",
+            f"Renderer: Matplotlib 3D  |  Tube Engine  |  Phong {ambient}/{diffuse}/{specular}{shadows}",
         )
 
     def _update_slider_labels(self) -> None:
-        self._set_text("lblDepthMinVal",    str(self._value("sliderDepthMin", 0)))
-        self._set_text("lblDepthMaxVal",    str(self._value("sliderDepthMax", 5000)))
-        self._set_text("lblVExagVal",       f"{self._value('sliderVExag', 1)}x")
-        self._set_text("lblCrossSectionVal",f"{self._value('sliderCrossSection', 50)}%")
-        # Tube radius shown in "pixels" to match screenshot label
-        self._set_text("lblTrajRadiusVal",  f"{self._value('sliderTrajRadius', 5)} px")
-        # Opacity slider in new UI represents *transparency* – invert for display
-        opacity_pct = self._value('sliderOpacity', 100)
+        self._set_text("lblDepthMinVal",     str(self._value("sliderDepthMin", 0)))
+        self._set_text("lblDepthMaxVal",     str(self._value("sliderDepthMax", 5000)))
+        self._set_text("lblVExagVal",        f"{self._value('sliderVExag', 1)}x")
+        self._set_text("lblCrossSectionVal", f"{self._value('sliderCrossSection', 50)}%")
+        self._set_text("lblTrajRadiusVal",   f"{self._value('sliderTrajRadius', 5)} px")
+        opacity_pct      = self._value("sliderOpacity", 100)
         transparency_pct = max(0, 100 - opacity_pct)
-        self._set_text("lblOpacityVal",     f"{transparency_pct}%")
-        self._set_text("lblAzimuthVal",     f"{self._value('sliderAzimuth', 45)}°")
-        self._set_text("lblElevationVal",   f"{self._value('sliderElevation', 30)}°")
-        self._set_text("lblFOVVal",         f"{self._value('sliderFOV', 60)}°")
-        self._set_text("lblZoomVal",        f"{self._value('sliderZoom', 100)}%")
-        self._set_text("lblAmbientVal",     f"{self._value('sliderAmbient', 40)}%")
-        self._set_text("lblDiffuseVal",     f"{self._value('sliderDiffuse', 70)}%")
-        self._set_text("lblSpecularVal",    f"{self._value('sliderSpecular', 25)}%")
-        self._set_text("lblStatusCamera",   self._camera_status_text())
+        self._set_text("lblOpacityVal",      f"{transparency_pct}%")
+        self._set_text("lblAzimuthVal",      f"{self._value('sliderAzimuth', 45)}°")
+        self._set_text("lblElevationVal",    f"{self._value('sliderElevation', 30)}°")
+        self._set_text("lblFOVVal",          f"{self._value('sliderFOV', 60)}°")
+        self._set_text("lblZoomVal",         f"{self._value('sliderZoom', 100)}%")
+        self._set_text("lblAmbientVal",      f"{self._value('sliderAmbient', 40)}%")
+        self._set_text("lblDiffuseVal",      f"{self._value('sliderDiffuse', 70)}%")
+        self._set_text("lblSpecularVal",     f"{self._value('sliderSpecular', 25)}%")
+        self._set_text("lblStatusCamera",    self._camera_status_text())
 
     def _advance_animation(self) -> None:
         slider     = self._widget("sliderDepthMax")
@@ -2006,30 +2340,30 @@ class Well3DWorkspaceController(QtCore.QObject):
         slider.setValue(next_value)
 
     # ------------------------------------------------------------------ #
-    #  Status / label helpers                                                #
+    #  Status / label helpers                                               #
     # ------------------------------------------------------------------ #
 
     def _reset_pick_labels(self) -> None:
         for name, text in (
-            ("lblPickWell",       "--"),
-            ("lblPickMD",         "--"),
-            ("lblPickTVD",        "--"),
-            ("lblPickTVDSS",      "--"),
-            ("lblPickFormation",  "--"),
-            ("lblPickGR",         "--  API"),
-            ("lblPickRHOB",       "--  g/cc"),
-            ("lblPickNPHI",       "--  v/v"),
-            ("lblPickVsh",        "--  v/v"),
-            ("lblPickPHIE",       "--  v/v"),
-            ("lblPickSw",         "--  v/v"),
-            ("lblPickK",          "--  mD"),
-            ("lblPickNetPay",     "--"),
-            ("lblCursorX",        "X: --"),
-            ("lblCursorY",        "Y: --"),
-            ("lblCursorTVD",      "TVD (m): --"),
-            ("lblCursorMD",       "MD (m): --"),
-            ("lblPickedWell",     "--"),
-            ("lblPickedFormation","--"),
+            ("lblPickWell",        "--"),
+            ("lblPickMD",          "--"),
+            ("lblPickTVD",         "--"),
+            ("lblPickTVDSS",       "--"),
+            ("lblPickFormation",   "--"),
+            ("lblPickGR",          "--  API"),
+            ("lblPickRHOB",        "--  g/cc"),
+            ("lblPickNPHI",        "--  v/v"),
+            ("lblPickVsh",         "--  v/v"),
+            ("lblPickPHIE",        "--  v/v"),
+            ("lblPickSw",          "--  v/v"),
+            ("lblPickK",           "--  mD"),
+            ("lblPickNetPay",      "--"),
+            ("lblCursorX",         "X: --"),
+            ("lblCursorY",         "Y: --"),
+            ("lblCursorTVD",       "TVD (m): --"),
+            ("lblCursorMD",        "MD (m): --"),
+            ("lblPickedWell",      "--"),
+            ("lblPickedFormation", "--"),
         ):
             self._set_text(name, text)
 
