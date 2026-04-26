@@ -2006,7 +2006,7 @@ class Well3DWorkspaceController(QtCore.QObject):
         slider.setValue(next_value)
 
     # ------------------------------------------------------------------ #
-    #  Status / label helpers                                               #
+    #  Status / label helpers                                                #
     # ------------------------------------------------------------------ #
 
     def _reset_pick_labels(self) -> None:
