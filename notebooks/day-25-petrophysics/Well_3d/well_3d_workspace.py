@@ -22,7 +22,7 @@ class PickResult:
     y: float
     values: dict[str, float | None]
 
-
+ 
 class Well3DWorkspaceController(QtCore.QObject):
     def __init__(self, window: QtWidgets.QMainWindow, page: QtWidgets.QWidget):
         super().__init__(page)
