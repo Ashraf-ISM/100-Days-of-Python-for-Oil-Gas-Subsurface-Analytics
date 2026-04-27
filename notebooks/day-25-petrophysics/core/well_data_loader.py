@@ -8,7 +8,7 @@ from core.data_model import Well
 
 def _read_las(path: str):
     try:
-        import lasio  # type: ignore
+        import lasio  # type: ignore 
     except Exception:  # noqa: BLE001
         return None
     las = lasio.read(path)
