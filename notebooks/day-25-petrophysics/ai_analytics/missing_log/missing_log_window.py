@@ -11,7 +11,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
     Handles data loading from PetroARX project or external files,
     and manages the ML prediction workflow.
     """
-    def __init__(self, ui_dir: Path, parent=None):
+    def __init__(self, ui_dir: Path, parent=None): 
         super().__init__(parent)
         self.ui_dir = ui_dir
         ui_path = ui_dir / "MissingLogPrediction.ui"
