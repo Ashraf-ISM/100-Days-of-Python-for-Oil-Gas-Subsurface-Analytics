@@ -750,93 +750,32 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="chkGR">
-              <property name="text">
-               <string>GR - Gamma Ray (API)</string>
-              </property>
-              <property name="checked">
+             <widget class="QScrollArea" name="scrollFeatures">
+              <property name="widgetResizable">
                <bool>true</bool>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkNPHI">
-              <property name="text">
-               <string>NPHI - Neutron Porosity (V/V)</string>
+              <property name="styleSheet">
+               <string notr="true">QScrollArea { border: none; background: transparent; }</string>
               </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkDT">
-              <property name="text">
-               <string>DT - Sonic (µs/ft)</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkRT">
-              <property name="text">
-               <string>RT - Resistivity (ohm.m)</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkCALI">
-              <property name="text">
-               <string>CALI - Caliper (in)</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkPE">
-              <property name="text">
-               <string>PE - Photoelectric Factor (b/e)</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkSP">
-              <property name="text">
-               <string>SP - Spontaneous Potential (mV)</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkMDEPTH">
-              <property name="text">
-               <string>MDEPTH - Measured Depth (m)</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="chkDELR">
-              <property name="text">
-               <string>RILD - Deep Resistivity (ohm.m)</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
+              <widget class="QWidget" name="scrollFeaturesContent">
+               <layout class="QVBoxLayout" name="lytFeatures">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+               </layout>
+              </widget>
              </widget>
             </item>
             <item>
