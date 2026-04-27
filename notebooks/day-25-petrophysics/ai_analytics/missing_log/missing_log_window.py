@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from PyQt5 import QtWidgets, QtCore, QtGui, uic
 import pandas as pd
+from .prediction_engine import MissingLogEngine
 
 class MissingLogPredictionWindow(QtWidgets.QWidget):
     """
@@ -19,6 +20,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         self.setWindowTitle("PetroARX AI Analytics — Missing Log Prediction")
         self._data_service = None
         self._df = None
+        self._engine = None
         
         self._setup_connections()
         self._init_ui_state()
@@ -59,6 +61,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
             return
             
         self._df = well.data.copy()
+        self._engine = MissingLogEngine(self._df)
         well_name = well.name
         self._update_data_display(f"Project Well: {well_name}")
         self._populate_curve_lists()
@@ -75,6 +78,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
             from core.well_data_loader import load_well
             well, msg = load_well(file_path, replace_nulls=True)
             self._df = well.data
+            self._engine = MissingLogEngine(self._df)
             self._update_data_display(f"External File: {Path(file_path).name}")
             self._populate_curve_lists()
             QtWidgets.QMessageBox.information(self, "Import Success", f"Successfully loaded data from {Path(file_path).name}")
@@ -83,14 +87,16 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
 
     def _update_data_display(self, source_name: str):
         """Update UI labels with data statistics."""
-        if self._df is None or self._df.empty:
+        if self._df is None or self._df.empty or self._engine is None:
             return
             
-        count = len(self._df)
-        if hasattr(self, "lblDataPtsVal"): self.lblDataPtsVal.setText(f"{count:,}")
+        cur_log = self.cboTargetLog.currentText()
+        stats = self._engine.get_log_statistics(cur_log)
         
-        # Estimate missing for standard curves if possible
-        # This is a placeholder for actual ML-ready stats
+        if stats:
+            if hasattr(self, "lblDataPtsVal"): self.lblDataPtsVal.setText(f"{stats['total']:,}")
+            if hasattr(self, "lblMissingVal"): self.lblMissingVal.setText(f"{stats['missing']:,} ({stats['missing_pct']:.1f}%)")
+        
         depth_col = next((c for c in self._df.columns if c.upper() in ["DEPTH", "DEPT", "MD"]), None)
         if depth_col is not None:
             d_min = self._df[depth_col].min()
