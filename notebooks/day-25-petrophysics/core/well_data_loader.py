@@ -19,7 +19,7 @@ def _read_las(path: str):
         "WELL": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.well}, 
         "PARAM": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.params}, 
     }
-    log_info = {
+    log_info = { 
         curve.mnemonic: {
             "unit": curve.unit,
             "type": getattr(curve, "curve_type", "") or "",
