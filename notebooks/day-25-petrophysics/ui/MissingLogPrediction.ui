@@ -1,0 +1,2292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MissingLogPrediction</class>
+ <widget class="QWidget" name="MissingLogPrediction">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1440</width><height>900</height></rect>
+  </property>
+  <property name="windowTitle"><string>Missing Log Prediction</string></property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ====================== GLOBAL ====================== */
+QWidget { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px; }
+QWidget#MissingLogPrediction { background-color: #EEF2F7; }
+
+/* ====================== FRAMES ====================== */
+QFrame#headerFrame {
+    background-color: #FFFFFF;
+    border-bottom: 2px solid #E2E8F0;
+    min-height: 60px; max-height: 60px;
+}
+QFrame#stepsFrame {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    min-height: 68px; max-height: 68px;
+}
+QFrame#bottomBar {
+    background-color: #FFFFFF;
+    border-top: 2px solid #E2E8F0;
+    min-height: 60px; max-height: 60px;
+}
+QFrame#contentArea { background-color: transparent; }
+QFrame#stepDivider {
+    background-color: #CBD5E1;
+    min-height: 2px; max-height: 2px;
+    min-width: 40px;
+}
+
+/* ====================== GROUPBOX ====================== */
+QGroupBox {
+    background-color: #FFFFFF;
+    border: 1px solid #DDE3EE;
+    border-radius: 10px;
+    margin-top: 18px;
+    padding: 10px 8px 8px 8px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding: 0 5px;
+    background-color: #FFFFFF;
+    color: #1E293B;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+/* ====================== LABELS ====================== */
+QLabel { color: #374151; background: transparent; }
+QLabel#lblPageTitle {
+    font-size: 20px; font-weight: 700; color: #1E293B;
+}
+QLabel#lblPageSub { font-size: 11px; color: #64748B; }
+QLabel#lblHelpBtn {
+    color: #2563EB; font-size: 11px; font-weight: 600;
+    padding: 4px 10px;
+    border: 1px solid #BFDBFE;
+    border-radius: 5px;
+    background-color: #EFF6FF;
+}
+
+/* Step circle - active */
+QLabel#stepCircleActive {
+    background-color: #2563EB; color: #FFFFFF;
+    border-radius: 14px; font-size: 12px; font-weight: 700;
+    min-width: 28px; max-width: 28px;
+    min-height: 28px; max-height: 28px;
+    qproperty-alignment: AlignCenter;
+}
+/* Step circle - inactive */
+QLabel#stepCircleInactive {
+    background-color: #CBD5E1; color: #FFFFFF;
+    border-radius: 14px; font-size: 12px; font-weight: 700;
+    min-width: 28px; max-width: 28px;
+    min-height: 28px; max-height: 28px;
+    qproperty-alignment: AlignCenter;
+}
+QLabel#stepTitleActive { font-size: 11px; font-weight: 700; color: #1E293B; }
+QLabel#stepTitleInactive { font-size: 11px; font-weight: 600; color: #94A3B8; }
+QLabel#stepSubActive { font-size: 10px; color: #2563EB; font-weight: 600; }
+QLabel#stepSubInactive { font-size: 10px; color: #CBD5E1; }
+
+/* Section number bubble */
+QLabel#secNum {
+    background-color: #2563EB; color: white;
+    border-radius: 10px; font-size: 10px; font-weight: 700;
+    min-width: 20px; max-width: 20px;
+    min-height: 20px; max-height: 20px;
+    qproperty-alignment: AlignCenter;
+}
+QLabel#secTitle { font-size: 11px; font-weight: 700; color: #1E293B; }
+QLabel#secSub { font-size: 10px; color: #64748B; }
+
+/* Metric labels */
+QLabel#metricValGreen { font-size: 26px; font-weight: 700; color: #10B981; }
+QLabel#metricValBlue  { font-size: 26px; font-weight: 700; color: #2563EB; }
+QLabel#metricValOrange{ font-size: 24px; font-weight: 700; color: #F59E0B; }
+QLabel#metricValSm    { font-size: 18px; font-weight: 700; color: #2563EB; }
+QLabel#metricValSmGreen{ font-size: 18px; font-weight: 700; color: #10B981; }
+QLabel#metricUnit     { font-size: 10px; color: #94A3B8; }
+QLabel#metricKey      { font-size: 11px; color: #64748B; font-weight: 600; }
+QLabel#metricVal      { font-size: 11px; color: #1E293B; font-weight: 700; }
+
+/* Status / Badge labels */
+QLabel#statusCompleted {
+    color: #10B981; font-size: 11px; font-weight: 700;
+}
+QLabel#badgeRed {
+    background-color: #FEF2F2; color: #DC2626;
+    border: 1px solid #FECACA; border-radius: 4px;
+    font-size: 10px; font-weight: 700; padding: 1px 6px;
+}
+QLabel#badgeGreen {
+    background-color: #F0FDF4; color: #059669;
+    border: 1px solid #BBF7D0; border-radius: 4px;
+    font-size: 10px; font-weight: 700; padding: 1px 6px;
+}
+QLabel#badgeBlue {
+    background-color: #EFF6FF; color: #1D4ED8;
+    border: 1px solid #BFDBFE; border-radius: 4px;
+    font-size: 10px; font-weight: 600; padding: 1px 6px;
+}
+QLabel#badgeOrange {
+    background-color: #FFFBEB; color: #D97706;
+    border: 1px solid #FDE68A; border-radius: 4px;
+    font-size: 10px; font-weight: 600; padding: 1px 6px;
+}
+QLabel#lblMissingCount {
+    color: #DC2626; font-size: 11px; font-weight: 600;
+}
+QLabel#lblDataPoints { font-size: 11px; color: #374151; }
+QLabel#lblDepthRange { font-size: 11px; color: #374151; }
+
+/* Pipeline steps */
+QLabel#pipelineStepNormal {
+    background-color: #F1F5F9; color: #475569;
+    border: 1px solid #CBD5E1; border-radius: 5px;
+    font-size: 10px; font-weight: 600; padding: 5px 8px;
+    qproperty-alignment: AlignCenter;
+}
+QLabel#pipelineStepActive {
+    background-color: #2563EB; color: #FFFFFF;
+    border-radius: 5px;
+    font-size: 10px; font-weight: 700; padding: 5px 8px;
+    qproperty-alignment: AlignCenter;
+}
+QLabel#pipelineArrow { color: #94A3B8; font-size: 14px; font-weight: 700; }
+
+/* SHAP bars */
+QLabel#shapBarBg {
+    background-color: #E2E8F0; border-radius: 3px;
+    min-height: 10px; max-height: 10px;
+}
+QLabel#shapBarFill {
+    background-color: #2563EB; border-radius: 3px;
+    min-height: 10px; max-height: 10px;
+}
+QLabel#shapBarNeg {
+    background-color: #F87171; border-radius: 3px;
+    min-height: 10px; max-height: 10px;
+}
+QLabel#shapLbl { font-size: 10px; color: #374151; }
+QLabel#shapVal { font-size: 10px; color: #64748B; font-weight: 600; }
+
+/* Well log track placeholder */
+QLabel#wellLogTrack {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    color: #94A3B8;
+    font-size: 10px;
+    qproperty-alignment: AlignCenter;
+}
+QLabel#wellLogHeader {
+    background-color: #1E293B; color: #FFFFFF;
+    font-size: 9px; font-weight: 700;
+    qproperty-alignment: AlignCenter;
+    padding: 3px;
+    border-radius: 3px;
+}
+QLabel#wellLogHeaderGR  { background-color: #374151; }
+QLabel#wellLogHeaderRHOB{ background-color: #1D4ED8; }
+
+/* Plot placeholder frames */
+QFrame#plotFrame {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    min-height: 140px;
+}
+QFrame#residualPlotFrame {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+}
+QFrame#histFrame {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+}
+
+/* Leaderboard */
+QFrame#lbRow1 { background-color: #FFFBEB; border-radius: 5px; padding: 2px; }
+QFrame#lbRowNormal { background-color: #FAFAFA; border-radius: 4px; }
+QLabel#lbRank1  { color: #F59E0B; font-weight: 800; font-size: 12px; }
+QLabel#lbRankN  { color: #94A3B8; font-weight: 600; font-size: 11px; }
+QLabel#lbModel  { color: #1E293B; font-size: 11px; font-weight: 600; }
+QLabel#lbScore  { color: #10B981; font-size: 11px; font-weight: 700; }
+QLabel#lbScoreN { color: #374151; font-size: 11px; }
+
+/* ====================== BUTTONS ====================== */
+QPushButton { border-radius: 6px; padding: 6px 14px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; }
+QPushButton#btnPrimary   { background-color: #2563EB; color: #FFFFFF; }
+QPushButton#btnPrimary:hover { background-color: #1D4ED8; }
+QPushButton#btnSuccess   { background-color: #10B981; color: #FFFFFF; }
+QPushButton#btnSuccess:hover { background-color: #059669; }
+QPushButton#btnOutline   { background-color: transparent; color: #2563EB; border: 1px solid #2563EB; }
+QPushButton#btnOutline:hover { background-color: #EFF6FF; }
+QPushButton#btnSecondary { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; }
+QPushButton#btnSecondary:hover { background-color: #F1F5F9; }
+QPushButton#btnPreview   { background-color: #2563EB; color: #FFFFFF; font-size: 12px; padding: 10px 22px; border-radius: 8px; }
+QPushButton#btnApply     { background-color: #1E3A8A; color: #FFFFFF; font-size: 12px; padding: 10px 22px; border-radius: 8px; }
+QPushButton#btnApply:hover { background-color: #1E40AF; }
+QPushButton#btnBack      { background-color: #F1F5F9; color: #374151; border: 1px solid #CBD5E1; font-size: 12px; padding: 10px 20px; border-radius: 8px; }
+QPushButton#btnReset     { background-color: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-size: 12px; padding: 10px 18px; border-radius: 8px; }
+QPushButton#btnExport    { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; font-size: 12px; padding: 10px 18px; border-radius: 8px; }
+QPushButton#btnAutoSel   { background-color: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+QPushButton#btnFeatEng   { background-color: #F0FDF4; color: #059669; border: 1px solid #BBF7D0; }
+QPushButton#btnViewLog   { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; font-size: 11px; padding: 4px 10px; }
+QPushButton#btnSaveModel { background-color: #2563EB; color: #FFFFFF; padding: 7px 12px; font-size: 11px; }
+QPushButton#btnLoadModel { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; padding: 7px 12px; font-size: 11px; }
+QPushButton#btnBatch     { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; padding: 7px 12px; font-size: 11px; }
+QPushButton#btnDeploy    { background-color: #10B981; color: #FFFFFF; padding: 7px 12px; font-size: 11px; }
+QPushButton#btnOptimize  { background-color: #7C3AED; color: #FFFFFF; padding: 5px 12px; font-size: 11px; }
+QPushButton#btnViewResults{ background-color: #F0FDF4; color: #059669; border: 1px solid #BBF7D0; padding: 5px 12px; font-size: 11px; }
+QPushButton#btnViewDrift { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; padding: 5px 12px; font-size: 11px; }
+QPushButton#btnCompare   { background-color: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; padding: 5px 12px; font-size: 11px; }
+QPushButton#btnExplainAI { background-color: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; padding: 5px 12px; font-size: 11px; }
+QPushButton#btnViewIntervals { color: #2563EB; font-size: 11px; background: transparent; padding: 3px 6px; }
+QPushButton#btnDetailedMetrics{ background-color: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; padding: 4px 10px; font-size: 10px; }
+QPushButton#btnEditPipeline { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; padding: 5px 12px; font-size: 11px; }
+QPushButton#btnExportPkg { background-color: #F8FAFC; color: #374151; border: 1px solid #CBD5E1; padding: 5px 10px; font-size: 11px; }
+
+/* ====================== INPUTS ====================== */
+QComboBox {
+    border: 1px solid #CBD5E1; border-radius: 6px;
+    padding: 5px 10px; background-color: #FFFFFF;
+    color: #374151; font-size: 12px; min-height: 30px;
+}
+QComboBox:focus { border-color: #2563EB; }
+QComboBox::drop-down { border: none; width: 24px; }
+QComboBox::down-arrow { image: none; }
+
+QCheckBox { spacing: 8px; color: #374151; font-size: 11px; }
+QCheckBox::indicator { width: 15px; height: 15px; border-radius: 3px; border: 2px solid #CBD5E1; background: #FFFFFF; }
+QCheckBox::indicator:checked { background-color: #2563EB; border-color: #2563EB; }
+
+QSlider::groove:horizontal { height: 5px; background: #E2E8F0; border-radius: 3px; }
+QSlider::handle:horizontal { width: 16px; height: 16px; background: #2563EB; border-radius: 8px; margin: -6px 0; }
+QSlider::sub-page:horizontal { background: #2563EB; border-radius: 3px; }
+
+QSpinBox, QDoubleSpinBox {
+    border: 1px solid #CBD5E1; border-radius: 6px;
+    padding: 4px 8px; background-color: #FFFFFF;
+    color: #374151; font-size: 12px;
+}
+
+QLineEdit {
+    border: 1px solid #CBD5E1; border-radius: 6px;
+    padding: 5px 8px; background-color: #FFFFFF;
+    color: #374151; font-size: 12px;
+}
+
+/* ====================== TABLE ====================== */
+QTableWidget {
+    border: 1px solid #E2E8F0; border-radius: 6px;
+    background-color: #FFFFFF; gridline-color: #F1F5F9;
+    selection-background-color: #EFF6FF; font-size: 11px;
+}
+QTableWidget::item { padding: 4px 8px; color: #374151; border-bottom: 1px solid #F1F5F9; }
+QTableWidget::item:selected { background-color: #EFF6FF; color: #1D4ED8; }
+QHeaderView::section {
+    background-color: #F8FAFC; border: none;
+    border-bottom: 2px solid #E2E8F0;
+    padding: 5px 8px; font-size: 11px; font-weight: 700; color: #64748B;
+}
+
+/* ====================== SCROLLAREA ====================== */
+QScrollArea { border: none; background-color: transparent; }
+QScrollBar:vertical { background: #F1F5F9; width: 8px; border-radius: 4px; }
+QScrollBar::handle:vertical { background: #CBD5E1; border-radius: 4px; min-height: 20px; }
+QScrollBar::handle:vertical:hover { background: #94A3B8; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+
+/* ====================== PROGRESS ====================== */
+QProgressBar { border: 1px solid #E2E8F0; border-radius: 4px; background-color: #F1F5F9; max-height: 8px; text-align: center; font-size: 0px; }
+QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
+   </string>
+  </property>
+
+  <!-- ======================================================= -->
+  <!-- MAIN LAYOUT                                             -->
+  <!-- ======================================================= -->
+  <layout class="QVBoxLayout" name="mainVLayout">
+   <property name="spacing"><number>0</number></property>
+   <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+
+   <!-- =================== HEADER =================== -->
+   <item>
+    <widget class="QFrame" name="headerFrame">
+     <layout class="QHBoxLayout" name="headerHL">
+      <property name="leftMargin">
+      <number>20</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>20</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+      <property name="spacing"><number>8</number></property>
+      <item>
+       <layout class="QVBoxLayout" name="headerTitleVL">
+        <property name="spacing"><number>2</number></property>
+        <item>
+         <widget class="QLabel" name="lblPageTitle">
+          <property name="text"><string>Missing Log Prediction</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblPageSub">
+          <property name="text"><string>Predict missing logs using machine learning models trained on complete wells</string></property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnDocumentation">
+        <property name="objectName"><string>btnSecondary</string></property>
+        <property name="text"><string>📄  Documentation</string></property>
+        <property name="minimumWidth"><number>130</number></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnVideoTutorial">
+        <property name="objectName"><string>btnSecondary</string></property>
+        <property name="text"><string>▶  Video Tutorial</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnHowItWorks">
+        <property name="objectName"><string>btnOutline</string></property>
+        <property name="text"><string>?  How it works?</string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <!-- =================== WORKFLOW STEPS BAR =================== -->
+   <item>
+    <widget class="QFrame" name="stepsFrame">
+     <layout class="QHBoxLayout" name="stepsHL">
+      <property name="leftMargin">
+      <number>20</number>
+     </property>
+     <property name="topMargin">
+      <number>10</number>
+     </property>
+     <property name="rightMargin">
+      <number>20</number>
+     </property>
+     <property name="bottomMargin">
+      <number>10</number>
+     </property>
+      <property name="spacing"><number>4</number></property>
+
+      <!-- Step 1 -->
+      <item>
+       <layout class="QHBoxLayout" name="step1HL">
+        <property name="spacing"><number>8</number></property>
+        <item>
+         <widget class="QLabel" name="stepCircle1">
+          <property name="objectName"><string>stepCircleActive</string></property>
+          <property name="text"><string>1</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="step1TxtVL">
+          <property name="spacing"><number>1</number></property>
+          <item>
+           <widget class="QLabel" name="step1Title">
+            <property name="objectName"><string>stepTitleActive</string></property>
+            <property name="text"><string>Target Log</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="step1Sub">
+            <property name="objectName"><string>stepSubActive</string></property>
+            <property name="text"><string>RHOB - Density</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+
+      <item><widget class="QFrame" name="div1"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Plain</enum></property><property name="minimumWidth"><number>30</number></property></widget></item>
+
+      <!-- Step 2 -->
+      <item>
+       <layout class="QHBoxLayout" name="step2HL">
+        <property name="spacing"><number>8</number></property>
+        <item>
+         <widget class="QLabel" name="stepCircle2">
+          <property name="objectName"><string>stepCircleActive</string></property>
+          <property name="text"><string>2</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="step2TxtVL">
+          <property name="spacing"><number>1</number></property>
+          <item>
+           <widget class="QLabel" name="step2Title">
+            <property name="objectName"><string>stepTitleActive</string></property>
+            <property name="text"><string>Select Features</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="step2Sub">
+            <property name="objectName"><string>stepSubActive</string></property>
+            <property name="text"><string>7 / 10 Logs Selected</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+
+      <item><widget class="QFrame" name="div2"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Plain</enum></property><property name="minimumWidth"><number>30</number></property></widget></item>
+
+      <!-- Step 3 -->
+      <item>
+       <layout class="QHBoxLayout" name="step3HL">
+        <property name="spacing"><number>8</number></property>
+        <item>
+         <widget class="QLabel" name="stepCircle3">
+          <property name="objectName"><string>stepCircleActive</string></property>
+          <property name="text"><string>3</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="step3TxtVL">
+          <property name="spacing"><number>1</number></property>
+          <item>
+           <widget class="QLabel" name="step3Title">
+            <property name="objectName"><string>stepTitleActive</string></property>
+            <property name="text"><string>Model Training</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="step3Sub">
+            <property name="objectName"><string>stepSubActive</string></property>
+            <property name="text"><string>XGBoost Regressor</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+
+      <item><widget class="QFrame" name="div3"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Plain</enum></property><property name="minimumWidth"><number>30</number></property></widget></item>
+
+      <!-- Step 4 -->
+      <item>
+       <layout class="QHBoxLayout" name="step4HL">
+        <property name="spacing"><number>8</number></property>
+        <item>
+         <widget class="QLabel" name="stepCircle4">
+          <property name="objectName"><string>stepCircleInactive</string></property>
+          <property name="text"><string>4</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="step4TxtVL">
+          <property name="spacing"><number>1</number></property>
+          <item>
+           <widget class="QLabel" name="step4Title">
+            <property name="objectName"><string>stepTitleInactive</string></property>
+            <property name="text"><string>Prediction</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="step4Sub">
+            <property name="objectName"><string>stepSubInactive</string></property>
+            <property name="text"><string>Generate Predicted Log</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+
+      <item><widget class="QFrame" name="div4"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Plain</enum></property><property name="minimumWidth"><number>30</number></property></widget></item>
+
+      <!-- Step 5 -->
+      <item>
+       <layout class="QHBoxLayout" name="step5HL">
+        <property name="spacing"><number>8</number></property>
+        <item>
+         <widget class="QLabel" name="stepCircle5">
+          <property name="objectName"><string>stepCircleInactive</string></property>
+          <property name="text"><string>5</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="step5TxtVL">
+          <property name="spacing"><number>1</number></property>
+          <item>
+           <widget class="QLabel" name="step5Title">
+            <property name="objectName"><string>stepTitleInactive</string></property>
+            <property name="text"><string>Evaluation</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="step5Sub">
+            <property name="objectName"><string>stepSubInactive</string></property>
+            <property name="text"><string>Assess Performance</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+
+      <item>
+       <spacer>
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>10</height></size></property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <!-- =================== SCROLL AREA =================== -->
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable"><bool>true</bool></property>
+     <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAsNeeded</enum></property>
+     <widget class="QWidget" name="scrollContent">
+      <layout class="QVBoxLayout" name="scrollVL">
+       <property name="spacing"><number>8</number></property>
+       <property name="leftMargin">
+      <number>12</number>
+     </property>
+     <property name="topMargin">
+      <number>10</number>
+     </property>
+     <property name="rightMargin">
+      <number>12</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+
+       <!-- ============================================================ -->
+       <!-- ROW 1: Sections 1–5                                          -->
+       <!-- ============================================================ -->
+       <item>
+        <layout class="QHBoxLayout" name="row1HL">
+         <property name="spacing"><number>8</number></property>
+
+         <!-- SECTION 1: Target Log -->
+         <item>
+          <widget class="QGroupBox" name="grpTargetLog">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>210</number></property>
+           <layout class="QVBoxLayout" name="s1VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header row -->
+            <item>
+             <layout class="QHBoxLayout" name="s1TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec1Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>1</string></property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="s1TxtVL">
+                <property name="spacing"><number>1</number></property>
+                <item>
+                 <widget class="QLabel" name="sec1Title">
+                  <property name="objectName"><string>secTitle</string></property>
+                  <property name="text"><string>Target Log (To Be Predicted)</string></property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <!-- Divider -->
+            <item><widget class="QFrame" name="s1Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Target Log label -->
+            <item>
+             <widget class="QLabel" name="lblTargetLogLbl">
+              <property name="text"><string>Target Log</string></property>
+              <property name="styleSheet"><string>font-size: 10px; color: #64748B; font-weight: 600;</string></property>
+             </widget>
+            </item>
+            <!-- ComboBox row -->
+            <item>
+             <layout class="QHBoxLayout" name="s1CbHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QComboBox" name="cboTargetLog">
+                <item><property name="text"><string>RHOB - Density (g/cc)</string></property></item>
+                <item><property name="text"><string>DT - Sonic (µs/ft)</string></property></item>
+                <item><property name="text"><string>NPHI - Neutron Porosity (V/V)</string></property></item>
+                <item><property name="text"><string>GR - Gamma Ray (API)</string></property></item>
+                <item><property name="text"><string>RT - Resistivity (ohm.m)</string></property></item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnFxLog">
+                <property name="objectName"><string>btnSecondary</string></property>
+                <property name="text"><string>fx</string></property>
+                <property name="maximumWidth"><number>36</number></property>
+                <property name="minimumHeight"><number>30</number></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Unit -->
+            <item>
+             <widget class="QLabel" name="lblUnit">
+              <property name="text"><string>Unit: g/cc</string></property>
+              <property name="styleSheet"><string>font-size: 10px; color: #94A3B8;</string></property>
+             </widget>
+            </item>
+            <!-- Data points -->
+            <item>
+             <layout class="QHBoxLayout" name="s1InfoHL">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QLabel" name="lblDataPts">
+                <property name="text"><string>Data Points:</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblDataPtsVal">
+                <property name="text"><string>3,842</string></property>
+                <property name="styleSheet"><string>font-size: 10px; font-weight: 700; color: #1E293B;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblMissingLbl">
+                <property name="text"><string>  Missing:</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblMissingVal">
+                <property name="text"><string>1,256 (32.7%)</string></property>
+                <property name="objectName"><string>badgeRed</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Depth range -->
+            <item>
+             <layout class="QHBoxLayout" name="s1DepHL">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QLabel" name="lblDepthLbl">
+                <property name="text"><string>Depth Range:</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblDepthVal">
+                <property name="text"><string>0.0 – 4,146.0 m</string></property>
+                <property name="styleSheet"><string>font-size: 10px; font-weight: 700; color: #1E293B;</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Missing Intervals -->
+            <item>
+             <layout class="QHBoxLayout" name="s1MissHL">
+              <property name="spacing"><number>4</number></property>
+              <item>
+               <widget class="QLabel" name="lblIntLbl">
+                <property name="text"><string>Missing Intervals:</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnViewIntervals">
+                <property name="objectName"><string>btnViewIntervals</string></property>
+                <property name="text"><string>3 intervals detected  →</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 2: Input Features -->
+         <item>
+          <widget class="QGroupBox" name="grpInputFeatures">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>230</number></property>
+           <layout class="QVBoxLayout" name="s2VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s2TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec2Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>2</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec2Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Input Features (Available Logs)</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s2Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Checkboxes -->
+            <item>
+             <widget class="QCheckBox" name="chkGR">
+              <property name="text"><string>GR - Gamma Ray (API)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkNPHI">
+              <property name="text"><string>NPHI - Neutron Porosity (V/V)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkDT">
+              <property name="text"><string>DT - Sonic (µs/ft)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkRT">
+              <property name="text"><string>RT - Resistivity (ohm.m)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkCALI">
+              <property name="text"><string>CALI - Caliper (in)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkPE">
+              <property name="text"><string>PE - Photoelectric Factor (b/e)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkSP">
+              <property name="text"><string>SP - Spontaneous Potential (mV)</string></property>
+              <property name="checked"><bool>true</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkMDEPTH">
+              <property name="text"><string>MDEPTH - Measured Depth (m)</string></property>
+              <property name="checked"><bool>false</bool></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkDELR">
+              <property name="text"><string>RILD - Deep Resistivity (ohm.m)</string></property>
+              <property name="checked"><bool>false</bool></property>
+             </widget>
+            </item>
+            <!-- Action buttons -->
+            <item>
+             <layout class="QHBoxLayout" name="s2BtnHL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QPushButton" name="btnAutoSelect">
+                <property name="objectName"><string>btnAutoSel</string></property>
+                <property name="text"><string>✦  Auto Select</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnFeatureEng">
+                <property name="objectName"><string>btnFeatEng</string></property>
+                <property name="text"><string>⚙  Feature Engineering</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 3: Model Configuration -->
+         <item>
+          <widget class="QGroupBox" name="grpModelConfig">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>220</number></property>
+           <layout class="QVBoxLayout" name="s3VL">
+            <property name="spacing"><number>8</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s3TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec3Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>3</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec3Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Model Configuration</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s3Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Algorithm -->
+            <item>
+             <widget class="QLabel" name="lblAlgoLbl">
+              <property name="text"><string>Algorithm</string></property>
+              <property name="styleSheet"><string>font-size: 10px; color: #64748B; font-weight: 600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="s3AlgoHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QComboBox" name="cboAlgorithm">
+                <item><property name="text"><string>XGBoost Regressor</string></property></item>
+                <item><property name="text"><string>LightGBM Regressor</string></property></item>
+                <item><property name="text"><string>Random Forest Regressor</string></property></item>
+                <item><property name="text"><string>CatBoost Regressor</string></property></item>
+                <item><property name="text"><string>Artificial Neural Network</string></property></item>
+                <item><property name="text"><string>Support Vector Regressor</string></property></item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnAlgoSettings">
+                <property name="objectName"><string>btnSecondary</string></property>
+                <property name="text"><string>⚙</string></property>
+                <property name="maximumWidth"><number>34</number></property>
+                <property name="minimumHeight"><number>30</number></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Cross Validation -->
+            <item>
+             <widget class="QLabel" name="lblCVLbl">
+              <property name="text"><string>Cross Validation (K-Fold)</string></property>
+              <property name="styleSheet"><string>font-size: 10px; color: #64748B; font-weight: 600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cboCrossVal">
+              <item><property name="text"><string>5-Fold</string></property></item>
+              <item><property name="text"><string>3-Fold</string></property></item>
+              <item><property name="text"><string>10-Fold</string></property></item>
+              <item><property name="text"><string>Leave-One-Out</string></property></item>
+             </widget>
+            </item>
+            <!-- Test Size -->
+            <item>
+             <layout class="QHBoxLayout" name="s3TestHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="lblTestSizeLbl">
+                <property name="text"><string>Test Size (%)</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B; font-weight: 600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property></spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblTestSizeVal">
+                <property name="text"><string>20</string></property>
+                <property name="styleSheet"><string>font-size: 11px; font-weight: 700; color: #2563EB;</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QSlider" name="sliderTestSize">
+              <property name="orientation"><enum>Qt::Horizontal</enum></property>
+              <property name="minimum"><number>10</number></property>
+              <property name="maximum"><number>40</number></property>
+              <property name="value"><number>20</number></property>
+             </widget>
+            </item>
+            <!-- Random State -->
+            <item>
+             <layout class="QHBoxLayout" name="s3RandHL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QLabel" name="lblRandLbl">
+                <property name="text"><string>Random State</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B; font-weight: 600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property></spacer>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinRandState">
+                <property name="minimum"><number>0</number></property>
+                <property name="maximum"><number>9999</number></property>
+                <property name="value"><number>42</number></property>
+                <property name="maximumWidth"><number>80</number></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- GPU -->
+            <item>
+             <layout class="QHBoxLayout" name="s3GpuHL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QLabel" name="lblGpuLbl">
+                <property name="text"><string>Use GPU Acceleration</string></property>
+                <property name="styleSheet"><string>font-size: 10px; color: #64748B; font-weight: 600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property></spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblGpuToggle">
+                <property name="text"><string>ON</string></property>
+                <property name="styleSheet"><string notr="true">
+background-color: #10B981; color: white;
+border-radius: 9px; padding: 1px 10px;
+font-size: 10px; font-weight: 700;
+                </string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 4: Training Progress -->
+         <item>
+          <widget class="QGroupBox" name="grpTrainingProgress">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>200</number></property>
+           <layout class="QVBoxLayout" name="s4VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s4TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec4Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>4</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec4Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Training Progress</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s4Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Progress items in grid -->
+            <item>
+             <layout class="QGridLayout" name="s4Grid">
+              <property name="spacing"><number>6</number></property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="lblTrWellsKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Training Wells</string></property></widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="lblTrWellsVal"><property name="objectName"><string>metricVal</string></property><property name="text"><string>5</string></property></widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblTrSampKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Training Samples</string></property></widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="lblTrSampVal"><property name="objectName"><string>metricVal</string></property><property name="text"><string>15,368</string></property></widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lblValSampKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Validation Samples</string></property></widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="lblValSampVal"><property name="objectName"><string>metricVal</string></property><property name="text"><string>3,842</string></property></widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="lblFeatUsedKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Features Used</string></property></widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="lblFeatUsedVal"><property name="objectName"><string>metricVal</string></property><property name="text"><string>7</string></property></widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="lblBestIterKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Best Iteration</string></property></widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLabel" name="lblBestIterVal"><property name="objectName"><string>metricVal</string></property><property name="text"><string>186</string></property></widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="lblTrainTimeKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Training Time</string></property></widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLabel" name="lblTrainTimeVal"><property name="objectName"><string>metricVal</string></property><property name="text"><string>00:01:24</string></property></widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="lblStatusKey"><property name="objectName"><string>metricKey</string></property><property name="text"><string>Status</string></property></widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QLabel" name="lblStatusVal">
+                <property name="objectName"><string>statusCompleted</string></property>
+                <property name="text"><string>✔  Completed</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Progress bar -->
+            <item>
+             <widget class="QProgressBar" name="progressTraining">
+              <property name="value"><number>100</number></property>
+              <property name="maximum"><number>100</number></property>
+             </widget>
+            </item>
+            <!-- View Training Log -->
+            <item>
+             <widget class="QPushButton" name="btnViewTrainingLog">
+              <property name="objectName"><string>btnSecondary</string></property>
+              <property name="text"><string>📋  View Training Log</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 5: Model Performance -->
+         <item>
+          <widget class="QGroupBox" name="grpModelPerf">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>260</number></property>
+           <layout class="QVBoxLayout" name="s5VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s5TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec5Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>5</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec5Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Model Performance (On Test Set)</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s5Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Metrics grid row 1 -->
+            <item>
+             <layout class="QGridLayout" name="s5MetricGrid">
+              <property name="spacing"><number>8</number></property>
+              <!-- R2 -->
+              <item row="0" column="0">
+               <layout class="QVBoxLayout" name="r2VL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblR2Key"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>R² Score</string></property></widget></item>
+                <item><widget class="QLabel" name="lblR2Val"><property name="objectName"><string>metricValGreen</string></property><property name="text"><string>0.92</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- RMSE -->
+              <item row="0" column="1">
+               <layout class="QVBoxLayout" name="rmseVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblRMSEKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>RMSE</string></property></widget></item>
+                <item><widget class="QLabel" name="lblRMSEVal"><property name="objectName"><string>metricValBlue</string></property><property name="text"><string>0.056</string></property></widget></item>
+                <item><widget class="QLabel" name="lblRMSEUnit"><property name="objectName"><string>metricUnit</string></property><property name="text"><string>g/cc</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- MAE -->
+              <item row="0" column="2">
+               <layout class="QVBoxLayout" name="maeVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblMAEKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>MAE</string></property></widget></item>
+                <item><widget class="QLabel" name="lblMAEVal"><property name="objectName"><string>metricValBlue</string></property><property name="text"><string>0.041</string></property></widget></item>
+                <item><widget class="QLabel" name="lblMAEUnit"><property name="objectName"><string>metricUnit</string></property><property name="text"><string>g/cc</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- MAPE -->
+              <item row="0" column="3">
+               <layout class="QVBoxLayout" name="mapeVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblMAPEKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>MAPE</string></property></widget></item>
+                <item><widget class="QLabel" name="lblMAPEVal"><property name="objectName"><string>metricValOrange</string></property><property name="text"><string>4.18%</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- Bias -->
+              <item row="1" column="0">
+               <layout class="QVBoxLayout" name="biasVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblBiasKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>Bias</string></property></widget></item>
+                <item><widget class="QLabel" name="lblBiasVal"><property name="objectName"><string>metricValSm</string></property><property name="text"><string>0.002</string></property></widget></item>
+                <item><widget class="QLabel" name="lblBiasUnit"><property name="objectName"><string>metricUnit</string></property><property name="text"><string>g/cc</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- Std Error -->
+              <item row="1" column="1">
+               <layout class="QVBoxLayout" name="stdVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblStdKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>Std Error</string></property></widget></item>
+                <item><widget class="QLabel" name="lblStdVal"><property name="objectName"><string>metricValSm</string></property><property name="text"><string>0.056</string></property></widget></item>
+                <item><widget class="QLabel" name="lblStdUnit"><property name="objectName"><string>metricUnit</string></property><property name="text"><string>g/cc</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- NRMSE -->
+              <item row="1" column="2">
+               <layout class="QVBoxLayout" name="nrmseVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblNRMSEKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>NRMSE</string></property></widget></item>
+                <item><widget class="QLabel" name="lblNRMSEVal"><property name="objectName"><string>metricValSm</string></property><property name="text"><string>3.21</string></property></widget></item>
+                <item><widget class="QLabel" name="lblNRMSEUnit"><property name="objectName"><string>metricUnit</string></property><property name="text"><string>%</string></property></widget></item>
+               </layout>
+              </item>
+              <!-- CCC -->
+              <item row="1" column="3">
+               <layout class="QVBoxLayout" name="cccVL">
+                <property name="spacing"><number>1</number></property>
+                <item><widget class="QLabel" name="lblCCCKey"><property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property><property name="text"><string>CCC</string></property></widget></item>
+                <item><widget class="QLabel" name="lblCCCVal"><property name="objectName"><string>metricValSmGreen</string></property><property name="text"><string>0.93</string></property></widget></item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <!-- Detailed Metrics button -->
+            <item>
+             <widget class="QPushButton" name="btnDetailedMetrics">
+              <property name="objectName"><string>btnDetailedMetrics</string></property>
+              <property name="text"><string>📊  Detailed Metrics</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+        </layout>
+       </item>
+
+       <!-- ============================================================ -->
+       <!-- ROW 2: Sections 6–9                                          -->
+       <!-- ============================================================ -->
+       <item>
+        <layout class="QHBoxLayout" name="row2HL">
+         <property name="spacing"><number>8</number></property>
+
+         <!-- SECTION 6: Actual vs Predicted Log -->
+         <item>
+          <widget class="QGroupBox" name="grpActualVsPred">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>380</number></property>
+           <layout class="QVBoxLayout" name="s6VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s6TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec6Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>6</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec6Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Actual vs Predicted Log</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer>
+              </item>
+              <!-- Toolbar icons -->
+              <item>
+               <widget class="QPushButton" name="btnS6Share"><property name="objectName"><string>btnSecondary</string></property><property name="text"><string>⇪</string></property><property name="maximumWidth"><number>28</number></property><property name="maximumHeight"><number>24</number></property></widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnS6Zoom"><property name="objectName"><string>btnSecondary</string></property><property name="text"><string>⊕</string></property><property name="maximumWidth"><number>28</number></property><property name="maximumHeight"><number>24</number></property></widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnS6Settings"><property name="objectName"><string>btnSecondary</string></property><property name="text"><string>⚙</string></property><property name="maximumWidth"><number>28</number></property><property name="maximumHeight"><number>24</number></property></widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnS6Download"><property name="objectName"><string>btnSecondary</string></property><property name="text"><string>↓</string></property><property name="maximumWidth"><number>28</number></property><property name="maximumHeight"><number>24</number></property></widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s6Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Log track headers -->
+            <item>
+             <layout class="QHBoxLayout" name="s6HeadHL">
+              <property name="spacing"><number>2</number></property>
+              <item><widget class="QLabel" name="lhGR"><property name="text"><string>GR (API)</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#374151;background:#FEF9C3;border:1px solid #FDE68A;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              <item><widget class="QLabel" name="lhNPHI"><property name="text"><string>NPHI (V/V)</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#374151;background:#E0F2FE;border:1px solid #BAE6FD;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              <item><widget class="QLabel" name="lhDT"><property name="text"><string>DT (µs/ft)</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#374151;background:#F0FDF4;border:1px solid #BBF7D0;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              <item><widget class="QLabel" name="lhRT"><property name="text"><string>RT (ohm.m)</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#374151;background:#FFF7ED;border:1px solid #FED7AA;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              <item><widget class="QLabel" name="lhRHOBA"><property name="text"><string>Actual RHOB</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#FFFFFF;background:#1E293B;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              <item><widget class="QLabel" name="lhRHOBP"><property name="text"><string>Predicted RHOB</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#FFFFFF;background:#2563EB;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+              <item><widget class="QLabel" name="lhError"><property name="text"><string>Error (g/cc)</string></property><property name="styleSheet"><string>font-size:9px;font-weight:700;color:#374151;background:#FEF2F2;border:1px solid #FECACA;padding:2px;border-radius:3px;</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+             </layout>
+            </item>
+            <!-- Well log tracks (placeholder) -->
+            <item>
+             <widget class="QLabel" name="lblWellLogPlot">
+              <property name="objectName"><string>wellLogTrack</string></property>
+              <property name="text"><string>[ Well Log Track Visualization - QCustomPlot / Matplotlib Canvas ]&#xa;&#xa;GR  |  NPHI  |  DT  |  RT  |  Actual RHOB  |  Predicted RHOB  |  Error&#xa;&#xa;Depth: 0.0 – 4,146.0 m</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="minimumHeight"><number>200</number></property>
+              <property name="styleSheet"><string>border:1px solid #E2E8F0; border-radius:6px; background:#F8FAFC; color:#94A3B8; font-size:11px;</string></property>
+             </widget>
+            </item>
+            <!-- Legend -->
+            <item>
+             <layout class="QHBoxLayout" name="s6LegHL">
+              <property name="spacing"><number>16</number></property>
+              <item>
+               <widget class="QLabel" name="lblLegActual">
+                <property name="text"><string>━━  Actual Data</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#1E293B;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblLegPred">
+                <property name="text"><string>╌╌  Predicted Data</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#2563EB;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblLegMissing">
+                <property name="text"><string>▓  Missing Interval</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#F59E0B;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblLegErrPos">
+                <property name="text"><string>█  Error (+)</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#EF4444;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblLegErrNeg">
+                <property name="text"><string>█  Error (-)</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#3B82F6;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 7: Residuals Analysis -->
+         <item>
+          <widget class="QGroupBox" name="grpResiduals">
+           <property name="title"><string></string></property>
+           <layout class="QVBoxLayout" name="s7VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s7TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec7Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>7</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec7Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Residuals Analysis</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s7Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Scatter plot placeholder -->
+            <item>
+             <widget class="QLabel" name="lblResidScatter">
+              <property name="text"><string>[ Residuals vs Depth Scatter Plot ]&#xa;&#xa;Y-axis: Residuals  X-axis: Depth (m)</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="minimumHeight"><number>110</number></property>
+              <property name="styleSheet"><string>border:1px solid #E2E8F0; border-radius:5px; background:#F8FAFC; color:#94A3B8; font-size:10px;</string></property>
+             </widget>
+            </item>
+            <!-- Axis labels -->
+            <item>
+             <layout class="QHBoxLayout" name="s7AxHL">
+              <property name="spacing"><number>4</number></property>
+              <item><widget class="QLabel" name="lblResidXLbl"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>0</string></property></widget></item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+              <item><widget class="QLabel" name="lblResidXMid"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>2,000</string></property></widget></item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+              <item><widget class="QLabel" name="lblResidXMax"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>4,146 m</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- Histogram label -->
+            <item>
+             <widget class="QLabel" name="lblHistTitle">
+              <property name="text"><string>Residuals Histogram</string></property>
+              <property name="styleSheet"><string>font-size:10px;font-weight:700;color:#374151;</string></property>
+             </widget>
+            </item>
+            <!-- Histogram placeholder -->
+            <item>
+             <widget class="QLabel" name="lblResidHist">
+              <property name="text"><string>[ Frequency Distribution of Residuals ]&#xa;Near-Gaussian distribution centered at 0</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="minimumHeight"><number>90</number></property>
+              <property name="styleSheet"><string>border:1px solid #E2E8F0; border-radius:5px; background:#F8FAFC; color:#94A3B8; font-size:10px;</string></property>
+             </widget>
+            </item>
+            <!-- Axis labels -->
+            <item>
+             <layout class="QHBoxLayout" name="s7HistAxHL">
+              <property name="spacing"><number>4</number></property>
+              <item><widget class="QLabel" name="lblHistX1"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>-0.3</string></property></widget></item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+              <item><widget class="QLabel" name="lblHistX2"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>0.0</string></property></widget></item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property></spacer></item>
+              <item><widget class="QLabel" name="lblHistX3"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>0.3</string></property></widget></item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 8: Prediction Uncertainty -->
+         <item>
+          <widget class="QGroupBox" name="grpUncertainty">
+           <property name="title"><string></string></property>
+           <layout class="QVBoxLayout" name="s8VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s8TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec8Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>8</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec8Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Prediction Uncertainty</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s8Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Scale labels -->
+            <item>
+             <layout class="QHBoxLayout" name="s8ScaleHL">
+              <property name="spacing"><number>4</number></property>
+              <item><widget class="QLabel" name="s8ScL"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>2.0</string></property></widget></item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property></spacer></item>
+              <item><widget class="QLabel" name="s8ScM"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>2.4</string></property></widget></item>
+              <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property></spacer></item>
+              <item><widget class="QLabel" name="s8ScR"><property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property><property name="text"><string>2.8 g/cc</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- Uncertainty track placeholder -->
+            <item>
+             <widget class="QLabel" name="lblUncertTrack">
+              <property name="text"><string>[ Predicted RHOB (g/cc) ]&#xa;&#xa;Predicted Log&#xa;+ 95% Confidence Interval&#xa;&#xa;Depth: 0.0 – 4,146.0 m</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="minimumHeight"><number>200</number></property>
+              <property name="styleSheet"><string>border:1px solid #E2E8F0; border-radius:5px; background:#F8FAFC; color:#94A3B8; font-size:10px;</string></property>
+             </widget>
+            </item>
+            <!-- Legend -->
+            <item>
+             <layout class="QVBoxLayout" name="s8LegVL">
+              <property name="spacing"><number>3</number></property>
+              <item>
+               <widget class="QLabel" name="lblUncLeg1">
+                <property name="text"><string>━━  Predicted</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#1D4ED8;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblUncLeg2">
+                <property name="text"><string>▒▒  95% Confidence Interval</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#93C5FD;font-weight:600;</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 9: Feature Importance -->
+         <item>
+          <widget class="QGroupBox" name="grpFeatureImportance">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>220</number></property>
+           <layout class="QVBoxLayout" name="s9VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <!-- Header -->
+            <item>
+             <layout class="QHBoxLayout" name="s9TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QLabel" name="sec9Num">
+                <property name="objectName"><string>secNum</string></property>
+                <property name="text"><string>9</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sec9Title">
+                <property name="objectName"><string>secTitle</string></property>
+                <property name="text"><string>Feature Importance (SHAP Summary)</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s9Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- SHAP bar rows -->
+            <!-- DT Sonic 0.42 -->
+            <item>
+             <layout class="QHBoxLayout" name="shap1HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap1Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>DT - Sonic</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap1BgFr">
+                <property name="styleSheet"><string>background:#E2E8F0;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>80</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap1Val"><property name="objectName"><string>shapVal</string></property><property name="text"><string>0.42</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- NPHI Neutron 0.28 -->
+            <item>
+             <layout class="QHBoxLayout" name="shap2HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap2Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>NPHI - Neutron</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap2BgFr">
+                <property name="styleSheet"><string>background:#E2E8F0;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>55</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap2Val"><property name="objectName"><string>shapVal</string></property><property name="text"><string>0.28</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- GR 0.16 -->
+            <item>
+             <layout class="QHBoxLayout" name="shap3HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap3Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>GR - Gamma Ray</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap3BgFr">
+                <property name="styleSheet"><string>background:#E2E8F0;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>32</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap3Val"><property name="objectName"><string>shapVal</string></property><property name="text"><string>0.16</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- RT 0.09 -->
+            <item>
+             <layout class="QHBoxLayout" name="shap4HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap4Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>RT - Resistivity</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap4BgFr">
+                <property name="styleSheet"><string>background:#E2E8F0;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>18</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap4Val"><property name="objectName"><string>shapVal</string></property><property name="text"><string>0.09</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- CALI 0.03 -->
+            <item>
+             <layout class="QHBoxLayout" name="shap5HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap5Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>CALI - Caliper</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap5BgFr">
+                <property name="styleSheet"><string>background:#E2E8F0;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>8</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap5Val"><property name="objectName"><string>shapVal</string></property><property name="text"><string>0.03</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- PE -0.02 (negative) -->
+            <item>
+             <layout class="QHBoxLayout" name="shap6HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap6Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>PE - Photoelectric</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap6BgFr">
+                <property name="styleSheet"><string>background:#FEE2E2;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>6</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap6Val"><property name="styleSheet"><string>font-size:10px;color:#DC2626;font-weight:600;</string></property><property name="text"><string>-0.02</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- SP 0.00 -->
+            <item>
+             <layout class="QHBoxLayout" name="shap7HL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="shap7Name"><property name="objectName"><string>shapLbl</string></property><property name="text"><string>SP - SP</string></property><property name="minimumWidth"><number>90</number></property></widget></item>
+              <item>
+               <widget class="QFrame" name="shap7BgFr">
+                <property name="styleSheet"><string>background:#E2E8F0;border-radius:3px;min-height:10px;max-height:10px;</string></property>
+                <property name="minimumWidth"><number>2</number></property>
+               </widget>
+              </item>
+              <item><widget class="QLabel" name="shap7Val"><property name="objectName"><string>shapVal</string></property><property name="text"><string>0.00</string></property></widget></item>
+             </layout>
+            </item>
+            <!-- X axis label -->
+            <item>
+             <widget class="QLabel" name="lblShapXAxis">
+              <property name="text"><string>Mean (SHAP value)   0.0      0.1      0.2      0.3      0.4      0.5</string></property>
+              <property name="styleSheet"><string>font-size:9px;color:#94A3B8;</string></property>
+             </widget>
+            </item>
+            <!-- Explain button -->
+            <item>
+             <widget class="QPushButton" name="btnExplainAI">
+              <property name="objectName"><string>btnExplainAI</string></property>
+              <property name="text"><string>🤖  Explain at Depth</string></property>
+             </widget>
+            </item>
+            <!-- Model Leaderboard label -->
+            <item>
+             <widget class="QLabel" name="lblLeaderboardTitle">
+              <property name="text"><string>Model Leaderboard (Sorted by R² Score)</string></property>
+              <property name="styleSheet"><string>font-size:10px;font-weight:700;color:#1E293B;margin-top:6px;</string></property>
+             </widget>
+            </item>
+            <!-- Leaderboard table -->
+            <item>
+             <widget class="QTableWidget" name="tblLeaderboard">
+              <property name="rowCount"><number>5</number></property>
+              <property name="columnCount"><number>5</number></property>
+              <property name="minimumHeight"><number>100</number></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <attribute name="horizontalHeaderVisible"><bool>true</bool></attribute>
+              <attribute name="verticalHeaderVisible"><bool>false</bool></attribute>
+              <column><property name="text"><string>#</string></property></column>
+              <column><property name="text"><string>Model</string></property></column>
+              <column><property name="text"><string>R²</string></property></column>
+              <column><property name="text"><string>RMSE</string></property></column>
+              <column><property name="text"><string>MAPE %</string></property></column>
+               <item row="0" column="0"><property name="text"><string>★ 1</string></property></item>
+               <item row="0" column="1"><property name="text"><string>XGBoost Regressor</string></property></item>
+               <item row="0" column="2"><property name="text"><string>0.92</string></property></item>
+               <item row="0" column="3"><property name="text"><string>0.056</string></property></item>
+               <item row="0" column="4"><property name="text"><string>4.18</string></property></item>
+               <item row="1" column="0"><property name="text"><string>2</string></property></item>
+               <item row="1" column="1"><property name="text"><string>LightGBM</string></property></item>
+               <item row="1" column="2"><property name="text"><string>0.91</string></property></item>
+               <item row="1" column="3"><property name="text"><string>0.061</string></property></item>
+               <item row="1" column="4"><property name="text"><string>4.62</string></property></item>
+               <item row="2" column="0"><property name="text"><string>3</string></property></item>
+               <item row="2" column="1"><property name="text"><string>CatBoost</string></property></item>
+               <item row="2" column="2"><property name="text"><string>0.90</string></property></item>
+               <item row="2" column="3"><property name="text"><string>0.063</string></property></item>
+               <item row="2" column="4"><property name="text"><string>4.83</string></property></item>
+               <item row="3" column="0"><property name="text"><string>4</string></property></item>
+               <item row="3" column="1"><property name="text"><string>Random Forest</string></property></item>
+               <item row="3" column="2"><property name="text"><string>0.89</string></property></item>
+               <item row="3" column="3"><property name="text"><string>0.068</string></property></item>
+               <item row="3" column="4"><property name="text"><string>5.21</string></property></item>
+               <item row="4" column="0"><property name="text"><string>5</string></property></item>
+               <item row="4" column="1"><property name="text"><string>Artificial Neural Net</string></property></item>
+               <item row="4" column="2"><property name="text"><string>0.88</string></property></item>
+               <item row="4" column="3"><property name="text"><string>0.072</string></property></item>
+               <item row="4" column="4"><property name="text"><string>5.74</string></property></item>
+             </widget>
+            </item>
+            <!-- Compare Models button -->
+            <item>
+             <widget class="QPushButton" name="btnCompareModels">
+              <property name="objectName"><string>btnCompare</string></property>
+              <property name="text"><string>⇄  Compare Models</string></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+        </layout>
+       </item>
+
+       <!-- ============================================================ -->
+       <!-- ROW 3: Sections 10–14                                        -->
+       <!-- ============================================================ -->
+       <item>
+        <layout class="QHBoxLayout" name="row3HL">
+         <property name="spacing"><number>8</number></property>
+
+         <!-- SECTION 10: Missing Intervals Detector -->
+         <item>
+          <widget class="QGroupBox" name="grpMissingIntervals">
+           <property name="title"><string></string></property>
+           <layout class="QVBoxLayout" name="s10VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <item>
+             <layout class="QHBoxLayout" name="s10TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="sec10Num"><property name="objectName"><string>secNum</string></property><property name="text"><string>10</string></property></widget></item>
+              <item><widget class="QLabel" name="sec10Title"><property name="objectName"><string>secTitle</string></property><property name="text"><string>Missing Intervals Detector</string></property></widget></item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s10Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Table -->
+            <item>
+             <widget class="QTableWidget" name="tblMissingIntervals">
+              <property name="rowCount"><number>3</number></property>
+              <property name="columnCount"><number>6</number></property>
+              <property name="showGrid"><bool>false</bool></property>
+              <property name="alternatingRowColors"><bool>true</bool></property>
+              <property name="selectionMode"><enum>QAbstractItemView::SingleSelection</enum></property>
+              <attribute name="horizontalHeaderVisible"><bool>true</bool></attribute>
+              <attribute name="verticalHeaderVisible"><bool>false</bool></attribute>
+              <column><property name="text"><string>Interval ID</string></property></column>
+              <column><property name="text"><string>Top Depth (m)</string></property></column>
+              <column><property name="text"><string>Base Depth (m)</string></property></column>
+              <column><property name="text"><string>Thickness (m)</string></property></column>
+              <column><property name="text"><string>Missing %</string></property></column>
+              <column><property name="text"><string>Quality</string></property></column>
+               <item row="0" column="0"><property name="text"><string>1</string></property></item>
+               <item row="1" column="0"><property name="text"><string>2</string></property></item>
+               <item row="2" column="0"><property name="text"><string>3</string></property></item>
+               <item row="0" column="1"><property name="text"><string>742.5</string></property></item>
+               <item row="1" column="1"><property name="text"><string>2,184.0</string></property></item>
+               <item row="2" column="1"><property name="text"><string>3,145.5</string></property></item>
+               <item row="0" column="2"><property name="text"><string>865.0</string></property></item>
+               <item row="1" column="2"><property name="text"><string>2,486.0</string></property></item>
+               <item row="2" column="2"><property name="text"><string>3,392.0</string></property></item>
+               <item row="0" column="3"><property name="text"><string>122.5</string></property></item>
+               <item row="1" column="3"><property name="text"><string>302.0</string></property></item>
+               <item row="2" column="3"><property name="text"><string>246.5</string></property></item>
+               <item row="0" column="4"><property name="text"><string>100%</string></property></item>
+               <item row="1" column="4"><property name="text"><string>100%</string></property></item>
+               <item row="2" column="4"><property name="text"><string>100%</string></property></item>
+               <item row="0" column="5"><property name="text"><string>Low</string></property></item>
+               <item row="1" column="5"><property name="text"><string>Low</string></property></item>
+               <item row="2" column="5"><property name="text"><string>Low</string></property></item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 11: Feature Engineering Pipeline -->
+         <item>
+          <widget class="QGroupBox" name="grpFeatEngPipeline">
+           <property name="title"><string></string></property>
+           <layout class="QVBoxLayout" name="s11VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <item>
+             <layout class="QHBoxLayout" name="s11TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="sec11Num"><property name="objectName"><string>secNum</string></property><property name="text"><string>11</string></property></widget></item>
+              <item><widget class="QLabel" name="sec11Title"><property name="objectName"><string>secTitle</string></property><property name="text"><string>Feature Engineering Pipeline</string></property></widget></item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s11Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Pipeline steps -->
+            <item>
+             <layout class="QHBoxLayout" name="s11PipeHL">
+              <property name="spacing"><number>4</number></property>
+              <item><widget class="QLabel" name="pipe1"><property name="objectName"><string>pipelineStepNormal</string></property><property name="text"><string>Raw Logs</string></property></widget></item>
+              <item><widget class="QLabel" name="pipeArr1"><property name="objectName"><string>pipelineArrow</string></property><property name="text"><string>→</string></property></widget></item>
+              <item><widget class="QLabel" name="pipe2"><property name="objectName"><string>pipelineStepNormal</string></property><property name="text"><string>Normalization</string></property></widget></item>
+              <item><widget class="QLabel" name="pipeArr2"><property name="objectName"><string>pipelineArrow</string></property><property name="text"><string>→</string></property></widget></item>
+              <item><widget class="QLabel" name="pipe3"><property name="objectName"><string>pipelineStepNormal</string></property><property name="text"><string>Derivatives</string></property></widget></item>
+              <item><widget class="QLabel" name="pipeArr3"><property name="objectName"><string>pipelineArrow</string></property><property name="text"><string>→</string></property></widget></item>
+              <item><widget class="QLabel" name="pipe4"><property name="objectName"><string>pipelineStepNormal</string></property><property name="text"><string>Moving Avg</string></property></widget></item>
+              <item><widget class="QLabel" name="pipeArr4"><property name="objectName"><string>pipelineArrow</string></property><property name="text"><string>→</string></property></widget></item>
+              <item><widget class="QLabel" name="pipe5"><property name="objectName"><string>pipelineStepNormal</string></property><property name="text"><string>PCA</string></property></widget></item>
+              <item><widget class="QLabel" name="pipeArr5"><property name="objectName"><string>pipelineArrow</string></property><property name="text"><string>→</string></property></widget></item>
+              <item><widget class="QLabel" name="pipe6"><property name="objectName"><string>pipelineStepActive</string></property><property name="text"><string>Selected Features</string></property></widget></item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnEditPipeline">
+              <property name="objectName"><string>btnEditPipeline</string></property>
+              <property name="text"><string>✏  Edit Pipeline</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 12: Hyperparameter Optimization -->
+         <item>
+          <widget class="QGroupBox" name="grpHyperOpt">
+           <property name="title"><string></string></property>
+           <layout class="QVBoxLayout" name="s12VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <item>
+             <layout class="QHBoxLayout" name="s12TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="sec12Num"><property name="objectName"><string>secNum</string></property><property name="text"><string>12</string></property></widget></item>
+              <item><widget class="QLabel" name="sec12Title"><property name="objectName"><string>secTitle</string></property><property name="text"><string>Hyperparameter Optimization</string></property></widget></item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s12Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Method -->
+            <item>
+             <widget class="QLabel" name="lblOptMethodLbl">
+              <property name="text"><string>Optimization Method</string></property>
+              <property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cboOptMethod">
+              <item><property name="text"><string>Bayesian Optimization</string></property></item>
+              <item><property name="text"><string>Grid Search</string></property></item>
+              <item><property name="text"><string>Random Search</string></property></item>
+              <item><property name="text"><string>Optuna (TPE)</string></property></item>
+             </widget>
+            </item>
+            <!-- Max Iterations -->
+            <item>
+             <layout class="QHBoxLayout" name="s12MaxHL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QLabel" name="lblMaxIterLbl">
+                <property name="text"><string>Max Iterations</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property></spacer>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinMaxIter">
+                <property name="minimum"><number>10</number></property>
+                <property name="maximum"><number>500</number></property>
+                <property name="value"><number>50</number></property>
+                <property name="maximumWidth"><number>80</number></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Action buttons -->
+            <item>
+             <layout class="QHBoxLayout" name="s12BtnHL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QPushButton" name="btnOptimize">
+                <property name="objectName"><string>btnOptimize</string></property>
+                <property name="text"><string>⚡  Optimize</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnViewResults">
+                <property name="objectName"><string>btnViewResults</string></property>
+                <property name="text"><string>✔  View Results</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 13: Data Drift Detection -->
+         <item>
+          <widget class="QGroupBox" name="grpDataDrift">
+           <property name="title"><string></string></property>
+           <layout class="QVBoxLayout" name="s13VL">
+            <property name="spacing"><number>6</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <item>
+             <layout class="QHBoxLayout" name="s13TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="sec13Num"><property name="objectName"><string>secNum</string></property><property name="text"><string>13</string></property></widget></item>
+              <item><widget class="QLabel" name="sec13Title"><property name="objectName"><string>secTitle</string></property><property name="text"><string>Data Drift Detection</string></property></widget></item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s13Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Reference Well Set -->
+            <item>
+             <widget class="QLabel" name="lblRefWellLbl">
+              <property name="text"><string>Reference Well Set</string></property>
+              <property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cboRefWell">
+              <item><property name="text"><string>Training Wells</string></property></item>
+             </widget>
+            </item>
+            <!-- Current Well -->
+            <item>
+             <widget class="QLabel" name="lblCurrWellLbl">
+              <property name="text"><string>Current Well</string></property>
+              <property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cboCurrWell">
+              <item><property name="text"><string>GORGONICHTHYS_1</string></property></item>
+             </widget>
+            </item>
+            <!-- Drift Score -->
+            <item>
+             <layout class="QHBoxLayout" name="s13DriftHL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QLabel" name="lblDriftScoreLbl">
+                <property name="text"><string>Drift Score:</string></property>
+                <property name="styleSheet"><string>font-size:10px;color:#64748B;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblDriftScoreVal">
+                <property name="text"><string>0.18</string></property>
+                <property name="styleSheet"><string>font-size:16px;font-weight:700;color:#1E293B;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblDriftStatus">
+                <property name="objectName"><string>badgeGreen</string></property>
+                <property name="text"><string>Low Drift</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- View Drift Report button -->
+            <item>
+             <widget class="QPushButton" name="btnViewDriftReport">
+              <property name="objectName"><string>btnViewDrift</string></property>
+              <property name="text"><string>📋  View Drift Report</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+         <!-- SECTION 14: Model Deployment -->
+         <item>
+          <widget class="QGroupBox" name="grpModelDeploy">
+           <property name="title"><string></string></property>
+           <property name="minimumWidth"><number>200</number></property>
+           <layout class="QVBoxLayout" name="s14VL">
+            <property name="spacing"><number>8</number></property>
+            <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+            <item>
+             <layout class="QHBoxLayout" name="s14TitleHL">
+              <property name="spacing"><number>6</number></property>
+              <item><widget class="QLabel" name="sec14Num"><property name="objectName"><string>secNum</string></property><property name="text"><string>14</string></property></widget></item>
+              <item><widget class="QLabel" name="sec14Title"><property name="objectName"><string>secTitle</string></property><property name="text"><string>Model Deployment</string></property></widget></item>
+             </layout>
+            </item>
+            <item><widget class="QFrame" name="s14Div"><property name="frameShape"><enum>QFrame::HLine</enum></property><property name="frameShadow"><enum>QFrame::Sunken</enum></property></widget></item>
+            <!-- Row 1: Save + Load -->
+            <item>
+             <layout class="QHBoxLayout" name="s14Row1HL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QPushButton" name="btnSaveModel">
+                <property name="objectName"><string>btnSaveModel</string></property>
+                <property name="text"><string>💾  Save Model</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnLoadModel">
+                <property name="objectName"><string>btnLoadModel</string></property>
+                <property name="text"><string>📂  Load Model</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnBatchPred1">
+                <property name="objectName"><string>btnBatch</string></property>
+                <property name="text"><string>⊞  Batch Prediction</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Row 2: Deploy + Batch -->
+            <item>
+             <layout class="QHBoxLayout" name="s14Row2HL">
+              <property name="spacing"><number>8</number></property>
+              <item>
+               <widget class="QPushButton" name="btnDeployNewWell">
+                <property name="objectName"><string>btnDeploy</string></property>
+                <property name="text"><string>🚀  Deploy on New Well</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnBatchPred2">
+                <property name="objectName"><string>btnBatch</string></property>
+                <property name="text"><string>⊞  Batch Prediction</string></property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <!-- Export -->
+            <item>
+             <widget class="QPushButton" name="btnExportPkg">
+              <property name="objectName"><string>btnExportPkg</string></property>
+              <property name="text"><string>↓  Export Model Package</string></property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation"><enum>Qt::Vertical</enum></property>
+              <property name="sizeHint" stdset="0"><size><width>20</width><height>10</height></size></property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+
+        </layout>
+       </item>
+
+       <!-- Bottom padding -->
+       <item>
+        <spacer>
+         <property name="orientation"><enum>Qt::Vertical</enum></property>
+         <property name="sizeHint" stdset="0"><size><width>20</width><height>8</height></size></property>
+        </spacer>
+       </item>
+
+      </layout>
+     </widget>
+    </widget>
+   </item>
+
+   <!-- =================== BOTTOM ACTION BAR =================== -->
+   <item>
+    <widget class="QFrame" name="bottomBar">
+     <layout class="QHBoxLayout" name="bottomHL">
+      <property name="leftMargin">
+      <number>20</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>20</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+      <property name="spacing"><number>10</number></property>
+      <!-- Back -->
+      <item>
+       <widget class="QPushButton" name="btnBack">
+        <property name="objectName"><string>btnBack</string></property>
+        <property name="text"><string>◀  Back</string></property>
+       </widget>
+      </item>
+      <!-- Reset All -->
+      <item>
+       <widget class="QPushButton" name="btnResetAll">
+        <property name="objectName"><string>btnReset</string></property>
+        <property name="text"><string>↺  Reset All</string></property>
+       </widget>
+      </item>
+      <!-- Spacer -->
+      <item>
+       <spacer>
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+       </spacer>
+      </item>
+      <!-- Preview -->
+      <item>
+       <widget class="QPushButton" name="btnPreviewPrediction">
+        <property name="objectName"><string>btnPreview</string></property>
+        <property name="text"><string>👁  Preview Prediction on Well</string></property>
+       </widget>
+      </item>
+      <!-- Apply -->
+      <item>
+       <widget class="QPushButton" name="btnApplyPrediction">
+        <property name="objectName"><string>btnApply</string></property>
+        <property name="text"><string>✔  Apply Prediction &amp; Save to Well</string></property>
+       </widget>
+      </item>
+      <!-- Export Results -->
+      <item>
+       <widget class="QPushButton" name="btnExportResults">
+        <property name="objectName"><string>btnExport</string></property>
+        <property name="text"><string>↓  Export Results</string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+
+ <customwidgets/>
+ <resources/>
+ <connections/>
+</ui>
