@@ -524,6 +524,23 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
              </widget>
             </item>
             <item>
+             <widget class="QLabel" name="lblWellSelectorLbl">
+              <property name="styleSheet">
+               <string>font-size: 10px; color: #64748B; font-weight: 600;</string>
+              </property>
+              <property name="text">
+               <string>Select Well</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cboWellSelector">
+              <property name="toolTip">
+               <string>Choose which well to use for prediction</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QLabel" name="lblTargetLogLbl">
               <property name="styleSheet">
                <string>font-size: 10px; color: #64748B; font-weight: 600;</string>
@@ -808,7 +825,7 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="feature_correlation_matrixpushButton">
               <property name="styleSheet">
                <string notr="true">QPushButton {
     background-color: qlineargradient(
