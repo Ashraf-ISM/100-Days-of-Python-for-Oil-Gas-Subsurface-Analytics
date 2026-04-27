@@ -412,7 +412,7 @@ class MainController:
             f"Well Tops for: {name}\n\nWell tops import / editing will be"
             " available in a future release.\nYou can currently load LAS files"
             " that include formation marker columns."
-        )
+        ) 
 
     def _go_to_3d_well_tab(self) -> None:
         """Switch to the 3D Well Viewer tab."""
