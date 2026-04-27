@@ -1838,9 +1838,18 @@ def main():
 
     # Create and show Splash Screen
     splash_path = ASSETS_DIR / "spalsh-petroarx.png"
+    # if splash_path.exists():
+    #     pixmap = QtGui.QPixmap(str(splash_path))
+    #     splash = QtWidgets.QSplashScreen(pixmap)
     if splash_path.exists():
-        pixmap = QtGui.QPixmap(str(splash_path))
-        splash = QtWidgets.QSplashScreen(pixmap)
+        splash.showMessage("Loading Petrophysics Engine...")
+        app.processEvents()
+    
+    window = PetroVisionMainWindow()
+    
+    if splash_path.exists():
+        splash.showMessage("Initializing AI Analytics...")
+        app.processEvents()
         
         # Add version/loading info to splash if desired 
         splash.show()
