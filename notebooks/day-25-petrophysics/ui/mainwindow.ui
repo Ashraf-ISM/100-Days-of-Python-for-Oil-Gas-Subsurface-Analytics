@@ -8762,6 +8762,12 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuAIAnalytics">
+    <property name="title">
+     <string>AI Analytics</string>
+    </property>
+    <addaction name="actionMissingLogPrediction"/>
+   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
@@ -9039,6 +9045,7 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
     <addaction name="actionUnsupervised"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuAIAnalytics"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuWell"/>
@@ -10000,6 +10007,14 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionMissingLogPrediction">
+   <property name="text">
+    <string>Missing Log Prediction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Predict missing log curves using machine learning</string>
    </property>
   </action>
   <action name="actionSaveProject">

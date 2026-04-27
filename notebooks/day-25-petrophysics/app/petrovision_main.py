@@ -9,7 +9,7 @@ THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
 UI_DIR = ROOT_DIR / "ui"
 UI_FILE = "mainwindow.ui"
-THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui"
+THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui" # Ui for the 3d well 
 WELL_CORRELATION_UI_FILE = "multiwell_correlation.ui" # Ui file for well correlation
 FACIES_CLASSIFICATION_UI_FILE = "facies_classifications.ui"
 if str(ROOT_DIR) not in sys.path:
