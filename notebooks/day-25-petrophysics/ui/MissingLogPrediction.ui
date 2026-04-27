@@ -359,6 +359,24 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
        </layout>
       </item>
       <item>
+       <widget class="QPushButton" name="btnLoadFromProject">
+        <property name="styleSheet">
+         <string>background-color: #2563EB; color: #FFFFFF; font-weight: 700;</string>
+        </property>
+        <property name="text"><string>🔄  Load from Project</string></property>
+        <property name="minimumWidth"><number>160</number></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnImportExternalLAS">
+        <property name="styleSheet">
+         <string>background-color: #E2E8F0; color: #1E293B; font-weight: 600;</string>
+        </property>
+        <property name="text"><string>📂  Upload LAS Separately</string></property>
+        <property name="minimumWidth"><number>180</number></property>
+       </widget>
+      </item>
+      <item>
        <spacer>
         <property name="orientation"><enum>Qt::Horizontal</enum></property>
         <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>

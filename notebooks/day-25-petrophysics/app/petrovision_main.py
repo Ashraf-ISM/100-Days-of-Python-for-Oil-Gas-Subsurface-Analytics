@@ -1332,27 +1332,15 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if data_svc is not None and hasattr(win, "set_data_service"):
             win.set_data_service(data_svc)
 
-    # ─── AI Analytics – Missing Log Prediction ──────────────────────────────────
     def _open_missing_log_prediction(self) -> None:
-        """Create and show the Missing Log Prediction dashboard."""
+        """Create and show the Missing Log Prediction dashboard using modular script."""
         if not hasattr(self, "_missing_log_win") or self._missing_log_win is None:
             try:
-                ui_path = UI_DIR / "MissingLogPrediction.ui"
-                if not ui_path.exists():
-                    raise FileNotFoundError(f"Missing Log Prediction UI file not found: {ui_path}")
+                from ai_analytics.missing_log.missing_log_window import MissingLogPredictionWindow
+                self._missing_log_win = MissingLogPredictionWindow(UI_DIR, parent=None)
                 
-                # Load the UI dynamically
-                self._missing_log_win = uic.loadUi(str(ui_path))
-                self._missing_log_win.setWindowTitle("PetroARX AI Analytics — Missing Log Prediction")
-                
-                # Handle window destruction
-                self._missing_log_win.setAttribute(QtCore.Qt.WA_DeleteOnClose, False)
-
-                # Connect help/doc buttons if present in UI
-                if hasattr(self._missing_log_win, "btnDocumentation"):
-                    self._missing_log_win.btnDocumentation.clicked.connect(self.show_help_dialog)
-                if hasattr(self._missing_log_win, "btnHowItWorks"):
-                    self._missing_log_win.btnHowItWorks.clicked.connect(self.show_help_dialog)
+                # Pass data service
+                self._inject_missing_log_data_service()
 
             except Exception as exc:
                 QtWidgets.QMessageBox.critical(self, "AI Analytics Error", 
@@ -1363,6 +1351,15 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._missing_log_win.show()
         self._missing_log_win.raise_()
         self._missing_log_win.activateWindow()
+
+    def _inject_missing_log_data_service(self) -> None:
+        """Pass the live DataService into the Missing Log Prediction window."""
+        win = getattr(self, "_missing_log_win", None)
+        if win is None:
+            return
+        data_svc = getattr(self, "controller", None).data if hasattr(self, "controller") else None
+        if data_svc is not None and hasattr(win, "set_data_service"):
+            win.set_data_service(data_svc)
 
     def refresh_facies_classification_tab(self) -> None:
         """Called by DataService after well import/deletion – refreshes the window."""
