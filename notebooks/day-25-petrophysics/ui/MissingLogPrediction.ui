@@ -557,31 +557,6 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
               </property>
               <item>
                <widget class="QComboBox" name="cboTargetLog">
-                <item>
-                 <property name="text">
-                  <string>RHOB - Density (g/cc)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>DT - Sonic (µs/ft)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>NPHI - Neutron Porosity (V/V)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>GR - Gamma Ray (API)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>RT - Resistivity (ohm.m)</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>
