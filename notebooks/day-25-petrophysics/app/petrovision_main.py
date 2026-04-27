@@ -11,7 +11,7 @@ UI_DIR = ROOT_DIR / "ui"
 UI_FILE = "mainwindow.ui"
 THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui" # Ui for the 3d well 
 WELL_CORRELATION_UI_FILE = "multiwell_correlation.ui" # Ui file for well correlation
-FACIES_CLASSIFICATION_UI_FILE = "facies_classifications.ui"
+FACIES_CLASSIFICATION_UI_FILE = "facies_classifications.ui" # UI For the facies classifications
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
