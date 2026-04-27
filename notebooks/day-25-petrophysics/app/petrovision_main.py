@@ -1827,42 +1827,53 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         elif current_tab is not None:
             tab_widget.setCurrentWidget(current_tab)
 
-
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    
-    # Set Global App Icon
+
+    # Set App Icon
     logo_path = ASSETS_DIR / "logo-petroarx.png"
     if logo_path.exists():
         app.setWindowIcon(QtGui.QIcon(str(logo_path)))
 
-    # Create and show Splash Screen
-    splash_path = ASSETS_DIR / "spalsh-petroarx.png"
-    # if splash_path.exists():
-    #     pixmap = QtGui.QPixmap(str(splash_path))
-    #     splash = QtWidgets.QSplashScreen(pixmap)
+    splash = None   # important
+
+    # Splash Screen
+    splash_path = ASSETS_DIR / "splash-petroarx.png"
+
     if splash_path.exists():
-        splash.showMessage("Loading Petrophysics Engine...")
-        app.processEvents()
-    
-    window = PetroVisionMainWindow()
-    
-    if splash_path.exists():
-        splash.showMessage("Initializing AI Analytics...")
-        app.processEvents()
-        
-        # Add version/loading info to splash if desired 
+        pixmap = QtGui.QPixmap(str(splash_path))
+        splash = QtWidgets.QSplashScreen(pixmap)
         splash.show()
+
+        splash.showMessage(
+            "Loading PetroARX...",
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignCenter,
+            QtCore.Qt.white
+        )
+
         app.processEvents()
-        
+
+    # Load Main Window
     window = PetroVisionMainWindow()
-    
-    if splash_path.exists():
-        window.show()
-        splash.finish(window)
+
+    if splash:
+        splash.showMessage(
+            "Initializing AI Modules...",
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignCenter,
+            QtCore.Qt.white
+        )
+        app.processEvents()
+
+        QtCore.QTimer.singleShot(
+            3000,   # control splash time here
+            lambda: (
+                window.show(),
+                splash.finish(window)
+            )
+        )
     else:
         window.show()
-        
+
     sys.exit(app.exec_())
 
 
