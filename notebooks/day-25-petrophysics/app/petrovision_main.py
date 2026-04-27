@@ -61,6 +61,10 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self.menuTools.addAction(self.actionDataDownloader)
         self.actionDataDownloader.triggered.connect(self._open_data_downloader)
 
+        # AI Analytics connections
+        if hasattr(self, "actionMissingLogPrediction"):
+            self.actionMissingLogPrediction.triggered.connect(self._open_missing_log_prediction)
+
     def _open_data_downloader(self) -> None:
         from data.data_downloader_dialog import DataDownloaderWindow
         if not hasattr(self, '_data_downloader_win'):
@@ -1327,6 +1331,38 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 data_svc = getattr(ctrl, "data", None)
         if data_svc is not None and hasattr(win, "set_data_service"):
             win.set_data_service(data_svc)
+
+    # ─── AI Analytics – Missing Log Prediction ──────────────────────────────────
+    def _open_missing_log_prediction(self) -> None:
+        """Create and show the Missing Log Prediction dashboard."""
+        if not hasattr(self, "_missing_log_win") or self._missing_log_win is None:
+            try:
+                ui_path = UI_DIR / "MissingLogPrediction.ui"
+                if not ui_path.exists():
+                    raise FileNotFoundError(f"Missing Log Prediction UI file not found: {ui_path}")
+                
+                # Load the UI dynamically
+                self._missing_log_win = uic.loadUi(str(ui_path))
+                self._missing_log_win.setWindowTitle("PetroARX AI Analytics — Missing Log Prediction")
+                
+                # Handle window destruction
+                self._missing_log_win.setAttribute(QtCore.Qt.WA_DeleteOnClose, False)
+
+                # Connect help/doc buttons if present in UI
+                if hasattr(self._missing_log_win, "btnDocumentation"):
+                    self._missing_log_win.btnDocumentation.clicked.connect(self.show_help_dialog)
+                if hasattr(self._missing_log_win, "btnHowItWorks"):
+                    self._missing_log_win.btnHowItWorks.clicked.connect(self.show_help_dialog)
+
+            except Exception as exc:
+                QtWidgets.QMessageBox.critical(self, "AI Analytics Error", 
+                    f"Could not launch Missing Log Prediction module:\n{exc}")
+                self._missing_log_win = None
+                return
+
+        self._missing_log_win.show()
+        self._missing_log_win.raise_()
+        self._missing_log_win.activateWindow()
 
     def refresh_facies_classification_tab(self) -> None:
         """Called by DataService after well import/deletion – refreshes the window."""
