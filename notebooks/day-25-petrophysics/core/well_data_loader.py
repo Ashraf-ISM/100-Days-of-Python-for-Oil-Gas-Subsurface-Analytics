@@ -16,7 +16,7 @@ def _read_las(path: str):
     df.rename(columns={df.columns[0]: "DEPTH"}, inplace=True)
 
     header = {
-        "WELL": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.well},
+        "WELL": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.well}, 
         "PARAM": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.params}, 
     }
     log_info = {

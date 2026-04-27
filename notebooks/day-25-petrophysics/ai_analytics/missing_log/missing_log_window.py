@@ -116,8 +116,15 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
     def _on_target_log_changed(self, log_name: str):
         """Called when user picks a different target log."""
         self._update_data_display()
-        # Optionally update suggested features
-        # self._update_feature_suggestions(log_name)
+        
+        # Disable the target log in the features list
+        if hasattr(self, "_feature_checkboxes"):
+            for chk in self._feature_checkboxes:
+                if chk.text() == log_name:
+                    chk.setChecked(False)
+                    chk.setEnabled(False)
+                else:
+                    chk.setEnabled(True)
 
     def _populate_curve_lists(self):
         """Populate comboboxes and dynamically create checkboxes for features."""
