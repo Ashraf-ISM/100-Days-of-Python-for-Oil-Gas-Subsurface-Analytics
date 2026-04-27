@@ -9,12 +9,13 @@ from pathlib import Path
 from PyQt5 import QtWidgets, QtCore, QtGui, uic
 import pandas as pd
 
-from .prediction_engine        import MissingLogEngine
-from .correlation_viewer       import CorrelationMatrixDialog
-from .missing_intervals_viewer import MissingIntervalsDialog
-from .training_controller      import TrainingController
-from .model_manager            import ModelManager
-from .export_controller        import ExportController
+from .prediction_engine          import MissingLogEngine
+from .correlation_viewer         import CorrelationMatrixDialog
+from .missing_intervals_viewer   import MissingIntervalsDialog
+from .training_controller        import TrainingController
+from .model_manager              import ModelManager
+from .export_controller          import ExportController
+from .actual_vs_predicted_viewer import ActualVsPredictedDialog
 
 
 class MissingLogPredictionWindow(QtWidgets.QWidget):
@@ -99,6 +100,17 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         _wire(self, "btnPreview", self._preview_prediction)
         _wire(self, "btnApply",   self._train_and_apply)
         _wire(self, "btnExport",  self._export_results)
+
+        # Section 6 — Actual vs Predicted Log viewer
+        # Try several possible button names used in Qt Designer
+        for _btn_avp in (
+            "btnActualVsPredicted",
+            "btnWellLogTrack",
+            "btnCustomPlot",
+            "btnMatplotlibCanvas",
+            "btnViewActualVsPred",
+        ):
+            _wire(self, _btn_avp, self._open_actual_vs_predicted)
 
         # Section 9 — feature importance
         _wire(self, "btnExplainAI", self._explain_at_depth)
@@ -340,24 +352,50 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
 
     def _train_and_apply(self):
         """Main 'Apply Prediction & Save to Well' button."""
+        # After the worker finishes it will call _on_training_finished via signal.
+        # Connect once (guard against double-connect with a flag).
+        if not getattr(self, "_avp_signal_connected", False):
+            self._trainer._worker_finished_signal_proxy = self._on_training_finished
+            self._avp_signal_connected = False  # reset so flag works below
         self._trainer.start_training()
+        # The TrainingController connects finished → _on_finished internally;
+        # we additionally hook into it after start:
+        if self._trainer._worker is not None and not getattr(self, "_avp_signal_connected", False):
+            self._trainer._worker.finished.connect(self._on_training_finished)
+            self._avp_signal_connected = True
+
+    def _on_training_finished(self, result: dict):
+        """Called automatically after training completes — opens the viewer."""
+        self._open_actual_vs_predicted()
 
     def _preview_prediction(self):
-        """Preview prediction without saving."""
+        """Preview prediction without saving — opens the Actual vs Predicted viewer."""
+        self._open_actual_vs_predicted()
+
+    def _open_actual_vs_predicted(self):
+        """Open the professional Actual vs Predicted Log viewer dialog."""
         result = self._trainer.last_result
         if result is None:
             QtWidgets.QMessageBox.information(
-                self, "Preview",
-                "Train the model first (Apply Prediction)."
+                self, "Actual vs Predicted Log",
+                "Please train the model first (click 'Apply Prediction & Save to Well')."
             )
             return
-        QtWidgets.QMessageBox.information(
-            self, "Prediction Preview",
-            f"R² = {result['r2']:.4f}\n"
-            f"RMSE = {result['rmse']:.4f}\n"
-            f"MAE = {result['mae']:.4f}\n"
-            f"MAPE = {result['mape']:.2f}%"
+        if self._df is None:
+            QtWidgets.QMessageBox.information(
+                self, "Actual vs Predicted Log", "Load well data first."
+            )
+            return
+        target   = self.cboTargetLog.currentText() if hasattr(self, "cboTargetLog") else ""
+        features = self.get_selected_features()
+        dlg = ActualVsPredictedDialog(
+            df       = self._df,
+            target   = target,
+            features = features,
+            result   = result,
+            parent   = self,
         )
+        dlg.exec_()
 
     def _export_results(self):
         result = self._trainer.last_result
