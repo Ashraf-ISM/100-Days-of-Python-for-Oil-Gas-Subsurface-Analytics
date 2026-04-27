@@ -439,8 +439,8 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1623</width>
-        <height>1144</height>
+        <width>1855</width>
+        <height>1092</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="scrollVL">
@@ -751,13 +751,21 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
             </item>
             <item>
              <widget class="QScrollArea" name="scrollFeatures">
-              <property name="widgetResizable">
-               <bool>true</bool>
-              </property>
               <property name="styleSheet">
                <string notr="true">QScrollArea { border: none; background: transparent; }</string>
               </property>
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
               <widget class="QWidget" name="scrollFeaturesContent">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>329</width>
+                 <height>74</height>
+                </rect>
+               </property>
                <layout class="QVBoxLayout" name="lytFeatures">
                 <property name="spacing">
                  <number>4</number>
@@ -798,6 +806,58 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
                </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+    background-color: qlineargradient(
+        x1:0, y1:0,
+        x2:1, y2:1,
+        stop:0 #2563EB,
+        stop:1 #1D4ED8
+    );
+    
+    color: white;
+    border: none;
+    border-radius: 12px;
+    
+    font-size: 14px;
+    font-weight: bold;
+    font-family: &quot;Segoe UI&quot;;
+    
+    padding: 12px 20px;
+    
+    min-height: 45px;
+    min-width: 180px;
+    
+    text-align: center;
+}
+
+QPushButton:hover {
+    background-color: qlineargradient(
+        x1:0, y1:0,
+        x2:1, y2:1,
+        stop:0 #3B82F6,
+        stop:1 #2563EB
+    );
+}
+
+QPushButton:pressed {
+    background-color: #1E40AF;
+    padding-left: 22px;
+    padding-top: 14px;
+}
+
+QPushButton:disabled {
+    background-color: #CBD5E1;
+    color: #64748B;
+}</string>
+              </property>
+              <property name="text">
+               <string>Feature Correlation Matrix</string>
+              </property>
+             </widget>
             </item>
             <item>
              <spacer>
