@@ -1842,7 +1842,7 @@ def main():
         pixmap = QtGui.QPixmap(str(splash_path))
         splash = QtWidgets.QSplashScreen(pixmap)
         
-        # Add version/loading info to splash if desired
+        # Add version/loading info to splash if desired 
         splash.show()
         app.processEvents()
         
