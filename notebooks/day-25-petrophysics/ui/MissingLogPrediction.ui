@@ -1750,7 +1750,7 @@ font-size: 10px; font-weight: 700;
             <!-- Leaderboard table -->
             <item>
              <widget class="QTableWidget" name="tblLeaderboard">
-              <property name="rowCount"><number>5</number></property>
+              <property name="rowCount"><number>5</number></property> 
               <property name="columnCount"><number>5</number></property>
               <property name="minimumHeight"><number>100</number></property>
               <property name="showGrid"><bool>false</bool></property>
