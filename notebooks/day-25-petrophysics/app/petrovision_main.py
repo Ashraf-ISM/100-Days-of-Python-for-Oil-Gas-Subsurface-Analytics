@@ -12,6 +12,7 @@ UI_FILE = "mainwindow.ui"
 THREE_D_WELL_UI_FILE = "tab_3d_well_visualization.ui" # Ui for the 3d well 
 WELL_CORRELATION_UI_FILE = "multiwell_correlation.ui" # Ui file for well correlation
 FACIES_CLASSIFICATION_UI_FILE = "facies_classifications.ui" # UI For the facies classifications
+ASSETS_DIR = ROOT_DIR / "assets"
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
@@ -28,6 +29,11 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         ui_path = UI_DIR / UI_FILE  
         uic.loadUi(str(ui_path), self)
         self.setWindowTitle("PetroARX v1.0 - Petrophysics Interpretation Platform")
+        
+        # Set Window Icon
+        logo_path = ASSETS_DIR / "logo-petroarx.png"
+        if logo_path.exists():
+            self.setWindowIcon(QtGui.QIcon(str(logo_path)))
         tab_widget = getattr(self, "centralTabWidget", None)
         if tab_widget is not None:
             self.setCentralWidget(tab_widget)
@@ -133,6 +139,13 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         hero_text.addWidget(self._dashboard_well_label)
         hero_text.addStretch(1)
         hero_layout.addLayout(hero_text, 3)
+
+        # Add Logo to Dashboard
+        logo_label = QtWidgets.QLabel(hero)
+        logo_pixmap = QtGui.QPixmap(str(ASSETS_DIR / "logo-petroarx.png"))
+        if not logo_pixmap.isNull():
+            logo_label.setPixmap(logo_pixmap.scaled(120, 120, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation))
+        hero_layout.addWidget(logo_label)
 
         badge_col = QtWidgets.QVBoxLayout()
         badge_col.setSpacing(10)
@@ -1817,8 +1830,30 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
+    
+    # Set Global App Icon
+    logo_path = ASSETS_DIR / "logo-petroarx.png"
+    if logo_path.exists():
+        app.setWindowIcon(QtGui.QIcon(str(logo_path)))
+
+    # Create and show Splash Screen
+    splash_path = ASSETS_DIR / "spalsh-petroarx.png"
+    if splash_path.exists():
+        pixmap = QtGui.QPixmap(str(splash_path))
+        splash = QtWidgets.QSplashScreen(pixmap)
+        
+        # Add version/loading info to splash if desired
+        splash.show()
+        app.processEvents()
+        
     window = PetroVisionMainWindow()
-    window.show()
+    
+    if splash_path.exists():
+        window.show()
+        splash.finish(window)
+    else:
+        window.show()
+        
     sys.exit(app.exec_())
 
 
