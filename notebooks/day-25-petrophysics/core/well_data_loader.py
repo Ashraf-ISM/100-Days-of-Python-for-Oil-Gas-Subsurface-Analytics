@@ -17,7 +17,7 @@ def _read_las(path: str):
 
     header = {
         "WELL": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.well},
-        "PARAM": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.params},
+        "PARAM": {item.mnemonic: {"unit": item.unit, "value": item.value, "desc": item.descr} for item in las.params}, 
     }
     log_info = {
         curve.mnemonic: {
