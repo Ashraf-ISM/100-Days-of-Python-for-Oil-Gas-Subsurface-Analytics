@@ -436,7 +436,7 @@ class MainController:
         )
 
     def _show_core_data_info(self) -> None:
-        """Placeholder for Core Data viewer."""
+        """Placeholder for Core Data viewer.""" 
         QtWidgets.QMessageBox.information(
             self.ui, "Core Data",
             "Core data import and display will be available in a future release.\n"
