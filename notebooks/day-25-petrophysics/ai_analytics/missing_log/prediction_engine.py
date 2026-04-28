@@ -134,6 +134,7 @@ class MissingLogEngine:
         corr = corr.drop(target_log, errors="ignore")
         return corr.sort_values(ascending=False).head(top_n).index.tolist()
 
+
     # ── unit guessing ─────────────────────────────────────────────────────────
 
     def guess_unit(self, log_name: str) -> str:
