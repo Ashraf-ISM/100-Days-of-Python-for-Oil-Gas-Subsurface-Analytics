@@ -263,7 +263,7 @@ class DataService:
             self.ui,
             "Import Well Data (Single or Multi-Well)",
             "",
-            "Well Data (*.las *.laz *.dlis *.dl *.csv *.txt *.dat *.asc)",
+            "Well Data (*.las *.laz *.dlis *.dl *.csv *.xlsx *.xls *.txt *.dat *.asc *.ascii)",
         )
         if not paths:
             return False
