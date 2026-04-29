@@ -96,7 +96,7 @@ class TrainingWorker(QtCore.QThread):
                 "cv_mean":     float(cv_scores.mean()),
                 "cv_std":      float(cv_scores.std()),
                 "importances": importances,
-                "n_train":     len(X_train),
+                "n_train":     len(X_train), 
                 "n_test":      len(X_test),
                 "n_features":  len(self.features),
                 "duration":    f"{minutes:02d}:{seconds:02d}",
