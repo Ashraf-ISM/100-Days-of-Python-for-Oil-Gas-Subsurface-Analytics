@@ -171,7 +171,7 @@ class TrainingWorker(QtCore.QThread):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# High-level training controller
+# High-level training controller 
 # ──────────────────────────────────────────────────────────────────────────────
 
 class TrainingController:
