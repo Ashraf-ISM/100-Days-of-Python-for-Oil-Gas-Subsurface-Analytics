@@ -132,8 +132,11 @@ class TrainingWorker(QtCore.QThread):
                                     verbosity=0, n_jobs=-1)
             except ImportError:
                 pass  # fall through to sklearn RF
+        
         # XGBoost (XGBoost Regressor): High-performance gradient boosting algorithm.
-        # 
+        # XGBoost Regressor: A machine learning algorithm that performs well on tabular data 
+        # (like well logs) and is often faster than traditional Random Forest.
+        # ──────────────────────────────────────────────────────────────
 
         if "lightgbm" in algo: 
             try:
