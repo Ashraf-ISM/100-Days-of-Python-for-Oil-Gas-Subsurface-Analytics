@@ -44,7 +44,7 @@ class MissingLogEngine:
     Core analytics engine for the Missing Log Prediction module.
 
     Provides data statistics, feature suggestion, interval detection
-    and unit guessing — all from a pandas DataFrame.
+    and unit guessing — all from a pandas DataFrame. 
     """
 
     def __init__(self, data: pd.DataFrame):
