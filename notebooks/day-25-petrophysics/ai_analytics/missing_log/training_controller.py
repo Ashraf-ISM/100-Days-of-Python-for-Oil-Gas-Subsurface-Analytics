@@ -142,7 +142,7 @@ class TrainingWorker(QtCore.QThread):
                                      verbose=-1, n_jobs=-1)
             except ImportError:
                 pass
- # Catboost
+        #Catboost
         if "catboost" in algo:
             try:
                 from catboost import CatBoostRegressor
