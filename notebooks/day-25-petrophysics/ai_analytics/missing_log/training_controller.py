@@ -272,5 +272,3 @@ def _set(win, name: str, val: str, index: int = 0):
     if widgets and index < len(widgets):
         widgets[index].setText(val)
 
-def
-
