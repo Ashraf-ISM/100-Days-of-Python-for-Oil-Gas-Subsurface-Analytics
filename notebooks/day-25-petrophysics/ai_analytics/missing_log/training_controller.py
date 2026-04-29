@@ -186,7 +186,7 @@ class TrainingController:
         self._result: Optional[dict]           = None
 
     def start_training(self):
-        """Kick off a background training job."""
+        """Kick off a background training job.""" 
         win = self._win
         df  = getattr(win, "_df", None)
         if df is None or df.empty:
