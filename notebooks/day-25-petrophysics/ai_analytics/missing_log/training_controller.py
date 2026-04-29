@@ -104,6 +104,7 @@ class TrainingWorker(QtCore.QThread):
                 "X_test":      X_test,
                 "y_test":      y_test,
                 "y_pred":      y_pred,
+                
             })
 
         except Exception as exc:
