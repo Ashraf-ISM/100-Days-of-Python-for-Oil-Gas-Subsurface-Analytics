@@ -31,7 +31,7 @@ class TrainingWorker(QtCore.QThread):
         super().__init__(parent)
         self.df           = df
         self.target       = target
-        self.features     = features
+        self.features     = features 
         self.algorithm    = algorithm
         self.test_size    = test_size
         self.cv_folds     = cv_folds
