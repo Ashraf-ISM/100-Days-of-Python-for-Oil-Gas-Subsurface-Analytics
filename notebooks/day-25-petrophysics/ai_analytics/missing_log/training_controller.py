@@ -87,7 +87,7 @@ class TrainingWorker(QtCore.QThread):
 
             self.progress.emit(100, "Completed ✔")
             self.finished.emit({
-                "model":       model,
+                "model":       model, 
                 "r2":          r2,
                 "rmse":        rmse,
                 "mae":         mae,
