@@ -556,8 +556,7 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
                <number>6</number>
               </property>
               <item>
-               <widget class="QComboBox" name="cboTargetLog">
-               </widget>
+               <widget class="QComboBox" name="cboTargetLog"/>
               </item>
               <item>
                <widget class="QPushButton" name="btnSecondary">
@@ -725,7 +724,7 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
               <item>
                <widget class="QLabel" name="secTitle">
                 <property name="text">
-                 <string>Input Features (Available Logs)</string>
+                 <string>Input Features (Available Logs) </string>
                 </property>
                </widget>
               </item>
@@ -754,7 +753,7 @@ QProgressBar::chunk { background-color: #10B981; border-radius: 4px; }
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>329</width>
+                 <width>335</width>
                  <height>74</height>
                 </rect>
                </property>
