@@ -176,7 +176,7 @@ class TrainingWorker(QtCore.QThread):
 
 class TrainingController:
     """
-    Manages a single training session for the Missing Log window.
+    Manages a single training session for the Missing Log window. 
     """
 
     def __init__(self, window):
