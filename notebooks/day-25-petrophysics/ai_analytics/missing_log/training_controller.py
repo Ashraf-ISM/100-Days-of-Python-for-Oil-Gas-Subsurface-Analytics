@@ -52,7 +52,7 @@ class TrainingWorker(QtCore.QThread):
             self.progress.emit(35, "Building model …")
             model = self._build_model()
 
-            self.progress.emit(50, "Cross-validating …")
+            self.progress.emit(50, "Cross-validating  …")
             cv_scores = cross_val_score(
                 model, X_train, y_train,
                 cv=self.cv_folds, scoring="r2",
