@@ -21,7 +21,7 @@ from PyQt5 import QtCore, QtWidgets
 class TrainingWorker(QtCore.QThread):
     """Runs training on a background thread and emits progress + results."""
 
-    progress = QtCore.pyqtSignal(int, str)          # (percent, status_text)
+    progress = QtCore.pyqtSignal(int, str)          # (percent, status_text) 
     finished = QtCore.pyqtSignal(dict)               # result dict
     failed   = QtCore.pyqtSignal(str)               # error message
 
