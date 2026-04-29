@@ -58,7 +58,7 @@ class MissingLogEngine:
             return None
 
         series  = self.df[target_log]
-        total   = len(series)
+        total   = len(series) 
         missing = int(series.isna().sum())
         pct     = (missing / total * 100) if total > 0 else 0.0
 
