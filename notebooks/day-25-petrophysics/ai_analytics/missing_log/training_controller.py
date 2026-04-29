@@ -133,9 +133,8 @@ class TrainingWorker(QtCore.QThread):
                                     verbosity=0, n_jobs=-1)
             except ImportError:
                 pass  # fall through to sklearn RF
-                
-        # 
-
+        
+        #LightGBM
         if "lightgbm" in algo: 
             try:
                 from lightgbm import LGBMRegressor
