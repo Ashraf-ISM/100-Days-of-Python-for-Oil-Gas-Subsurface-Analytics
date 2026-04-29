@@ -102,7 +102,7 @@ class TrainingWorker(QtCore.QThread):
                 "duration":    f"{minutes:02d}:{seconds:02d}",
                 "algorithm":   self.algorithm,
                 "X_test":      X_test,
-                "y_test":      y_test,
+                "y_test":      y_test, 
                 "y_pred":      y_pred,
                 
             })
