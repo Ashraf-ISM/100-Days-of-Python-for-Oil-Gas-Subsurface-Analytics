@@ -271,3 +271,4 @@ def _set(win, name: str, val: str, index: int = 0):
     widgets = win.findChildren(QtWidgets.QLabel, name)
     if widgets and index < len(widgets):
         widgets[index].setText(val)
+        
