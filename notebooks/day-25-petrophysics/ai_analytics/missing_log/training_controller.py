@@ -15,7 +15,7 @@ from PyQt5 import QtCore, QtWidgets
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Background worker thread and 
+# Background worker thread and training controller 
 # ──────────────────────────────────────────────────────────────────────────────
 
 class TrainingWorker(QtCore.QThread):
