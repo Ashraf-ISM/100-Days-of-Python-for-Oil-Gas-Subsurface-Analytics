@@ -132,6 +132,8 @@ class TrainingWorker(QtCore.QThread):
                                     verbosity=0, n_jobs=-1)
             except ImportError:
                 pass  # fall through to sklearn RF
+        # XGBoost (XGBoost Regressor): High-performance gradient boosting algorithm.
+        # 
 
         if "lightgbm" in algo: 
             try:
@@ -162,7 +164,7 @@ class TrainingWorker(QtCore.QThread):
             from sklearn.pipeline import make_pipeline
             from sklearn.svm import SVR
             return make_pipeline(StandardScaler(), SVR(kernel="rbf"))
-    
+
         # Default: Random Forest
         from sklearn.ensemble import RandomForestRegressor
         return RandomForestRegressor(n_estimators=200, random_state=rs, n_jobs=-1)
