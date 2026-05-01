@@ -49,6 +49,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._connect_edit_actions()
         self.controller = MainController(self)
         self._wire_3d_well_controls()
+        self._setup_browser_stylesheet()   # ← professional Project Browser styling
         self._build_dashboard()
         self.refresh_dashboard_tab()
         self.refresh_3d_well_tab()
@@ -70,6 +71,285 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         # AI Analytics connections
         if hasattr(self, "actionMissingLogPrediction"):
             self.actionMissingLogPrediction.triggered.connect(self._open_missing_log_prediction)
+
+    # ── Project Browser – Professional Dark-Theme Styling ───────────────────
+
+    def _setup_browser_stylesheet(self) -> None:
+        """Apply a dark-navy professional stylesheet to the Project Browser dock."""
+        # ── Dock widget (title + frame)
+        dock = getattr(self, "dockBrowser", None)
+        if dock is not None:
+            dock.setStyleSheet("""
+                QDockWidget {
+                    background: #0D1B2A;
+                    color: #CFD8DC;
+                    border: none;
+                }
+                QDockWidget::title {
+                    background: qlineargradient(
+                        x1:0, y1:0, x2:1, y2:0,
+                        stop:0 #0D1B2A, stop:1 #162333
+                    );
+                    color: #64B5F6;
+                    font-weight: 700;
+                    font-size: 11px;
+                    padding: 6px 10px;
+                    border-bottom: 2px solid #1C3854;
+                }
+            """)
+
+        # ── Dock content container
+        contents = getattr(self, "dockBrowserContents", None)
+        if contents is not None:
+            contents.setStyleSheet("background: #0D1B2A;")
+
+        # ── Search bar
+        search = getattr(self, "lineEditBrowserSearch", None)
+        if search is not None:
+            search.setStyleSheet("""
+                QLineEdit {
+                    background: #132030;
+                    color: #CFD8DC;
+                    border: 1px solid #1E3A54;
+                    border-radius: 8px;
+                    padding: 5px 10px;
+                    font-size: 11px;
+                }
+                QLineEdit:focus {
+                    border: 1px solid #2979FF;
+                    background: #0F2233;
+                }
+                QLineEdit::placeholder {
+                    color: #4A6070;
+                }
+            """)
+            # Live tree filter
+            search.textChanged.connect(self._filter_project_tree)
+
+        # ── Tab widget inside the browser
+        tab_browser = getattr(self, "tabBrowser", None)
+        if tab_browser is not None:
+            tab_browser.setStyleSheet("""
+                QTabWidget::pane {
+                    background: #0D1B2A;
+                    border: none;
+                    border-top: 2px solid #1C3854;
+                }
+                QTabBar::tab {
+                    background: #0D1B2A;
+                    color: #607D8B;
+                    font-size: 10px;
+                    font-weight: 600;
+                    padding: 5px 14px;
+                    border: none;
+                    border-bottom: 2px solid transparent;
+                    min-width: 60px;
+                }
+                QTabBar::tab:selected {
+                    color: #64B5F6;
+                    border-bottom: 2px solid #2979FF;
+                    background: #0F2233;
+                }
+                QTabBar::tab:hover:!selected {
+                    color: #90CAF9;
+                    background: #112030;
+                }
+            """)
+
+        # ── Project tree
+        tree_project = getattr(self, "treeProject", None)
+        if tree_project is not None:
+            self._apply_tree_stylesheet(tree_project)
+            # Auto-resize Info column
+            tree_project.setColumnWidth(0, 148)
+            tree_project.setColumnWidth(1, 92)
+            header = tree_project.header()
+            if header:
+                header.setStyleSheet("""
+                    QHeaderView::section {
+                        background: #0D1B2A;
+                        color: #4A6070;
+                        font-size: 9px;
+                        font-weight: 700;
+                        padding: 4px 6px;
+                        border: none;
+                        border-bottom: 1px solid #1C3854;
+                    }
+                """)
+
+        # ── Curves tree
+        tree_curves = getattr(self, "treeCurves", None)
+        if tree_curves is not None:
+            self._apply_tree_stylesheet(tree_curves)
+            header = tree_curves.header()
+            if header:
+                header.setStyleSheet("""
+                    QHeaderView::section {
+                        background: #0D1B2A;
+                        color: #4A6070;
+                        font-size: 9px;
+                        font-weight: 700;
+                        padding: 4px 6px;
+                        border: none;
+                        border-bottom: 1px solid #1C3854;
+                    }
+                """)
+
+        # ── Bottom action buttons
+        btn_add  = getattr(self, "btnBrowseAddWell", None)
+        btn_imp  = getattr(self, "btnBrowseImport", None)
+        btn_ref  = getattr(self, "btnBrowseRefresh", None)
+        if btn_add is not None:
+            btn_add.setStyleSheet("""
+                QPushButton {
+                    background: #1B5E20; color: #A5D6A7;
+                    border: none; border-radius: 6px;
+                    padding: 5px 10px; font-size: 10px; font-weight: 700;
+                }
+                QPushButton:hover  { background: #2E7D32; color: #FFFFFF; }
+                QPushButton:pressed { background: #1B5E20; }
+            """)
+        if btn_imp is not None:
+            btn_imp.setStyleSheet("""
+                QPushButton {
+                    background: #0D3B70; color: #90CAF9;
+                    border: none; border-radius: 6px;
+                    padding: 5px 10px; font-size: 10px; font-weight: 700;
+                }
+                QPushButton:hover  { background: #1565C0; color: #FFFFFF; }
+                QPushButton:pressed { background: #0D3B70; }
+            """)
+        if btn_ref is not None:
+            btn_ref.setStyleSheet("""
+                QPushButton {
+                    background: #1A3A4A; color: #80DEEA;
+                    border: none; border-radius: 6px;
+                    padding: 5px 10px; font-size: 10px; font-weight: 700;
+                }
+                QPushButton:hover  { background: #006064; color: #FFFFFF; }
+                QPushButton:pressed { background: #1A3A4A; }
+            """)
+            # Wire Refresh to rebuild the tree
+            btn_ref.clicked.connect(self._refresh_browser_tree)
+
+    def _apply_tree_stylesheet(self, tree: QtWidgets.QTreeWidget) -> None:
+        """Apply the shared dark-navy stylesheet to a QTreeWidget."""
+        tree.setStyleSheet("""
+            QTreeWidget {
+                background: #0D1B2A;
+                alternate-background-color: #0F2233;
+                color: #CFD8DC;
+                border: none;
+                outline: none;
+                font-size: 11px;
+            }
+            QTreeWidget::item {
+                padding: 3px 4px;
+                border-radius: 4px;
+            }
+            QTreeWidget::item:selected {
+                background: #1565C0;
+                color: #FFFFFF;
+            }
+            QTreeWidget::item:hover:!selected {
+                background: #132840;
+            }
+            QTreeWidget::branch {
+                background: #0D1B2A;
+            }
+            QTreeWidget::branch:has-children:!has-siblings:closed,
+            QTreeWidget::branch:closed:has-children:has-siblings {
+                border-image: none;
+                image: url(none);
+            }
+            QScrollBar:vertical {
+                background: #0A1520;
+                width: 6px;
+                border-radius: 3px;
+            }
+            QScrollBar::handle:vertical {
+                background: #2979FF;
+                border-radius: 3px;
+                min-height: 24px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+            QScrollBar:horizontal {
+                background: #0A1520;
+                height: 6px;
+                border-radius: 3px;
+            }
+            QScrollBar::handle:horizontal {
+                background: #2979FF;
+                border-radius: 3px;
+            }
+            QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+                width: 0px;
+            }
+        """)
+
+    def _filter_project_tree(self, text: str) -> None:
+        """Show/hide tree items based on search text (case-insensitive)."""
+        tree = getattr(self, "treeProject", None)
+        if tree is None:
+            return
+        text = text.strip().lower()
+
+        def _set_visible(item: QtWidgets.QTreeWidgetItem, show: bool) -> None:
+            item.setHidden(not show)
+            for i in range(item.childCount()):
+                item.child(i).setHidden(not show)
+
+        if not text:
+            # Restore full tree
+            iterator = QtWidgets.QTreeWidgetItemIterator(tree)
+            while iterator.value():
+                iterator.value().setHidden(False)
+                iterator += 1
+            return
+
+        # Walk top-level (project root) → wells → children
+        for r in range(tree.topLevelItemCount()):
+            root = tree.topLevelItem(r)
+            root.setHidden(False)
+            any_well_visible = False
+            for w in range(root.childCount()):
+                well_item = root.child(w)
+                well_matches = text in well_item.text(0).lower()
+                any_curve_visible = False
+                for c in range(well_item.childCount()):
+                    child = well_item.child(c)
+                    child_label = child.text(0).lower()
+                    child_match = text in child_label
+                    # Also search grandchildren (curve rows)
+                    any_grandchild = False
+                    for g in range(child.childCount()):
+                        gc = child.child(g)
+                        gc_match = text in gc.text(0).lower()
+                        gc.setHidden(not gc_match)
+                        if gc_match:
+                            any_grandchild = True
+                    child_visible = child_match or any_grandchild
+                    child.setHidden(not child_visible)
+                    if child_visible:
+                        child.setExpanded(True)
+                        any_curve_visible = True
+                well_visible = well_matches or any_curve_visible
+                well_item.setHidden(not well_visible)
+                if well_visible:
+                    well_item.setExpanded(True)
+                    any_well_visible = True
+
+    def _refresh_browser_tree(self) -> None:
+        """Refresh both the Project and Curves trees."""
+        data_svc = getattr(getattr(self, "controller", None), "data", None)
+        if data_svc is None:
+            return
+        data_svc._update_project_tree()
+        well = data_svc._get_current_well()
+        if well is not None:
+            data_svc._update_curves_tree(well)
 
     def _open_data_downloader(self) -> None:
         from data.data_downloader_dialog import DataDownloaderWindow
