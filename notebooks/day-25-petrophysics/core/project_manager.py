@@ -251,3 +251,4 @@ def _safe_filename(name: str) -> str:
     """Convert an arbitrary well name to a safe ZIP entry filename."""
     safe = "".join(c if c.isalnum() or c in "-_." else "_" for c in name)
     return safe or "well"
+ 
