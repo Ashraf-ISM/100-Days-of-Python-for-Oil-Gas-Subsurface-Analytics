@@ -24,7 +24,7 @@ from typing import Any, Dict, Optional, Tuple
 from core.app_state import AppState
 
 # ── Format version written to every manifest ──────────────────────────────────
-FORMAT_VERSION = "1.0"
+FORMAT_VERSION = "1.0" 
 
 
 # ─────────────────────────────────────────────────────────────────────────────
