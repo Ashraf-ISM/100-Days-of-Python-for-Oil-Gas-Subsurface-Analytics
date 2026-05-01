@@ -16,7 +16,7 @@ from .training_controller        import TrainingController
 from .model_manager              import ModelManager
 from .export_controller          import ExportController
 from .actual_vs_predicted_viewer import ActualVsPredictedDialog
-
+ 
 
 class MissingLogPredictionWindow(QtWidgets.QWidget):
     """
