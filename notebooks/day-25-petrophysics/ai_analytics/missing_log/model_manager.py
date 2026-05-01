@@ -14,7 +14,7 @@ class ModelManager:
     """Saves and loads models for the Missing Log Prediction module."""
 
     def save_model(self, model, metadata: dict, parent_widget=None):
-        """Prompt the user for a file path and pickle the model + metadata."""
+        """Prompt the user for a file path and pickle the model + metadata.""" 
         path, _ = QtWidgets.QFileDialog.getSaveFileName(
             parent_widget, "Save Model",
             "missing_log_model.pkl",
