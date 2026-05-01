@@ -2,7 +2,7 @@
 
 File layout inside the ZIP archive
 ────────────────────────────────────
-  manifest.json          Human-readable project metadata + well list
+  manifest.json          Human-readable project metadata + well list 
   state.pkl              Pickled AppState (all UI / panel parameters)
   wells/<name>.pkl       One pickled Well object per well
                          (preserves full DataFrame including computed curves)
