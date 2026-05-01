@@ -229,7 +229,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 QPushButton:hover  { background: #006064; color: #FFFFFF; }
                 QPushButton:pressed { background: #1A3A4A; }
             """)
-            # Wire Refresh to rebuild the tree
+            # Wire Refresh to rebuild the tree 
             btn_ref.clicked.connect(self._refresh_browser_tree)
 
     def _apply_tree_stylesheet(self, tree: QtWidgets.QTreeWidget) -> None:

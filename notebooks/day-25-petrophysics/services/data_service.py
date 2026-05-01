@@ -1038,15 +1038,15 @@ th {{ background: #F8FBFE; }}
 
     # ── Project Browser Tree Helpers ─────────────────────────────────────────
 
-    # Palette constants for the dark-themed tree
-    _C_PROJECT   = "#64B5F6"   # sky-blue  – project root
-    _C_ACTIVE    = "#81C784"   # mint-green – active well
-    _C_INACTIVE  = "#CFD8DC"   # light-grey – inactive well
-    _C_FOLDER    = "#90A4AE"   # blue-grey  – sub-folders
-    _C_CURVE_RAW = "#B0BEC5"   # pale       – raw curve rows
-    _C_CURVE_CMP = "#FFD54F"   # amber      – computed curve rows
-    _C_BADGE_OK  = "#4CAF50"   # green      – ACTIVE badge
-    _C_BADGE_CNT = "#78909C"   # slate      – curve-count badge
+    # Palette constants for the light-themed tree (must match project_browser_panel.py)
+    _C_PROJECT   = "#0D47A1"   # deep-blue    – project root
+    _C_ACTIVE    = "#2E7D32"   # deep-green   – active well
+    _C_INACTIVE  = "#37474F"   # dark slate   – inactive well
+    _C_FOLDER    = "#546E7A"   # blue-grey    – sub-folders
+    _C_CURVE_RAW = "#455A64"   # dark teal    – raw curve rows
+    _C_CURVE_CMP = "#E65100"   # deep-orange  – computed curve rows
+    _C_BADGE_OK  = "#1B5E20"   # dark-green   – ACTIVE badge foreground
+    _C_BADGE_CNT = "#546E7A"   # slate        – curve-count badge
 
     def _make_tree_item(
         self,
