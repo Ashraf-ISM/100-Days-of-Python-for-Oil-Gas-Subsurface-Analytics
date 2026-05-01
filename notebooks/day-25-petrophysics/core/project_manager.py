@@ -230,7 +230,7 @@ def add_recent_project(path: str) -> None:
 
 
 def remove_recent_project(path: str) -> None:
-    """Remove a stale path from the recent-projects registry."""
+    """Remove a stale path from the recent-projects registry.""" 
     if not _RECENT_FILE.exists():
         return
     try:
