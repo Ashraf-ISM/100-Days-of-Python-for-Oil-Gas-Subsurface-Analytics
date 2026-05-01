@@ -1036,45 +1036,245 @@ th {{ background: #F8FBFE; }}
         if line_edit is not None:
             line_edit.setText(text)
 
+    # ── Project Browser Tree Helpers ─────────────────────────────────────────
+
+    # Palette constants for the dark-themed tree
+    _C_PROJECT   = "#64B5F6"   # sky-blue  – project root
+    _C_ACTIVE    = "#81C784"   # mint-green – active well
+    _C_INACTIVE  = "#CFD8DC"   # light-grey – inactive well
+    _C_FOLDER    = "#90A4AE"   # blue-grey  – sub-folders
+    _C_CURVE_RAW = "#B0BEC5"   # pale       – raw curve rows
+    _C_CURVE_CMP = "#FFD54F"   # amber      – computed curve rows
+    _C_BADGE_OK  = "#4CAF50"   # green      – ACTIVE badge
+    _C_BADGE_CNT = "#78909C"   # slate      – curve-count badge
+
+    def _make_tree_item(
+        self,
+        col0: str,
+        col1: str = "",
+        color: str = "#CFD8DC",
+        bold: bool = False,
+        italic: bool = False,
+        font_size: int = 8,
+        icon_sp=None,          # QStyle.StandardPixmap or None
+    ) -> QtWidgets.QTreeWidgetItem:
+        """Create a styled QTreeWidgetItem with consistent font and colour."""
+        item = QtWidgets.QTreeWidgetItem([col0, col1])
+        fg = QtGui.QColor(color)
+        font = QtGui.QFont()
+        font.setPointSize(font_size)
+        font.setBold(bold)
+        font.setItalic(italic)
+        for col in (0, 1):
+            item.setForeground(col, fg)
+            item.setFont(col, font)
+        if icon_sp is not None:
+            try:
+                style = QtWidgets.QApplication.style()
+                icon = style.standardIcon(icon_sp)
+                item.setIcon(0, icon)
+            except Exception:
+                pass
+        return item
+
     def _update_project_tree(self):
+        """Rebuild the Project tab tree with professional icons and styling."""
         tree = getattr(self.ui, "treeProject", None)
         if tree is None:
             return
+
+        tree.blockSignals(True)
         tree.clear()
-        for well_name in sorted(self._wells.keys()):
+
+        style = QtWidgets.QApplication.style()
+        SP = QtWidgets.QStyle
+
+        wells_sorted = sorted(self._wells.keys())
+        n_wells = len(wells_sorted)
+
+        # ── Project root node ──────────────────────────────────────────────────
+        proj_svc = getattr(getattr(self.ui, "_project_service", None), "current_project", None)
+        proj_name = getattr(proj_svc, "name", "Unsaved Project") if proj_svc else "Unsaved Project"
+        proj_label = f"{proj_name}"
+        proj_badge = f"{n_wells} well{'s' if n_wells != 1 else ''}"
+
+        root = self._make_tree_item(
+            proj_label, proj_badge,
+            color=self._C_PROJECT,
+            bold=True, font_size=9,
+            icon_sp=SP.SP_DriveHDIcon,
+        )
+        tree.addTopLevelItem(root)
+
+        for well_name in wells_sorted:
             well = self._wells[well_name]
-            well_item = QtWidgets.QTreeWidgetItem([well_name, "[Well]"])
-            tree.addTopLevelItem(well_item)
-            curves_parent = QtWidgets.QTreeWidgetItem(well_item, ["Curves", ""])
+            is_active = (well_name == self._current_well)
+
+            # count curves
+            df = getattr(well, "data", None)
             log_info = getattr(well, "log_info", {}) or {}
-            if log_info:
-                for curve_name, info in log_info.items():
-                    unit = info.get("unit", "")
-                    QtWidgets.QTreeWidgetItem(curves_parent, [curve_name, unit])
-            else:
-                df = getattr(well, "data", None)
-                if df is not None:
-                    for curve_name in df.columns:
-                        QtWidgets.QTreeWidgetItem(curves_parent, [str(curve_name), ""])
-        tree.expandAll()
+            all_curves = list(df.columns) if df is not None else list(log_info.keys())
+            n_curves = len(all_curves)
+
+            # ── Well node ──────────────────────────────────────────────────────
+            well_label = well_name
+            well_badge = f"● ACTIVE  ·  {n_curves} curves" if is_active else f"{n_curves} curves"
+            well_color = self._C_ACTIVE if is_active else self._C_INACTIVE
+            well_icon  = SP.SP_MessageBoxInformation if is_active else SP.SP_DirIcon
+
+            well_item = self._make_tree_item(
+                well_label, well_badge,
+                color=well_color,
+                bold=is_active, font_size=9,
+                icon_sp=well_icon,
+            )
+            if is_active:
+                # Extra bold green for the active badge column
+                badge_font = QtGui.QFont()
+                badge_font.setPointSize(8)
+                badge_font.setBold(True)
+                well_item.setFont(1, badge_font)
+                well_item.setForeground(1, QtGui.QColor(self._C_BADGE_OK))
+            root.addChild(well_item)
+
+            # ── Well Logs sub-folder ───────────────────────────────────────────
+            COMPUTED_SUFFIXES = {"VSH","PHIT","PHIE","SW","SXO","PERM","NET_PAY",
+                                  "VWCL","PAYFLAG","VSH_LINEAR","VSH_LARIONOV",
+                                  "VSH_CLAVIER","VSH_STEIBER","GR_INDEX"}
+            raw_curves, computed_curves = [], []
+            for cn in all_curves:
+                cnu = str(cn).upper()
+                if any(cnu == sfx or cnu.startswith(sfx + "_") for sfx in COMPUTED_SUFFIXES):
+                    computed_curves.append(cn)
+                else:
+                    raw_curves.append(cn)
+
+            logs_folder = self._make_tree_item(
+                f"Well Logs  ({n_curves})", "",
+                color=self._C_FOLDER,
+                italic=True, font_size=8,
+                icon_sp=SP.SP_FileDialogDetailedView,
+            )
+            well_item.addChild(logs_folder)
+
+            # raw curves
+            for cn in raw_curves:
+                unit = ""
+                if cn in log_info:
+                    unit = log_info[cn].get("unit", "")
+                c_item = self._make_tree_item(
+                    str(cn), unit,
+                    color=self._C_CURVE_RAW,
+                    font_size=8,
+                    icon_sp=SP.SP_FileIcon,
+                )
+                logs_folder.addChild(c_item)
+
+            # computed curves (amber)
+            for cn in computed_curves:
+                unit = ""
+                if cn in log_info:
+                    unit = log_info[cn].get("unit", "")
+                c_item = self._make_tree_item(
+                    str(cn), f"{unit}  [Computed]",
+                    color=self._C_CURVE_CMP,
+                    font_size=8,
+                    icon_sp=SP.SP_FileIcon,
+                )
+                logs_folder.addChild(c_item)
+
+            # ── Static sub-folders ────────────────────────────────────────────
+            static_folders = [
+                ("Well Tops",   SP.SP_CommandLink),
+                ("Trajectory",  SP.SP_BrowserReload),
+                ("Core Data",   SP.SP_DialogResetButton),
+                ("DST Data",    SP.SP_FileDialogContentsView),
+            ]
+            for folder_label, folder_icon in static_folders:
+                f_item = self._make_tree_item(
+                    folder_label, "",
+                    color=self._C_FOLDER,
+                    italic=True, font_size=8,
+                    icon_sp=folder_icon,
+                )
+                well_item.addChild(f_item)
+
+        # Expand project root and all well nodes; keep curve folders collapsed
+        root.setExpanded(True)
+        for i in range(root.childCount()):
+            root.child(i).setExpanded(True)
+
+        tree.blockSignals(False)
 
     def _update_curves_tree(self, well):
+        """Rebuild the Curves tab tree with categorised groups and icons."""
         tree = getattr(self.ui, "treeCurves", None)
         if tree is None or well is None:
             return
+
+        tree.blockSignals(True)
         tree.clear()
+
+        style = QtWidgets.QApplication.style()
+        SP = QtWidgets.QStyle
+
+        df = getattr(well, "data", None)
         log_info = getattr(well, "log_info", {}) or {}
-        if log_info:
-            for curve_name, info in log_info.items():
-                unit = info.get("unit", "")
-                curve_type = info.get("type", "")
-                QtWidgets.QTreeWidgetItem(tree, [curve_name, unit, curve_type])
-        else:
-            df = getattr(well, "data", None)
-            if df is None:
+        all_curves = list(df.columns) if df is not None else list(log_info.keys())
+
+        COMPUTED_KEYS = {"VSH","PHIT","PHIE","SW","SXO","PERM","NET_PAY",
+                         "VWCL","PAYFLAG","VSH_LINEAR","VSH_LARIONOV",
+                         "VSH_CLAVIER","VSH_STEIBER","GR_INDEX"}
+        QC_KEYS = {"QC","FLAG","SPIKE","OUTLIER","MISSING"}
+
+        raw_curves, computed_curves, qc_curves = [], [], []
+        for cn in all_curves:
+            cnu = str(cn).upper()
+            if any(cnu == k or cnu.startswith(k+"_") for k in QC_KEYS):
+                qc_curves.append(cn)
+            elif any(cnu == k or cnu.startswith(k+"_") for k in COMPUTED_KEYS):
+                computed_curves.append(cn)
+            else:
+                raw_curves.append(cn)
+
+        def _add_group(label: str, curves: list, color: str, badge_color: str, icon_sp):
+            if not curves:
                 return
-            for curve_name in df.columns:
-                QtWidgets.QTreeWidgetItem(tree, [str(curve_name), "", ""])
+            grp_item = QtWidgets.QTreeWidgetItem([f"{label}  ({len(curves)})", "", ""])
+            grp_font = QtGui.QFont()
+            grp_font.setBold(True)
+            grp_font.setPointSize(8)
+            grp_item.setFont(0, grp_font)
+            grp_item.setForeground(0, QtGui.QColor(badge_color))
+            try:
+                grp_item.setIcon(0, style.standardIcon(icon_sp))
+            except Exception:
+                pass
+            tree.addTopLevelItem(grp_item)
+
+            for cn in curves:
+                info = log_info.get(cn, {}) if isinstance(log_info, dict) else {}
+                unit = info.get("unit", "") if isinstance(info, dict) else ""
+                ctype = info.get("type", "") if isinstance(info, dict) else ""
+                c_item = QtWidgets.QTreeWidgetItem([str(cn), unit, ctype])
+                c_font = QtGui.QFont()
+                c_font.setPointSize(8)
+                c_item.setFont(0, c_font)
+                c_item.setForeground(0, QtGui.QColor(color))
+                c_item.setForeground(1, QtGui.QColor("#607D8B"))
+                c_item.setForeground(2, QtGui.QColor("#546E7A"))
+                try:
+                    c_item.setIcon(0, style.standardIcon(SP.SP_FileIcon))
+                except Exception:
+                    pass
+                grp_item.addChild(c_item)
+            grp_item.setExpanded(True)
+
+        _add_group("Raw Logs",      raw_curves,      self._C_CURVE_RAW, "#64B5F6", SP.SP_FileDialogDetailedView)
+        _add_group("Computed Logs", computed_curves, self._C_CURVE_CMP, "#FFD54F", SP.SP_FileDialogInfoView)
+        _add_group("QC Flags",      qc_curves,       "#EF9A9A",         "#EF9A9A", SP.SP_MessageBoxWarning)
+
+        tree.blockSignals(False)
 
     def _get_current_well(self):
         if self._current_well and self._current_well in self._wells:

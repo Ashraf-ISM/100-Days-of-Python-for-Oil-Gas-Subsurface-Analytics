@@ -244,7 +244,7 @@ def remove_recent_project(path: str) -> None:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  Internal helpers
+#  Internal helpers function
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _safe_filename(name: str) -> str:
