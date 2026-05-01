@@ -18,7 +18,7 @@ class ModelManager:
         path, _ = QtWidgets.QFileDialog.getSaveFileName(
             parent_widget, "Save Model",
             "missing_log_model.pkl",
-            "Pickle files (*.pkl);;All Files (*)"
+            "Pickle files (*.pkl);;All Files (*)" 
         )
         if not path:
             return False
