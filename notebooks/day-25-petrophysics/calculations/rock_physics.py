@@ -1,4 +1,4 @@
-"""Calculation stub (extend)."""
+"""Rock physics calculations panel"""
 from __future__ import annotations
 
 
