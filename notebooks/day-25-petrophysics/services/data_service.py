@@ -1038,7 +1038,7 @@ th {{ background: #F8FBFE; }}
 
     # ── Project Browser Tree Helpers ─────────────────────────────────────────
 
-    # Palette constants for the light-themed tree (must match project_browser_panel.py)
+    # Palette constants – light-theme friendly (legible on white background)
     _C_PROJECT   = "#0D47A1"   # deep-blue    – project root
     _C_ACTIVE    = "#2E7D32"   # deep-green   – active well
     _C_INACTIVE  = "#37474F"   # dark slate   – inactive well
@@ -1270,9 +1270,9 @@ th {{ background: #F8FBFE; }}
                 grp_item.addChild(c_item)
             grp_item.setExpanded(True)
 
-        _add_group("Raw Logs",      raw_curves,      self._C_CURVE_RAW, "#64B5F6", SP.SP_FileDialogDetailedView)
-        _add_group("Computed Logs", computed_curves, self._C_CURVE_CMP, "#FFD54F", SP.SP_FileDialogInfoView)
-        _add_group("QC Flags",      qc_curves,       "#EF9A9A",         "#EF9A9A", SP.SP_MessageBoxWarning)
+        _add_group("Raw Logs",      raw_curves,      self._C_CURVE_RAW, "#1565C0", SP.SP_FileDialogDetailedView)
+        _add_group("Computed Logs", computed_curves, self._C_CURVE_CMP, "#E65100", SP.SP_FileDialogInfoView)
+        _add_group("QC Flags",      qc_curves,       "#C62828",         "#C62828", SP.SP_MessageBoxWarning)
 
         tree.blockSignals(False)
 
