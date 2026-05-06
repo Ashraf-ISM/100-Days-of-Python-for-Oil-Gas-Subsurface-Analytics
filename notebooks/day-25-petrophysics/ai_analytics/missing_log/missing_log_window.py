@@ -57,7 +57,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
     # ─────────────────────────────────────────────────────────────────────────
 
     def _setup_connections(self):
-        """Connect every named button to its handler."""
+        """Connect every named button to its handlers."""
 
         # Header — data source
         _wire(self, "btnLoadFromProject",   self.load_from_active_well)
