@@ -27,7 +27,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         - Well / log selection
         - Dynamic feature checkbox list
         - Live statistics display
-        - Button wiring to separate service objects
+        - Button wiring to separate service objects 
     """
 
     def __init__(self, ui_dir: Path, parent=None):
