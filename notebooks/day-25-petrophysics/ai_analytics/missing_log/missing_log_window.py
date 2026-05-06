@@ -20,7 +20,7 @@ from .actual_vs_predicted_viewer import ActualVsPredictedDialog
 
 class MissingLogPredictionWindow(QtWidgets.QWidget):
     """
-    Main window controller for the Missing Log Prediction AI module.
+    Main window controller for the Missing Log Prediction AI modules.
 
     Responsibilities:
         - Data sourcing  (project wells or external LAS)
