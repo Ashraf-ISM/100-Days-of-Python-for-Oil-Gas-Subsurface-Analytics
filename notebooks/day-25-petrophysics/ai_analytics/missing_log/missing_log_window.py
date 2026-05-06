@@ -128,7 +128,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         _wire(self, "btnDeploy",       self._deploy_model)
 
     def _init_ui_state(self):
-        """Set initial placeholder text on stat labels."""
+        """Set initial placeholder text on stat labels ."""
         for name in ("lblDataPtsVal", "lblMissingVal", "lblDepthVal"):
             if hasattr(self, name):
                 getattr(self, name).setText("—")
