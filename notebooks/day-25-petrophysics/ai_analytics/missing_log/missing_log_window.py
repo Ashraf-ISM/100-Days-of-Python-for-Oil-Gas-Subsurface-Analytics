@@ -135,7 +135,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         if hasattr(self, "lblUnit"):
             self.lblUnit.setText("Unit: —")
         if hasattr(self, "btnViewIntervals"):
-            self.btnViewIntervals.setText("No data loaded")
+            self.btnViewIntervals.setText("No data loaded ")
 
     # ─────────────────────────────────────────────────────────────────────────
     # Data ingestion
