@@ -101,7 +101,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         _wire(self, "btnApply",   self._train_and_apply)
         _wire(self, "btnExport",  self._export_results)
 
-        # Section 6 — Actual vs Predicted Log viewer
+        # Section 6 — Actual vs Predicted Log viewer 
         # Try several possible button names used in Qt Designer
         for _btn_avp in (
             "btnActualVsPredicted",
