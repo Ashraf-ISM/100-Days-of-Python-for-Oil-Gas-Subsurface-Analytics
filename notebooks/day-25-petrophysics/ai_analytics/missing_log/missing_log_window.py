@@ -317,7 +317,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         dlg.exec_()
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Button handlers — Section 2 (Input Features)
+    # Button handlers — Section 2 (Input Features) 
     # ─────────────────────────────────────────────────────────────────────────
 
     def _open_correlation_matrix(self):
