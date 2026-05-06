@@ -116,7 +116,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         _wire(self, "btnExplainAI", self._explain_at_depth)
         _wire(self, "btnCompare",   self._compare_models)
 
-        # Section 10-14 — bottom panels
+        # Section 10-14 — bottom panels 
         _wire(self, "btnEditPipeline", self._edit_pipeline)
         _wire(self, "btnOptimize",     self._run_hyperopt)
         _wire(self, "btnViewResults",  self._view_optim_results)
