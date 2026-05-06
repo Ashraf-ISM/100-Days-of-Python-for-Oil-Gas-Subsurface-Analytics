@@ -180,7 +180,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         well = self._data_service._get_current_well()
         if well is None:
             QtWidgets.QMessageBox.warning(self, "Data Loading",
-                                          "No active well found in the project.")
+                                          "No active well found in the project. .")
             return
         self._df = well.data.copy()
         self._engine = MissingLogEngine(self._df)
