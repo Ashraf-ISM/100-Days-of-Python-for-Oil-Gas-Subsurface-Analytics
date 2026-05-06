@@ -35,7 +35,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         self.ui_dir = ui_dir
         uic.loadUi(str(ui_dir / "MissingLogPrediction.ui"), self)
 
-        self.setWindowTitle("PetroARX AI Analytics — Missing Log Prediction")
+        self.setWindowTitle("PetroARX AI Analytics — Missing Log Prediction ")
 
         # ── state ──────────────────────────────────────────────────────────────
         self._data_service      = None
