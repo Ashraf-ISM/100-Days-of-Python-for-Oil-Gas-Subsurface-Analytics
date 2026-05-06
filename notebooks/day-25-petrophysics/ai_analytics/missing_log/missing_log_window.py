@@ -112,7 +112,7 @@ class MissingLogPredictionWindow(QtWidgets.QWidget):
         ):
             _wire(self, _btn_avp, self._open_actual_vs_predicted)
 
-        # Section 9 — feature importance
+        # Section 9 — feature importance 
         _wire(self, "btnExplainAI", self._explain_at_depth)
         _wire(self, "btnCompare",   self._compare_models)
 
