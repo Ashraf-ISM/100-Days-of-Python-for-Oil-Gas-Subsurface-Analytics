@@ -26,7 +26,7 @@ class CorrelationMatrixDialog(QtWidgets.QDialog):
             f"📊  Correlation Matrix  —  Target: <b>{target_log}</b>"
         ) 
         header.setStyleSheet(
-            "font-size:14px; color:#1E293B; font-weight:700; padding:6px 0;"
+            "font-size:14px; color:#1E293B; font-weight:700; padding:6px 0; "
         )
         layout.addWidget(header) 
 
