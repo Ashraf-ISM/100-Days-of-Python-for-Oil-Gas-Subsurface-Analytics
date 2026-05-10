@@ -1,6 +1,6 @@
 """
 correlation_viewer.py
-Opens a professional feature correlation matrix dialog.
+Opens a professional feature correlation matrix dialog .
 """
 from __future__ import annotations
 
