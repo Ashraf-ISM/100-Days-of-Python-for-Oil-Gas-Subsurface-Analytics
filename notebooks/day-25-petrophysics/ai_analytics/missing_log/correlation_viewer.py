@@ -5,7 +5,7 @@ Opens a professional feature correlation matrix dialog.
 from __future__ import annotations
 
 import numpy as np
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui 
 
 
 class CorrelationMatrixDialog(QtWidgets.QDialog):
