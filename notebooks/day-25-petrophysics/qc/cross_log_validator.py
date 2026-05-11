@@ -1,5 +1,5 @@
 """
-cross_log_validator.py 
+cross_log_validator.py
 ======================
 Stage 5 of the enterprise spike detector: cross-log correlation.
 
@@ -16,8 +16,13 @@ candidate spike position:
   * 1.0   → no other log shows an anomaly at this depth
              (single-log artefact → high confidence it's a noise spike)
 
-The isolation score feeds directly into Stage 6 confidence weighting
-with coefficient 0.20 (see spike_detector.py).
+v2 change: depth_tolerance_samples (default 3) expands the search
+neighbourhood to ± N samples around the candidate.  This accounts for
+real-world tool offsets, depth mismatch, and different vertical
+resolution between logging runs.
+
+The isolation score feeds into Stage 6 confidence weighting with
+coefficient 0.20 (see spike_detector.py).
 
 Usage
 -----
@@ -28,10 +33,11 @@ Usage
         all_curves_df=df,
         valid_index=valid_index,
         depth_series=depth_series,
-        window=5,
-        mad_multiplier=3.0,
+        window=15,
+        mad_multiplier=4.5,
+        depth_tolerance_samples=3,
     )
-    # Returns a float array of length == len(candidate_indices)
+    # Returns float array, shape (len(candidate_indices),)
 """
 from __future__ import annotations
 
@@ -41,7 +47,7 @@ import numpy as np
 import pandas as pd
 
 
-# Curves that are checked as "companion" logs.
+# Curves checked as companion logs.
 # If the curve under test is one of these we do not include itself.
 _COMPANION_MNEMONICS = [
     "GR", "SGR", "CGR",
@@ -64,8 +70,9 @@ class CrossLogValidator:
         all_curves_df: pd.DataFrame,
         valid_index: pd.Index,
         depth_series: pd.Series,
-        window: int = 5,
-        mad_multiplier: float = 3.0,
+        window: int = 11,
+        mad_multiplier: float = 4.0,
+        depth_tolerance_samples: int = 3,
     ) -> np.ndarray:
         """Return isolation scores for each candidate spike index.
 
@@ -83,6 +90,10 @@ class CrossLogValidator:
             Analysis window for local MAD computation.
         mad_multiplier : float
             Multiplier for local MAD threshold (same as Stage 1).
+        depth_tolerance_samples : int
+            ± sample tolerance when checking companion log anomalies.
+            Handles tool offsets, depth mismatch, and differing vertical
+            resolution.  Default 3 samples (≈ 0.45 ft at 0.15 m sampling).
 
         Returns
         -------
@@ -95,8 +106,7 @@ class CrossLogValidator:
         # Identify companion columns in the DataFrame
         companion_cols = self._find_companion_cols(all_curves_df)
         if not companion_cols:
-            # No companion logs available → can't determine isolation
-            # Return 0.5 (neutral) so it doesn't unfairly penalise or boost
+            # No companion logs → neutral score (don't penalise or boost)
             return np.full(n_candidates, 0.5, dtype=float)
 
         # Pre-compute anomaly flags for each companion log over the valid index
@@ -114,23 +124,24 @@ class CrossLogValidator:
             return np.full(n_candidates, 0.5, dtype=float)
 
         flag_matrix = np.column_stack(list(companion_flags.values()))  # (n_valid, n_comp)
+        n_valid     = flag_matrix.shape[0]
         n_comp      = flag_matrix.shape[1]
 
-        # For each candidate, count how many companion logs also show an anomaly
+        # Effective search half-window: combines the MAD analysis window
+        # with the extra depth-tolerance samples
+        search_half = max(window // 2, 1) + depth_tolerance_samples
+
         isolation_scores = np.zeros(n_candidates, dtype=float)
-        win_half = window // 2
 
         for k, ci in enumerate(candidate_indices):
-            # Look in a small neighbourhood around the candidate
-            lo = max(0, ci - win_half)
-            hi = min(flag_matrix.shape[0], ci + win_half + 1)
-            window_flags = flag_matrix[lo:hi, :]   # (win_size, n_comp)
+            lo = max(0, ci - search_half)
+            hi = min(n_valid, ci + search_half + 1)
+            window_flags = flag_matrix[lo:hi, :]   # (neighbourhood, n_comp)
 
-            # A companion log "responds" if ANY point in this window is flagged
-            companion_responds = window_flags.any(axis=0)   # bool, shape (n_comp,)
+            # Companion responds if ANY sample in the tolerance window is flagged
+            companion_responds = window_flags.any(axis=0)   # bool (n_comp,)
             n_responding       = int(companion_responds.sum())
 
-            # isolation = 1 - fraction of responding companions
             isolation_scores[k] = 1.0 - n_responding / n_comp
 
         return np.clip(isolation_scores, 0.0, 1.0)
@@ -140,22 +151,23 @@ class CrossLogValidator:
     @staticmethod
     def _find_companion_cols(df: pd.DataFrame) -> list[str]:
         """Return columns in *df* that match known petrophysical mnemonics."""
-        cols = []
+        cols       = []
         upper_cols = {c.upper().strip(): c for c in df.columns}
         for mnem in _COMPANION_MNEMONICS:
             if mnem in upper_cols:
                 cols.append(upper_cols[mnem])
             else:
-                # Partial match: e.g. "GR_EDITED" still matches "GR"
                 for ucol, original in upper_cols.items():
                     if mnem in ucol and original not in cols:
                         cols.append(original)
                         break
         return cols
-  
+
     @staticmethod
-    def _local_mad_flags(values: np.ndarray, window: int, multiplier: float) -> np.ndarray:
-        """Rolling MAD anomaly detection (same logic as Stage 1)."""
+    def _local_mad_flags(
+        values: np.ndarray, window: int, multiplier: float
+    ) -> np.ndarray:
+        """Rolling MAD anomaly detection aligned with Stage 1 logic."""
         n      = len(values)
         flags  = np.zeros(n, dtype=bool)
         half_w = window // 2
@@ -175,4 +187,4 @@ class CrossLogValidator:
             if abs(values[i] - local_med) > multiplier * local_std:
                 flags[i] = True
 
-        return flags 
+        return flags
