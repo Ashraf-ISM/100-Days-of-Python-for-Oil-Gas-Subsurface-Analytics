@@ -201,7 +201,8 @@ class SpikeDetector:
         s4, run_lengths = self._stage4_persistence_tiered(s1)
 
         # ── Stage 5: Cross-Log Correlation ───────────────────────────────────
-        s5 = np.zeros(n, dtype=float)   # isolation scores
+        # s5 is None when no cross-log data → Stage 6 uses neutral 0.5 scores
+        s5 = None
         if (mode_e == DetectionMode.ADVANCED and cross_log_validation and
                 all_curves_df is not None):
             try:
@@ -219,7 +220,9 @@ class SpikeDetector:
 
         # ── Stage 6: Logical Gate → then Confidence Scoring ──────────────────
         confidence, hard_rejected = self._stage6_gated_confidence(
-            s1, s2, s3, s4, s5, values, win, curve_name, run_lengths,
+            s1, s2, s3, s4,
+            s5,          # None when no cross-log run
+            values, win, curve_name, run_lengths,
         )
 
         is_spike = (confidence >= confidence_threshold) & (~hard_rejected)
@@ -240,7 +243,7 @@ class SpikeDetector:
                 "gradient":    s2,
                 "physics":     s3,
                 "persistence": s4,
-                "cross_log":   (s5 > 0.5),
+                "cross_log":   (s5 > 0.5) if s5 is not None else np.zeros(n, dtype=bool),
             },
             spike_type=spike_type,
             n_spikes=int(is_spike.sum()),
@@ -451,7 +454,7 @@ class SpikeDetector:
         s2: np.ndarray,
         s3: np.ndarray,
         s4: np.ndarray,
-        s5_isolation: np.ndarray,
+        s5_isolation: Optional[np.ndarray],
         values: np.ndarray,
         win: int,
         curve_name: str,
@@ -462,7 +465,8 @@ class SpikeDetector:
         Gate order (hard rejects):
           1. Not a candidate (Stage 1 negative) → reject
           2. Persistence hard-rejected (run > 5) → reject
-          3. Physically valid AND cross-log correlated → reject
+          3. Physically fine AND companion logs actively corroborate (Gate 3
+             only fires when real cross-log data is available)
 
         Remaining candidates get confidence from weighted sum.
         Run-length 3–5 gets a 0.6× confidence penalty.
@@ -476,22 +480,24 @@ class SpikeDetector:
         confidence    = np.zeros(n, dtype=float)
         hard_rejected = np.zeros(n, dtype=bool)
 
-        # Build isolation score array aligned to full n
-        iso_score = np.zeros(n, dtype=float)
-        if len(s5_isolation) == n:
-            iso_score = s5_isolation.astype(float)
-        elif len(s5_isolation) > 0:
-            candidate_idx = np.where(s1)[0]
-            for k, idx in enumerate(candidate_idx):
-                if k < len(s5_isolation) and idx < n:
-                    iso_score[idx] = float(s5_isolation[k])
+        # Build isolation score array aligned to full n.
+        # When s5_isolation is None (no cross-log run) use 0.5 (neutral) so
+        # Gate 3 never fires and the isolation weight contributes 0.10 to conf.
+        has_cross_log = s5_isolation is not None
+        iso_score     = np.full(n, 0.5, dtype=float)   # neutral default
+        if has_cross_log and s5_isolation is not None:
+            if len(s5_isolation) == n:
+                iso_score = s5_isolation.astype(float)
+            elif len(s5_isolation) > 0:
+                # Candidate-aligned scores → splat back to full array
+                candidate_idx = np.where(s1)[0]
+                for k, idx in enumerate(candidate_idx):
+                    if k < len(s5_isolation) and idx < n:
+                        iso_score[idx] = float(s5_isolation[k])
 
         local_score    = self._local_deviation_score(values, win, curve_name)
         gradient_score = s2.astype(float)
         physics_score  = self._physics_score(values, curve_name)
-
-        # Determine if cross-log data is meaningful (non-trivial scores present)
-        has_cross_log = bool(np.any(s5_isolation != 0.5) and len(s5_isolation) > 0)
 
         for i in range(n):
             # Gate 1: must be a Stage-1 candidate
@@ -499,15 +505,15 @@ class SpikeDetector:
                 hard_rejected[i] = True
                 continue
 
-            # Gate 2: hard persistence rejection (run > 5 already cleared in s4)
+            # Gate 2: hard persistence rejection (run > 5 cleared by s4)
             if not s4[i]:
                 hard_rejected[i] = True
                 continue
 
-            # Gate 3: physically fine AND companion logs actively corroborate
-            # the point → likely real geology, not noise.
-            # Only applied when cross-log data is actually available.
-            if has_cross_log and not s3[i] and iso_score[i] < 0.25:
+            # Gate 3: only active when real cross-log data was computed.
+            # If companion logs actively corroborate AND physics is fine →
+            # the anomaly is a real geological feature, not noise.
+            if has_cross_log and (not s3[i]) and iso_score[i] < 0.25:
                 hard_rejected[i] = True
                 continue
 
