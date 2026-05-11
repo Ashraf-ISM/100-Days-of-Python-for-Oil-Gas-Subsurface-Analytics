@@ -31,7 +31,7 @@ class CorrelationMatrixDialog(QtWidgets.QDialog):
         layout.addWidget(header) 
 
         info = QtWidgets.QLabel(
-            "Cells show Pearson correlation coefficient. "
+            "Cells show Pearson correlation coefficient."
             "Select a feature log and click <b>Use as Feature</b> to add to the model."
         )
         info.setWordWrap(True)
