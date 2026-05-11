@@ -110,7 +110,7 @@ class CorrelationMatrixDialog(QtWidgets.QDialog):
     def _build_importance_panel(self, layout: QtWidgets.QVBoxLayout,
                                  corr, target_log: str):
         """Ranked correlation bar panel below the heatmap."""
-        grp = QtWidgets.QGroupBox(f"Correlation with '{target_log}' (sorted by |r|)")
+        grp = QtWidgets.QGroupBox(f"Correlation with '{target_log}' (sorted by |r|) ")
         grp.setStyleSheet(
             "QGroupBox { font-size:11px; font-weight:700; color:#1E293B; "
             "border:1px solid #E2E8F0; border-radius:8px; margin-top:8px; }"
