@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 class CorrelationMatrixDialog(QtWidgets.QDialog):
     """
-    Shows a heatmap correlation matrix using matplotlib embedded in PyQt5 .
+    Shows a heatmap correlation matrix using matplotlib embedded in PyQt5  .
     """
 
     def __init__(self, df, target_log: str, parent=None):
