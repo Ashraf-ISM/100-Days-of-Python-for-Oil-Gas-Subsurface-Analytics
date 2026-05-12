@@ -438,7 +438,7 @@ class AdvancedCrossplotWindow(QtWidgets.QMainWindow):
     def _draw_reference_overlays(self, ax, plot_df, x_curve: str, y_curve: str) -> None:
         x_name = x_curve.upper()
         y_name = y_curve.upper()
-        if "NPHI" not in x_name and x_name not in {"TNPH", "CNCF", "PHIN"}:
+        if "NPHI" not in x_name and x_name not in {"TNPH", "CNCF", "PHIN"}: 
             return
         if "RHOB" not in y_name and y_name not in {"DEN", "ZDEN", "RHOZ"}:
             return
