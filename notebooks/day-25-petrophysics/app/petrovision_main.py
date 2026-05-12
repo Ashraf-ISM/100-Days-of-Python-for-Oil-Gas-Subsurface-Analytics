@@ -311,7 +311,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(self, "Demo Data", f"Demo data file not found:\n{demo_path}")
             return
             
-        from core.well_data_loader import load_well
+        from core.well_data_loader import load_well 
         try:
             well, msg = load_well(demo_path, replace_nulls=True, depth_unit="m", depth_type="MD")
             data_svc._register_well(well)
