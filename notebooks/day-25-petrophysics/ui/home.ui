@@ -596,7 +596,7 @@ border-radius: 20px; font-size: 14px; font-weight: 800;</string>
         </widget>
        </item>
 
-       <!-- ════════ 3. QUICK ACTIONS — vertical icon-top cards -->
+       <!-- ════════ 3. QUICK ACTIONS — vertical icon-top cards --> 
        <item>
         <widget class="QFrame" name="quickActionsFrame">
          <property name="styleSheet">
