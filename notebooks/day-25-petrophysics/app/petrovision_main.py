@@ -517,6 +517,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             widget._label.setText(text)
 
     def _update_recent_projects(self) -> None:
+        
         from core.project_manager import get_recent_projects
         from pathlib import Path
 
