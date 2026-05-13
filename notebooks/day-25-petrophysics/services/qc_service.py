@@ -615,4 +615,4 @@ class QCService:
         try:
             return float(value)
         except Exception:
-            return float("inf")
+            return float("inf") 
