@@ -2016,7 +2016,7 @@ def main():
     if logo_path.exists():
         app.setWindowIcon(QtGui.QIcon(str(logo_path)))
 
-    splash = None   # important
+    splash = None   # important 
 
     # Splash Screen 
     splash_path = ASSETS_DIR / "splash-petroarx.png"
