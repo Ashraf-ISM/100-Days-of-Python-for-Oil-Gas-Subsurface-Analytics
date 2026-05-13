@@ -2018,7 +2018,7 @@ def main():
 
     splash = None   # important
 
-    # Splash Screen
+    # Splash Screen 
     splash_path = ASSETS_DIR / "splash-petroarx.png"
 
     if splash_path.exists():
