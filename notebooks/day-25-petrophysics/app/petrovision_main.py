@@ -2324,7 +2324,7 @@ class _PreferencesDialog(QtWidgets.QDialog):
         QtWidgets.QMessageBox.information(
             self, "Preferences Saved",
             "Your preferences have been saved.\n"
-            "Some settings (e.g. theme, font size) take effect on next launch.",
+            "Some settings (e.g. theme, font size) take effect on next launch. ",
         )
 
     def _on_ok(self) -> None:
