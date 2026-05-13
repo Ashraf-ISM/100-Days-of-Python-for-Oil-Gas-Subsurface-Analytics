@@ -1904,7 +1904,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
     # ─── Preferences dialog ───────────────────────────────────────────────────
 
     def _open_preferences(self) -> None:
-        """Show the Preferences dialog (create on first call, reuse after)."""
+        """Show the Preferences dialog(create on first call, reuse after)."""
         if not hasattr(self, "_pref_dialog") or self._pref_dialog is None:
             self._pref_dialog = _PreferencesDialog(self)
         self._pref_dialog.show()
