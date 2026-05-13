@@ -1695,8 +1695,8 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if self._clipboard_copy_item_view(focus):
             self._clear_item_view_selection(focus)
             return
-        # Fallback: synthesise Ctrl+X key event
-        self._send_key_event(focus, QtCore.Qt.Key_X, QtCore.Qt.ControlModifier)
+        # Fallback: synthesise Ctrl+X key event without triggering recursion
+        self._send_key_event(focus, "actionCut", QtCore.Qt.Key_X, QtCore.Qt.ControlModifier)
 
     def _do_copy(self) -> None:
         """Copy selected content from the focused widget."""
@@ -1709,7 +1709,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             return
         if self._clipboard_copy_item_view(focus):
             return
-        self._send_key_event(focus, QtCore.Qt.Key_C, QtCore.Qt.ControlModifier)
+        self._send_key_event(focus, "actionCopy", QtCore.Qt.Key_C, QtCore.Qt.ControlModifier)
 
     def _do_paste(self) -> None:
         """Paste clipboard content into the focused widget."""
@@ -1722,7 +1722,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             return
         if self._clipboard_paste_item_view(focus):
             return
-        self._send_key_event(focus, QtCore.Qt.Key_V, QtCore.Qt.ControlModifier)
+        self._send_key_event(focus, "actionPaste", QtCore.Qt.Key_V, QtCore.Qt.ControlModifier)
 
     def _do_delete(self) -> None:
         """Delete selected content from the focused widget."""
@@ -1750,7 +1750,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         # Item views — clear cell content
         if self._clear_item_view_selection(focus):
             return
-        self._send_key_event(focus, QtCore.Qt.Key_Delete, QtCore.Qt.NoModifier)
+        self._send_key_event(focus, "actionDelete", QtCore.Qt.Key_Delete, QtCore.Qt.NoModifier)
 
     def _do_select_all(self) -> None:
         """Select all content in the focused widget."""
@@ -1766,7 +1766,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         if isinstance(focus, QtWidgets.QAbstractItemView):
             focus.selectAll()
             return
-        self._send_key_event(focus, QtCore.Qt.Key_A, QtCore.Qt.ControlModifier)
+        self._send_key_event(focus, "actionSelectAll", QtCore.Qt.Key_A, QtCore.Qt.ControlModifier)
 
     # ─── Item-view clipboard helpers ────────────────────────────────────────────
 
@@ -1837,21 +1837,32 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             model.setData(idx, "", QtCore.Qt.EditRole)
         return True
 
-    @staticmethod
     def _send_key_event(
+        self,
         widget: QtWidgets.QWidget,
+        action_name: str,
         key: int,
         modifiers: QtCore.Qt.KeyboardModifiers,
     ) -> None:
         """Synthesise a key-press + key-release event on *widget*.
 
-        This replaces the old segfault-prone approach of indexing a
-        QKeySequence.StandardKey enum value with ``sequence[0]``.
+        Temporarily disables the QAction's shortcut so Qt doesn't intercept
+        the event we just sent and trigger the action again (which causes
+        a RecursionError).
         """
+        action = getattr(self, action_name, None)
+        shortcut = None
+        if action is not None:
+            shortcut = action.shortcut()
+            action.setShortcut(QtGui.QKeySequence())
+
         press = QtGui.QKeyEvent(QtCore.QEvent.KeyPress, key, modifiers)
         release = QtGui.QKeyEvent(QtCore.QEvent.KeyRelease, key, modifiers)
         QtWidgets.QApplication.sendEvent(widget, press)
         QtWidgets.QApplication.sendEvent(widget, release)
+
+        if action is not None and shortcut is not None:
+            action.setShortcut(shortcut)
 
     # ─── Legacy helpers (kept for any external callers) ──────────────────────────
 
