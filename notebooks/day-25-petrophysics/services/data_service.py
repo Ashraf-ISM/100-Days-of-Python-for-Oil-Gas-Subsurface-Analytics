@@ -1043,7 +1043,7 @@ th {{ background: #F8FBFE; }}
     _C_ACTIVE    = "#2E7D32"   # deep-green   – active well
     _C_INACTIVE  = "#455A64"   # dark slate   – inactive well
     _C_FOLDER    = "#546E7A"   # blue-grey    – sub-folders
-    _C_CURVE_RAW = "#455A64"   # dark teal    – raw curve rows
+    _C_CURVE_RAW = "#455A64"   # dark teal    – raw curve row
     _C_CURVE_CMP = "#E65100"   # deep-orange  – computed curve rows
     _C_BADGE_OK  = "#1B5E20"   # dark-green   – ACTIVE badge foreground
     _C_BADGE_CNT = "#546E7A"   # slate        – curve-count badge 
