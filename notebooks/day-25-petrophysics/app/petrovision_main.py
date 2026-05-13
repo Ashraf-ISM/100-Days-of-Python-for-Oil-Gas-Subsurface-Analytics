@@ -47,6 +47,9 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._install_3d_well_action()
         self._connect_tab_switches()
         self._connect_edit_actions()
+        # Application-wide undo/redo stack
+        self._undo_stack = QtWidgets.QUndoStack(self)
+        self._undo_stack.setUndoLimit(100)
         self.controller = MainController(self)
         self._wire_3d_well_controls()
         # Project Browser — delegate to dedicated module
@@ -1571,20 +1574,342 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             )
 
     def _connect_edit_actions(self) -> None:
-        action_map = {
-            "actionUndo": "undo",
-            "actionRedo": "redo",
-            "actionCut": "cut",
-            "actionCopy": "copy",
-            "actionPaste": "paste",
-            "actionDelete": "delete",
-            "actionSelectAll": "select_all",
+        """Wire every Edit menu action to a fully functional handler."""
+
+        # ── Undo / Redo ─────────────────────────────────────────────────────
+        undo_action = getattr(self, "actionUndo", None)
+        redo_action = getattr(self, "actionRedo", None)
+        if undo_action is not None:
+            undo_action.setShortcut(QtGui.QKeySequence.Undo)
+            undo_action.setEnabled(False)   # enabled once stack has history
+            undo_action.triggered.connect(self._do_undo)
+        if redo_action is not None:
+            redo_action.setShortcut(QtGui.QKeySequence.Redo)
+            redo_action.setEnabled(False)
+            redo_action.triggered.connect(self._do_redo)
+
+        # ── Clipboard operations ────────────────────────────────────────────
+        clipboard_map = {
+            "actionCut":       (QtGui.QKeySequence.Cut,       self._do_cut),
+            "actionCopy":      (QtGui.QKeySequence.Copy,      self._do_copy),
+            "actionPaste":     (QtGui.QKeySequence.Paste,     self._do_paste),
+            "actionDelete":    (QtGui.QKeySequence.Delete,    self._do_delete),
+            "actionSelectAll": (QtGui.QKeySequence.SelectAll, self._do_select_all),
         }
-        for action_name, op_name in action_map.items():
+        for action_name, (shortcut, handler) in clipboard_map.items():
             action = getattr(self, action_name, None)
-            if action is None:
-                continue
-            action.triggered.connect(lambda checked=False, op=op_name: self._run_edit_operation(op))
+            if action is not None:
+                action.setShortcut(shortcut)
+                action.triggered.connect(handler)
+
+        # ── Preferences ─────────────────────────────────────────────────────
+        pref_action = getattr(self, "actionPreferences", None)
+        if pref_action is not None:
+            pref_action.setShortcut(QtGui.QKeySequence("Ctrl+,"))
+            pref_action.triggered.connect(self._open_preferences)
+
+    # ─── Undo / Redo ──────────────────────────────────────────────────────
+
+    def _do_undo(self) -> None:
+        """Undo: first try the focused widget's own undo, then the app stack."""
+        focus = QtWidgets.QApplication.focusWidget()
+        # Let native text widgets handle it first (they have their own undo)
+        for widget in self._iter_focus_chain(focus):
+            if isinstance(widget, (QtWidgets.QLineEdit,
+                                   QtWidgets.QTextEdit,
+                                   QtWidgets.QPlainTextEdit)):
+                if hasattr(widget, "undo") and callable(widget.undo):
+                    widget.undo()
+                    return
+        # Fall back to the application-level undo stack
+        stack = getattr(self, "_undo_stack", None)
+        if stack is not None and stack.canUndo():
+            stack.undo()
+            self._refresh_undo_redo_state()
+
+    def _do_redo(self) -> None:
+        """Redo: first try the focused widget's own redo, then the app stack."""
+        focus = QtWidgets.QApplication.focusWidget()
+        for widget in self._iter_focus_chain(focus):
+            if isinstance(widget, (QtWidgets.QLineEdit,
+                                   QtWidgets.QTextEdit,
+                                   QtWidgets.QPlainTextEdit)):
+                if hasattr(widget, "redo") and callable(widget.redo):
+                    widget.redo()
+                    return
+        stack = getattr(self, "_undo_stack", None)
+        if stack is not None and stack.canRedo():
+            stack.redo()
+            self._refresh_undo_redo_state()
+
+    def _refresh_undo_redo_state(self) -> None:
+        """Enable/disable Undo & Redo menu items based on stack state."""
+        stack = getattr(self, "_undo_stack", None)
+        if stack is None:
+            return
+        undo_action = getattr(self, "actionUndo", None)
+        redo_action = getattr(self, "actionRedo", None)
+        if undo_action is not None:
+            undo_action.setEnabled(stack.canUndo())
+            undo_action.setText(f"Undo {stack.undoText()}" if stack.canUndo() else "Undo")
+        if redo_action is not None:
+            redo_action.setEnabled(stack.canRedo())
+            redo_action.setText(f"Redo {stack.redoText()}" if stack.canRedo() else "Redo")
+
+    def push_undo_command(self, command: QtWidgets.QUndoCommand) -> None:
+        """Push a custom undo command onto the application stack.
+
+        Use this from any controller that wants Undo/Redo support::
+
+            class SetCurveCommand(QUndoCommand):
+                ...
+            self.main_window.push_undo_command(SetCurveCommand(...))
+        """
+        stack = getattr(self, "_undo_stack", None)
+        if stack is not None:
+            stack.push(command)
+            self._refresh_undo_redo_state()
+
+    # ─── Clipboard helpers ───────────────────────────────────────────────────
+
+    def _iter_focus_chain(self, widget) -> list:
+        """Walk up the widget parent chain from *widget*."""
+        chain = []
+        current = widget
+        while current is not None:
+            chain.append(current)
+            current = current.parentWidget()
+        return chain
+
+    def _do_cut(self) -> None:
+        """Cut selected content from the focused widget."""
+        focus = QtWidgets.QApplication.focusWidget()
+        if focus is None:
+            return
+        # Native text widgets
+        if isinstance(focus, (QtWidgets.QLineEdit, QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            if hasattr(focus, "cut"):
+                focus.cut()
+            return
+        # Item views — copy then clear
+        if self._clipboard_copy_item_view(focus):
+            self._clear_item_view_selection(focus)
+            return
+        # Fallback: synthesise Ctrl+X key event
+        self._send_key_event(focus, QtCore.Qt.Key_X, QtCore.Qt.ControlModifier)
+
+    def _do_copy(self) -> None:
+        """Copy selected content from the focused widget."""
+        focus = QtWidgets.QApplication.focusWidget()
+        if focus is None:
+            return
+        if isinstance(focus, (QtWidgets.QLineEdit, QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            if hasattr(focus, "copy"):
+                focus.copy()
+            return
+        if self._clipboard_copy_item_view(focus):
+            return
+        self._send_key_event(focus, QtCore.Qt.Key_C, QtCore.Qt.ControlModifier)
+
+    def _do_paste(self) -> None:
+        """Paste clipboard content into the focused widget."""
+        focus = QtWidgets.QApplication.focusWidget()
+        if focus is None:
+            return
+        if isinstance(focus, (QtWidgets.QLineEdit, QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            if hasattr(focus, "paste"):
+                focus.paste()
+            return
+        if self._clipboard_paste_item_view(focus):
+            return
+        self._send_key_event(focus, QtCore.Qt.Key_V, QtCore.Qt.ControlModifier)
+
+    def _do_delete(self) -> None:
+        """Delete selected content from the focused widget."""
+        focus = QtWidgets.QApplication.focusWidget()
+        if focus is None:
+            return
+        # Text widgets — delete selection or next char
+        if isinstance(focus, (QtWidgets.QLineEdit,)):
+            cursor_pos = focus.cursorPosition()
+            sel_start  = focus.selectionStart()
+            if focus.hasSelectedText():
+                focus.del_()
+            else:
+                focus.setSelection(cursor_pos, 1)
+                focus.del_()
+            return
+        if isinstance(focus, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            cursor = focus.textCursor()
+            if cursor.hasSelection():
+                cursor.removeSelectedText()
+            else:
+                cursor.deleteChar()
+            focus.setTextCursor(cursor)
+            return
+        # Item views — clear cell content
+        if self._clear_item_view_selection(focus):
+            return
+        self._send_key_event(focus, QtCore.Qt.Key_Delete, QtCore.Qt.NoModifier)
+
+    def _do_select_all(self) -> None:
+        """Select all content in the focused widget."""
+        focus = QtWidgets.QApplication.focusWidget()
+        if focus is None:
+            return
+        if isinstance(focus, (QtWidgets.QLineEdit,)):
+            focus.selectAll()
+            return
+        if isinstance(focus, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            focus.selectAll()
+            return
+        if isinstance(focus, QtWidgets.QAbstractItemView):
+            focus.selectAll()
+            return
+        self._send_key_event(focus, QtCore.Qt.Key_A, QtCore.Qt.ControlModifier)
+
+    # ─── Item-view clipboard helpers ────────────────────────────────────────────
+
+    def _find_item_view(self, widget) -> "QtWidgets.QAbstractItemView | None":
+        """Return the first QAbstractItemView in the focus chain."""
+        for candidate in self._iter_focus_chain(widget):
+            if isinstance(candidate, QtWidgets.QAbstractItemView):
+                return candidate
+        return None
+
+    def _clipboard_copy_item_view(self, widget) -> bool:
+        view = self._find_item_view(widget)
+        if view is None:
+            return False
+        model = view.model()
+        sel_model = view.selectionModel()
+        if model is None or sel_model is None:
+            return False
+        indexes = sel_model.selectedIndexes()
+        if not indexes:
+            return False
+        rows = sorted({idx.row() for idx in indexes})
+        cols = sorted({idx.column() for idx in indexes})
+        cell_map = {(idx.row(), idx.column()): idx for idx in indexes}
+        lines = []
+        for row in rows:
+            parts = []
+            for col in cols:
+                cell_idx = cell_map.get((row, col))
+                text = str(model.data(cell_idx, QtCore.Qt.DisplayRole) or "") if cell_idx else ""
+                parts.append(text)
+            lines.append("\t".join(parts))
+        QtWidgets.QApplication.clipboard().setText("\n".join(lines))
+        return True
+
+    def _clipboard_paste_item_view(self, widget) -> bool:
+        view = self._find_item_view(widget)
+        if view is None:
+            return False
+        model = view.model()
+        if model is None:
+            return False
+        text = QtWidgets.QApplication.clipboard().text()
+        if not text:
+            return False
+        start = view.currentIndex()
+        if not start.isValid():
+            return False
+        for row_off, row_text in enumerate(text.splitlines()):
+            for col_off, cell_text in enumerate(row_text.split("\t")):
+                cell_idx = model.index(start.row() + row_off, start.column() + col_off)
+                if cell_idx.isValid():
+                    model.setData(cell_idx, cell_text, QtCore.Qt.EditRole)
+        return True
+
+    def _clear_item_view_selection(self, widget) -> bool:
+        view = self._find_item_view(widget)
+        if view is None:
+            return False
+        model = view.model()
+        sel_model = view.selectionModel()
+        if model is None or sel_model is None:
+            return False
+        indexes = sel_model.selectedIndexes()
+        if not indexes:
+            return False
+        for idx in indexes:
+            model.setData(idx, "", QtCore.Qt.EditRole)
+        return True
+
+    @staticmethod
+    def _send_key_event(
+        widget: QtWidgets.QWidget,
+        key: int,
+        modifiers: QtCore.Qt.KeyboardModifiers,
+    ) -> None:
+        """Synthesise a key-press + key-release event on *widget*.
+
+        This replaces the old segfault-prone approach of indexing a
+        QKeySequence.StandardKey enum value with ``sequence[0]``.
+        """
+        press = QtGui.QKeyEvent(QtCore.QEvent.KeyPress, key, modifiers)
+        release = QtGui.QKeyEvent(QtCore.QEvent.KeyRelease, key, modifiers)
+        QtWidgets.QApplication.sendEvent(widget, press)
+        QtWidgets.QApplication.sendEvent(widget, release)
+
+    # ─── Legacy helpers (kept for any external callers) ──────────────────────────
+
+    def _run_edit_operation(self, op_name: str) -> None:
+        """Dispatch *op_name* to the correct handler (backward-compat shim)."""
+        dispatch = {
+            "undo":       self._do_undo,
+            "redo":       self._do_redo,
+            "cut":        self._do_cut,
+            "copy":       self._do_copy,
+            "paste":      self._do_paste,
+            "delete":     self._do_delete,
+            "select_all": self._do_select_all,
+        }
+        handler = dispatch.get(op_name)
+        if handler is not None:
+            handler()
+
+    def _focus_widget_chain(self, widget):
+        return self._iter_focus_chain(widget)
+
+    def _copy_from_item_view(self, widget) -> bool:
+        return self._clipboard_copy_item_view(widget)
+
+    def _cut_from_item_view(self, widget) -> bool:
+        if self._clipboard_copy_item_view(widget):
+            return self._clear_item_view_selection(widget)
+        return False
+
+    def _paste_to_item_view(self, widget) -> bool:
+        return self._clipboard_paste_item_view(widget)
+
+    def _delete_from_item_view(self, widget) -> bool:
+        return self._clear_item_view_selection(widget)
+
+    def _as_item_view(self, widget) -> "QtWidgets.QAbstractItemView | None":
+        return self._find_item_view(widget)
+
+    def _delete_text(self, widget) -> bool:
+        if isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
+            cursor = widget.textCursor()
+            if cursor.hasSelection():
+                cursor.removeSelectedText()
+            else:
+                cursor.deleteChar()
+            widget.setTextCursor(cursor)
+            return True
+        return False
+
+    # ─── Preferences dialog ───────────────────────────────────────────────────
+
+    def _open_preferences(self) -> None:
+        """Show the Preferences dialog (create on first call, reuse after)."""
+        if not hasattr(self, "_pref_dialog") or self._pref_dialog is None:
+            self._pref_dialog = _PreferencesDialog(self)
+        self._pref_dialog.show()
+        self._pref_dialog.raise_()
+        self._pref_dialog.activateWindow()
 
     def _run_edit_operation(self, op_name: str) -> None:
         focus = QtWidgets.QApplication.focusWidget()
