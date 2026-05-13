@@ -1603,7 +1603,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 action.triggered.connect(handler)
 
         # ── Preferences ─────────────────────────────────────────────────────
-        pref_action = getattr(self, "actionPreferences", None)
+        pref_action = getattr(self, "actionPreferences ", None)
         if pref_action is not None:
             pref_action.setShortcut(QtGui.QKeySequence("Ctrl+,"))
             pref_action.triggered.connect(self._open_preferences)
