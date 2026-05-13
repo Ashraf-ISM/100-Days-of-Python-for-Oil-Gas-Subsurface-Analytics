@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 from PyQt5 import QtWidgets, QtCore, QtGui, uic
-from PyQt5.QtCore import QSettings
 
 THIS_DIR = Path(__file__).resolve().parent
 ROOT_DIR = THIS_DIR.parent
@@ -23,30 +22,6 @@ from Well_3d.well_3d_workspace import Well3DWorkspaceController  # noqa: E402
 from plotting.log_availability_radar import build_log_availability_radar_figure  # noqa: E402
 
 from extra.dialogs import AboutHelpDialog
-from app.dock_style import apply_dock_stylesheet
-
-# ─── Dock Panel Registry ─────────────────────────────────────────────────────
-# Each entry: (tab_object_name, dock_title, icon_text)
-# The tab widget will be reparented into a QDockWidget at startup.
-DOCK_PANELS: list[tuple[str, str, str]] = [
-    ("tabQualitycontrol",       "QC",                 "🔬"),
-    ("tabLogViewer",            "Well Plot",          "📈"),
-    ("tabWaterSaturation",      "Saturation (Sw)",    "💧"),
-    ("tabPorosity",             "Porosity",           "🟡"),
-    ("tabShaleVolume",          "Shale Volume",       "🟤"),
-    ("tabPermeability",         "Permeability",       "⚙"),
-    ("tabNetPay",               "Net Pay",            "📊"),
-    ("tabWellCorrelation",      "Well Correlation",   "🔗"),
-    ("tabFormationevaluation",  "Formation Eval",     "📋"),
-    ("tabMultiMineral",         "Multi-Mineral",      "🧪"),
-    ("tab3DWell",               "3D Well",            "🌐"),
-    ("tabGeomechanics",         "Geomechanics",       "⛏"),
-    ("tabFMIAnalysis",          "FMI / BHI",          "🖼"),
-    ("tabPorePressure",         "Pore Pressure",      "🔴"),
-    ("tabWellboreStability",    "Wellbore Stability", "🛡"),
-    ("tabDataInfoStats",        "Data Info",          "📁"),
-    ("tabRoseDiagram",          "Rose Diagram",       "🌹"),
-]
 
 class PetroVisionMainWindow(QtWidgets.QMainWindow):
     def __init__(self, project_path: str | None = None):
@@ -67,7 +42,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._embed_pore_pressure_tab()
         self._embed_3d_well_tab()
         self._embed_well_correlation_tab()
-        self._init_facies_window()      # standalone separate window (not a tab)
+        self._init_facies_window()      # standalone separate window (not a tab) 
         self._reorder_tabs()
         self._install_3d_well_action()
         self._connect_tab_switches()
@@ -80,21 +55,13 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._build_dashboard()
         self.refresh_dashboard_tab()
         self.refresh_3d_well_tab()
-
-        # ── Dockable Panels ──────────────────────────────────────────────────
-        self._dock_widgets: dict[str, QtWidgets.QDockWidget] = {}
-        self._setup_dock_panels()
-        self._build_view_panels_menu()
-        apply_dock_stylesheet(self)
-        # Restore saved dock layout (deferred so the window has time to paint)
-        QtCore.QTimer.singleShot(0, self._restore_dock_layout)
-
+        
         # Set window geometry
         self.setGeometry(100, 100, 1497, 893)
-
+        
         # Load project if provided
         if project_path and Path(project_path).exists():
-            QtCore.QTimer.singleShot(500,
+            QtCore.QTimer.singleShot(500, 
                 lambda p=project_path: self.controller.projects.load_project_from_path(p))
 
         # Add Data Downloader to Tools menu
@@ -1495,77 +1462,90 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         existing_layout.addWidget(dock_contents)
 
     def _connect_tab_switches(self) -> None:
-        """Wire toolbar/menu actions and dashboard buttons to show dock panels.
-
-        Since analysis tabs are now QDockWidgets, navigation uses
-        show_dock_panel() to show+raise the target dock.  The Dashboard tab
-        in the central QTabWidget is the only tab that still uses setCurrentIndex.
-        """
+        """Wire toolbar/menu actions and dashboard buttons to tab indices."""
         tab_widget = getattr(self, "centralTabWidget", None)
+        if tab_widget is None:
+            return
 
-        def connect_action_to_dock(action_name: str, tab_name: str) -> None:
-            """Connect a menu/toolbar action to show the dock for *tab_name*."""
+        def tab_index(tab_name: str, fallback: int | None = None) -> int | None:
+            tab = getattr(self, tab_name, None)
+            if tab is not None:
+                idx = tab_widget.indexOf(tab)
+                if idx >= 0:
+                    return idx
+            return fallback
+
+        def connect_action(action_name: str, idx: int) -> None:
             action = getattr(self, action_name, None)
             if action is None:
                 return
             action.triggered.connect(
-                lambda checked=False, tn=tab_name: self.show_dock_panel(tn)
+                lambda checked=False, tab_idx=idx: tab_widget.setCurrentIndex(tab_idx)
             )
 
-        def connect_button_to_dock(button_name: str, tab_name: str) -> None:
-            """Connect a push-button to show the dock for *tab_name*."""
+        def connect_button(button_name: str, idx: int) -> None:
             button = getattr(self, button_name, None)
             if button is None:
                 return
             button.clicked.connect(
-                lambda checked=False, tn=tab_name: self.show_dock_panel(tn)
+                lambda checked=False, tab_idx=idx: tab_widget.setCurrentIndex(tab_idx)
             )
 
-        # ── Toolbar / menu actions → dockable panels ─────────────────────────
-        connect_action_to_dock("actionNewLogPlot",           "tabLogViewer")
-        connect_action_to_dock("actiondatainfo",             "tabDataInfoStats")
-        connect_action_to_dock("actionNewCrossplot",         "tabLogViewer")
-        connect_action_to_dock("actionNewHistogram",         "tabLogViewer")
-        connect_action_to_dock("action3DWellViewer",         "tab3DWell")
-        connect_action_to_dock("actionQualityControl",       "tabQualitycontrol")
-        connect_action_to_dock("actionFormationTesting",     "tabFormationevaluation")
-        connect_action_to_dock("actionNewRoseDiagram",       "tabRoseDiagram")
-        connect_action_to_dock("actionShaleVolume",          "tabShaleVolume")
-        connect_action_to_dock("actionPorosityCalc",         "tabPorosity")
-        connect_action_to_dock("actionWaterSaturation",      "tabWaterSaturation")
-        connect_action_to_dock("actionPermeability",         "tabPermeability")
-        connect_action_to_dock("actionNetPay",               "tabNetPay")
-        connect_action_to_dock("actionWellCorrelation",      "tabWellCorrelation")
-        connect_action_to_dock("actionMultimineralAnalysis", "tabMultiMineral")
-        connect_action_to_dock("actionFMIAnalysis",          "tabFMIAnalysis")
-        connect_action_to_dock("actionWellboreStability",    "tabWellboreStability")
-        connect_action_to_dock("actionPorePressure",         "tabPorePressure")
+        def connect_action_to_tab(action_name: str, tab_name: str, fallback_idx: int) -> None:
+            idx = tab_index(tab_name, fallback_idx)
+            if idx is not None:
+                connect_action(action_name, idx)
 
-        # Geomechanics sub-menu actions
-        for name in (
-            "actionStressAnalysis",
-            "actionWellboreStability",
-            "actionFractureAnalysis",
-            "actionPorePressure",
-            "actionUCS",
-            "actionYoungsModulus",
-            "actionPoissonRatio",
-            "actionBrittlenessIndex",
-            "actionMudWeightWindow",
-        ):
-            connect_action_to_dock(name, "tabGeomechanics")
+        # Toolbar / menu actions -> main tabs
+        connect_action_to_tab("actionNewLogPlot", "tabLogViewer", 1)
+        connect_action_to_tab("actiondatainfo", "tabDataInfoStats", 2)
+        connect_action_to_tab("actionNewCrossplot", "tabLogViewer", 1)
+        connect_action_to_tab("actionNewHistogram", "tabLogViewer", 1)
+        connect_action_to_tab("action3DWellViewer", "tab3DWell", 3)
+        connect_action_to_tab("actionQualityControl", "tabQualitycontrol", 3)
+        connect_action_to_tab("actionFormationTesting", "tabFormationevaluation", 4)
+        rose_idx = tab_index("tabRoseDiagram", None)
+        if rose_idx is not None:
+            connect_action("actionNewRoseDiagram", rose_idx)
+        connect_action_to_tab("actionShaleVolume", "tabShaleVolume", 6)
+        connect_action_to_tab("actionPorosityCalc", "tabPorosity", 7)
+        connect_action_to_tab("actionWaterSaturation", "tabWaterSaturation", 8)
+        connect_action_to_tab("actionPermeability", "tabPermeability", 9)
+        connect_action_to_tab("actionNetPay", "tabNetPay", 10)
+        connect_action_to_tab("actionWellCorrelation", "tabWellCorrelation", 11)
+        connect_action_to_tab("actionMultimineralAnalysis", "tabMultiMineral", 12)
+        connect_action_to_tab("actionFMIAnalysis", "tabFMIAnalysis", 13)
+        connect_action_to_tab("actionWellboreStability", "tabWellboreStability", 14)
+        connect_action_to_tab("actionPorePressure", "tabPorePressure", 15)
 
-        # ── Dashboard quick-launch buttons → dockable panels ─────────────────
-        connect_button_to_dock("btnDashLogView", "tabLogViewer")
-        connect_button_to_dock("btnDashXplot",   "tabLogViewer")
-        connect_button_to_dock("btnDashVsh",     "tabShaleVolume")
-        connect_button_to_dock("btnDashSw",      "tabWaterSaturation")
-        connect_button_to_dock("btnDashCorr",    "tabWellCorrelation")
-        connect_button_to_dock("btnDashGeo",     "tabGeomechanics")
+        geo_idx = tab_index("tabGeomechanics", 16)
+        if geo_idx is not None:
+            for name in (
+                "actionStressAnalysis",
+                "actionWellboreStability",
+                "actionFractureAnalysis",
+                "actionPorePressure",
+                "actionUCS",
+                "actionYoungsModulus",
+                "actionPoissonRatio",
+                "actionBrittlenessIndex",
+                "actionMudWeightWindow",
+            ):
+                connect_action(name, geo_idx)
 
-        # ── Facies Classification menu actions ────────────────────────────────
-        if tab_widget is not None:
-            self._wire_facies_menu_actions(tab_widget)
+            connect_button("btnDashGeo", geo_idx)
+        else:
+            connect_button("btnDashGeo", 16)
+
+        # Dashboard quick-launch buttons
+        connect_button("btnDashLogView", tab_index("tabLogViewer", 1) or 1)
+        connect_button("btnDashXplot", tab_index("tabLogViewer", 1) or 1)
+        connect_button("btnDashVsh", tab_index("tabShaleVolume", 6) or 6)
+        connect_button("btnDashSw", tab_index("tabWaterSaturation", 8) or 8)
+        connect_button("btnDashCorr", tab_index("tabWellCorrelation", 11) or 11)
+
+        # ── Facies Classification menu actions ──────────────────────────────
+        self._wire_facies_menu_actions(tab_widget)
 
     def _wire_facies_menu_actions(self, tab_widget: QtWidgets.QTabWidget) -> None:  # noqa: ARG002
         """Wire every Facies Classification menu action to _open_facies_window()."""
@@ -1758,202 +1738,28 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         return None
     
     def closeEvent(self, event):
-        """Handle application close — save dock layout, prompt to save project."""
+        """Handle application close - prompt to save if modified.
+        
+        Args:
+            event: QCloseEvent
+        """
         if self.controller.projects.is_project_modified():
             reply = QtWidgets.QMessageBox.question(
                 self,
                 "Save Project?",
                 "Project has unsaved changes. Save before closing?",
-                QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel,
+                QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel
             )
+            
             if reply == QtWidgets.QMessageBox.Save:
                 self.controller.projects.save_project()
-                self._save_dock_layout()
                 event.accept()
             elif reply == QtWidgets.QMessageBox.Discard:
-                self._save_dock_layout()
                 event.accept()
             else:
                 event.ignore()
         else:
-            self._save_dock_layout()
             event.accept()
-
-    # ─── Dock Panel System ────────────────────────────────────────────────────
-
-    def _setup_dock_panels(self) -> None:
-        """Convert registered analysis tabs into dockable QDockWidget panels.
-
-        Each tab's content widget is reparented into a new QDockWidget.
-        All docks start tabified together in the centre area so the UI looks
-        identical to the old tab layout — but now every panel can be freely
-        torn off, floated, snapped to any edge, or merged with another panel.
-        """
-        tab_widget = getattr(self, "centralTabWidget", None)
-
-        first_dock: QtWidgets.QDockWidget | None = None
-
-        for tab_name, dock_title, icon_text in DOCK_PANELS:
-            page = getattr(self, tab_name, None)
-            if page is None:
-                continue
-
-            # Remove the tab page from the central QTabWidget
-            if tab_widget is not None:
-                idx = tab_widget.indexOf(page)
-                if idx >= 0:
-                    tab_widget.removeTab(idx)
-
-            # Detach from any parent so Qt allows re-parenting into a dock
-            page.setParent(None)  # type: ignore[arg-type]
-
-            # Create the dock
-            dock = QtWidgets.QDockWidget(f"{icon_text}  {dock_title}", self)
-            dock.setObjectName(f"dock_{tab_name}")
-            dock.setWidget(page)
-            dock.setAllowedAreas(QtCore.Qt.AllDockWidgetAreas)
-            dock.setFeatures(
-                QtWidgets.QDockWidget.DockWidgetMovable
-                | QtWidgets.QDockWidget.DockWidgetFloatable
-                | QtWidgets.QDockWidget.DockWidgetClosable
-            )
-
-            # Store reference so other methods can reach the dock by tab name
-            self._dock_widgets[tab_name] = dock
-            # Also expose as an attribute for backward compat (e.g. show/raise)
-            setattr(self, f"_dock_{tab_name}", dock)
-
-            if first_dock is None:
-                # First dock anchors the tabified group in the centre area
-                self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, dock)
-                first_dock = dock
-            else:
-                # Stack subsequent docks as tabs behind the first one
-                self.tabifyDockWidget(first_dock, dock)
-
-        # Raise the Well Plot panel (Log Viewer) to be the active visible tab
-        preferred_front = self._dock_widgets.get("tabLogViewer")
-        if preferred_front is None:
-            preferred_front = first_dock
-        if preferred_front is not None:
-            preferred_front.show()
-            preferred_front.raise_()
-
-        # Expand the centre area to fill available space
-        self.setDockOptions(
-            QtWidgets.QMainWindow.AllowTabbedDocks
-            | QtWidgets.QMainWindow.AllowNestedDocks
-            | QtWidgets.QMainWindow.AnimatedDocks
-        )
-
-    def _build_view_panels_menu(self) -> None:
-        """Add View → Panels sub-menu with one toggle action per dock."""
-        # NOTE: uic.loadUi sets self.menuBar as the QMenuBar *instance*,
-        # shadowing QMainWindow.menuBar().  We use it directly as an attribute.
-        menu_bar: QtWidgets.QMenuBar = (
-            getattr(self, "menuBar", None)  # set by uic as the widget instance
-            or QtWidgets.QMainWindow.menuBar(self)  # fallback via super
-        )
-        if menu_bar is None:
-            return
-
-        # Find or create a View menu
-        view_menu: QtWidgets.QMenu | None = None
-        for action in menu_bar.actions():
-            if action.text().lower().replace("&", "") in ("view", "views", "window"):
-                view_menu = action.menu()
-                break
-        if view_menu is None:
-            view_menu = menu_bar.addMenu("View")
-
-        panels_menu = view_menu.addMenu("Panels")
-
-        # Add a "Show All Panels" convenience action
-        show_all_action = QtWidgets.QAction("Show All Panels", self)
-        show_all_action.triggered.connect(self._show_all_dock_panels)
-        panels_menu.addAction(show_all_action)
-
-        # Add a "Reset Layout" convenience action
-        reset_action = QtWidgets.QAction("Reset Default Layout", self)
-        reset_action.triggered.connect(self._reset_dock_layout)
-        panels_menu.addAction(reset_action)
-
-        panels_menu.addSeparator()
-
-        for tab_name, _dock_title, icon_text in DOCK_PANELS:
-            dock = self._dock_widgets.get(tab_name)
-            if dock is None:
-                continue
-            toggle_action = dock.toggleViewAction()
-            toggle_action.setText(dock.windowTitle())
-            panels_menu.addAction(toggle_action)
-
-    def _show_all_dock_panels(self) -> None:
-        """Make every registered dock visible."""
-        for dock in self._dock_widgets.values():
-            dock.show()
-
-    def _reset_dock_layout(self) -> None:
-        """Restore factory default: all panels tabified on the left area."""
-        # Clear saved state so _restore_dock_layout doesn't override the reset
-        settings = QSettings("PetroARX", "PetroVisionLayout")
-        settings.remove("dockState")
-        settings.remove("windowGeometry")
-
-        first_dock: QtWidgets.QDockWidget | None = None
-        for tab_name, _title, _icon in DOCK_PANELS:
-            dock = self._dock_widgets.get(tab_name)
-            if dock is None:
-                continue
-            if dock.isFloating():
-                dock.setFloating(False)
-            if first_dock is None:
-                self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, dock)
-                first_dock = dock
-            else:
-                self.tabifyDockWidget(first_dock, dock)
-            dock.show()
-
-        preferred = self._dock_widgets.get("tabLogViewer") or first_dock
-        if preferred is not None:
-            preferred.raise_()
-
-    def _save_dock_layout(self) -> None:
-        """Persist the current dock/window geometry to QSettings."""
-        settings = QSettings("PetroARX", "PetroVisionLayout")
-        settings.setValue("dockState", self.saveState())
-        settings.setValue("windowGeometry", self.saveGeometry())
-
-    def _restore_dock_layout(self) -> None:
-        """Restore a previously saved dock/window geometry from QSettings."""
-        settings = QSettings("PetroARX", "PetroVisionLayout")
-        geometry = settings.value("windowGeometry")
-        state = settings.value("dockState")
-        if geometry is not None:
-            try:
-                self.restoreGeometry(geometry)
-            except Exception:
-                pass
-        if state is not None:
-            try:
-                self.restoreState(state)
-            except Exception:
-                pass
-
-    def show_dock_panel(self, tab_name: str) -> None:
-        """Show and raise the dock associated with *tab_name* (e.g. 'tabQualitycontrol')."""
-        dock = self._dock_widgets.get(tab_name)
-        if dock is not None:
-            dock.show()
-            dock.raise_()
-            return
-        # Fallback: try to locate by centralTabWidget (shouldn't happen after setup)
-        tab_widget = getattr(self, "centralTabWidget", None)
-        page = getattr(self, tab_name, None)
-        if tab_widget is not None and page is not None:
-            idx = tab_widget.indexOf(page)
-            if idx >= 0:
-                tab_widget.setCurrentIndex(idx)
 
     def _reorder_tabs(self) -> None:
         """Put the main analysis tabs in a stable, user-friendly order."""
