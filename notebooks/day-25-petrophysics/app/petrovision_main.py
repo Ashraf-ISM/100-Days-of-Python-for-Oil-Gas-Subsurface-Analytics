@@ -2058,5 +2058,279 @@ def main():
     sys.exit(app.exec_())
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Preferences Dialog
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _PreferencesDialog(QtWidgets.QDialog):
+    """Application Preferences dialog (Edit → Preferences / Ctrl+,).
+
+    Provides three tabs:
+      • General   — theme, font size, units system
+      • Display   — depth range, null display, decimal places
+      • Shortcuts — read-only keyboard shortcut reference
+    All settings are persisted via QSettings.
+    """
+
+    _SETTINGS_ORG  = "PetroARX"
+    _SETTINGS_APP  = "PetroVisionPrefs"
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Preferences")
+        self.setWindowIcon(
+            QtGui.QIcon(str(ASSETS_DIR / "logo-petroarx.png"))
+            if (ASSETS_DIR / "logo-petroarx.png").exists()
+            else QtGui.QIcon()
+        )
+        self.setMinimumSize(580, 460)
+        self.setModal(False)  # non-modal so user can keep working
+
+        self._settings = QtCore.QSettings(self._SETTINGS_ORG, self._SETTINGS_APP)
+        self._build_ui()
+        self._load_settings()
+
+    # ── UI Construction ──────────────────────────────────────────────────────
+
+    def _build_ui(self) -> None:
+        root = QtWidgets.QVBoxLayout(self)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
+
+        # Header banner
+        banner = QtWidgets.QFrame(self)
+        banner.setFixedHeight(64)
+        banner.setStyleSheet(
+            "QFrame { background: qlineargradient(x1:0,y1:0,x2:1,y2:0,"
+            "stop:0 #1C4A7C, stop:1 #3F7CB6); }"
+        )
+        banner_layout = QtWidgets.QHBoxLayout(banner)
+        banner_layout.setContentsMargins(20, 0, 20, 0)
+        title_lbl = QtWidgets.QLabel("⚙  Preferences", banner)
+        title_lbl.setStyleSheet(
+            "color:#FFFFFF; font-size:18px; font-weight:800;"
+            "font-family:'Segoe UI','Inter',sans-serif;"
+        )
+        subtitle_lbl = QtWidgets.QLabel("PetroARX Application Settings", banner)
+        subtitle_lbl.setStyleSheet("color:rgba(255,255,255,0.75); font-size:11px;")
+        text_col = QtWidgets.QVBoxLayout()
+        text_col.addWidget(title_lbl)
+        text_col.addWidget(subtitle_lbl)
+        banner_layout.addLayout(text_col)
+        banner_layout.addStretch()
+        root.addWidget(banner)
+
+        # Tab widget
+        self._tabs = QtWidgets.QTabWidget(self)
+        self._tabs.setStyleSheet(
+            "QTabWidget::pane { border: none; background: #F3F7FC; }"
+            "QTabBar::tab { padding: 8px 20px; font-weight: 600; }"
+            "QTabBar::tab:selected { color: #1C4A7C; border-bottom: 2px solid #3F7CB6; }"
+        )
+        self._tabs.addTab(self._build_general_tab(),   "⚙  General")
+        self._tabs.addTab(self._build_display_tab(),   "🖥  Display")
+        self._tabs.addTab(self._build_shortcuts_tab(), "⌨  Shortcuts")
+        root.addWidget(self._tabs, 1)
+
+        # Footer buttons
+        footer = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok
+            | QtWidgets.QDialogButtonBox.Apply
+            | QtWidgets.QDialogButtonBox.Cancel,
+            parent=self,
+        )
+        footer.setStyleSheet("padding: 8px 12px;")
+        footer.accepted.connect(self._on_ok)
+        footer.rejected.connect(self.reject)
+        apply_btn = footer.button(QtWidgets.QDialogButtonBox.Apply)
+        if apply_btn:
+            apply_btn.clicked.connect(self._save_settings)
+        root.addWidget(footer)
+
+    def _build_general_tab(self) -> QtWidgets.QWidget:
+        w = QtWidgets.QWidget()
+        layout = QtWidgets.QFormLayout(w)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
+        layout.setLabelAlignment(QtCore.Qt.AlignRight)
+
+        # Theme
+        self._combo_theme = QtWidgets.QComboBox()
+        self._combo_theme.addItems(["Light (Default)", "Dark", "System"])
+        layout.addRow("Application Theme:", self._combo_theme)
+
+        # Font size
+        self._spin_font = QtWidgets.QSpinBox()
+        self._spin_font.setRange(8, 20)
+        self._spin_font.setSuffix(" pt")
+        layout.addRow("UI Font Size:", self._spin_font)
+
+        # Depth unit
+        self._combo_depth_unit = QtWidgets.QComboBox()
+        self._combo_depth_unit.addItems(["Metres (m)", "Feet (ft)"])
+        layout.addRow("Default Depth Unit:", self._combo_depth_unit)
+
+        # Pressure unit
+        self._combo_pressure_unit = QtWidgets.QComboBox()
+        self._combo_pressure_unit.addItems(["psi", "MPa", "bar", "kPa"])
+        layout.addRow("Default Pressure Unit:", self._combo_pressure_unit)
+
+        # Auto-save interval
+        self._spin_autosave = QtWidgets.QSpinBox()
+        self._spin_autosave.setRange(0, 60)
+        self._spin_autosave.setSuffix(" min  (0 = disabled)")
+        layout.addRow("Auto-Save Interval:", self._spin_autosave)
+
+        # Splash screen toggle
+        self._chk_splash = QtWidgets.QCheckBox("Show splash screen on startup")
+        layout.addRow("", self._chk_splash)
+
+        return w
+
+    def _build_display_tab(self) -> QtWidgets.QWidget:
+        w = QtWidgets.QWidget()
+        layout = QtWidgets.QFormLayout(w)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
+        layout.setLabelAlignment(QtCore.Qt.AlignRight)
+
+        # Null value display
+        self._edit_null_display = QtWidgets.QLineEdit()
+        self._edit_null_display.setPlaceholderText("e.g.  -9999  or  NaN")
+        layout.addRow("Null Value Display:", self._edit_null_display)
+
+        # Decimal places
+        self._spin_decimals = QtWidgets.QSpinBox()
+        self._spin_decimals.setRange(0, 8)
+        layout.addRow("Decimal Places:", self._spin_decimals)
+
+        # Default depth range
+        depth_row = QtWidgets.QHBoxLayout()
+        self._spin_depth_min = QtWidgets.QDoubleSpinBox()
+        self._spin_depth_min.setRange(0, 20000)
+        self._spin_depth_min.setSuffix(" m")
+        self._spin_depth_max = QtWidgets.QDoubleSpinBox()
+        self._spin_depth_max.setRange(0, 20000)
+        self._spin_depth_max.setValue(5000)
+        self._spin_depth_max.setSuffix(" m")
+        depth_row.addWidget(QtWidgets.QLabel("From"))
+        depth_row.addWidget(self._spin_depth_min)
+        depth_row.addWidget(QtWidgets.QLabel("To"))
+        depth_row.addWidget(self._spin_depth_max)
+        layout.addRow("Default Depth Range:", depth_row)
+
+        # Grid lines on plots
+        self._chk_grid = QtWidgets.QCheckBox("Show grid lines on log plots")
+        layout.addRow("", self._chk_grid)
+
+        # Show toolbar labels
+        self._chk_toolbar_labels = QtWidgets.QCheckBox("Show text labels on toolbar buttons")
+        layout.addRow("", self._chk_toolbar_labels)
+
+        return w
+
+    def _build_shortcuts_tab(self) -> QtWidgets.QWidget:
+        w = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(w)
+        layout.setContentsMargins(16, 12, 16, 12)
+
+        note = QtWidgets.QLabel(
+            "Keyboard shortcuts are listed below. "
+            "Use the standard OS shortcuts in any focused text field or table."
+        )
+        note.setWordWrap(True)
+        note.setStyleSheet("color:#5C718A; font-size:11px; padding-bottom:8px;")
+        layout.addWidget(note)
+
+        table = QtWidgets.QTableWidget(self)
+        table.setColumnCount(3)
+        table.setHorizontalHeaderLabels(["Action", "Windows / Linux", "macOS"])
+        table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        table.setAlternatingRowColors(True)
+        table.setStyleSheet(
+            "QTableWidget { border:1px solid #D7E2EE; border-radius:8px; }"
+            "QTableWidget::item { padding:5px 8px; }"
+            "QHeaderView::section { background:#EAF0F8; font-weight:700; padding:5px; }"
+        )
+        shortcuts = [
+            ("Undo",            "Ctrl+Z",          "⌘Z"),
+            ("Redo",            "Ctrl+Y / Ctrl+Shift+Z", "⌘⇧Z"),
+            ("Cut",             "Ctrl+X",          "⌘X"),
+            ("Copy",            "Ctrl+C",          "⌘C"),
+            ("Paste",           "Ctrl+V",          "⌘V"),
+            ("Delete",          "Delete",          "⌫"),
+            ("Select All",      "Ctrl+A",          "⌘A"),
+            ("Preferences",     "Ctrl+,",          "⌘,"),
+            ("New Project",     "Ctrl+N",          "⌘N"),
+            ("Open Project",    "Ctrl+O",          "⌘O"),
+            ("Save Project",    "Ctrl+S",          "⌘S"),
+            ("Import LAS",      "Ctrl+I",          "⌘I"),
+            ("Export as PDF",   "Ctrl+P",          "⌘P"),
+            ("Close / Quit",    "Alt+F4",          "⌘Q"),
+        ]
+        table.setRowCount(len(shortcuts))
+        for row, (action, win, mac) in enumerate(shortcuts):
+            for col, text in enumerate((action, win, mac)):
+                item = QtWidgets.QTableWidgetItem(text)
+                if col == 0:
+                    item.setFont(QtGui.QFont("Segoe UI", 10, QtGui.QFont.Bold))
+                table.setItem(row, col, item)
+
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        table.verticalHeader().setVisible(False)
+        layout.addWidget(table, 1)
+        return w
+
+    # ── Settings persistence ─────────────────────────────────────────────────
+
+    def _load_settings(self) -> None:
+        s = self._settings
+        # General
+        self._combo_theme.setCurrentText(s.value("general/theme", "Light (Default)"))
+        self._spin_font.setValue(int(s.value("general/font_size", 10)))
+        self._combo_depth_unit.setCurrentText(s.value("general/depth_unit", "Metres (m)"))
+        self._combo_pressure_unit.setCurrentText(s.value("general/pressure_unit", "psi"))
+        self._spin_autosave.setValue(int(s.value("general/autosave_min", 5)))
+        self._chk_splash.setChecked(s.value("general/show_splash", True, type=bool))
+        # Display
+        self._edit_null_display.setText(s.value("display/null_text", "-9999"))
+        self._spin_decimals.setValue(int(s.value("display/decimals", 3)))
+        self._spin_depth_min.setValue(float(s.value("display/depth_min", 0.0)))
+        self._spin_depth_max.setValue(float(s.value("display/depth_max", 5000.0)))
+        self._chk_grid.setChecked(s.value("display/show_grid", True, type=bool))
+        self._chk_toolbar_labels.setChecked(s.value("display/toolbar_labels", True, type=bool))
+
+    def _save_settings(self) -> None:
+        s = self._settings
+        # General
+        s.setValue("general/theme",         self._combo_theme.currentText())
+        s.setValue("general/font_size",     self._spin_font.value())
+        s.setValue("general/depth_unit",    self._combo_depth_unit.currentText())
+        s.setValue("general/pressure_unit", self._combo_pressure_unit.currentText())
+        s.setValue("general/autosave_min",  self._spin_autosave.value())
+        s.setValue("general/show_splash",   self._chk_splash.isChecked())
+        # Display
+        s.setValue("display/null_text",      self._edit_null_display.text())
+        s.setValue("display/decimals",       self._spin_decimals.value())
+        s.setValue("display/depth_min",      self._spin_depth_min.value())
+        s.setValue("display/depth_max",      self._spin_depth_max.value())
+        s.setValue("display/show_grid",      self._chk_grid.isChecked())
+        s.setValue("display/toolbar_labels", self._chk_toolbar_labels.isChecked())
+        s.sync()
+        QtWidgets.QMessageBox.information(
+            self, "Preferences Saved",
+            "Your preferences have been saved.\n"
+            "Some settings (e.g. theme, font size) take effect on next launch.",
+        )
+
+    def _on_ok(self) -> None:
+        self._save_settings()
+        self.accept()
+
+
 if __name__ == "__main__":
     main()
