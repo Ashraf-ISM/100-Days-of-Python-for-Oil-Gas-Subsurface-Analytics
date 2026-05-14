@@ -439,7 +439,7 @@ class MainController:
         """Placeholder for Core Data viewer.""" 
         QtWidgets.QMessageBox.information(
             self.ui, "Core Data",
-            "Core data import and display will be available in a future release.\n"
+            "Core data import and display will be available in a future release.\n "
             "CSV-format core plug data can currently be loaded via File ▸ Import Data ▸ Import CSV."
         )
 
