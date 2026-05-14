@@ -1699,7 +1699,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._send_key_event(focus, "actionCut", QtCore.Qt.Key_X, QtCore.Qt.ControlModifier)
 
     def _do_copy(self) -> None:
-        """Copy selected content from the focused widget."""
+        """Copy selected content from the focused widget. """
         focus = QtWidgets.QApplication.focusWidget()
         if focus is None:
             return
