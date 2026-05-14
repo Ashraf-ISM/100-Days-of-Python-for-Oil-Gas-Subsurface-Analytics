@@ -1352,7 +1352,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 data_svc = getattr(ctrl, "data", None)
         if data_svc is not None and hasattr(win, "set_data_service"):
             win.set_data_service(data_svc)
-
+# Missing log prediction 
     def _open_missing_log_prediction(self) -> None:
         """Create and show the Missing Log Prediction dashboard using modular script."""
         if not hasattr(self, "_missing_log_win") or self._missing_log_win is None:
