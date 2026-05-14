@@ -280,7 +280,6 @@ class MainController:
         Returns:
             Project path or empty string
         """
-        
         from core.project_manager import get_recent_projects
         recent = get_recent_projects()
         return recent[index] if index < len(recent) else ""
