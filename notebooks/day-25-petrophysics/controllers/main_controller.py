@@ -387,7 +387,7 @@ class MainController:
         QtWidgets.QMessageBox.information(self.ui, "Well Properties", "\n".join(lines))
 
     def _show_set_active_well(self) -> None:
-        """Show a dialog to pick which loaded well should be the active well."""
+        """Show a dialog to pick which loaded well should be the active well. """
         wells = sorted(getattr(self.data, "_wells", {}).keys())
         if not wells:
             QtWidgets.QMessageBox.information(
