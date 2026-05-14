@@ -1574,7 +1574,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             )
 
     def _connect_edit_actions(self) -> None:
-        """Wire every Edit menu action to a fully functional handler. """
+        """Wire every Edit menu action to a fully functional handler.  """
 
         # ── Undo / Redo ─────────────────────────────────────────────────────
         undo_action = getattr(self, "actionUndo", None)
