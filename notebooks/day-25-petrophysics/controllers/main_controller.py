@@ -228,7 +228,7 @@ class MainController:
             except Exception as exc:
                 print(f"[PostLoad] Porosity refresh skipped: {exc}")
 
-        # ── Water Saturation ──────────────────────────────────────────────────
+        # ── Water Saturation ────────────────────────────────────────────────── 
         if "SW" in cols_upper:
             try:
                 self.interp.refresh_sw_workspace()
