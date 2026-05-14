@@ -1574,7 +1574,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             )
 
     def _connect_edit_actions(self) -> None:
-        """Wire every Edit menu action to a fully functional handler."""
+        """Wire every Edit menu action to a fully functional handler. """
 
         # ── Undo / Redo ─────────────────────────────────────────────────────
         undo_action = getattr(self, "actionUndo", None)
@@ -1628,6 +1628,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self._refresh_undo_redo_state()
 
     def _do_redo(self) -> None:
+
         """Redo: first try the focused widget's own redo, then the app stack. """
         focus = QtWidgets.QApplication.focusWidget()
         for widget in self._iter_focus_chain(focus):
