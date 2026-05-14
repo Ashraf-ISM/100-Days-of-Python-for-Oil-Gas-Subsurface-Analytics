@@ -355,7 +355,7 @@ class MainController:
     # ── Well menu handlers ────────────────────────────────────────────────────
 
     def _show_well_properties(self) -> None:
-        """Display properties of the currently active well."""
+        """Display properties of the currently active well. """
         well = self.data._get_current_well()
         if well is None:
             QtWidgets.QMessageBox.information(
