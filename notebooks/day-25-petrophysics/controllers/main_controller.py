@@ -359,7 +359,7 @@ class MainController:
         well = self.data._get_current_well()
         if well is None:
             QtWidgets.QMessageBox.information(
-                self.ui, "Well Properties", "No well is currently loaded.\nUse Well ▸ Add New Well to import a LAS file. "
+                self.ui, "Well Properties", "No well is currently loaded.\nUse Well ▸ Add New Well to import a LAS file."
             )
             return
         df = getattr(well, "data", None)
