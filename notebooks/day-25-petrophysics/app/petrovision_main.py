@@ -1643,7 +1643,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self._refresh_undo_redo_state()
 
     def _refresh_undo_redo_state(self) -> None:
-        """Enable/disable Undo & Redo menu items based on stack state."""
+        """Enable/disable Undo & Redo menu items based on stack state. """
         stack = getattr(self, "_undo_stack", None)
         if stack is None:
             return
