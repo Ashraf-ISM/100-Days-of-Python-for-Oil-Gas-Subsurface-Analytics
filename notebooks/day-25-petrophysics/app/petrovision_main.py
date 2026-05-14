@@ -1354,7 +1354,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             win.set_data_service(data_svc)
 # Missing log prediction panel
     def _open_missing_log_prediction(self) -> None:
-        """Create and show the Missing Log Prediction dashboard using modular script."""
+        """Create and show the Missing Log Prediction panel using modular script."""
         if not hasattr(self, "_missing_log_win") or self._missing_log_win is None:
             try:
                 from ai_analytics.missing_log.missing_log_window import MissingLogPredictionWindow
