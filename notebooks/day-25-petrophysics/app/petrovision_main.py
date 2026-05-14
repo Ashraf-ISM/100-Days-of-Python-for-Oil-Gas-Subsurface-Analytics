@@ -1326,6 +1326,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 pass
 
  
+ 
     # ─── Facies Classification – standalone window ───────────────────────────────
 
     def _init_facies_window(self) -> None:
