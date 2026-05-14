@@ -1498,7 +1498,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             idx = tab_index(tab_name, fallback_idx)
             if idx is not None:
                 connect_action(action_name, idx)
- 
+  
         # Toolbar / menu actions -> main tabs
         connect_action_to_tab("actionNewLogPlot", "tabLogViewer", 1)
         connect_action_to_tab("actiondatainfo", "tabDataInfoStats", 2)
