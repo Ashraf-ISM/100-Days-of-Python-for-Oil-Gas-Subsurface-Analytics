@@ -235,7 +235,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._dashboard_quick_buttons = [
             btn_add_well,
             btn_import_well,
-            self._make_launch_button("Load Demo Data" , self._load_demo_data, "#FF6B6B"),
+            self._make_launch_button("Load Demo Data", self._load_demo_data, "#FF6B6B"),
             self._make_launch_button("Data Downloader", self._open_data_downloader, "#5E35B1"),
             self._make_launch_button("Log Viewer", lambda: self._call_controller_action("_go_to_logviewer_tab"), "#1FA67A"),
             self._make_launch_button("Crossplot", lambda: self._trigger_widget_click("btnDashXplot"), "#D48A1D"),
