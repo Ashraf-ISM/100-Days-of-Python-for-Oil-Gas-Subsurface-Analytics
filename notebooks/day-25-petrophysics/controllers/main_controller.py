@@ -214,7 +214,7 @@ class MainController:
         # ── Vsh / Shale Volume ────────────────────────────────────────────────
         # run_vsh_workflow re-reads the restored GR-curve / GR-min / GR-max 
         # widgets and replots the track; the VSH column already in the
-        # DataFrame will be overwritten with the same values.
+        # DataFrame will be overwritten with the same values. 
         if "VSH" in cols_upper or "VSH_LINEAR" in cols_upper:
             try:
                 self.interp.run_vsh_workflow()
