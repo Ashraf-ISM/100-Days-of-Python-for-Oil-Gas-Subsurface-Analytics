@@ -241,7 +241,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             self._make_launch_button("Crossplot", lambda: self._trigger_widget_click("btnDashXplot"), "#D48A1D"),
             self._make_launch_button("Shale Volume", lambda: self._trigger_widget_click("btnDashVsh"), "#A354D0"),
             self._make_launch_button("Water Saturation", lambda: self._trigger_widget_click("btnDashSw"), "#0F8B8D"),
-            self._make_launch_button("Well Correlation", lambda: self._trigger_widget_click("btnDashCorr"), "#7C5CFF"),
+            self._make_launch_button("Well Correlation",  lambda: self._trigger_widget_click("btnDashCorr"), "#7C5CFF"),
         ]
         for index, button in enumerate(self._dashboard_quick_buttons):
             row, column = divmod(index, 2)
