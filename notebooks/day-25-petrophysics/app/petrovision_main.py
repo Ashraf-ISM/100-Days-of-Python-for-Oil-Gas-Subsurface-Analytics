@@ -249,7 +249,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         quick_section.layout().addLayout(quick_grid)
         right_col.addWidget(quick_section, 2)
 
-        recent_section = self._make_section("Recent Projects")
+        recent_section = self._make_section("Recent Projects ")
         self._dashboard_recent_buttons = [
             getattr(self, "btnDashRecent1", None),
             getattr(self, "btnDashRecent2", None),
