@@ -126,7 +126,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         hero_layout.setSpacing(18)
 
         hero_text = QtWidgets.QVBoxLayout()
-        hero_title = QtWidgets.QLabel("PetroARX Dashboard", hero)
+        hero_title = QtWidgets.QLabel("PetroARX Dashboards", hero)
         hero_title.setStyleSheet("color:#FFFFFF;font-size:24px;font-weight:800;")
         hero_subtitle = QtWidgets.QLabel(
             "Overview of project activity, loaded wells, and quick access to the core interpretation tools.",
