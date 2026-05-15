@@ -16,6 +16,7 @@ Instantiate once inside ``PetroVisionMainWindow.__init__``::
 from __future__ import annotations
 
 from pathlib import Path
+# pyrefly: ignore [missing-import]
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
