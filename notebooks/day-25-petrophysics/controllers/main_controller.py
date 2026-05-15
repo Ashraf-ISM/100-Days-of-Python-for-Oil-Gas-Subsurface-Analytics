@@ -1,8 +1,8 @@
 """Main UI controller wiring actions to services."""
 from __future__ import annotations
-
+# pyrefly: ignore [missing-import]
 from PyQt5 import QtWidgets
-
+# pyrefly: ignore [missing-import]
 from app.calculation_window import CalculationWindow
 from services.project_service import ProjectService
 from services.data_service import DataService
