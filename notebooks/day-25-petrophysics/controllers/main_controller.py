@@ -2,21 +2,14 @@
 from __future__ import annotations
 # pyrefly: ignore [missing-import]
 from PyQt5 import QtWidgets
-# pyrefly: ignore [missing-import]
+
 from app.calculation_window import CalculationWindow
-# pyrefly: ignore [missing-import]
 from services.project_service import ProjectService
-# pyrefly: ignore [missing-import]
 from services.data_service import DataService
-# pyrefly: ignore [missing-import]
 from services.plot_service import PlotService
-# pyrefly: ignore [missing-import]
 from services.interpretation_service import InterpretationService
-# pyrefly: ignore [missing-import]
 from services.geomechanics_service import GeomechanicsService
-# pyrefly: ignore [missing-import]
 from services.formation_evaluation_service import FormationEvaluationService
-# pyrefly: ignore [missing-import]
 from services.qc_service import QCService
 
 
