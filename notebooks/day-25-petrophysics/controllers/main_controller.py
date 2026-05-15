@@ -212,7 +212,7 @@ class MainController:
         cols_upper = {str(c).upper() for c in df.columns}
 
         # ── Vsh / Shale Volume ────────────────────────────────────────────────
-        # run_vsh_workflow re-reads the restored GR-curve / GR-min / GR-max
+        # run_vsh_workflow re-reads the restored GR-curve / GR-min / GR-max 
         # widgets and replots the track; the VSH column already in the
         # DataFrame will be overwritten with the same values.
         if "VSH" in cols_upper or "VSH_LINEAR" in cols_upper:
