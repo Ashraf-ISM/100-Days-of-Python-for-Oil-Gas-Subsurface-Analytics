@@ -81,9 +81,9 @@ class DashboardPanel:
 
         hero_text = QtWidgets.QVBoxLayout()
         ht = QtWidgets.QLabel("PetroARX Dashboard", hero)
-        ht.setStyleSheet("color:#F1F7FF;font-size:20px;font-weight:700;")
+        ht.setStyleSheet("color:#F1F7FF;font-size:18px;font-weight:700;")
         hs = QtWidgets.QLabel("AI-powered petrophysical interpretation workspace", hero)
-        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:15px;font-weight:500;")
+        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:13px;font-weight:500;")
         hs.setWordWrap(True)
 
         info_row = QtWidgets.QHBoxLayout()
