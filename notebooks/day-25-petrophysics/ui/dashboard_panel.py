@@ -67,66 +67,81 @@ class DashboardPanel:
 
         # --- Hero ---
         hero = QtWidgets.QFrame(content)
+        hero.setObjectName("dashHero")
         hero.setStyleSheet(
-            "QFrame {"
-            "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #1C4A7C, stop:1 #3F7CB6);"
-            "border-radius: 18px;"
+            "QFrame#dashHero {"
+            "background:qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #031B44, stop:0.55 #07356E, stop:1 #0A5FA8);"
+            "border:1px solid rgba(255,255,255,0.08);"
+            "border-radius:20px;"
             "}"
         )
         hl = QtWidgets.QHBoxLayout(hero)
-        hl.setContentsMargins(22, 20, 22, 20)
-        hl.setSpacing(18)
+        hl.setContentsMargins(26, 24, 26, 24)
+        hl.setSpacing(20)
 
         hero_text = QtWidgets.QVBoxLayout()
-        ht = QtWidgets.QLabel("PetroARX Dashboards", hero)
-        ht.setStyleSheet("color:#FFFFFF;font-size:24px;font-weight:800;")
-        hs = QtWidgets.QLabel(
-            "Overview of project activity, loaded wells, and quick access to the core interpretation tools.",
-            hero,
-        )
-        hs.setStyleSheet("color:rgba(255,255,255,0.86);font-size:12px;")
+        ht = QtWidgets.QLabel("PetroARX Dashboard", hero)
+        ht.setStyleSheet("color:#F1F7FF;font-size:28px;font-weight:800;")
+        hs = QtWidgets.QLabel("AI-powered petrophysical interpretation workspace", hero)
+        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:15px;font-weight:500;")
         hs.setWordWrap(True)
 
-        self.ui._dashboard_project_label = QtWidgets.QLabel("Project: -", hero)
-        self.ui._dashboard_project_label.setStyleSheet("color:#DCEBFA;font-size:12px;font-weight:600;")
-        self.ui._dashboard_well_label = QtWidgets.QLabel("Active well: -", hero)
-        self.ui._dashboard_well_label.setStyleSheet("color:#DCEBFA;font-size:12px;font-weight:600;")
+        info_row = QtWidgets.QHBoxLayout()
+        info_row.setSpacing(0)
+        self.ui._dashboard_well_label = self._make_hero_info_item(hero, "ACTIVE WELL", "-", "#61E594")
+        self.ui._dashboard_project_label = self._make_hero_info_item(hero, "PROJECT", "No Project", "#51B3FF")
+        self.ui._dashboard_depth_label = self._make_hero_info_item(hero, "DEPTH RANGE", "-", "#A9C7FF")
+        self.ui._dashboard_last_updated_label = self._make_hero_info_item(hero, "LAST UPDATED", "-", "#A9C7FF")
+        info_row.addWidget(self.ui._dashboard_well_label, 1)
+        info_row.addWidget(self.ui._dashboard_project_label, 1)
+        info_row.addWidget(self.ui._dashboard_depth_label, 1)
+        info_row.addWidget(self.ui._dashboard_last_updated_label, 1)
 
         hero_text.addWidget(ht)
         hero_text.addWidget(hs)
-        hero_text.addSpacing(4)
-        hero_text.addWidget(self.ui._dashboard_project_label)
-        hero_text.addWidget(self.ui._dashboard_well_label)
+        hero_text.addSpacing(10)
+        hero_text.addLayout(info_row)
         hero_text.addStretch(1)
-        hl.addLayout(hero_text, 3)
+        hl.addLayout(hero_text, 5)
 
-        logo_label = QtWidgets.QLabel(hero)
+        logo_card = QtWidgets.QFrame(hero)
+        logo_card.setStyleSheet(
+            "QFrame { background:rgba(1,11,29,0.64); border:1px solid rgba(83,178,255,0.38); border-radius:16px; }"
+        )
+        logo_layout = QtWidgets.QVBoxLayout(logo_card)
+        logo_layout.setContentsMargins(20, 20, 20, 20)
+        logo_label = QtWidgets.QLabel(logo_card)
+        logo_label.setAlignment(QtCore.Qt.AlignCenter)
         logo_pixmap = QtGui.QPixmap(str(ASSETS_DIR / "logo-petroarx.png"))
         if not logo_pixmap.isNull():
-            logo_label.setPixmap(logo_pixmap.scaled(120, 120, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation))
-        hl.addWidget(logo_label)
+            logo_label.setPixmap(logo_pixmap.scaled(180, 180, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation))
+        logo_layout.addWidget(logo_label, 1)
+        hl.addWidget(logo_card, 1)
 
-        badge_col = QtWidgets.QVBoxLayout()
-        badge_col.setSpacing(10)
-        self.ui._dashboard_badge_one = self._make_badge("Project Ready", "#EAF4FF", "#1C4A7C")
-        self.ui._dashboard_badge_two = self._make_badge("0 Wells", "#EEF9F6", "#0E7A63")
-        badge_col.addWidget(self.ui._dashboard_badge_one)
-        badge_col.addWidget(self.ui._dashboard_badge_two)
-        badge_col.addStretch(1)
-        hl.addLayout(badge_col, 1)
+        status_col = QtWidgets.QVBoxLayout()
+        status_col.setSpacing(8)
+        self.ui._dashboard_badge_one = self._make_status_item("PROJECT STATUS", "Ready", "#61E594")
+        self.ui._dashboard_badge_two = self._make_status_item("DATA INTEGRITY", "0%", "#66D7FF")
+        self.ui._dashboard_missing_logs = self._make_status_item("MISSING LOGS", "0 Logs", "#FFB04D")
+        self.ui._dashboard_interpretation = self._make_status_item("INTERPRETATION READINESS", "Waiting for data", "#50AAFF")
+        status_col.addWidget(self.ui._dashboard_badge_one)
+        status_col.addWidget(self.ui._dashboard_badge_two)
+        status_col.addWidget(self.ui._dashboard_missing_logs)
+        status_col.addWidget(self.ui._dashboard_interpretation)
+        hl.addLayout(status_col, 2)
         cl.addWidget(hero)
 
         # --- Metrics row ---
         metrics_row = QtWidgets.QHBoxLayout()
         metrics_row.setSpacing(12)
         self.ui._dashboard_metrics = {}
-        for title, key, accent in (
-            ("Wells Loaded", "wells_loaded", "#2F6FB3"),
-            ("Curves", "curve_count", "#1FA67A"),
-            ("Avg Data Quality", "data_quality", "#D48A1D"),
-            ("Current Samples", "sample_count", "#A354D0"),
+        for title, subtitle, key, accent in (
+            ("WELLS LOADED", "Active well", "wells_loaded", "#2F6FB3"),
+            ("CURVES LOADED", "Total curves", "curve_count", "#6A46D7"),
+            ("AVG DATA QUALITY", "Excellent", "data_quality", "#E98313"),
+            ("CURRENT SAMPLES", "Total data points", "sample_count", "#1FA65F"),
         ):
-            card, val = self._make_metric_card(title, accent)
+            card, val = self._make_metric_card(title, subtitle, accent)
             self.ui._dashboard_metrics[key] = val
             metrics_row.addWidget(card)
         cl.addLayout(metrics_row)
@@ -251,7 +266,7 @@ class DashboardPanel:
         pname = "No project"
         if ps is not None and getattr(ps, "current_project", None) is not None:
             pname = ps.current_project.name
-        self._set_label("_dashboard_project_label", f"Project: {pname}")
+        self._set_label("_dashboard_project_label", pname)
 
         well = None; df = None
         if ds is not None:
@@ -259,7 +274,7 @@ class DashboardPanel:
             df = getattr(well, "data", None) if well is not None else None
 
         wname = getattr(well, "name", "-") if well is not None else "-"
-        self._set_label("_dashboard_well_label", f"Active well: {wname}")
+        self._set_label("_dashboard_well_label", wname)
 
         wc = len(getattr(ds, "_wells", {})) if ds is not None else 0
         cc = len(df.columns) if df is not None else 0
@@ -270,8 +285,12 @@ class DashboardPanel:
         self._set_metric("curve_count", str(cc))
         self._set_metric("sample_count", f"{sc:,}")
         self._set_metric("data_quality", f"{dq:.0f}%")
-        self._set_label("_dashboard_badge_one", "Project Ready")
-        self._set_label("_dashboard_badge_two", f"{wc} Wells")
+        self._set_label("_dashboard_badge_one", "Ready")
+        self._set_label("_dashboard_badge_two", f"Excellent ({dq:.0f}%)")
+        self._set_label("_dashboard_missing_logs", self._estimate_missing_logs(df))
+        self._set_label("_dashboard_interpretation", self._interpretation_readiness(dq))
+        self._set_label("_dashboard_last_updated_label", QtCore.QDateTime.currentDateTime().toString("MMM d, yyyy hh:mm AP"))
+        self._set_label("_dashboard_depth_label", self._format_depth_range(df))
 
         self._update_recent_projects()
         self._update_activity_list(pname, well, df)
@@ -297,28 +316,58 @@ class DashboardPanel:
         ly.addWidget(lbl)
         return s
 
-    def _make_metric_card(self, title: str, accent: str) -> tuple:
+    def _make_metric_card(self, title: str, subtitle: str, accent: str) -> tuple:
         card = QtWidgets.QFrame(self.ui)
         card.setObjectName("dashCard")
         card.setStyleSheet("QFrame#dashCard { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:14px; }")
         ly = QtWidgets.QVBoxLayout(card)
-        ly.setContentsMargins(14, 12, 14, 12); ly.setSpacing(6)
+        ly.setContentsMargins(18, 14, 18, 14); ly.setSpacing(8)
         tl = QtWidgets.QLabel(title, card)
-        tl.setStyleSheet("color:#5C718A;font-size:11px;font-weight:600;")
+        tl.setStyleSheet("color:#2D4D74;font-size:13px;font-weight:700;")
         vl = QtWidgets.QLabel("0", card)
-        vl.setStyleSheet(f"color:{accent};font-size:22px;font-weight:800;")
-        ly.addWidget(tl); ly.addWidget(vl)
+        vl.setStyleSheet(f"color:{accent};font-size:44px;font-weight:800;")
+        sl = QtWidgets.QLabel(subtitle, card)
+        sl.setStyleSheet("color:#5B7290;font-size:12px;font-weight:600;")
+        ly.addWidget(tl)
+        ly.addWidget(vl)
+        ly.addWidget(sl)
+        ly.addStretch(1)
         return card, vl
 
-    def _make_badge(self, text: str, bg: str, fg: str) -> QtWidgets.QFrame:
+    def _make_hero_info_item(self, parent, title: str, value: str, value_color: str) -> QtWidgets.QFrame:
+        box = QtWidgets.QFrame(parent)
+        box.setStyleSheet("QFrame { border-right:1px solid rgba(160,198,235,0.2); }")
+        ly = QtWidgets.QVBoxLayout(box)
+        ly.setContentsMargins(14, 8, 14, 8)
+        ly.setSpacing(6)
+        t = QtWidgets.QLabel(title, box)
+        t.setStyleSheet("color:#9CB9DD;font-size:11px;font-weight:700;")
+        v = QtWidgets.QLabel(value, box)
+        v.setStyleSheet(f"color:{value_color};font-size:22px;font-weight:800;")
+        ly.addWidget(t)
+        ly.addWidget(v)
+        box._label = v  # type: ignore[attr-defined]
+        return box
+
+    def _make_status_item(self, title: str, value: str, accent: str) -> QtWidgets.QFrame:
         badge = QtWidgets.QFrame(self.ui)
-        badge.setStyleSheet(f"QFrame {{ background:{bg}; border-radius:12px; border:1px solid rgba(255,255,255,0.18); }}")
-        ly = QtWidgets.QHBoxLayout(badge)
+        badge.setStyleSheet(
+            "QFrame {"
+            "background:rgba(4,29,63,0.68);"
+            "border:1px solid rgba(116,171,228,0.18);"
+            "border-radius:12px;"
+            "}"
+        )
+        ly = QtWidgets.QVBoxLayout(badge)
         ly.setContentsMargins(12, 10, 12, 10)
-        lbl = QtWidgets.QLabel(text, badge)
-        lbl.setStyleSheet(f"color:{fg};font-size:12px;font-weight:700;")
-        ly.addWidget(lbl); ly.addStretch(1)
-        badge._label = lbl  # type: ignore[attr-defined]
+        ly.setSpacing(3)
+        tl = QtWidgets.QLabel(title, badge)
+        tl.setStyleSheet("color:#ADC5E2;font-size:10px;font-weight:700;")
+        vl = QtWidgets.QLabel(value, badge)
+        vl.setStyleSheet(f"color:{accent};font-size:15px;font-weight:800;")
+        ly.addWidget(tl)
+        ly.addWidget(vl)
+        badge._label = vl  # type: ignore[attr-defined]
         return badge
 
     def _make_launch_button(self, text: str, handler, accent: str) -> QtWidgets.QPushButton:
@@ -470,6 +519,35 @@ class DashboardPanel:
             return 0.0
         nv = [float(df[c].isna().mean() * 100) for c in nc]
         return max(0.0, min(100.0, 100.0 - sum(nv) / len(nv)))
+
+    def _format_depth_range(self, df) -> str:
+        if df is None or getattr(df, "empty", True):
+            return "-"
+        import pandas as pd
+        for col in df.columns:
+            if str(col).strip().upper() in {"DEPTH", "DEPT", "MD"}:
+                vals = pd.to_numeric(df[col], errors="coerce").dropna()
+                if vals.empty:
+                    return "-"
+                return f"{vals.min():,.2f} - {vals.max():,.2f} m"
+        return "-"
+
+    def _estimate_missing_logs(self, df) -> str:
+        if df is None or getattr(df, "empty", True):
+            return "0 Logs"
+        target = ("GR", "RHOB", "NPHI", "DT", "RT", "PEF")
+        present = {str(c).strip().upper() for c in df.columns}
+        missing = [name for name in target if name not in present]
+        return f"{len(missing)} Logs"
+
+    def _interpretation_readiness(self, quality: float) -> str:
+        if quality >= 85:
+            return "Good to interpret"
+        if quality >= 65:
+            return "Fair for interpretation"
+        if quality > 0:
+            return "Needs cleanup"
+        return "Waiting for data"
 
     # ------------------------------------------------------------------
     # Chart rendering
