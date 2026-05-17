@@ -483,7 +483,7 @@ class DashboardPanel:
         nc = [c for c in df.columns if pd.api.types.is_numeric_dtype(df[c])]
         if not nc:
             self._render_message(self.ui._dashboard_hist_frame, "No numeric curves found.")
-            self._render_message(self.ui._dashboard_radar_frame, "No numeric curves found.")
+            self._render_message(self.ui._dashboard_radar_frame, "No numeric curves found. ")
             return
         gr = None
         for cand in ("GR", "CGR", "GAPI", "API"):
