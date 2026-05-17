@@ -57,6 +57,7 @@ class DashboardPanel:
 
         scroll = QtWidgets.QScrollArea(tab)
         scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
         scroll.setStyleSheet("border:0;background:transparent;")
 
@@ -76,14 +77,14 @@ class DashboardPanel:
             "}"
         )
         hl = QtWidgets.QHBoxLayout(hero)
-        hl.setContentsMargins(26, 24, 26, 24)
-        hl.setSpacing(20)
+        hl.setContentsMargins(18, 16, 18, 16)
+        hl.setSpacing(12)
 
         hero_text = QtWidgets.QVBoxLayout()
         ht = QtWidgets.QLabel("PetroARX Dashboard", hero)
-        ht.setStyleSheet("color:#F1F7FF;font-size:28px;font-weight:800;")
+        ht.setStyleSheet("color:#F1F7FF;font-size:20px;font-weight:800;")
         hs = QtWidgets.QLabel("AI-powered petrophysical interpretation workspace", hero)
-        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:15px;font-weight:500;")
+        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:11px;font-weight:500;")
         hs.setWordWrap(True)
 
         info_row = QtWidgets.QHBoxLayout()
@@ -99,27 +100,27 @@ class DashboardPanel:
 
         hero_text.addWidget(ht)
         hero_text.addWidget(hs)
-        hero_text.addSpacing(10)
+        hero_text.addSpacing(6)
         hero_text.addLayout(info_row)
         hero_text.addStretch(1)
-        hl.addLayout(hero_text, 5)
+        hl.addLayout(hero_text, 8)
 
         logo_card = QtWidgets.QFrame(hero)
         logo_card.setStyleSheet(
             "QFrame { background:rgba(1,11,29,0.64); border:1px solid rgba(83,178,255,0.38); border-radius:16px; }"
         )
         logo_layout = QtWidgets.QVBoxLayout(logo_card)
-        logo_layout.setContentsMargins(20, 20, 20, 20)
+        logo_layout.setContentsMargins(12, 12, 12, 12)
         logo_label = QtWidgets.QLabel(logo_card)
         logo_label.setAlignment(QtCore.Qt.AlignCenter)
         logo_pixmap = QtGui.QPixmap(str(ASSETS_DIR / "logo-petroarx.png"))
         if not logo_pixmap.isNull():
-            logo_label.setPixmap(logo_pixmap.scaled(180, 180, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation))
+            logo_label.setPixmap(logo_pixmap.scaled(96, 96, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation))
         logo_layout.addWidget(logo_label, 1)
         hl.addWidget(logo_card, 1)
 
         status_col = QtWidgets.QVBoxLayout()
-        status_col.setSpacing(8)
+        status_col.setSpacing(6)
         self.ui._dashboard_badge_one = self._make_status_item("PROJECT STATUS", "Ready", "#61E594")
         self.ui._dashboard_badge_two = self._make_status_item("DATA INTEGRITY", "0%", "#66D7FF")
         self.ui._dashboard_missing_logs = self._make_status_item("MISSING LOGS", "0 Logs", "#FFB04D")
@@ -133,7 +134,7 @@ class DashboardPanel:
 
         # --- Metrics row ---
         metrics_row = QtWidgets.QHBoxLayout()
-        metrics_row.setSpacing(12)
+        metrics_row.setSpacing(10)
         self.ui._dashboard_metrics = {}
         for title, subtitle, key, accent in (
             ("WELLS LOADED", "Active well", "wells_loaded", "#2F6FB3"),
@@ -312,7 +313,7 @@ class DashboardPanel:
         ly = QtWidgets.QVBoxLayout(s)
         ly.setContentsMargins(16, 14, 16, 16); ly.setSpacing(10)
         lbl = QtWidgets.QLabel(title, s)
-        lbl.setStyleSheet("font-size:10px;font-weight:600;color:#274B72;")
+        lbl.setStyleSheet("font-size:13px;font-weight:600;color:#274B72;")
         ly.addWidget(lbl)
         return s
 
@@ -321,13 +322,13 @@ class DashboardPanel:
         card.setObjectName("dashCard")
         card.setStyleSheet("QFrame#dashCard { background:#FFFFFF; border:1px solid #D7E2EE; border-radius:14px; }")
         ly = QtWidgets.QVBoxLayout(card)
-        ly.setContentsMargins(18, 14, 18, 14); ly.setSpacing(8)
+        ly.setContentsMargins(14, 10, 14, 10); ly.setSpacing(4)
         tl = QtWidgets.QLabel(title, card)
-        tl.setStyleSheet("color:#2D4D74;font-size:13px;font-weight:700;")
+        tl.setStyleSheet("color:#2D4D74;font-size:10px;font-weight:700;")
         vl = QtWidgets.QLabel("0", card)
-        vl.setStyleSheet(f"color:{accent};font-size:44px;font-weight:800;")
+        vl.setStyleSheet(f"color:{accent};font-size:22px;font-weight:800;")
         sl = QtWidgets.QLabel(subtitle, card)
-        sl.setStyleSheet("color:#5B7290;font-size:12px;font-weight:600;")
+        sl.setStyleSheet("color:#5B7290;font-size:9px;font-weight:600;")
         ly.addWidget(tl)
         ly.addWidget(vl)
         ly.addWidget(sl)
@@ -338,12 +339,13 @@ class DashboardPanel:
         box = QtWidgets.QFrame(parent)
         box.setStyleSheet("QFrame { border-right:1px solid rgba(160,198,235,0.2); }")
         ly = QtWidgets.QVBoxLayout(box)
-        ly.setContentsMargins(14, 8, 14, 8)
-        ly.setSpacing(6)
+        ly.setContentsMargins(10, 4, 10, 4)
+        ly.setSpacing(2)
         t = QtWidgets.QLabel(title, box)
-        t.setStyleSheet("color:#9CB9DD;font-size:11px;font-weight:700;")
+        t.setStyleSheet("color:#9CB9DD;font-size:9px;font-weight:700;")
         v = QtWidgets.QLabel(value, box)
-        v.setStyleSheet(f"color:{value_color};font-size:22px;font-weight:800;")
+        v.setStyleSheet(f"color:{value_color};font-size:9px;font-weight:700;")
+        v.setWordWrap(True)
         ly.addWidget(t)
         ly.addWidget(v)
         box._label = v  # type: ignore[attr-defined]
@@ -359,12 +361,12 @@ class DashboardPanel:
             "}"
         )
         ly = QtWidgets.QVBoxLayout(badge)
-        ly.setContentsMargins(12, 10, 12, 10)
-        ly.setSpacing(3)
+        ly.setContentsMargins(9, 7, 9, 7)
+        ly.setSpacing(2)
         tl = QtWidgets.QLabel(title, badge)
-        tl.setStyleSheet("color:#ADC5E2;font-size:10px;font-weight:700;")
+        tl.setStyleSheet("color:#ADC5E2;font-size:8px;font-weight:700;")
         vl = QtWidgets.QLabel(value, badge)
-        vl.setStyleSheet(f"color:{accent};font-size:15px;font-weight:800;")
+        vl.setStyleSheet(f"color:{accent};font-size:11px;font-weight:800;")
         ly.addWidget(tl)
         ly.addWidget(vl)
         badge._label = vl  # type: ignore[attr-defined]
