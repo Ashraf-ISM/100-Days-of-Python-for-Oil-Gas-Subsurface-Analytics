@@ -312,7 +312,7 @@ class DashboardPanel:
         ly = QtWidgets.QVBoxLayout(s)
         ly.setContentsMargins(16, 14, 16, 16); ly.setSpacing(10)
         lbl = QtWidgets.QLabel(title, s)
-        lbl.setStyleSheet("font-size:14px;font-weight:700;color:#274B72;")
+        lbl.setStyleSheet("font-size:10px;font-weight:600;color:#274B72;")
         ly.addWidget(lbl)
         return s
 
