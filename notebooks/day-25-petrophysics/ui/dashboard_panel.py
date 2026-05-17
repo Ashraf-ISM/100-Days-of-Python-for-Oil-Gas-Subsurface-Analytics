@@ -171,6 +171,7 @@ class DashboardPanel:
 
         # Quick Actions + Recent Projects (combined)
         qa = self._make_section("Quick Actions & Recent Projects")
+        qa.layout().setSpacing(6)
         qg = QtWidgets.QGridLayout()
         qg.setSpacing(10)
 
@@ -198,18 +199,18 @@ class DashboardPanel:
         qa.layout().addLayout(qg)
         
         rp_title = QtWidgets.QLabel("Recent Projects", qa)
-        rp_title.setStyleSheet("font-size:12px;font-weight:700;color:#274B72;padding-top:6px;")
+        rp_title.setStyleSheet("font-size:12px;font-weight:800;color:#1F4673;padding-top:2px;")
         qa.layout().addWidget(rp_title)
 
         self.ui._dashboard_recent_buttons = [
-            self._make_workflow_button("No recent project", lambda: self._load_recent_project(0)),
-            self._make_workflow_button("No recent project", lambda: self._load_recent_project(1)),
-            self._make_workflow_button("No recent project", lambda: self._load_recent_project(2)),
+            self._make_recent_project_button("No recent project", lambda: self._load_recent_project(0), "#2F6FB3"),
+            self._make_recent_project_button("No recent project", lambda: self._load_recent_project(1), "#6A46D7"),
+            self._make_recent_project_button("No recent project", lambda: self._load_recent_project(2), "#1FA67A"),
         ]
         rl = QtWidgets.QVBoxLayout()
-        rl.setSpacing(8)
+        rl.setSpacing(6)
         for b in self.ui._dashboard_recent_buttons:
-            b.setMinimumHeight(40)
+            b.setMinimumHeight(38)
             rl.addWidget(b)
         qa.layout().addLayout(rl)
         right.addWidget(qa, 1)
@@ -358,6 +359,34 @@ class DashboardPanel:
             "}"
             "QPushButton:hover { background:#F2F7FD; border-color:#9FC0E2; }"
             "QPushButton:disabled { color:#8CA2BB; background:#F7FAFD; }"
+        )
+        btn.clicked.connect(handler)
+        return btn
+
+    def _make_recent_project_button(self, text: str, handler, accent: str) -> QtWidgets.QPushButton:
+        btn = QtWidgets.QPushButton(f"  {text}", self.ui)
+        btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        btn.setStyleSheet(
+            "QPushButton {"
+            "text-align:left;"
+            "padding:8px 12px;"
+            "font-size:11px;"
+            "font-weight:700;"
+            "color:#163B63;"
+            "border-radius:10px;"
+            "border:1px solid #BED1E6;"
+            "background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #FFFFFF, stop:1 #F4F9FF);"
+            f"border-left:4px solid {accent};"
+            "}"
+            "QPushButton:hover {"
+            "background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #F7FBFF, stop:1 #EAF3FE);"
+            "border-color:#91B4D8;"
+            "}"
+            "QPushButton:disabled {"
+            "color:#8CA2BB;"
+            "background:#F7FAFD;"
+            "border-color:#D6E1EE;"
+            "}"
         )
         btn.clicked.connect(handler)
         return btn
