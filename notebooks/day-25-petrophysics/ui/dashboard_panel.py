@@ -82,9 +82,9 @@ class DashboardPanel:
 
         hero_text = QtWidgets.QVBoxLayout()
         ht = QtWidgets.QLabel("PetroARX Dashboard", hero)
-        ht.setStyleSheet("color:#F1F7FF;font-size:20px;font-weight:800;")
+        ht.setStyleSheet("color:#F1F7FF;font-size:24px;font-weight:800;")
         hs = QtWidgets.QLabel("AI-powered petrophysical interpretation workspace", hero)
-        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:11px;font-weight:500;")
+        hs.setStyleSheet("color:rgba(230,241,255,0.9);font-size:12px;font-weight:500;")
         hs.setWordWrap(True)
 
         info_row = QtWidgets.QHBoxLayout()
@@ -165,32 +165,12 @@ class DashboardPanel:
         vis.layout().addLayout(vg)
         left.addWidget(vis, 3)
 
-        # Quick Workflow
-        wf = self._make_section("Quick Workflow")
-        wfg = QtWidgets.QGridLayout()
-        wfg.setSpacing(10)
-        self.ui._dashboard_workflow_buttons = [
-            self._w("btnDashImportLAS"), self._w("btnDashImportCSV"),
-            self._w("btnDashImportSEGY"), self._w("btnDashLogView"),
-            self._w("btnDashXplot"), self._w("btnDashVsh"),
-            self._w("btnDashSw"), self._w("btnDashGeo"),
-            self._w("btnDashCorr"),
-        ]
-        btns = [b for b in self.ui._dashboard_workflow_buttons if b is not None]
-        for i, b in enumerate(btns):
-            b.setMinimumHeight(42)
-            b.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-            r, c = divmod(i, 3)
-            wfg.addWidget(b, r, c)
-        wf.layout().addLayout(wfg)
-        left.addWidget(wf, 1)
-
         # Right column
         right = QtWidgets.QVBoxLayout()
         right.setSpacing(14)
 
-        # Quick Actions
-        qa = self._make_section("Quick Actions")
+        # Quick Actions + Recent Projects (combined)
+        qa = self._make_section("Quick Actions & Recent Projects")
         qg = QtWidgets.QGridLayout()
         qg.setSpacing(10)
 
@@ -216,33 +196,23 @@ class DashboardPanel:
             r, c = divmod(i, 2)
             qg.addWidget(b, r, c)
         qa.layout().addLayout(qg)
-        right.addWidget(qa, 2)
+        
+        rp_title = QtWidgets.QLabel("Recent Projects", qa)
+        rp_title.setStyleSheet("font-size:12px;font-weight:700;color:#274B72;padding-top:6px;")
+        qa.layout().addWidget(rp_title)
 
-        # Recent Projects
-        rp = self._make_section("Recent Projects")
         self.ui._dashboard_recent_buttons = [
-            self._w("btnDashRecent1"), self._w("btnDashRecent2"), self._w("btnDashRecent3"),
+            self._make_workflow_button("No recent project", lambda: self._load_recent_project(0)),
+            self._make_workflow_button("No recent project", lambda: self._load_recent_project(1)),
+            self._make_workflow_button("No recent project", lambda: self._load_recent_project(2)),
         ]
         rl = QtWidgets.QVBoxLayout()
         rl.setSpacing(8)
         for b in self.ui._dashboard_recent_buttons:
-            if b is None:
-                continue
             b.setMinimumHeight(40)
             rl.addWidget(b)
-        rp.layout().addLayout(rl)
-        right.addWidget(rp, 1)
-
-        # Activity
-        act = self._make_section("Recent Activity")
-        self.ui._dashboard_activity_list = QtWidgets.QListWidget(act)
-        self.ui._dashboard_activity_list.setAlternatingRowColors(True)
-        self.ui._dashboard_activity_list.setStyleSheet(
-            "QListWidget { background:#F8FBFE; border:1px solid #D7E2EE; border-radius:10px; padding:6px; }"
-            "QListWidget::item { padding:8px 6px; }"
-        )
-        act.layout().addWidget(self.ui._dashboard_activity_list)
-        right.addWidget(act, 1)
+        qa.layout().addLayout(rl)
+        right.addWidget(qa, 1)
 
         body.addLayout(left, 2)
         body.addLayout(right, 1)
@@ -313,7 +283,7 @@ class DashboardPanel:
         ly = QtWidgets.QVBoxLayout(s)
         ly.setContentsMargins(16, 14, 16, 16); ly.setSpacing(10)
         lbl = QtWidgets.QLabel(title, s)
-        lbl.setStyleSheet("font-size:13px;font-weight:600;color:#274B72;")
+        lbl.setStyleSheet("font-size:14px;font-weight:600;color:#274B72;")
         ly.addWidget(lbl)
         return s
 
@@ -324,11 +294,11 @@ class DashboardPanel:
         ly = QtWidgets.QVBoxLayout(card)
         ly.setContentsMargins(14, 10, 14, 10); ly.setSpacing(4)
         tl = QtWidgets.QLabel(title, card)
-        tl.setStyleSheet("color:#2D4D74;font-size:10px;font-weight:700;")
+        tl.setStyleSheet("color:#2D4D74;font-size:13px;font-weight:700;")
         vl = QtWidgets.QLabel("0", card)
         vl.setStyleSheet(f"color:{accent};font-size:22px;font-weight:800;")
         sl = QtWidgets.QLabel(subtitle, card)
-        sl.setStyleSheet("color:#5B7290;font-size:9px;font-weight:600;")
+        sl.setStyleSheet("color:#5B7290;font-size:12px;font-weight:600;")
         ly.addWidget(tl)
         ly.addWidget(vl)
         ly.addWidget(sl)
@@ -342,9 +312,9 @@ class DashboardPanel:
         ly.setContentsMargins(10, 4, 10, 4)
         ly.setSpacing(2)
         t = QtWidgets.QLabel(title, box)
-        t.setStyleSheet("color:#9CB9DD;font-size:9px;font-weight:700;")
+        t.setStyleSheet("color:#9CB9DD;font-size:15px;font-weight:700;")
         v = QtWidgets.QLabel(value, box)
-        v.setStyleSheet(f"color:{value_color};font-size:9px;font-weight:700;")
+        v.setStyleSheet(f"color:{value_color};font-size:15px;font-weight:700;")
         v.setWordWrap(True)
         ly.addWidget(t)
         ly.addWidget(v)
@@ -364,13 +334,33 @@ class DashboardPanel:
         ly.setContentsMargins(9, 7, 9, 7)
         ly.setSpacing(2)
         tl = QtWidgets.QLabel(title, badge)
-        tl.setStyleSheet("color:#ADC5E2;font-size:8px;font-weight:700;")
+        tl.setStyleSheet("color:#ADC5E2;font-size:12px;font-weight:700;")
         vl = QtWidgets.QLabel(value, badge)
-        vl.setStyleSheet(f"color:{accent};font-size:11px;font-weight:800;")
+        vl.setStyleSheet(f"color:{accent};font-size:12px;font-weight:800;")
         ly.addWidget(tl)
         ly.addWidget(vl)
         badge._label = vl  # type: ignore[attr-defined]
         return badge
+
+    def _make_workflow_button(self, text: str, handler) -> QtWidgets.QPushButton:
+        btn = QtWidgets.QPushButton(text, self.ui)
+        btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        btn.setStyleSheet(
+            "QPushButton {"
+            "background:#FFFFFF;"
+            "color:#1D3E68;"
+            "border:1px solid #C8D7E8;"
+            "border-radius:10px;"
+            "padding:8px 10px;"
+            "font-size:11px;"
+            "font-weight:700;"
+            "text-align:left;"
+            "}"
+            "QPushButton:hover { background:#F2F7FD; border-color:#9FC0E2; }"
+            "QPushButton:disabled { color:#8CA2BB; background:#F7FAFD; }"
+        )
+        btn.clicked.connect(handler)
+        return btn
 
     def _make_launch_button(self, text: str, handler, accent: str) -> QtWidgets.QPushButton:
         btn = QtWidgets.QPushButton(text, self.ui)
@@ -445,6 +435,20 @@ class DashboardPanel:
         if callable(opener):
             opener()
 
+    def _load_recent_project(self, index: int) -> None:
+        btns = getattr(self.ui, "_dashboard_recent_buttons", [])
+        if index < 0 or index >= len(btns):
+            return
+        btn = btns[index]
+        path = btn.toolTip() if btn is not None else ""
+        if not path:
+            return
+        ctrl = getattr(self.ui, "controller", None)
+        projects = getattr(ctrl, "projects", None) if ctrl is not None else None
+        loader = getattr(projects, "load_project_from_path", None)
+        if callable(loader):
+            loader(path)
+
     def _trigger_widget_click(self, name: str) -> None:
         w = self._w(name)
         if w is not None and hasattr(w, "click"):
@@ -489,28 +493,7 @@ class DashboardPanel:
                 btn.setText("No recent project"); btn.setToolTip(""); btn.setEnabled(False)
 
     def _update_activity_list(self, project_name: str, well, df) -> None:
-        al = getattr(self.ui, "_dashboard_activity_list", None)
-        if al is None:
-            return
-        al.clear()
-        items: list[str] = [f"Project: {project_name}"]
-        if well is not None and df is not None:
-            dc = None
-            for n in df.columns:
-                if str(n).strip().upper() in {"DEPTH", "DEPT", "MD"}:
-                    dc = n; break
-            if dc is not None:
-                import pandas as pd
-                dv = pd.to_numeric(df[dc], errors="coerce").dropna()
-                if not dv.empty:
-                    items.append(f"Depth range: {dv.min():.1f} to {dv.max():.1f} m")
-            items.append(f"Loaded curves: {len(df.columns)}")
-            items.append(f"Samples: {len(df):,}")
-            items.append("Dashboard refreshed from the active well.")
-        else:
-            items.append("Import a LAS or CSV file to activate the charts.")
-        for t in items:
-            al.addItem(t)
+        return
 
     def _estimate_data_quality(self, df) -> float:
         if df is None or getattr(df, "empty", True):
