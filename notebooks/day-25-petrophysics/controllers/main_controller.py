@@ -83,7 +83,7 @@ class MainController:
         self._connect_action("actionDSTData", self._show_dst_data_info)
         self._connect_action("actionFluidAnalysis", self._show_fluid_analysis_info)
         self._connect_action("actionMudLog", self._show_mud_log_info)
-        # Project Browser sidebar '+ Well' and 'Import' buttons
+        # Project Browser sidebar '+ Well' and 'Import' buttons 
         self._connect_widget("btnBrowseAddWell", "clicked", self._import_and_track)
         self._connect_widget("btnBrowseImport", "clicked", self._import_and_track)
 
