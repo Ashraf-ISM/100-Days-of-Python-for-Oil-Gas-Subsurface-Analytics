@@ -191,6 +191,7 @@ class ProjectBrowserPanel:
                 background: {_BG_PANEL};
                 border: none;
             }}
+
             QDockWidget::title {{
                 background: qlineargradient(
                     x1:0, y1:0, x2:1, y2:0,

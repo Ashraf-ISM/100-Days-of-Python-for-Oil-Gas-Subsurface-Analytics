@@ -474,7 +474,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="documentMode">
     <bool>true</bool>
@@ -489,178 +489,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     <attribute name="title">
      <string>⌂ Dashboard</string>
     </attribute>
-    <layout class="QVBoxLayout" name="layoutDashboard">
-     <item>
-      <widget class="QLabel" name="lblDashTitle">
-       <property name="styleSheet">
-        <string>font-size:18px;font-weight:700;color:#2A5090;padding:20px 0 6px 0;</string>
-       </property>
-       <property name="text">
-        <string>PetroARX — Welcome</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignHCenter|Qt::AlignTop</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lblDashSub">
-       <property name="styleSheet">
-        <string>font-size:13px;color:#4A6A8A;</string>
-       </property>
-       <property name="text">
-        <string>Open a project or import LAS data to begin.  Use the toolbar or menus above to open any analysis module.</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignHCenter</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="spacerDashV">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>60</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="layoutDashCards">
-       <item>
-        <widget class="QGroupBox" name="cardImport">
-         <property name="title">
-          <string>Quick Import</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QPushButton" name="btnDashImportLAS">
-            <property name="text">
-             <string>Import LAS File...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashImportCSV">
-            <property name="text">
-             <string>Import CSV / Excel...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashImportSEGY">
-            <property name="text">
-             <string>Import SEG-Y...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="cardRecent">
-         <property name="title">
-          <string>Recent Projects</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QPushButton" name="btnDashRecent1">
-            <property name="text">
-             <string>SandboxMay2016</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashRecent2">
-            <property name="text">
-             <string>Field_A_EvalProject</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnDashRecent3">
-            <property name="text">
-             <string>OffshoreBlock_7</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="cardModules">
-         <property name="title">
-          <string>Open Module</string>
-         </property>
-         <layout class="QGridLayout">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="btnDashLogView">
-            <property name="text">
-             <string>Log Viewer</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="btnDashXplot">
-            <property name="text">
-             <string>Crossplot</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="btnDashVsh">
-            <property name="text">
-             <string>Shale Volume</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="btnDashSw">
-            <property name="text">
-             <string>Water Saturation</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="btnDashGeo">
-            <property name="text">
-             <string>Geomechanics</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="btnDashCorr">
-            <property name="text">
-             <string>Well Correlation</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <spacer name="spacerDashV2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+    <layout class="QVBoxLayout" name="layoutDashboard"/>
    </widget>
    <widget class="QWidget" name="tabLogViewer">
     <attribute name="title">
@@ -8088,7 +7917,7 @@ then click  ▶ Render Correlation Panel  to generate the display.</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>505</width>
+           <width>306</width>
            <height>411</height>
           </rect>
          </property>
