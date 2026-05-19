@@ -27,7 +27,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 # ---------------------------------------------------------------------------
-# Light-theme colour palette
+# Light-theme colour palette 
 # ---------------------------------------------------------------------------
 _BG_PANEL       = "#F4F6F9"   # panel background  
 
