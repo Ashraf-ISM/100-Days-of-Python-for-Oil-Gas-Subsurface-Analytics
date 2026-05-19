@@ -91,7 +91,7 @@ class ProjectBrowserPanel:
     # ------------------------------------------------------------------
 
     def _data_service(self):
-        """Return the live DataService or None."""
+        """Return the live DataService or None. """
         controller = getattr(self.ui, "controller", None)
         return getattr(controller, "data", None) if controller else None
 
