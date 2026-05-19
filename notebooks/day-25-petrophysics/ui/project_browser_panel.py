@@ -29,7 +29,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # ---------------------------------------------------------------------------
 # Light-theme colour palette
 # ---------------------------------------------------------------------------
-_BG_PANEL       = "#F4F6F9"   # panel background
+_BG_PANEL       = "#F4F6F9"   # panel background 
 
 _BG_TREE        = "#FFFFFF"   # tree background
 _BG_TREE_ALT    = "#F7F9FC"   # alternating row
