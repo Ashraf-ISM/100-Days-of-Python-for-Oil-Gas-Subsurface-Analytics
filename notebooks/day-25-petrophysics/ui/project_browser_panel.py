@@ -46,7 +46,7 @@ _BORDER_FOCUS   = "#2962FF"   # focused input border
 _ACCENT_BLUE    = "#2962FF"   # tab underline / scrollbar  
 _TAB_SEL_BG     = "#EBF2FF"   # selected tab bg
 _TITLE_GRAD_L   = "#EBF0F7"   # dock title gradient left
-_TITLE_GRAD_R   = "#DCE5F2"   # dock title gradient right
+_TITLE_GRAD_R   = "#DCE5F2"   # dock title gradient right 
 _TITLE_FG       = "#1C4A7C"   # dock title text 
 
 # Button colours (bg, fg, hover-bg)
