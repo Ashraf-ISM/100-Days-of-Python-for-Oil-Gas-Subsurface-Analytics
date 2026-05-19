@@ -69,6 +69,7 @@ class ProjectBrowserPanel:
         ``btnBrowseAddWell``, ``btnBrowseImport``, ``btnBrowseRefresh``).
     """
 
+
     def __init__(self, ui: QtWidgets.QMainWindow) -> None:
         self.ui = ui
         self._apply_styles()
