@@ -23,7 +23,7 @@ Instantiate once inside ``PetroVisionMainWindow.__init__`` **after** the
 """
 from __future__ import annotations
 
-# pyrefly: ignore [missing-import]
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
