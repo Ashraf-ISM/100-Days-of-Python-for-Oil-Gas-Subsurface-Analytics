@@ -41,7 +41,7 @@ _BG_HOVER       = "#E8F0FE"   # hovered row
 _FG_HEADER_LBL  = "#5C718A"   # header column text
 _FG_SEARCH_HINT = "#9EAFC2"   # placeholder
 
-_BORDER         = "#D4DDE8"   # general border
+_BORDER         = "#D4DDE8"   # general border 
 _BORDER_FOCUS   = "#2962FF"   # focused input border
 _ACCENT_BLUE    = "#2962FF"   # tab underline / scrollbar
 _TAB_SEL_BG     = "#EBF2FF"   # selected tab bg
