@@ -46,7 +46,7 @@ class BaseMLDetector(ABC):
 
 class IsolationForestDetector(BaseMLDetector):
     """sklearn Isolation Forest wrapper."""
-
+ 
     def __init__(self, contamination: float = 0.05, n_estimators: int = 200,
                  random_state: int = 42):
         self.contamination = float(np.clip(contamination, 0.01, 0.49))
