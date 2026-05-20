@@ -20,7 +20,7 @@ def run_qc(
     depth_tolerance_samples: int = 3,
     **_kwargs,
 ):
-    """Run the full QC pipeline and return a structured result dict.
+    """Run the full QC pipeline and return a structured result dict. 
 
     When *curve_series* is provided the :class:`~qc.spike_detector.SpikeDetector`
     is invoked with curve-specific profile defaults (from
