@@ -709,6 +709,7 @@ th {{ background: #F8FBFE; }}
             "comboWBSWell",
             "comboPPWell",
             "comboGeoWell",
+            "comboMLQCWell",
         )
         combos_with_all = {"comboDISWell", "comboHistWell", "comboStatWell"}
         wells_sorted = sorted(self._wells.keys())
@@ -742,7 +743,7 @@ th {{ background: #F8FBFE; }}
         if df is None:
             return
         curves = list(df.columns)
-        for combo_name in ("comboStatCurve", "comboQCCurve"):
+        for combo_name in ("comboStatCurve", "comboQCCurve", "comboMLQCCurve"):
             combo = getattr(self.ui, combo_name, None)
             if combo is None:
                 continue
@@ -886,6 +887,7 @@ th {{ background: #F8FBFE; }}
             "comboGeoDT",
             "comboGeoDTS",
             "comboGeoRHOB",
+            "comboMLQCCurve",
         ):
             combo = getattr(self.ui, combo_name, None)
             if combo is None:
@@ -924,6 +926,8 @@ th {{ background: #F8FBFE; }}
                     ("spinFETo", float(depth_values.max())),
                     ("spinLVQCFrom", float(depth_values.min())),
                     ("spinLVQCTo", float(depth_values.max())),
+                    ("spinMLQCDepthFrom", float(depth_values.min())),
+                    ("spinMLQCDepthTo",   float(depth_values.max())),
                 ):
                     spin = getattr(self.ui, name, None)
                     if spin is not None:
