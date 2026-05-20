@@ -150,7 +150,7 @@ class CrossLogValidator:
 
     @staticmethod
     def _find_companion_cols(df: pd.DataFrame) -> list[str]:
-        """Return columns in *df* that match known petrophysical mnemonics."""
+        """Return columns in *df* that match known petrophysical mnemonics. """
         cols       = []
         upper_cols = {c.upper().strip(): c for c in df.columns}
         for mnem in _COMPANION_MNEMONICS:
