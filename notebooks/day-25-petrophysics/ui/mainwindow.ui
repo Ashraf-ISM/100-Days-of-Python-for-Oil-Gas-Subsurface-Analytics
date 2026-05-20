@@ -1848,7 +1848,503 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="tabMLQC">
+    <attribute name="title">
+     <string>ML Based QC</string>
+    </attribute>
+    <layout class="QVBoxLayout" name="layoutMLQC">
+     <property name="spacing"><number>6</number></property>
+     <property name="leftMargin"><number>8</number></property>
+     <property name="topMargin"><number>8</number></property>
+     <property name="rightMargin"><number>8</number></property>
+     <property name="bottomMargin"><number>8</number></property>
+     <!-- ── TOP CONTROLS BAR ── -->
+     <item>
+      <widget class="QFrame" name="frameMLQCTopBar">
+       <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string></property>
+       <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+       <layout class="QHBoxLayout" name="layoutMLQCTopBar">
+        <property name="leftMargin"><number>12</number></property>
+        <property name="topMargin"><number>8</number></property>
+        <property name="rightMargin"><number>12</number></property>
+        <property name="bottomMargin"><number>8</number></property>
+        <property name="spacing"><number>10</number></property>
+        <item>
+         <widget class="QLabel" name="lblMLQCWellLabel">
+          <property name="text"><string>Well:</string></property>
+          <property name="styleSheet"><string>font-weight:600;color:#2A4E77;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboMLQCWell">
+          <property name="minimumWidth"><number>130</number></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblMLQCCurveLabel">
+          <property name="text"><string>Curve:</string></property>
+          <property name="styleSheet"><string>font-weight:600;color:#2A4E77;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboMLQCCurve">
+          <property name="minimumWidth"><number>110</number></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblMLQCModelLabel">
+          <property name="text"><string>Model:</string></property>
+          <property name="styleSheet"><string>font-weight:600;color:#2A4E77;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboMLQCModel">
+          <property name="minimumWidth"><number>150</number></property>
+          <item><property name="text"><string>Isolation Forest</string></property></item>
+          <item><property name="text"><string>LOF</string></property></item>
+          <item><property name="text"><string>One-Class SVM</string></property></item>
+          <item><property name="text"><string>DBSCAN</string></property></item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblMLQCContLabel">
+          <property name="text"><string>Contamination %:</string></property>
+          <property name="styleSheet"><string>font-weight:600;color:#2A4E77;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinMLQCContamination">
+          <property name="minimum"><number>1</number></property>
+          <property name="maximum"><number>40</number></property>
+          <property name="value"><number>5</number></property>
+          <property name="suffix"><string>%</string></property>
+          <property name="minimumWidth"><number>70</number></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblMLQCFromLabel">
+          <property name="text"><string>From:</string></property>
+          <property name="styleSheet"><string>font-weight:600;color:#2A4E77;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="spinMLQCDepthFrom">
+          <property name="maximum"><number>100000</number></property>
+          <property name="decimals"><number>1</number></property>
+          <property name="minimumWidth"><number>80</number></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblMLQCToLabel">
+          <property name="text"><string>To:</string></property>
+          <property name="styleSheet"><string>font-weight:600;color:#2A4E77;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="spinMLQCDepthTo">
+          <property name="maximum"><number>100000</number></property>
+          <property name="decimals"><number>1</number></property>
+          <property name="minimumWidth"><number>80</number></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkMLQCMultiCurve">
+          <property name="text"><string>Multi-Curve Features</string></property>
+          <property name="checked"><bool>true</bool></property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacerMLQCTop">
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnRunMLQC">
+          <property name="text"><string>▶  Run ML QC</string></property>
+          <property name="styleSheet"><string notr="true">background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #27AE60,stop:1 #1E8449);color:white;border:1px solid #196F3D;border-radius:5px;padding:5px 16px;font-weight:700;</string></property>
+          <property name="minimumHeight"><number>30</number></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnResetMLQC">
+          <property name="text"><string>Reset</string></property>
+          <property name="styleSheet"><string notr="true">background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #5DADE2,stop:1 #2E86C1);color:white;border:1px solid #1A5276;border-radius:5px;padding:5px 12px;font-weight:600;</string></property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <!-- ── MAIN BODY ── -->
+     <item>
+      <layout class="QHBoxLayout" name="layoutMLQCBody">
+       <property name="spacing"><number>8</number></property>
+       <!-- LEFT SIDEBAR -->
+       <item>
+        <widget class="QFrame" name="frameMLQCSidebar">
+         <property name="minimumWidth"><number>200</number></property>
+         <property name="maximumWidth"><number>240</number></property>
+         <property name="styleSheet"><string>background:#F4F7FB;border:1px solid #C9D7E6;border-radius:8px;</string></property>
+         <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+         <layout class="QVBoxLayout" name="layoutMLQCSidebar">
+          <property name="spacing"><number>8</number></property>
+          <property name="leftMargin"><number>10</number></property>
+          <property name="topMargin"><number>10</number></property>
+          <property name="rightMargin"><number>10</number></property>
+          <property name="bottomMargin"><number>10</number></property>
+          <item>
+           <widget class="QLabel" name="lblMLQCSidebarTitle">
+            <property name="text"><string>ML QC MODULES</string></property>
+            <property name="styleSheet"><string>font-weight:700;font-size:11px;color:#2A5090;letter-spacing:1px;</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frameMLQCSteps">
+            <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:6px;</string></property>
+            <layout class="QVBoxLayout" name="layoutMLQCSteps">
+             <property name="spacing"><number>4</number></property>
+             <property name="leftMargin"><number>8</number></property>
+             <property name="topMargin"><number>8</number></property>
+             <property name="rightMargin"><number>8</number></property>
+             <property name="bottomMargin"><number>8</number></property>
+             <item>
+              <widget class="QLabel" name="lblMLStep1">
+               <property name="text"><string>① Data Preparation</string></property>
+               <property name="styleSheet"><string>color:#2A5090;font-size:11px;padding:3px 6px;background:#EBF5FB;border-radius:4px;</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMLStep2">
+               <property name="text"><string>② Feature Engineering</string></property>
+               <property name="styleSheet"><string>color:#2A5090;font-size:11px;padding:3px 6px;</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMLStep3">
+               <property name="text"><string>③ Model Training</string></property>
+               <property name="styleSheet"><string>color:#2A5090;font-size:11px;padding:3px 6px;</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMLStep4">
+               <property name="text"><string>④ Anomaly Detection</string></property>
+               <property name="styleSheet"><string>color:#2A5090;font-size:11px;padding:3px 6px;</string></property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <!-- Summary cards -->
+          <item>
+           <widget class="QLabel" name="lblMLQCSummaryTitle">
+            <property name="text"><string>QC SUMMARY</string></property>
+            <property name="styleSheet"><string>font-weight:700;font-size:11px;color:#2A5090;letter-spacing:1px;margin-top:4px;</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="cardMLQCScore">
+            <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string></property>
+            <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+            <layout class="QVBoxLayout" name="layoutCardMLQCScore">
+             <property name="spacing"><number>2</number></property>
+             <item>
+              <widget class="QLabel" name="lblMLQCScoreTitle">
+               <property name="text"><string>QC SCORE</string></property>
+               <property name="styleSheet"><string>color:#61788F;font-size:9px;font-weight:600;letter-spacing:1px;</string></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMLQCScore">
+               <property name="text"><string>—</string></property>
+               <property name="styleSheet"><string>font-size:22px;font-weight:700;color:#27AE60;</string></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridMLQCCards">
+            <property name="spacing"><number>6</number></property>
+            <item row="0" column="0">
+             <widget class="QFrame" name="cardMLQCAnomalies">
+              <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string></property>
+              <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+              <layout class="QVBoxLayout" name="layoutCardMLAnomaly">
+               <item>
+                <widget class="QLabel" name="lblMLQCAnomalyTitle">
+                 <property name="text"><string>Anomalies</string></property>
+                 <property name="styleSheet"><string>color:#61788F;font-size:9px;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblMLQCAnomalyCount">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-size:16px;font-weight:700;color:#E55353;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QFrame" name="cardMLQCGood">
+              <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string></property>
+              <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+              <layout class="QVBoxLayout" name="layoutCardMLGood">
+               <item>
+                <widget class="QLabel" name="lblMLQCGoodTitle">
+                 <property name="text"><string>Good</string></property>
+                 <property name="styleSheet"><string>color:#61788F;font-size:9px;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblMLQCGoodPct">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-size:16px;font-weight:700;color:#27AE60;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QFrame" name="cardMLQCMissing">
+              <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string></property>
+              <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+              <layout class="QVBoxLayout" name="layoutCardMLMissing">
+               <item>
+                <widget class="QLabel" name="lblMLQCMissingTitle">
+                 <property name="text"><string>Missing</string></property>
+                 <property name="styleSheet"><string>color:#61788F;font-size:9px;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblMLQCMissingPct">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-size:16px;font-weight:700;color:#F59E0B;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QFrame" name="cardMLQCReliability">
+              <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D8E2EC;border-radius:8px;</string></property>
+              <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+              <layout class="QVBoxLayout" name="layoutCardMLReliability">
+               <item>
+                <widget class="QLabel" name="lblMLQCReliabilityTitle">
+                 <property name="text"><string>Reliability</string></property>
+                 <property name="styleSheet"><string>color:#61788F;font-size:9px;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblMLQCReliability">
+                 <property name="text"><string>—</string></property>
+                 <property name="styleSheet"><string>font-size:16px;font-weight:700;color:#2A6FD4;</string></property>
+                 <property name="alignment"><set>Qt::AlignCenter</set></property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMLQCModelUsed">
+            <property name="text"><string>Active Model</string></property>
+            <property name="styleSheet"><string>color:#61788F;font-size:9px;font-weight:600;</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMLQCModel">
+            <property name="text"><string>—</string></property>
+            <property name="styleSheet"><string>font-size:11px;font-weight:700;color:#2A5090;padding:3px 6px;background:#EBF5FB;border-radius:4px;</string></property>
+            <property name="wordWrap"><bool>true</bool></property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spacerMLQCSidebar">
+            <property name="orientation"><enum>Qt::Vertical</enum></property>
+            <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <!-- CENTER: plots -->
+       <item>
+        <layout class="QVBoxLayout" name="layoutMLQCCenter">
+         <property name="spacing"><number>8</number></property>
+         <!-- Anomaly Log View -->
+         <item>
+          <widget class="QFrame" name="frameMLQCLogView">
+           <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout" name="layoutMLQCLogView">
+            <property name="leftMargin"><number>10</number></property>
+            <property name="topMargin"><number>10</number></property>
+            <property name="rightMargin"><number>10</number></property>
+            <property name="bottomMargin"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblMLQCLogTitle">
+              <property name="text"><string>Anomaly Log View</string></property>
+              <property name="styleSheet"><string>font-weight:700;color:#2A4E77;font-size:11px;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblMLQCLogPlaceholder">
+              <property name="text"><string>Run ML QC to view anomaly-flagged depth track.\nAnomalies are colour-coded by severity score.</string></property>
+              <property name="styleSheet"><string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="minimumHeight"><number>200</number></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <!-- Score vs Depth Scatter -->
+         <item>
+          <widget class="QFrame" name="frameMLQCScatter">
+           <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout" name="layoutMLQCScatter">
+            <property name="leftMargin"><number>10</number></property>
+            <property name="topMargin"><number>10</number></property>
+            <property name="rightMargin"><number>10</number></property>
+            <property name="bottomMargin"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblMLQCScatterTitle">
+              <property name="text"><string>Anomaly Score vs Depth</string></property>
+              <property name="styleSheet"><string>font-weight:700;color:#2A4E77;font-size:11px;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblMLQCScatterPlaceholder">
+              <property name="text"><string>Score distribution will appear here after running ML QC.</string></property>
+              <property name="styleSheet"><string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="minimumHeight"><number>140</number></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <!-- Feature Importance Bar -->
+         <item>
+          <widget class="QFrame" name="frameMLQCFeatureBar">
+           <property name="styleSheet"><string>background:#FFFFFF;border:1px solid #D7E2EE;border-radius:8px;</string></property>
+           <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+           <layout class="QVBoxLayout" name="layoutMLQCFeatureBar">
+            <property name="leftMargin"><number>10</number></property>
+            <property name="topMargin"><number>10</number></property>
+            <property name="rightMargin"><number>10</number></property>
+            <property name="bottomMargin"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblMLQCFeatureTitle">
+              <property name="text"><string>Feature Contributions</string></property>
+              <property name="styleSheet"><string>font-weight:700;color:#2A4E77;font-size:11px;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblMLQCFeaturePlaceholder">
+              <property name="text"><string>Feature importance chart will appear here.</string></property>
+              <property name="styleSheet"><string>color:#7B8FA6;font-size:12px;border:1px dashed #C8D7E8;border-radius:6px;background:#F8FBFE;</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="wordWrap"><bool>true</bool></property>
+              <property name="minimumHeight"><number>120</number></property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <!-- RIGHT PANEL -->
+       <item>
+        <widget class="QFrame" name="frameMLQCRight">
+         <property name="minimumWidth"><number>280</number></property>
+         <property name="maximumWidth"><number>340</number></property>
+         <property name="styleSheet"><string>background:#F4F7FB;border:1px solid #C9D7E6;border-radius:8px;</string></property>
+         <property name="frameShape"><enum>QFrame::StyledPanel</enum></property>
+         <layout class="QVBoxLayout" name="layoutMLQCRight">
+          <property name="spacing"><number>8</number></property>
+          <property name="leftMargin"><number>10</number></property>
+          <property name="topMargin"><number>10</number></property>
+          <property name="rightMargin"><number>10</number></property>
+          <property name="bottomMargin"><number>10</number></property>
+          <item>
+           <widget class="QLabel" name="lblMLQCIssuesTitle">
+            <property name="text"><string>DETECTED ANOMALIES</string></property>
+            <property name="styleSheet"><string>font-weight:700;font-size:11px;color:#2A5090;letter-spacing:1px;</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableMLQCIssues">
+            <property name="alternatingRowColors"><bool>true</bool></property>
+            <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+            <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+            <property name="sortingEnabled"><bool>true</bool></property>
+            <column>
+             <property name="text"><string>Depth</string></property>
+            </column>
+            <column>
+             <property name="text"><string>Curve</string></property>
+            </column>
+            <column>
+             <property name="text"><string>Value</string></property>
+            </column>
+            <column>
+             <property name="text"><string>Score</string></property>
+            </column>
+            <column>
+             <property name="text"><string>Severity</string></property>
+            </column>
+           </widget>
+          </item>
+          <!-- Status label -->
+          <item>
+           <widget class="QLabel" name="lblMLQCStatus">
+            <property name="text"><string>Ready — load a well and click Run ML QC</string></property>
+            <property name="styleSheet"><string>color:#61788F;font-size:10px;font-style:italic;</string></property>
+            <property name="wordWrap"><bool>true</bool></property>
+           </widget>
+          </item>
+          <!-- Action buttons -->
+          <item>
+           <layout class="QHBoxLayout" name="layoutMLQCActions">
+            <property name="spacing"><number>8</number></property>
+            <item>
+             <widget class="QPushButton" name="btnExportMLQC">
+              <property name="text"><string>Export CSV</string></property>
+              <property name="styleSheet"><string notr="true">background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #4A82C4,stop:1 #2A5C9E);color:white;border:1px solid #1D4A85;border-radius:4px;padding:5px 12px;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnMLQCReport">
+              <property name="text"><string>Generate Report</string></property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
    <widget class="QWidget" name="tabFormationevaluation">
+
     <attribute name="title">
      <string>Formation Evaluation</string>
     </attribute>
