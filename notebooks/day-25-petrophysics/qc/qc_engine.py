@@ -54,7 +54,7 @@ def run_qc(
     depth_tolerance_samples : int
         Depth-tolerance ± samples for cross-log companion search (default 3).
 
-    Returns
+    Returns 
     -------
     dict with keys:
         ``checks``       – list[dict] rule-check summary rows
