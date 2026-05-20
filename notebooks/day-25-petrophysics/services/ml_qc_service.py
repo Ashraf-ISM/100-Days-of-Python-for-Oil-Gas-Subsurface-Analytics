@@ -28,6 +28,12 @@ import pandas as pd
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 try:
+    from ui.ml_qc_panel import MLQCPanel
+    _PANEL_AVAILABLE = True
+except Exception:
+    _PANEL_AVAILABLE = False
+
+try:
     from ml_qc.ml_qc_engine import run_ml_qc
     from ml_qc.ml_qc_models import MODEL_NAMES
     from ml_qc.ml_anomaly_report import MLQCResult, build_anomaly_rows
@@ -46,6 +52,12 @@ class MLQCService:
         self._last_result: MLQCResult | None = None
         self._last_export_df: pd.DataFrame | None = None
         self._plot_hosts: dict[str, QtWidgets.QWidget] = {}
+        # Rebuild tab layout for proper alignment
+        if _PANEL_AVAILABLE:
+            try:
+                MLQCPanel(ui)
+            except Exception as _pe:
+                print(f"[MLQCPanel] Layout rebuild skipped: {_pe}")
         self._configure_controls()
 
     # ──────────────────────────────────────────────────────────────────────────
@@ -201,7 +213,7 @@ class MLQCService:
         mask   = result.anomaly_mask
         scores = result.anomaly_scores
 
-        fig = Figure(figsize=(4.5, 8.5), tight_layout=True)
+        fig = Figure(tight_layout=True)
         ax  = fig.add_subplot(111)
         ax.set_facecolor("#F8FBFE")
 
@@ -251,7 +263,7 @@ class MLQCService:
         scores = result.anomaly_scores.to_numpy(dtype=float)
         mask   = result.anomaly_mask.to_numpy(dtype=bool) if result.anomaly_mask is not None else np.zeros(len(depth), dtype=bool)
 
-        fig = Figure(figsize=(5.5, 3.2), tight_layout=True)
+        fig = Figure(tight_layout=True)
         ax  = fig.add_subplot(111)
         ax.set_facecolor("#F8FBFE")
 
@@ -287,7 +299,7 @@ class MLQCService:
 
         # Use mean absolute value per feature as a proxy for importance
         # (works even when the model doesn't expose native importance)
-        fig = Figure(figsize=(5.5, 2.8), tight_layout=True)
+        fig = Figure(tight_layout=True)
         ax  = fig.add_subplot(111)
         ax.set_facecolor("#F8FBFE")
 
