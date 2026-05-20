@@ -49,7 +49,7 @@ class IsolationForestDetector(BaseMLDetector):
  
     def __init__(self, contamination: float = 0.05, n_estimators: int = 200,
                  random_state: int = 42):
-        self.contamination = float(np.clip(contamination, 0.01, 0.49))
+        self.contamination = float(np.clip(contamination, 0.01, 0.49)) 
         self.n_estimators  = n_estimators
         self.random_state  = random_state
         self._model = None
