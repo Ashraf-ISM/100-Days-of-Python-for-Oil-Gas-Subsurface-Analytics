@@ -183,7 +183,7 @@ def get_detector(model_name: str, contamination: float = 0.05) -> BaseMLDetector
     Parameters
     ----------
     model_name    : one of ``_MODEL_MAP`` keys (case-sensitive)
-    contamination : fraction of data expected to be anomalous [0.01, 0.49]
+    contamination : fraction of data expected to be anomalous [0.01, 0.49] 
     """
     cls = _MODEL_MAP.get(model_name, IsolationForestDetector)
 
