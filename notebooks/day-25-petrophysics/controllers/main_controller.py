@@ -12,6 +12,7 @@ from services.interpretation_service import InterpretationService
 from services.geomechanics_service import GeomechanicsService
 from services.formation_evaluation_service import FormationEvaluationService
 from services.qc_service import QCService
+from services.ml_qc_service import MLQCService
 
 
 class MainController:
@@ -24,6 +25,7 @@ class MainController:
         self.geo = GeomechanicsService(ui, self.data)
         self.fe = FormationEvaluationService(ui, self.data)
         self.qc = QCService(ui, self.data)
+        self.ml_qc = MLQCService(ui, self.data)
         self.calculation_window: CalculationWindow | None = None
         
         # Store references for cross-service access
@@ -190,6 +192,16 @@ class MainController:
         self._connect_widget("checkQCCrossLog",   "toggled",            self.qc.run_qc)
         self._connect_widget("comboQCCorrection", "currentTextChanged", self.qc.run_qc)
 
+        # ── ML Based QC ───────────────────────────────────────────────────────
+        self._connect_widget("btnRunMLQC",           "clicked",            self.ml_qc.run_ml_qc)
+        self._connect_widget("btnResetMLQC",         "clicked",            self.ml_qc.reset_ml_qc)
+        self._connect_widget("btnExportMLQC",        "clicked",            self.ml_qc.export_ml_qc)
+        self._connect_widget("comboMLQCModel",       "currentTextChanged", self.ml_qc.run_ml_qc)
+        self._connect_widget("comboMLQCCurve",       "currentTextChanged", self.ml_qc.run_ml_qc)
+        self._connect_widget("comboMLQCWell",        "currentTextChanged", self.data.set_current_well)
+        self._connect_widget("spinMLQCContamination","valueChanged",       self.ml_qc.run_ml_qc)
+        self._connect_widget("checkMLQCMultiCurve",  "toggled",            self.ml_qc.run_ml_qc)
+
     def _initialize_ui(self) -> None:
         """Initialize UI state."""
         self.projects.refresh_recent_projects()
@@ -322,6 +334,16 @@ class MainController:
             geo_tab = getattr(self.ui, "tabGeomechanics", None)
             if geo_tab is not None:
                 idx = tab_widget.indexOf(geo_tab)
+                if idx >= 0:
+                    tab_widget.setCurrentIndex(idx)
+
+    def _go_to_ml_qc_tab(self) -> None:
+        """Switch to the ML Based QC tab."""
+        tab_widget = getattr(self.ui, "centralTabWidget", None)
+        if tab_widget is not None:
+            ml_tab = getattr(self.ui, "tabMLQC", None)
+            if ml_tab is not None:
+                idx = tab_widget.indexOf(ml_tab)
                 if idx >= 0:
                     tab_widget.setCurrentIndex(idx)
 
