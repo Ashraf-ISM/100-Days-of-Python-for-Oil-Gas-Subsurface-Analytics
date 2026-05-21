@@ -1044,19 +1044,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
             pass
 
 
-    #     # Super title
-    #     datum_text = self._combo_datum.currentText()
-    #     fig.suptitle(
-    #         f"Well Correlation Panel  ·  {n_wells} Wells  ·  {datum_text}",
-    #         color=fg, fontsize=12, fontweight="800", y=1.01
-    #     )
-    #     fig.tight_layout(pad=0.5, h_pad=0.3, w_pad=0.1)
-
-    #     self._embed_figure(fig)
-    #     self._fig = fig
-    #     self._lbl_progress.setText(
-    #         f"✓ Rendered: {n_wells} wells × {n_tracks} tracks"
-    #     )
 
     #     # Update depth metric
     #     try:
