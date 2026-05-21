@@ -1043,24 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-   
-    #         n_tracks = 1
-
-    #     fig_w = max(10.0, n_wells * n_tracks * 1.6 + 1.0)
-    #     fig_h = 9.0
-
-    #     fig, axes = plt.subplots(
-    #         nrows=1,
-    #         ncols=n_wells * n_tracks,
-    #         figsize=(fig_w, fig_h),
-    #         sharey=False,
-    #     )
-    #     fig.patch.set_facecolor(bg)
-
-    #     if n_wells * n_tracks == 1:
-    #         axes = [axes]
-    #     else:
-    #         axes = list(axes)
 
     #     depth_min = self._spin_depth_from.value()
     #     depth_max = self._spin_depth_to.value()
