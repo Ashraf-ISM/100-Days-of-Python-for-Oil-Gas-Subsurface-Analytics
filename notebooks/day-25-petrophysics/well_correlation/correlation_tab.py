@@ -1043,27 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    #             curve_name = track_curves[t_idx] if t_idx < len(track_curves) else "GR"
-
-    #             # depth column
-    #             depth_col = None
-    #             for cname in df.columns:
-    #                 if str(cname).strip().upper() in {"DEPTH", "DEPT", "MD"}:
-    #                     depth_col = cname
-    #                     break
-    #             if depth_col is None:
-    #                 depth_col = df.columns[0]
-
-    #             try:
-    #                 import pandas as pd
-    #                 depth = pd.to_numeric(df[depth_col], errors="coerce")
-    #                 mask = (depth >= depth_min) & (depth <= depth_max)
-    #                 if mask.sum() == 0:
-    #                     mask = pd.Series([True] * len(df))
-
-    #                 depth_plot = depth[mask].values
-
-    #                 if curve_name in df.columns:
     #                     vals = pd.to_numeric(df[curve_name], errors="coerce")[mask].values
     #                     c_color, x_range = CURVE_COLORS.get(
     #                         curve_name.upper(), ("#00B4D8", (None, None))
