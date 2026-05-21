@@ -1043,23 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    #                 else:
-    #                     ax.text(0.5, 0.5, f"{curve_name}\n(N/A)",
-    #                             ha="center", va="center",
-    #                             color=fg, fontsize=8,
-    #                             transform=ax.transAxes)
-
-    #                 # Invert depth axis
-    #                 if len(depth_plot) > 1 and depth_plot[-1] > depth_plot[0]:
-    #                     ax.set_ylim(depth_plot.max(), depth_plot.min())
-    #                 else:
-    #                     ax.invert_yaxis()
-
-    #                 # Grid
-    #                 if self._chk_grid.isChecked():
-    #                     ax.grid(axis="y", color=grid_clr, linewidth=0.4, alpha=0.6)
-    #                     ax.grid(axis="x", color=grid_clr, linewidth=0.3, alpha=0.4)
-
     #                 # Headers
     #                 if self._chk_headers.isChecked():
     #                     ax.set_title(
