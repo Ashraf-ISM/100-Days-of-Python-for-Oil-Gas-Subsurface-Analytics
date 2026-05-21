@@ -7,7 +7,7 @@ Each class exposes a uniform interface::
 
     detector = IsolationForestDetector(contamination=0.05)
     mask, scores = detector.fit_predict(X)          # X: (n, d) float array
-    importance   = detector.feature_importance()    # (d,) float array | None
+    importance   = detector.feature_importance()    # (d,) float array | None 
 
 All classes handle edge-cases gracefully (tiny datasets, import errors).
 """
