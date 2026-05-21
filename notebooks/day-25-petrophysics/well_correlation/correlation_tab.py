@@ -1043,25 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    #     ax_idx = 0
-    #     for w_idx, (wname, well, df) in enumerate(wells_data):
-    #         for t_idx in range(n_tracks):
-    #             if ax_idx >= len(axes):
-    #                 break
-    #             ax = axes[ax_idx]
-    #             ax.set_facecolor(bg)
-    #             ax.tick_params(colors=fg, labelsize=7)
-    #             for spine in ax.spines.values():
-    #                 spine.set_edgecolor(grid_clr)
-
-    #             if df is None or df.empty:
-    #                 ax.text(0.5, 0.5, f"{wname}\n(no data)",
-    #                         ha="center", va="center",
-    #                         color=fg, fontsize=8, transform=ax.transAxes)
-    #                 ax.set_yticks([])
-    #                 ax_idx += 1
-    #                 continue
-
     #             curve_name = track_curves[t_idx] if t_idx < len(track_curves) else "GR"
 
     #             # depth column
