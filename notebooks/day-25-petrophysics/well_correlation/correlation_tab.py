@@ -1043,24 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-
-    #     depth_min = self._spin_depth_from.value()
-    #     depth_max = self._spin_depth_to.value()
-
-    #     CURVE_COLORS = {
-    #         "GR":   ("#4CAF50", (0,   150)),
-    #         "RHOB": ("#FF7043", (1.95, 2.95)),
-    #         "NPHI": ("#29B6F6", (0.45, -0.15)),
-    #         "RT":   ("#EF9A9A", (0.2,  2000)),
-    #         "SP":   ("#CE93D8", (-160, 40)),
-    #         "CALI": ("#FFCA28", (6,    16)),
-    #         "DT":   ("#80DEEA", (40,   140)),
-    #         "PHIE": ("#A5D6A7", (0,    0.4)),
-    #         "VSH":  ("#FFCC80", (0,    1)),
-    #         "SW":   ("#90CAF9", (0,    1)),
-    #         "PERM": ("#F48FB1", (0.001, 1000)),
-    #     }
-
     #     ax_idx = 0
     #     for w_idx, (wname, well, df) in enumerate(wells_data):
     #         for t_idx in range(n_tracks):
