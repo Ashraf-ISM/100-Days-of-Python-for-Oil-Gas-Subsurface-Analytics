@@ -1043,21 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    #                     vals = pd.to_numeric(df[curve_name], errors="coerce")[mask].values
-    #                     c_color, x_range = CURVE_COLORS.get(
-    #                         curve_name.upper(), ("#00B4D8", (None, None))
-    #                     )
-    #                     ax.plot(vals, depth_plot, color=c_color,
-    #                             linewidth=0.9, alpha=0.92)
-
-    #                     # Fill
-    #                     if self._chk_fill_lt.isChecked():
-    #                         ax.fill_betweenx(depth_plot, vals,
-    #                                          alpha=0.12, color=c_color)
-
-    #                     if x_range[0] is not None:
-    #                         ax.set_xlim(*x_range)
-
     #                     # Formation markers
     #                     if self._chk_markers.isChecked() and len(depth_plot) > 10:
     #                         n_markers = min(4, max(1, len(depth_plot) // 200))
