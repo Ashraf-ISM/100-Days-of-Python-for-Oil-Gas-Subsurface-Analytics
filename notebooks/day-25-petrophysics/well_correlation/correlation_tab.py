@@ -1043,25 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    #                     # Formation markers
-    #                     if self._chk_markers.isChecked() and len(depth_plot) > 10:
-    #                         n_markers = min(4, max(1, len(depth_plot) // 200))
-    #                         for midx in np.linspace(0, len(depth_plot)-1, n_markers, dtype=int):
-    #                             d = depth_plot[midx]
-    #                             ax.axhline(d, color="#F5A623", linewidth=0.6,
-    #                                        linestyle="--", alpha=0.55)
-
-    #                     # Pay zone highlight
-    #                     if self._chk_highlight.isChecked():
-    #                         if curve_name.upper() in {"PHIE", "SW"}:
-    #                             threshold = 0.1 if curve_name.upper() == "PHIE" else 0.5
-    #                             compare = vals > threshold if curve_name.upper() == "PHIE" else vals < threshold
-    #                             ax.fill_betweenx(
-    #                                 depth_plot, x_range[0] or vals.min(),
-    #                                 x_range[1] or vals.max(),
-    #                                 where=compare,
-    #                                 color="#FFD700", alpha=0.08
-    #                             )
     #                 else:
     #                     ax.text(0.5, 0.5, f"{curve_name}\n(N/A)",
     #                             ha="center", va="center",
