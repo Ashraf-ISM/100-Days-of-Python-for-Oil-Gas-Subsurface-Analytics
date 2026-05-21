@@ -1044,22 +1044,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
             pass
 
 
-    #                 ax.tick_params(axis='x', labelsize=6, labelcolor=fg, rotation=45)
-
-    #             except Exception:
-    #                 ax.text(0.5, 0.5, "Error", ha="center", va="center",
-    #                         color="red", transform=ax.transAxes)
-
-    #             ax_idx += 1
-
-    #     # Well separation lines
-    #     if self._chk_headers.isChecked() and n_tracks > 1:
-    #         for sep_i in range(1, n_wells):
-    #             sep_idx = sep_i * n_tracks
-    #             if sep_idx < len(axes):
-    #                 axes[sep_idx].spines["left"].set_edgecolor(CLR_ACCENT)
-    #                 axes[sep_idx].spines["left"].set_linewidth(2)
-
     #     # Super title
     #     datum_text = self._combo_datum.currentText()
     #     fig.suptitle(
