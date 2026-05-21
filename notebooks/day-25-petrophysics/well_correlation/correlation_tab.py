@@ -1044,19 +1044,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
             pass
 
    
-    #     wells_data: list[tuple[str, Any, Any]] = []
-    #     if self._data_service is not None:
-    #         _wells = getattr(self._data_service, "_wells", {}) or {}
-    #         for wn in self._selected_wells:
-    #             well = _wells.get(wn)
-    #             df = getattr(well, "data", None) if well is not None else None
-    #             wells_data.append((wn, well, df))
-
-    #     n_wells  = len(wells_data)
-    #     track_curves = [cb.currentText() for cb in self._track_combos
-    #                     if cb.currentText() != "None"]
-    #     n_tracks = min(self._spin_tracks.value(), len(track_curves))
-    #     if n_tracks < 1:
     #         n_tracks = 1
 
     #     fig_w = max(10.0, n_wells * n_tracks * 1.6 + 1.0)
