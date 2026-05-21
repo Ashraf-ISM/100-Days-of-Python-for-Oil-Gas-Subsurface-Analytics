@@ -27,7 +27,7 @@ class BaseMLDetector(ABC):
 
     @abstractmethod
     def fit_predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        """Run detection on feature matrix X.
+        """Run detection on feature matrix X. 
 
         Returns
         -------
