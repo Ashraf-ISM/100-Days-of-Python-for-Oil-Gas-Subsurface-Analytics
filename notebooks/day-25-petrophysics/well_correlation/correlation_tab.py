@@ -1277,7 +1277,7 @@ class WellCorrelationTab(QtWidgets.QWidget):
                 df = getattr(well, "data", None) if well is not None else None
                 wells_data.append((wn, well, df))
     
-        n_wells = len(wells_data)
+        n_wells = len(wells_data) 
     
         track_curves = [
             cb.currentText()
