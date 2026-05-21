@@ -1561,39 +1561,87 @@ class WellCorrelationTab(QtWidgets.QWidget):
                                 except Exception:
                                     pass
     
+                        # # ---------------------------------------------------------
+                        # # CORRELATION BADGE
+                        # # ---------------------------------------------------------
+                        # if corr_percent is not None:
+    
+                        #     if corr_percent >= 80:
+                        #         corr_color = "#00E676"
+    
+                        #     elif corr_percent >= 60:
+                        #         corr_color = "#FFD54F"
+    
+                        #     else:
+                        #         corr_color = "#FF5252"
+    
+                        #     ax.text(
+                        #         0.03,
+                        #         0.97,
+                        #         f"{corr_percent:.1f}%",
+                        #         transform=ax.transAxes,
+                        #         fontsize=7,
+                        #         fontweight="bold",
+                        #         va="top",
+                        #         ha="left",
+                        #         color=corr_color,
+                        #         bbox=dict(
+                        #             boxstyle="round,pad=0.25",
+                        #             fc="#102530" if dark else "#F3F7FA",
+                        #             ec=corr_color,
+                        #             lw=0.8,
+                        #             alpha=0.95,
+                        #         ),
+                        #     )
                         # ---------------------------------------------------------
                         # CORRELATION BADGE
                         # ---------------------------------------------------------
-                        if corr_percent is not None:
-    
-                            if corr_percent >= 80:
+                        if (
+                            corr_percent is not None
+                            and np.isfinite(corr_percent)
+                        ):
+                        
+                            # limit values
+                            corr_percent = max(
+                                min(corr_percent, 100),
+                                -100
+                            )
+                        
+                            # color coding
+                            if abs(corr_percent) >= 80:
                                 corr_color = "#00E676"
-    
-                            elif corr_percent >= 60:
+                        
+                            elif abs(corr_percent) >= 60:
                                 corr_color = "#FFD54F"
-    
+                        
                             else:
                                 corr_color = "#FF5252"
-    
+                        
+                            # badge text
+                            badge_txt = f"Corr\n{corr_percent:.1f}%"
+                        
+                            # add box
                             ax.text(
-                                0.03,
-                                0.97,
-                                f"{corr_percent:.1f}%",
+                                0.05,
+                                0.93,
+                                badge_txt,
                                 transform=ax.transAxes,
                                 fontsize=7,
                                 fontweight="bold",
                                 va="top",
                                 ha="left",
-                                color=corr_color,
+                                color="white",
+                                zorder=9999,
+                                clip_on=False,
                                 bbox=dict(
-                                    boxstyle="round,pad=0.25",
-                                    fc="#102530" if dark else "#F3F7FA",
+                                    boxstyle="round,pad=0.35",
+                                    fc="#111827",
                                     ec=corr_color,
-                                    lw=0.8,
+                                    lw=1.2,
                                     alpha=0.95,
                                 ),
                             )
-    
+                            
                     else:
     
                         ax.text(
