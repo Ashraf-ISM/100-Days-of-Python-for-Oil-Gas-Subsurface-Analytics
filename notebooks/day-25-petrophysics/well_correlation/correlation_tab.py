@@ -1043,212 +1043,728 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
+    # def _render_correlation(self) -> None:
+    #     import matplotlib
+    #     matplotlib.use("Qt5Agg")
+    #     import matplotlib.pyplot as plt
+    #     import matplotlib.ticker as ticker
+    #     import numpy as np
+
+    #     dark = self._chk_dark_mode.isChecked()
+    #     bg   = "#0A1520" if dark else "#FFFFFF"
+    #     fg   = "#C8D8E8" if dark else "#2A3A4A"
+    #     grid_clr = "#1A2E42" if dark else "#E8EFF6"
+
+    #     wells_data: list[tuple[str, Any, Any]] = []
+    #     if self._data_service is not None:
+    #         _wells = getattr(self._data_service, "_wells", {}) or {}
+    #         for wn in self._selected_wells:
+    #             well = _wells.get(wn)
+    #             df = getattr(well, "data", None) if well is not None else None
+    #             wells_data.append((wn, well, df))
+
+    #     n_wells  = len(wells_data)
+    #     track_curves = [cb.currentText() for cb in self._track_combos
+    #                     if cb.currentText() != "None"]
+    #     n_tracks = min(self._spin_tracks.value(), len(track_curves))
+    #     if n_tracks < 1:
+    #         n_tracks = 1
+
+    #     fig_w = max(10.0, n_wells * n_tracks * 1.6 + 1.0)
+    #     fig_h = 9.0
+
+    #     fig, axes = plt.subplots(
+    #         nrows=1,
+    #         ncols=n_wells * n_tracks,
+    #         figsize=(fig_w, fig_h),
+    #         sharey=False,
+    #     )
+    #     fig.patch.set_facecolor(bg)
+
+    #     if n_wells * n_tracks == 1:
+    #         axes = [axes]
+    #     else:
+    #         axes = list(axes)
+
+    #     depth_min = self._spin_depth_from.value()
+    #     depth_max = self._spin_depth_to.value()
+
+    #     CURVE_COLORS = {
+    #         "GR":   ("#4CAF50", (0,   150)),
+    #         "RHOB": ("#FF7043", (1.95, 2.95)),
+    #         "NPHI": ("#29B6F6", (0.45, -0.15)),
+    #         "RT":   ("#EF9A9A", (0.2,  2000)),
+    #         "SP":   ("#CE93D8", (-160, 40)),
+    #         "CALI": ("#FFCA28", (6,    16)),
+    #         "DT":   ("#80DEEA", (40,   140)),
+    #         "PHIE": ("#A5D6A7", (0,    0.4)),
+    #         "VSH":  ("#FFCC80", (0,    1)),
+    #         "SW":   ("#90CAF9", (0,    1)),
+    #         "PERM": ("#F48FB1", (0.001, 1000)),
+    #     }
+
+    #     ax_idx = 0
+    #     for w_idx, (wname, well, df) in enumerate(wells_data):
+    #         for t_idx in range(n_tracks):
+    #             if ax_idx >= len(axes):
+    #                 break
+    #             ax = axes[ax_idx]
+    #             ax.set_facecolor(bg)
+    #             ax.tick_params(colors=fg, labelsize=7)
+    #             for spine in ax.spines.values():
+    #                 spine.set_edgecolor(grid_clr)
+
+    #             if df is None or df.empty:
+    #                 ax.text(0.5, 0.5, f"{wname}\n(no data)",
+    #                         ha="center", va="center",
+    #                         color=fg, fontsize=8, transform=ax.transAxes)
+    #                 ax.set_yticks([])
+    #                 ax_idx += 1
+    #                 continue
+
+    #             curve_name = track_curves[t_idx] if t_idx < len(track_curves) else "GR"
+
+    #             # depth column
+    #             depth_col = None
+    #             for cname in df.columns:
+    #                 if str(cname).strip().upper() in {"DEPTH", "DEPT", "MD"}:
+    #                     depth_col = cname
+    #                     break
+    #             if depth_col is None:
+    #                 depth_col = df.columns[0]
+
+    #             try:
+    #                 import pandas as pd
+    #                 depth = pd.to_numeric(df[depth_col], errors="coerce")
+    #                 mask = (depth >= depth_min) & (depth <= depth_max)
+    #                 if mask.sum() == 0:
+    #                     mask = pd.Series([True] * len(df))
+
+    #                 depth_plot = depth[mask].values
+
+    #                 if curve_name in df.columns:
+    #                     vals = pd.to_numeric(df[curve_name], errors="coerce")[mask].values
+    #                     c_color, x_range = CURVE_COLORS.get(
+    #                         curve_name.upper(), ("#00B4D8", (None, None))
+    #                     )
+    #                     ax.plot(vals, depth_plot, color=c_color,
+    #                             linewidth=0.9, alpha=0.92)
+
+    #                     # Fill
+    #                     if self._chk_fill_lt.isChecked():
+    #                         ax.fill_betweenx(depth_plot, vals,
+    #                                          alpha=0.12, color=c_color)
+
+    #                     if x_range[0] is not None:
+    #                         ax.set_xlim(*x_range)
+
+    #                     # Formation markers
+    #                     if self._chk_markers.isChecked() and len(depth_plot) > 10:
+    #                         n_markers = min(4, max(1, len(depth_plot) // 200))
+    #                         for midx in np.linspace(0, len(depth_plot)-1, n_markers, dtype=int):
+    #                             d = depth_plot[midx]
+    #                             ax.axhline(d, color="#F5A623", linewidth=0.6,
+    #                                        linestyle="--", alpha=0.55)
+
+    #                     # Pay zone highlight
+    #                     if self._chk_highlight.isChecked():
+    #                         if curve_name.upper() in {"PHIE", "SW"}:
+    #                             threshold = 0.1 if curve_name.upper() == "PHIE" else 0.5
+    #                             compare = vals > threshold if curve_name.upper() == "PHIE" else vals < threshold
+    #                             ax.fill_betweenx(
+    #                                 depth_plot, x_range[0] or vals.min(),
+    #                                 x_range[1] or vals.max(),
+    #                                 where=compare,
+    #                                 color="#FFD700", alpha=0.08
+    #                             )
+    #                 else:
+    #                     ax.text(0.5, 0.5, f"{curve_name}\n(N/A)",
+    #                             ha="center", va="center",
+    #                             color=fg, fontsize=8,
+    #                             transform=ax.transAxes)
+
+    #                 # Invert depth axis
+    #                 if len(depth_plot) > 1 and depth_plot[-1] > depth_plot[0]:
+    #                     ax.set_ylim(depth_plot.max(), depth_plot.min())
+    #                 else:
+    #                     ax.invert_yaxis()
+
+    #                 # Grid
+    #                 if self._chk_grid.isChecked():
+    #                     ax.grid(axis="y", color=grid_clr, linewidth=0.4, alpha=0.6)
+    #                     ax.grid(axis="x", color=grid_clr, linewidth=0.3, alpha=0.4)
+
+    #                 # Headers
+    #                 if self._chk_headers.isChecked():
+    #                     ax.set_title(
+    #                         f"{curve_name}",
+    #                         color=CURVE_COLORS.get(curve_name.upper(), ("#00B4D8", None))[0],
+    #                         fontsize=8, fontweight="700", pad=3
+    #                     )
+
+    #                 # Well label on first track
+    #                 if t_idx == 0:
+    #                     ax.set_ylabel(
+    #                         wname, color=fg, fontsize=9, fontweight="700"
+    #                     )
+
+    #                 # Only show y ticks on first track per well
+    #                 if t_idx > 0:
+    #                     ax.set_yticks([])
+    #                 else:
+    #                     ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.0f"))
+    #                     ax.tick_params(axis='y', labelsize=7, labelcolor=fg)
+
+    #                 ax.tick_params(axis='x', labelsize=6, labelcolor=fg, rotation=45)
+
+    #             except Exception:
+    #                 ax.text(0.5, 0.5, "Error", ha="center", va="center",
+    #                         color="red", transform=ax.transAxes)
+
+    #             ax_idx += 1
+
+    #     # Well separation lines
+    #     if self._chk_headers.isChecked() and n_tracks > 1:
+    #         for sep_i in range(1, n_wells):
+    #             sep_idx = sep_i * n_tracks
+    #             if sep_idx < len(axes):
+    #                 axes[sep_idx].spines["left"].set_edgecolor(CLR_ACCENT)
+    #                 axes[sep_idx].spines["left"].set_linewidth(2)
+
+    #     # Super title
+    #     datum_text = self._combo_datum.currentText()
+    #     fig.suptitle(
+    #         f"Well Correlation Panel  ·  {n_wells} Wells  ·  {datum_text}",
+    #         color=fg, fontsize=12, fontweight="800", y=1.01
+    #     )
+    #     fig.tight_layout(pad=0.5, h_pad=0.3, w_pad=0.1)
+
+    #     self._embed_figure(fig)
+    #     self._fig = fig
+    #     self._lbl_progress.setText(
+    #         f"✓ Rendered: {n_wells} wells × {n_tracks} tracks"
+    #     )
+
+    #     # Update depth metric
+    #     try:
+    #         span = depth_max - depth_min
+    #         self._set_metric(self._metric_depth_range, f"{span:.0f}")
+    #     except Exception:
+    #         pass
+
     def _render_correlation(self) -> None:
         import matplotlib
         matplotlib.use("Qt5Agg")
+    
         import matplotlib.pyplot as plt
         import matplotlib.ticker as ticker
         import numpy as np
-
+        import pandas as pd
+    
         dark = self._chk_dark_mode.isChecked()
-        bg   = "#0A1520" if dark else "#FFFFFF"
-        fg   = "#C8D8E8" if dark else "#2A3A4A"
+    
+        bg = "#0A1520" if dark else "#FFFFFF"
+        fg = "#C8D8E8" if dark else "#2A3A4A"
         grid_clr = "#1A2E42" if dark else "#E8EFF6"
-
+    
         wells_data: list[tuple[str, Any, Any]] = []
+    
         if self._data_service is not None:
             _wells = getattr(self._data_service, "_wells", {}) or {}
+    
             for wn in self._selected_wells:
                 well = _wells.get(wn)
                 df = getattr(well, "data", None) if well is not None else None
                 wells_data.append((wn, well, df))
-
-        n_wells  = len(wells_data)
-        track_curves = [cb.currentText() for cb in self._track_combos
-                        if cb.currentText() != "None"]
+    
+        n_wells = len(wells_data)
+    
+        track_curves = [
+            cb.currentText()
+            for cb in self._track_combos
+            if cb.currentText() != "None"
+        ]
+    
         n_tracks = min(self._spin_tracks.value(), len(track_curves))
+    
         if n_tracks < 1:
             n_tracks = 1
-
+    
         fig_w = max(10.0, n_wells * n_tracks * 1.6 + 1.0)
         fig_h = 9.0
-
+    
         fig, axes = plt.subplots(
             nrows=1,
             ncols=n_wells * n_tracks,
             figsize=(fig_w, fig_h),
             sharey=False,
         )
+    
         fig.patch.set_facecolor(bg)
-
+    
         if n_wells * n_tracks == 1:
             axes = [axes]
         else:
             axes = list(axes)
-
+    
         depth_min = self._spin_depth_from.value()
         depth_max = self._spin_depth_to.value()
-
+    
         CURVE_COLORS = {
-            "GR":   ("#4CAF50", (0,   150)),
+            "GR":   ("#4CAF50", (0, 150)),
             "RHOB": ("#FF7043", (1.95, 2.95)),
             "NPHI": ("#29B6F6", (0.45, -0.15)),
-            "RT":   ("#EF9A9A", (0.2,  2000)),
+            "RT":   ("#EF9A9A", (0.2, 2000)),
             "SP":   ("#CE93D8", (-160, 40)),
-            "CALI": ("#FFCA28", (6,    16)),
-            "DT":   ("#80DEEA", (40,   140)),
-            "PHIE": ("#A5D6A7", (0,    0.4)),
-            "VSH":  ("#FFCC80", (0,    1)),
-            "SW":   ("#90CAF9", (0,    1)),
+            "CALI": ("#FFCA28", (6, 16)),
+            "DT":   ("#80DEEA", (40, 140)),
+            "PHIE": ("#A5D6A7", (0, 0.4)),
+            "VSH":  ("#FFCC80", (0, 1)),
+            "SW":   ("#90CAF9", (0, 1)),
             "PERM": ("#F48FB1", (0.001, 1000)),
         }
-
+    
+        # ---------------------------------------------------------
+        # STORE REFERENCE WELL DATA
+        # ---------------------------------------------------------
+        reference_data = {}
+    
         ax_idx = 0
+    
         for w_idx, (wname, well, df) in enumerate(wells_data):
+    
             for t_idx in range(n_tracks):
+    
                 if ax_idx >= len(axes):
                     break
+    
                 ax = axes[ax_idx]
+    
                 ax.set_facecolor(bg)
+    
                 ax.tick_params(colors=fg, labelsize=7)
+    
                 for spine in ax.spines.values():
                     spine.set_edgecolor(grid_clr)
-
+    
                 if df is None or df.empty:
-                    ax.text(0.5, 0.5, f"{wname}\n(no data)",
-                            ha="center", va="center",
-                            color=fg, fontsize=8, transform=ax.transAxes)
+    
+                    ax.text(
+                        0.5,
+                        0.5,
+                        f"{wname}\n(no data)",
+                        ha="center",
+                        va="center",
+                        color=fg,
+                        fontsize=8,
+                        transform=ax.transAxes,
+                    )
+    
                     ax.set_yticks([])
+    
                     ax_idx += 1
                     continue
-
-                curve_name = track_curves[t_idx] if t_idx < len(track_curves) else "GR"
-
-                # depth column
+    
+                curve_name = (
+                    track_curves[t_idx]
+                    if t_idx < len(track_curves)
+                    else "GR"
+                )
+    
+                # ---------------------------------------------------------
+                # FIND DEPTH COLUMN
+                # ---------------------------------------------------------
                 depth_col = None
+    
                 for cname in df.columns:
                     if str(cname).strip().upper() in {"DEPTH", "DEPT", "MD"}:
                         depth_col = cname
                         break
+    
                 if depth_col is None:
                     depth_col = df.columns[0]
-
+    
                 try:
-                    import pandas as pd
-                    depth = pd.to_numeric(df[depth_col], errors="coerce")
-                    mask = (depth >= depth_min) & (depth <= depth_max)
+    
+                    depth = pd.to_numeric(
+                        df[depth_col],
+                        errors="coerce"
+                    )
+    
+                    mask = (
+                        (depth >= depth_min)
+                        & (depth <= depth_max)
+                    )
+    
                     if mask.sum() == 0:
                         mask = pd.Series([True] * len(df))
-
+    
                     depth_plot = depth[mask].values
-
+    
                     if curve_name in df.columns:
-                        vals = pd.to_numeric(df[curve_name], errors="coerce")[mask].values
+    
+                        vals = pd.to_numeric(
+                            df[curve_name],
+                            errors="coerce"
+                        )[mask].values
+    
                         c_color, x_range = CURVE_COLORS.get(
-                            curve_name.upper(), ("#00B4D8", (None, None))
+                            curve_name.upper(),
+                            ("#00B4D8", (None, None))
                         )
-                        ax.plot(vals, depth_plot, color=c_color,
-                                linewidth=0.9, alpha=0.92)
-
-                        # Fill
+    
+                        # ---------------------------------------------------------
+                        # PLOT CURVE
+                        # ---------------------------------------------------------
+                        ax.plot(
+                            vals,
+                            depth_plot,
+                            color=c_color,
+                            linewidth=0.9,
+                            alpha=0.92,
+                        )
+    
+                        # ---------------------------------------------------------
+                        # FILL
+                        # ---------------------------------------------------------
                         if self._chk_fill_lt.isChecked():
-                            ax.fill_betweenx(depth_plot, vals,
-                                             alpha=0.12, color=c_color)
-
+    
+                            ax.fill_betweenx(
+                                depth_plot,
+                                vals,
+                                alpha=0.12,
+                                color=c_color
+                            )
+    
+                        # ---------------------------------------------------------
+                        # X LIMIT
+                        # ---------------------------------------------------------
                         if x_range[0] is not None:
                             ax.set_xlim(*x_range)
-
-                        # Formation markers
-                        if self._chk_markers.isChecked() and len(depth_plot) > 10:
-                            n_markers = min(4, max(1, len(depth_plot) // 200))
-                            for midx in np.linspace(0, len(depth_plot)-1, n_markers, dtype=int):
+    
+                        # ---------------------------------------------------------
+                        # FORMATION MARKERS
+                        # ---------------------------------------------------------
+                        if (
+                            self._chk_markers.isChecked()
+                            and len(depth_plot) > 10
+                        ):
+    
+                            n_markers = min(
+                                4,
+                                max(1, len(depth_plot) // 200)
+                            )
+    
+                            for midx in np.linspace(
+                                0,
+                                len(depth_plot) - 1,
+                                n_markers,
+                                dtype=int
+                            ):
+    
                                 d = depth_plot[midx]
-                                ax.axhline(d, color="#F5A623", linewidth=0.6,
-                                           linestyle="--", alpha=0.55)
-
-                        # Pay zone highlight
+    
+                                ax.axhline(
+                                    d,
+                                    color="#F5A623",
+                                    linewidth=0.6,
+                                    linestyle="--",
+                                    alpha=0.55,
+                                )
+    
+                        # ---------------------------------------------------------
+                        # PAY ZONE HIGHLIGHT
+                        # ---------------------------------------------------------
                         if self._chk_highlight.isChecked():
+    
                             if curve_name.upper() in {"PHIE", "SW"}:
-                                threshold = 0.1 if curve_name.upper() == "PHIE" else 0.5
-                                compare = vals > threshold if curve_name.upper() == "PHIE" else vals < threshold
+    
+                                threshold = (
+                                    0.1
+                                    if curve_name.upper() == "PHIE"
+                                    else 0.5
+                                )
+    
+                                compare = (
+                                    vals > threshold
+                                    if curve_name.upper() == "PHIE"
+                                    else vals < threshold
+                                )
+    
                                 ax.fill_betweenx(
-                                    depth_plot, x_range[0] or vals.min(),
+                                    depth_plot,
+                                    x_range[0] or vals.min(),
                                     x_range[1] or vals.max(),
                                     where=compare,
-                                    color="#FFD700", alpha=0.08
+                                    color="#FFD700",
+                                    alpha=0.08,
                                 )
+    
+                        # ---------------------------------------------------------
+                        # STORE FIRST WELL AS REFERENCE
+                        # ---------------------------------------------------------
+                        corr_percent = None
+    
+                        if w_idx == 0:
+    
+                            reference_data[curve_name] = (
+                                depth_plot.copy(),
+                                vals.copy()
+                            )
+    
+                        else:
+    
+                            if curve_name in reference_data:
+    
+                                ref_depth, ref_vals = reference_data[curve_name]
+    
+                                try:
+    
+                                    common_depth = np.linspace(
+                                        max(
+                                            np.nanmin(ref_depth),
+                                            np.nanmin(depth_plot)
+                                        ),
+                                        min(
+                                            np.nanmax(ref_depth),
+                                            np.nanmax(depth_plot)
+                                        ),
+                                        1000
+                                    )
+    
+                                    ref_interp = np.interp(
+                                        common_depth,
+                                        ref_depth,
+                                        ref_vals
+                                    )
+    
+                                    vals_interp = np.interp(
+                                        common_depth,
+                                        depth_plot,
+                                        vals
+                                    )
+    
+                                    valid = (
+                                        np.isfinite(ref_interp)
+                                        & np.isfinite(vals_interp)
+                                    )
+    
+                                    if valid.sum() > 10:
+    
+                                        corr = np.corrcoef(
+                                            ref_interp[valid],
+                                            vals_interp[valid]
+                                        )[0, 1]
+    
+                                        corr_percent = corr * 100
+    
+                                except Exception:
+                                    pass
+    
+                        # ---------------------------------------------------------
+                        # CORRELATION BADGE
+                        # ---------------------------------------------------------
+                        if corr_percent is not None:
+    
+                            if corr_percent >= 80:
+                                corr_color = "#00E676"
+    
+                            elif corr_percent >= 60:
+                                corr_color = "#FFD54F"
+    
+                            else:
+                                corr_color = "#FF5252"
+    
+                            ax.text(
+                                0.03,
+                                0.97,
+                                f"{corr_percent:.1f}%",
+                                transform=ax.transAxes,
+                                fontsize=7,
+                                fontweight="bold",
+                                va="top",
+                                ha="left",
+                                color=corr_color,
+                                bbox=dict(
+                                    boxstyle="round,pad=0.25",
+                                    fc="#102530" if dark else "#F3F7FA",
+                                    ec=corr_color,
+                                    lw=0.8,
+                                    alpha=0.95,
+                                ),
+                            )
+    
                     else:
-                        ax.text(0.5, 0.5, f"{curve_name}\n(N/A)",
-                                ha="center", va="center",
-                                color=fg, fontsize=8,
-                                transform=ax.transAxes)
-
-                    # Invert depth axis
-                    if len(depth_plot) > 1 and depth_plot[-1] > depth_plot[0]:
-                        ax.set_ylim(depth_plot.max(), depth_plot.min())
+    
+                        ax.text(
+                            0.5,
+                            0.5,
+                            f"{curve_name}\n(N/A)",
+                            ha="center",
+                            va="center",
+                            color=fg,
+                            fontsize=8,
+                            transform=ax.transAxes,
+                        )
+    
+                    # ---------------------------------------------------------
+                    # DEPTH AXIS
+                    # ---------------------------------------------------------
+                    if (
+                        len(depth_plot) > 1
+                        and depth_plot[-1] > depth_plot[0]
+                    ):
+    
+                        ax.set_ylim(
+                            depth_plot.max(),
+                            depth_plot.min()
+                        )
+    
                     else:
                         ax.invert_yaxis()
-
-                    # Grid
+    
+                    # ---------------------------------------------------------
+                    # GRID
+                    # ---------------------------------------------------------
                     if self._chk_grid.isChecked():
-                        ax.grid(axis="y", color=grid_clr, linewidth=0.4, alpha=0.6)
-                        ax.grid(axis="x", color=grid_clr, linewidth=0.3, alpha=0.4)
-
-                    # Headers
+    
+                        ax.grid(
+                            axis="y",
+                            color=grid_clr,
+                            linewidth=0.4,
+                            alpha=0.6,
+                        )
+    
+                        ax.grid(
+                            axis="x",
+                            color=grid_clr,
+                            linewidth=0.3,
+                            alpha=0.4,
+                        )
+    
+                    # ---------------------------------------------------------
+                    # TITLES
+                    # ---------------------------------------------------------
                     if self._chk_headers.isChecked():
+    
                         ax.set_title(
                             f"{curve_name}",
-                            color=CURVE_COLORS.get(curve_name.upper(), ("#00B4D8", None))[0],
-                            fontsize=8, fontweight="700", pad=3
+                            color=CURVE_COLORS.get(
+                                curve_name.upper(),
+                                ("#00B4D8", None)
+                            )[0],
+                            fontsize=8,
+                            fontweight="700",
+                            pad=3,
                         )
-
-                    # Well label on first track
+    
+                    # ---------------------------------------------------------
+                    # WELL LABEL
+                    # ---------------------------------------------------------
                     if t_idx == 0:
+    
                         ax.set_ylabel(
-                            wname, color=fg, fontsize=9, fontweight="700"
+                            wname,
+                            color=fg,
+                            fontsize=9,
+                            fontweight="700",
                         )
-
-                    # Only show y ticks on first track per well
+    
+                    # ---------------------------------------------------------
+                    # Y TICKS
+                    # ---------------------------------------------------------
                     if t_idx > 0:
+    
                         ax.set_yticks([])
+    
                     else:
-                        ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.0f"))
-                        ax.tick_params(axis='y', labelsize=7, labelcolor=fg)
-
-                    ax.tick_params(axis='x', labelsize=6, labelcolor=fg, rotation=45)
-
+    
+                        ax.yaxis.set_major_formatter(
+                            ticker.FormatStrFormatter("%.0f")
+                        )
+    
+                        ax.tick_params(
+                            axis='y',
+                            labelsize=7,
+                            labelcolor=fg
+                        )
+    
+                    ax.tick_params(
+                        axis='x',
+                        labelsize=6,
+                        labelcolor=fg,
+                        rotation=45,
+                    )
+    
                 except Exception:
-                    ax.text(0.5, 0.5, "Error", ha="center", va="center",
-                            color="red", transform=ax.transAxes)
-
+    
+                    ax.text(
+                        0.5,
+                        0.5,
+                        "Error",
+                        ha="center",
+                        va="center",
+                        color="red",
+                        transform=ax.transAxes,
+                    )
+    
                 ax_idx += 1
-
-        # Well separation lines
+    
+        # ---------------------------------------------------------
+        # WELL SEPARATION
+        # ---------------------------------------------------------
         if self._chk_headers.isChecked() and n_tracks > 1:
+    
             for sep_i in range(1, n_wells):
+    
                 sep_idx = sep_i * n_tracks
+    
                 if sep_idx < len(axes):
+    
                     axes[sep_idx].spines["left"].set_edgecolor(CLR_ACCENT)
                     axes[sep_idx].spines["left"].set_linewidth(2)
-
-        # Super title
+    
+        # ---------------------------------------------------------
+        # SUPER TITLE
+        # ---------------------------------------------------------
         datum_text = self._combo_datum.currentText()
+    
         fig.suptitle(
-            f"Well Correlation Panel  ·  {n_wells} Wells  ·  {datum_text}",
-            color=fg, fontsize=12, fontweight="800", y=1.01
+            f"Well Correlation Panel  ·  "
+            f"{n_wells} Wells  ·  "
+            f"{datum_text}",
+            color=fg,
+            fontsize=12,
+            fontweight="800",
+            y=1.01,
         )
-        fig.tight_layout(pad=0.5, h_pad=0.3, w_pad=0.1)
-
+    
+        fig.tight_layout(
+            pad=0.5,
+            h_pad=0.3,
+            w_pad=0.1,
+        )
+    
         self._embed_figure(fig)
+    
         self._fig = fig
+    
         self._lbl_progress.setText(
             f"✓ Rendered: {n_wells} wells × {n_tracks} tracks"
         )
-
-        # Update depth metric
+    
+        # ---------------------------------------------------------
+        # UPDATE METRIC
+        # ---------------------------------------------------------
         try:
+    
             span = depth_max - depth_min
-            self._set_metric(self._metric_depth_range, f"{span:.0f}")
+    
+            self._set_metric(
+                self._metric_depth_range,
+                f"{span:.0f}"
+            )
+    
         except Exception:
             pass
 
