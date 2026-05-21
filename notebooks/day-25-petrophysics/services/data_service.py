@@ -1619,6 +1619,7 @@ th {{ background: #F8FBFE; }}
 
         import matplotlib.pyplot as plt
         import seaborn as sns
+        import numpy as np
 
         curves = self._numeric_curves(df)
         if len(curves) < 2:
@@ -1630,6 +1631,9 @@ th {{ background: #F8FBFE; }}
             self._render_message_figure(frame, "Correlation Matrix", "Correlation matrix is unavailable for the current filter.")
             return
 
+        # Compute a highly robust, version-safe numpy array of custom string annotations (e.g. '85%', '-12%')
+        annot = np.vectorize(lambda v: f"{v * 100:.0f}%" if np.isfinite(v) else "")(corr_df.to_numpy())
+
         fig, ax = plt.subplots(figsize=(8.8, 6.6), constrained_layout=True)
         sns.heatmap(
             corr_df,
@@ -1639,6 +1643,9 @@ th {{ background: #F8FBFE; }}
             vmin=-1,
             vmax=1,
             square=False,
+            annot=annot,
+            fmt="",
+            annot_kws={"size": 8.5, "weight": "bold"},
             cbar_kws={"shrink": 0.8},
         )
         ax.set_title("Correlation Matrix", fontsize=13, fontweight="600")

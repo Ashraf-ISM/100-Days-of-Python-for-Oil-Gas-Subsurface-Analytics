@@ -224,7 +224,7 @@ def plot_correlation_matrix(
     ax.set_title("Feature Correlation Matrix", fontweight="bold")
     for i in range(n):
         for j in range(n):
-            ax.text(j, i, f"{corr.iloc[i, j]:.2f}",
+            ax.text(j, i, f"{corr.iloc[i, j] * 100:.0f}%",
                     ha="center", va="center", fontsize=5.5,
                     color="white" if abs(corr.iloc[i, j]) > 0.6 else "black")
     return fig
