@@ -1044,14 +1044,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
             pass
 
 
-
-    #     # Update depth metric
-    #     try:
-    #         span = depth_max - depth_min
-    #         self._set_metric(self._metric_depth_range, f"{span:.0f}")
-    #     except Exception:
-    #         pass
-
     def _render_correlation(self) -> None:
         import matplotlib
         matplotlib.use("Qt5Agg")
