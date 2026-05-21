@@ -1043,18 +1043,7 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    # def _render_correlation(self) -> None:
-    #     import matplotlib
-    #     matplotlib.use("Qt5Agg")
-    #     import matplotlib.pyplot as plt
-    #     import matplotlib.ticker as ticker
-    #     import numpy as np
-
-    #     dark = self._chk_dark_mode.isChecked()
-    #     bg   = "#0A1520" if dark else "#FFFFFF"
-    #     fg   = "#C8D8E8" if dark else "#2A3A4A"
-    #     grid_clr = "#1A2E42" if dark else "#E8EFF6"
-
+   
     #     wells_data: list[tuple[str, Any, Any]] = []
     #     if self._data_service is not None:
     #         _wells = getattr(self._data_service, "_wells", {}) or {}
