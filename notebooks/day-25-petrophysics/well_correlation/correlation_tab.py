@@ -1043,26 +1043,6 @@ class WellCorrelationTab(QtWidgets.QWidget):
         finally:
             pass
 
-    #                 # Headers
-    #                 if self._chk_headers.isChecked():
-    #                     ax.set_title(
-    #                         f"{curve_name}",
-    #                         color=CURVE_COLORS.get(curve_name.upper(), ("#00B4D8", None))[0],
-    #                         fontsize=8, fontweight="700", pad=3
-    #                     )
-
-    #                 # Well label on first track
-    #                 if t_idx == 0:
-    #                     ax.set_ylabel(
-    #                         wname, color=fg, fontsize=9, fontweight="700"
-    #                     )
-
-    #                 # Only show y ticks on first track per well
-    #                 if t_idx > 0:
-    #                     ax.set_yticks([])
-    #                 else:
-    #                     ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.0f"))
-    #                     ax.tick_params(axis='y', labelsize=7, labelcolor=fg)
 
     #                 ax.tick_params(axis='x', labelsize=6, labelcolor=fg, rotation=45)
 
