@@ -1032,7 +1032,7 @@ class WellCorrelationTab(QtWidgets.QWidget):
             )
             return
 
-        self._lbl_progress.setText("⏳ Rendering…")
+        self._lbl_progress.setText("⏳ Rendering…") 
         QtWidgets.QApplication.processEvents()
 
         try:
