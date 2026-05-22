@@ -1011,7 +1011,7 @@ class WellCorrelationTab(QtWidgets.QWidget):
             self._lbl_status.setStyleSheet(
                 "background: #F5A62333; color: #F5A623;"
                 "border: 1px solid #F5A62355; border-radius: 5px;"
-                "padding: 2px 8px; font-size: 10px; font-weight: 700;"
+                "padding: 2px 8px; font-size: 10px; font-weight: 700;" 
             )
         else:
             self._lbl_status.setText(f"● {count} Wells")
