@@ -6,7 +6,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-# pyre
+# pyrefly: ignore [missing-import]
 from PyQt5 import QtCore, QtWidgets
 
 THIS_DIR = Path(__file__).resolve().parent
