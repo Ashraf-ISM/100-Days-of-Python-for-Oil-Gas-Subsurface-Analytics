@@ -181,7 +181,7 @@ class Well3DWorkspaceController(QtCore.QObject):
             first_vis.setChecked(True)
 
     # ------------------------------------------------------------------ #
-    #                          Public API                               #
+    #                          Public API                                #
     # ------------------------------------------------------------------ #
 
     def refresh(self) -> None:
