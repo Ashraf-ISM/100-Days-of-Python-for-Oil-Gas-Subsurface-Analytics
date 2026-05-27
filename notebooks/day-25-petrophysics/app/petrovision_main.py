@@ -1502,7 +1502,7 @@ def main():
     splash = None   # important 
 
     # Splash Screen 
-    splash_path = ASSETS_DIR / "splash-petroarx.png"
+    splash_path = ASSETS_DIR / "splash-petroarx.png" 
 
     if splash_path.exists():
         pixmap = QtGui.QPixmap(str(splash_path))
