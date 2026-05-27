@@ -255,7 +255,7 @@ def _tag_label(text: str, color: str, parent=None) -> QtWidgets.QLabel:
         f"border-radius: 5px;"
         f"padding: 2px 8px;"
         f"font-size: 10px;"
-        f"font-weight: 700;"
+        f"font-weight: 700;" 
     )
     lbl.setAlignment(QtCore.Qt.AlignCenter)
     return lbl
