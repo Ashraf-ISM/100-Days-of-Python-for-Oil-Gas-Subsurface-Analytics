@@ -353,7 +353,7 @@ class WellCorrelationTab(QtWidgets.QWidget):
         frame.setMinimumHeight(82)
         frame.setMaximumHeight(100)
         frame.setStyleSheet(
-            "QFrame {"
+            "QFrame {" 
             "  background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
             f"    {CLR_HEADER_GRAD});"
             "  border: 1px solid #1A3A5C;"
