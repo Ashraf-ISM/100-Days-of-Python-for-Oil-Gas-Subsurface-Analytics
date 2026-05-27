@@ -300,7 +300,7 @@ class AnimatedButton(QtWidgets.QPushButton):
             f"  letter-spacing: 0.3px;"
             f"}}"
             f"QPushButton:hover {{ background: {self._color}DD; }}"
-            f"QPushButton:pressed {{ background: {self._color}88; }}"
+            f"QPushButton:pressed {{ background: {self._color}88; }}" 
         )
 
     def mousePressEvent(self, e):
