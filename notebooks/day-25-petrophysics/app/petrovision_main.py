@@ -1430,6 +1430,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             "tab3DWell",
             "tabQualitycontrol",
             "tabShaleVolume",
+            "tabPorosity",
             "tabFormationevaluation",
         ]
 
