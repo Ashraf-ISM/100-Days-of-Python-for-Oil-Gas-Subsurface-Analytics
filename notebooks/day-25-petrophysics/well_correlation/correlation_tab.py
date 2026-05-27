@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import textwrap
 from typing import Any
-# pyref
+# pyrefly: ignore [missing-import]
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
