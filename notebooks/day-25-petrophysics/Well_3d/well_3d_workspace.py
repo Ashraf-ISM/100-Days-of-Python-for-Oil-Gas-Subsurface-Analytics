@@ -176,7 +176,6 @@ class Well3DWorkspaceController(QtCore.QObject):
                 button.clicked.connect(
                     lambda _checked=False, bname=btn_name: self._on_vis_mode_clicked(bname)
                 )
-        
         first_vis = self._widget("btnVisModeColorTube") 
         if first_vis is not None:
             first_vis.setChecked(True)
