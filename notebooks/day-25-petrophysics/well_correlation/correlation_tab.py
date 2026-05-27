@@ -241,7 +241,7 @@ def _section_label(text: str, parent=None) -> QtWidgets.QLabel:
         f"font-weight: 700;"
         f"letter-spacing: 0.8px;"
         f"text-transform: uppercase;"
-        f"background: transparent;"
+        f"background: transparent;" 
     )
     return lbl
 
