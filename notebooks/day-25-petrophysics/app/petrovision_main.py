@@ -1429,6 +1429,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
             "tabLogViewer",
             "tab3DWell",
             "tabQualitycontrol",
+            "tabShaleVolume",
             "tabFormationevaluation",
         ]
 
