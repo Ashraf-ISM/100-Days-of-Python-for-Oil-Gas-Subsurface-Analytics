@@ -312,6 +312,7 @@ class AnimatedButton(QtWidgets.QPushButton):
         super().mouseReleaseEvent(e)
 
 
+
 # ---------------------------------------------------------------------------
 class WellCorrelationTab(QtWidgets.QWidget):
     """Advanced, professional Multi-Well Correlation Workspace."""
