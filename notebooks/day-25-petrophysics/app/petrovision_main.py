@@ -801,7 +801,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
         self._facies_win: "FaciesClassificationWindow | None" = None
         try:
             from Facies_classifications.facies_window import FaciesClassificationWindow
-            self._facies_win = FaciesClassificationWindow(UI_DIR, parent=None)
+            self._facies_win = FaciesClassificationWindow(UI_DIR, parent=None) 
             # Inject data service if already available
             self._inject_facies_data_service()
         except Exception as exc:
