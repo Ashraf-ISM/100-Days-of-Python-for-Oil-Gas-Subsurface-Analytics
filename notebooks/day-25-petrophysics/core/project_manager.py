@@ -47,7 +47,8 @@ class ProjectData:
             "region": "",
             "country": "",
             "operator": "",
-            
+        
+
         }
         # Names of wells encoded in the archive (populated on load)
         self.well_names: list[str] = []
