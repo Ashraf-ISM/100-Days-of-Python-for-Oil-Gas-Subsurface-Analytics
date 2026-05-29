@@ -95,7 +95,7 @@ def save_ash(
         app_state:  AppState snapshot of all UI parameters.
 
     Returns:
-        True on success, False on error.
+        True on success, False on error. 
     """
     try:
         Path(path).parent.mkdir(parents=True, exist_ok=True)
