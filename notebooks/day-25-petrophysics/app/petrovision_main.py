@@ -1494,7 +1494,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
-    # Set App Icon 
+    # Set App Icon for showing 
     logo_path = ASSETS_DIR / "logo-petroarx.png"  
     if logo_path.exists():
         app.setWindowIcon(QtGui.QIcon(str(logo_path)))
