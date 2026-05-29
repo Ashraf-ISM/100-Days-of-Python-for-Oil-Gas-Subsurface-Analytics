@@ -33,7 +33,7 @@ FORMAT_VERSION = "1.0"
 # ─────────────────────────────────────────────────────────────────────────────
 
 class ProjectData:
-    """Lightweight container for project metadata (not the heavy well data)."""
+    """Lightweight container for project metadata (not the heavy well data). """
 
     def __init__(self, name: str = "Untitled", path: str | None = None) -> None:
         self.name: str = name
