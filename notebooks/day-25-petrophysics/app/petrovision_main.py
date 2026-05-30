@@ -795,7 +795,7 @@ class PetroVisionMainWindow(QtWidgets.QMainWindow):
                 pass
 
 
-    # ─── Facies Classification – separate window ───────────────────────────────
+    # ─── Facies Classification – separate window ─────────────────────────────── 
 
     def _init_facies_window(self) -> None:
         """Pre-create the standalone Facies Classification window (hidden)."""
