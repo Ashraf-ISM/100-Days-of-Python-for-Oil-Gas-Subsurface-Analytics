@@ -1,7 +1,12 @@
 """
 ml_qc_panel.py
 ==============
-Programmatic layout builder for the ML Based QC tab.
+Programmatic layout builder for the ML Based QC sub-tab.
+
+tabMLQC is now a sub-tab of tabQCInner, which lives inside tabQualitycontrol
+(the unified "Quality Control" top-level tab).  Tab hierarchy:
+    centralTabWidget → tabQualitycontrol → tabQCInner → tabMLQC  (this tab)
+                                                      → tabQCStat (Statistical QC)
 
 Called from MLQCService.__init__() immediately after widget discovery.
 Rebuilds the tabMLQC content with:
