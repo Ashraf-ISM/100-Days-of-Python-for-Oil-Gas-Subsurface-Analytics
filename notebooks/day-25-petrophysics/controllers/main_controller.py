@@ -69,7 +69,7 @@ class MainController:
             "actionImportWITSML",
             "actionImportSEGY",
             "actionImportXML",
-            "actionImportODM",
+            "actionImportODM", 
         ):
             self._connect_action(name, self._import_and_track)
         self._connect_action("actionDeleteWell", self._delete_well_and_track)
