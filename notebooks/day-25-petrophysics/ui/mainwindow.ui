@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <ui version="4.0">
  <class>PetroAnalystMainWindow</class>
  <widget class="QMainWindow" name="PetroAnalystMainWindow">
@@ -27,7 +27,7 @@
 
 QMainWindow {
     background-color: #EBF0F6;
-    font-family: &quot;Segoe UI&quot;, &quot;Noto Sans&quot;, sans-serif;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
 }
 
 /* ---- Menu Bar ---- */
@@ -362,7 +362,7 @@ QMdiSubWindow::title {
 QPlainTextEdit {
     background-color: #F5F9FE;
     color: #1B2B40;
-    font-family: &quot;Consolas&quot;, &quot;Courier New&quot;, monospace;
+    font-family: "Consolas", "Courier New", monospace;
     font-size: 11px;
     border: none;
     border-radius: 0;
@@ -464,7 +464,7 @@ QSplitter::handle:vertical { height: 4px; }
 QSplitter::handle:hover { background-color: #3A72B5; }
 
 /* ---- Frame ---- */
-QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
+QFrame[frameShape="4"], QFrame[frameShape="5"] {
     color: #C2D0E0;
 }
    </string>
@@ -1171,7 +1171,7 @@ Use the controls above to select well, template and depth range, then click Rend
     <attribute name="title">
      <string>Quality Control</string>
     </attribute>
-    <layout class="QHBoxLayout" name="layoutCrossplot">
+    <layout class="QVBoxLayout" name="layoutQCOuter"><property name="spacing"><number>0</number></property><property name="leftMargin"><number>0</number></property><property name="topMargin"><number>0</number></property><property name="rightMargin"><number>0</number></property><property name="bottomMargin"><number>0</number></property><item><widget class="QTabWidget" name="tabQCInner"><property name="tabPosition"><enum>QTabWidget::North</enum></property><property name="currentIndex"><number>0</number></property><widget class="QWidget" name="tabQCStat"><attribute name="title"><string>Statistical QC</string></attribute><layout class="QHBoxLayout" name="layoutQCStatContent">
      <property name="spacing">
       <number>4</number>
      </property>
@@ -1847,12 +1847,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QWidget" name="tabMLQC">
-    <attribute name="title">
-     <string>ML Based QC</string>
-    </attribute>
-    <layout class="QVBoxLayout" name="layoutMLQC">
+   </widget><widget class="QWidget" name="tabMLQC"><attribute name="title"><string>ML Based QC</string></attribute><layout class="QVBoxLayout" name="layoutMLQCInner">
      <property name="spacing"><number>6</number></property>
      <property name="leftMargin"><number>8</number></property>
      <property name="topMargin"><number>8</number></property>
@@ -2342,7 +2337,7 @@ Show original, cleaned, outlier, spike and missing markers in a shared log view.
       </layout>
      </item>
     </layout>
-   </widget>
+   </widget></widget></item></layout></widget>
    <widget class="QWidget" name="tabFormationevaluation">
 
     <attribute name="title">
