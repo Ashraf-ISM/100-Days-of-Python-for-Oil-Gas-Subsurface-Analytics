@@ -106,7 +106,7 @@ class MainController:
         self._connect_widget("advance_cross_plot", "clicked", self.plots.open_advanced_crossplot) 
         self._connect_widget("btnLVPlotHistogram", "clicked", self.plots.new_histogram)
         self._connect_widget("btnLVPlotPairplot", "clicked", self.plots.new_pairplot)
-        self._connect_widget("btnLVPlotViolin", "clicked", self.plots.new_violinplot)
+        self._connect_widget("btnLVPlotViolin", "clicked", self.plots.new_violinplot) 
         # Log viewer tab buttons
         self._connect_widget("plottriplecomboplot", "clicked", self.plots.new_triple_combo)
         self._connect_widget("plotmutlitrack", "clicked", self.plots.new_log_plot)
