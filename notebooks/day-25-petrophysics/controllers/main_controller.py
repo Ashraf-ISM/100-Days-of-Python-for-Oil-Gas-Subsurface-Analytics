@@ -100,7 +100,7 @@ class MainController:
         # Plotting (plots tab buttons)
         self._connect_widget("btnPlotMultiTrack", "clicked", self.plots.new_log_plot)
         self._connect_widget("btnPlotTripleCombo", "clicked", self.plots.new_triple_combo)
-        self._connect_widget("btnPlotCrossplot", "clicked", self.plots.new_crossplot)
+        self._connect_widget("btnPlotCrossplot", "clicked", self.plots.new_crossplot) 
         self._connect_widget("btnPlotHistogram", "clicked", self.plots.new_histogram)
         self._connect_widget("btnLVPlotCrossplot", "clicked", self.plots.new_crossplot)
         self._connect_widget("advance_cross_plot", "clicked", self.plots.open_advanced_crossplot)
