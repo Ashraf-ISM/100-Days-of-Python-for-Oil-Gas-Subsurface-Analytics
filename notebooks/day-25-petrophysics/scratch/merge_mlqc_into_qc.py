@@ -1,218 +1,197 @@
 """
-merge_mlqc_into_qc.py
-=====================
-Merges the top-level tabMLQC into tabQualitycontrol as a sub-tab called
-"ML Based QC" inside an inner QTabWidget.
+merge_mlqc_into_qc_v2.py
+========================
+Uses regex-based XML manipulation to merge tabMLQC into tabQualitycontrol
+as an inner sub-tab in a new QTabWidget called tabQCInner.
 
-Strategy:
-1. Find tabQualitycontrol's content and wrap it in a sub-tab "Statistical QC"
-2. Move tabMLQC (minus its outer <widget> shell) into a second sub-tab "ML Based QC"
-3. Both sub-tabs live inside a new QTabWidget named "tabQCInner" in tabQualitycontrol
-4. Remove the now-defunct top-level tabMLQC
+Approach: Extract the raw XML blocks with a bracket-depth scanner,
+then perform targeted string replacements.
 """
 
 import re
 
 UI_PATH = "/home/ashraf/Desktop/100-Days-of-Python-for-Oil-Gas-Subsurface-Analytics-Well-log/notebooks/day-25-petrophysics/ui/mainwindow.ui"
 
-content = open(UI_PATH, encoding="utf-8").read()
-lines = content.splitlines(keepends=True)
+with open(UI_PATH, encoding="utf-8") as f:
+    content = f.read()
 
-# ── 1. Locate tabQualitycontrol ────────────────────────────────────────────
-def find_widget_bounds(lines, name):
-    """Return (start_idx, end_idx) of the <widget name='name'> block (0-indexed)."""
-    depth = 0
-    start = None
-    for i, line in enumerate(lines):
-        if f'name="{name}"' in line and '<widget' in line:
-            start = i
-            depth = 0
-        if start is not None:
-            depth += line.count("<widget") + line.count("<layout") + line.count("<item") + line.count("<spacer")
-            depth -= line.count("</widget>") + line.count("</layout>") + line.count("</item>") + line.count("</spacer>")
-            if depth <= 0:
-                return start, i
-    raise RuntimeError(f"Widget {name!r} not found")
+def find_widget_block(text, name):
+    """
+    Find the character offsets (start, end) of the <widget name="NAME"> block.
+    Returns (start_char, end_char) inclusive of the closing </widget> tag.
+    """
+    # Find the opening tag
+    pattern = rf'<widget[^>]*name="{re.escape(name)}"[^>]*>'
+    m = re.search(pattern, text)
+    if not m:
+        raise RuntimeError(f"Widget {name!r} not found in file")
+    start = m.start()
+    pos = m.end()
+    depth = 1
+    while depth > 0 and pos < len(text):
+        # Find next <widget or </widget
+        next_open  = text.find('<widget',  pos)
+        next_close = text.find('</widget>', pos)
+        if next_close == -1:
+            break
+        if next_open != -1 and next_open < next_close:
+            depth += 1
+            pos = next_open + len('<widget')
+        else:
+            depth -= 1
+            pos = next_close + len('</widget>')
+    end = pos  # pos is right after the last </widget>
+    return start, end
 
-qc_start, qc_end = find_widget_bounds(lines, "tabQualitycontrol")
-ml_start, ml_end = find_widget_bounds(lines, "tabMLQC")
+# ── Locate blocks ──────────────────────────────────────────────────────────
+qc_start, qc_end = find_widget_block(content, "tabQualitycontrol")
+ml_start, ml_end = find_widget_block(content, "tabMLQC")
 
-print(f"tabQualitycontrol: lines {qc_start+1}–{qc_end+1}")
-print(f"tabMLQC:           lines {ml_start+1}–{ml_end+1}")
+print(f"tabQualitycontrol: chars {qc_start}–{qc_end}")
+print(f"tabMLQC:           chars {ml_start}–{ml_end}")
 
-# ── 2. Extract the QC tab's inner content ─────────────────────────────────
-# tabQualitycontrol looks like:
+qc_block = content[qc_start:qc_end]
+ml_block = content[ml_start:ml_end]
+
+# ── Extract the QC tab's inner layout ─────────────────────────────────────
+# qc_block starts with <widget class="QWidget" name="tabQualitycontrol">
+# then has <attribute name="title">...
+# then has <layout ...> ... </layout>
+# then </widget>
+# We want everything between (not including) the first <layout and last </widget>
+
+layout_start_in_qc = qc_block.find('<layout')
+if layout_start_in_qc == -1:
+    raise RuntimeError("No <layout found inside tabQualitycontrol")
+
+# The layout and everything after it, up to but not including the final </widget>
+qc_inner = qc_block[layout_start_in_qc : qc_block.rfind('</widget>')]
+
+# The header: everything before the first <layout
+qc_header = qc_block[:layout_start_in_qc]
+
+# ── Extract ML QC tab's inner layout ──────────────────────────────────────
+ml_layout_start = ml_block.find('<layout')
+if ml_layout_start == -1:
+    raise RuntimeError("No <layout found inside tabMLQC")
+ml_inner = ml_block[ml_layout_start : ml_block.rfind('</widget>')]
+
+# ── Build new combined tabQualitycontrol block ────────────────────────────
+#
+# The QC tab becomes:
 #   <widget class="QWidget" name="tabQualitycontrol">
-#     <attribute name="title"><string>Quality Control</string></attribute>
-#     <layout ...>
-#       ...content...
+#     <attribute name="title">Quality Control</attribute>
+#     <layout class="QVBoxLayout" name="layoutQCOuter">
+#       <property name="spacing">...</property>
+#       <item>
+#         <widget class="QTabWidget" name="tabQCInner">
+#           <widget class="QWidget" name="tabQCStat">
+#             <attribute name="title">Statistical QC</attribute>
+#             [original qc_inner – the QC layout]
+#           </widget>
+#           <widget class="QWidget" name="tabMLQC">
+#             <attribute name="title">ML Based QC</attribute>
+#             [ml_inner – the ML QC layout]
+#           </widget>
+#         </widget>
+#       </item>
 #     </layout>
 #   </widget>
-#
-# We want to keep the outer widget shell but replace its layout children with
-# a QTabWidget containing two sub-tabs.
 
-qc_lines = lines[qc_start : qc_end + 1]
+def reindent(text, extra_indent):
+    """Prepend extra_indent to every non-blank line."""
+    result = []
+    for line in text.splitlines(keepends=True):
+        if line.strip():
+            result.append(extra_indent + line)
+        else:
+            result.append(line)
+    return "".join(result)
 
-# Find the layout open tag (first <layout) and the matching close within qc_lines
-layout_open_idx = None
-for j, ln in enumerate(qc_lines):
-    if "<layout" in ln:
-        layout_open_idx = j
-        break
+# Re-indent inner content to account for the extra nesting
+# (they will be inside tabQCStat / tabMLQC inside tabQCInner inside the new layout)
+stat_inner_indented = reindent(qc_inner, "      ")   # 6 spaces extra
+ml_inner_indented   = reindent(ml_inner, "      ")   # 6 spaces extra
 
-# The layout content is everything from layout_open_idx to the second-to-last line
-# (last line is </widget>)
-# But we want to extract "inner content lines" = qc_lines[layout_open_idx : -1]
-# We'll re-indent them to be inside a sub-tab
-
-qc_inner = qc_lines[layout_open_idx : -1]   # layout + all content, excluding closing </widget>
-
-# ── 3. Extract ML QC tab's inner layout content ───────────────────────────
-# tabMLQC:
-#   <widget class="QWidget" name="tabMLQC">
-#     <attribute .../>
-#     <layout ...>  ... </layout>
-#   </widget>
-
-ml_lines = lines[ml_start : ml_end + 1]
-
-# Find layout inside tabMLQC
-ml_layout_open = None
-for j, ln in enumerate(ml_lines):
-    if "<layout" in ln:
-        ml_layout_open = j
-        break
-
-ml_inner = ml_lines[ml_layout_open : -1]  # layout + content, excluding </widget>
-
-# ── 4. Build the new tabQualitycontrol content ────────────────────────────
-# We replace the original layout inside tabQualitycontrol with:
-#   <layout class="QVBoxLayout">
-#     <item>
-#       <widget class="QTabWidget" name="tabQCInner">
-#         <widget class="QWidget" name="tabQCStat">
-#           <attribute name="title"><string>Statistical QC</string></attribute>
-#           [original QC layout content, re-indented]
-#         </widget>
-#         <widget class="QWidget" name="tabMLQC">
-#           <attribute name="title"><string>ML Based QC</string></attribute>
-#           [ML QC layout content, re-indented]
-#         </widget>
-#       </widget>
-#     </item>
-#   </layout>
-
-EXTRA = "   "  # 3 extra spaces for the additional nesting inside sub-tab
-
-def indent_lines(line_list, prefix):
-    return [prefix + ln if ln.strip() else ln for ln in line_list]
-
-stat_qc_sub = (
-    '   <widget class="QWidget" name="tabQCStat">\n'
-    '    <attribute name="title"><string>Statistical QC</string></attribute>\n'
-)
-stat_qc_sub += "".join(indent_lines(qc_inner, "    "))
-stat_qc_sub += '   </widget>\n'
-
-ml_qc_sub = (
-    '   <widget class="QWidget" name="tabMLQC">\n'
-    '    <attribute name="title"><string>ML Based QC</string></attribute>\n'
-)
-ml_qc_sub += "".join(indent_lines(ml_inner, "    "))
-ml_qc_sub += '   </widget>\n'
-
-new_qc_content = (
-    '  <layout class="QVBoxLayout" name="layoutQCOuter">\n'
-    '   <property name="spacing"><number>0</number></property>\n'
-    '   <property name="leftMargin"><number>0</number></property>\n'
-    '   <property name="topMargin"><number>0</number></property>\n'
-    '   <property name="rightMargin"><number>0</number></property>\n'
-    '   <property name="bottomMargin"><number>0</number></property>\n'
-    '   <item>\n'
-    '    <widget class="QTabWidget" name="tabQCInner">\n'
-    '     <property name="tabPosition"><enum>QTabWidget::North</enum></property>\n'
-    '     <property name="currentIndex"><number>0</number></property>\n'
-    + "".join(indent_lines([stat_qc_sub], "     "))
-    + "".join(indent_lines([ml_qc_sub], "     "))
-    + '    </widget>\n'
-    '   </item>\n'
-    '  </layout>\n'
+new_qc_block = (
+    qc_header  # includes opening <widget> tag and <attribute name="title">
+    + '   <layout class="QVBoxLayout" name="layoutQCOuter">\n'
+    + '    <property name="spacing"><number>0</number></property>\n'
+    + '    <property name="leftMargin"><number>0</number></property>\n'
+    + '    <property name="topMargin"><number>0</number></property>\n'
+    + '    <property name="rightMargin"><number>0</number></property>\n'
+    + '    <property name="bottomMargin"><number>0</number></property>\n'
+    + '    <item>\n'
+    + '     <widget class="QTabWidget" name="tabQCInner">\n'
+    + '      <property name="tabPosition"><enum>QTabWidget::North</enum></property>\n'
+    + '      <property name="currentIndex"><number>0</number></property>\n'
+    # ── Sub-tab 1: Statistical QC ──
+    + '      <widget class="QWidget" name="tabQCStat">\n'
+    + '       <attribute name="title"><string>Statistical QC</string></attribute>\n'
+    + stat_inner_indented + "\n"
+    + '      </widget>\n'
+    # ── Sub-tab 2: ML Based QC ──
+    + '      <widget class="QWidget" name="tabMLQC">\n'
+    + '       <attribute name="title"><string>ML Based QC</string></attribute>\n'
+    + ml_inner_indented + "\n"
+    + '      </widget>\n'
+    + '     </widget>\n'
+    + '    </item>\n'
+    + '   </layout>\n'
+    + '  </widget>'  # closing tag for tabQualitycontrol
 )
 
-# The header for tabQualitycontrol (lines before the first <layout)
-qc_header = "".join(qc_lines[:layout_open_idx])
-new_qc_widget = (
-    qc_header
-    + new_qc_content
-    + "".join(qc_lines[-1:])  # closing </widget>
-)
+# ── Replace tabQualitycontrol in the content ──────────────────────────────
+new_content = content[:qc_start] + new_qc_block + content[qc_end:]
 
-# ── 5. Assemble the new file ───────────────────────────────────────────────
-# Replace qc_start..qc_end with new_qc_widget
-# Then remove ml_start..ml_end (the top-level tabMLQC)
+# ── Find and remove the now-orphaned top-level tabMLQC ────────────────────
+# After our replacement, the tabMLQC widget is embedded inside tabQCInner.
+# The original top-level tabMLQC still remains in new_content (it wasn't touched).
+# We need to remove it.
 
-# First: build new lines list with the new QC widget replacing the old one
-new_lines = list(lines[:qc_start]) + [new_qc_widget] + list(lines[qc_end + 1 :])
+# The original ml_start/ml_end positions are now SHIFTED by the replacement.
+# Calculate shift:
+shift = len(new_qc_block) - (qc_end - qc_start)
+ml_start_new = ml_start + shift
+ml_end_new   = ml_end   + shift
 
-# Now find tabMLQC in new_lines (it shifted)
-ml_start2, ml_end2 = find_widget_bounds(new_lines, "tabMLQC")
-# But tabMLQC now lives INSIDE tabQCInner – we need the TOP-LEVEL one.
-# The top-level tabMLQC is the one that is a direct child of centralTabWidget.
-# After our replacement, the inner tabMLQC is nested; the top-level one no longer exists.
-# Actually wait – we *moved* tabMLQC's CONTENT, not the widget itself.
-# The original top-level tabMLQC block (ml_start..ml_end in original) is still in new_lines
-# because we only replaced qc_start..qc_end.  Find it again.
+print(f"Removing orphan tabMLQC at chars {ml_start_new}–{ml_end_new}")
 
-# Re-compute ml position in new_lines. The original tabMLQC is after qc_end in original,
-# so in new_lines it starts after the new qc widget.
+# Verify it's still tabMLQC
+snippet = new_content[ml_start_new : ml_start_new + 80]
+print(f"Snippet at ml_start_new: {snippet!r}")
 
-# Find the top-level tabMLQC: it should be a <widget name="tabMLQC"> that is a
-# direct child of centralTabWidget — NOT nested inside tabQCInner.
-# Since tabQCInner is our new widget, the inner tabMLQC will be found first if we
-# scan from the start. The *outer* (to-be-removed) tabMLQC will appear *after* the
-# entire qc widget block.
-
-# Simple: find the SECOND occurrence of name="tabMLQC"
-occurrences = []
-for i, ln in enumerate(new_lines):
-    if isinstance(ln, str):
-        text = ln
-    else:
-        text = ln
-    if 'name="tabMLQC"' in text and '<widget' in text:
-        occurrences.append(i)
-
-print(f"tabMLQC occurrences in new_lines: {[o+1 for o in occurrences]}")
-
-if len(occurrences) >= 2:
-    # The second one is the orphan top-level tabMLQC
-    orphan_start = occurrences[1]
-    _, orphan_end = find_widget_bounds(new_lines, "tabMLQC")
-    # find_widget_bounds finds the FIRST – we need to find from occurrences[1]
-    # Manually find the end
-    depth = 0
-    orphan_end2 = None
-    for i in range(orphan_start, len(new_lines)):
-        ln = new_lines[i] if isinstance(new_lines[i], str) else new_lines[i]
-        depth += ln.count("<widget") + ln.count("<layout") + ln.count("<item") + ln.count("<spacer")
-        depth -= ln.count("</widget>") + ln.count("</layout>") + ln.count("</item>") + ln.count("</spacer>")
-        if depth <= 0:
-            orphan_end2 = i
-            break
-    print(f"Removing orphan tabMLQC: lines {orphan_start+1}–{orphan_end2+1}")
-    final_lines = new_lines[:orphan_start] + new_lines[orphan_end2 + 1:]
+# Only remove if it's the outer tabMLQC
+if 'name="tabMLQC"' in snippet and '<widget' in snippet:
+    final_content = new_content[:ml_start_new] + new_content[ml_end_new:]
+    print("Orphan top-level tabMLQC removed.")
 else:
-    print("Only one tabMLQC found — already merged. No removal needed.")
-    final_lines = new_lines
+    print("WARNING: Expected tabMLQC not at computed position. Searching manually...")
+    # Fall-back: find the SECOND occurrence of tabMLQC widget
+    first_occ = new_content.find('name="tabMLQC"')
+    second_occ = new_content.find('name="tabMLQC"', first_occ + 1)
+    if second_occ != -1:
+        # Walk back to the <widget tag
+        widget_start = new_content.rfind('<widget', 0, second_occ)
+        _, orphan_end = find_widget_block(new_content[widget_start:], "tabMLQC")
+        orphan_end_abs = widget_start + orphan_end
+        final_content = new_content[:widget_start] + new_content[orphan_end_abs:]
+        print(f"Fallback: removed orphan tabMLQC at chars {widget_start}–{orphan_end_abs}")
+    else:
+        print("No second tabMLQC found — content is already merged.")
+        final_content = new_content
 
-# ── 6. Write output ───────────────────────────────────────────────────────
-result = "".join(
-    (ln if isinstance(ln, str) else ln) for ln in final_lines
-)
-
+# ── Write output ──────────────────────────────────────────────────────────
 with open(UI_PATH, "w", encoding="utf-8") as f:
-    f.write(result)
+    f.write(final_content)
 
-print("Done — mainwindow.ui updated.")
-print(f"Final line count: {len(result.splitlines())}")
+print(f"Done — mainwindow.ui updated.")
+print(f"Original size: {len(content)} chars")
+print(f"Final size:    {len(final_content)} chars")
+print(f"Change:        {len(final_content) - len(content):+d} chars")
+
+# Quick sanity check: count tabMLQC occurrences
+occurrences = len(re.findall(r'name="tabMLQC"', final_content))
+print(f"tabMLQC occurrences in final file: {occurrences}")
+occurrences_qcinner = len(re.findall(r'name="tabQCInner"', final_content))
+print(f"tabQCInner occurrences in final file: {occurrences_qcinner}")

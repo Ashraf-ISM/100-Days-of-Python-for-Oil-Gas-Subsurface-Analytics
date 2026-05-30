@@ -298,7 +298,7 @@ class MainController:
         return recent[index] if index < len(recent) else ""
 
     def _go_to_qc_tab(self) -> None:
-        """Switch to QC tab."""
+        """Switch to the Quality Control tab (contains Statistical QC + ML Based QC sub-tabs)."""
         tab_widget = getattr(self.ui, "centralTabWidget", None)
         if tab_widget is not None:
             qc_tab = getattr(self.ui, "tabQualitycontrol", None)
@@ -338,14 +338,15 @@ class MainController:
                     tab_widget.setCurrentIndex(idx)
 
     def _go_to_ml_qc_tab(self) -> None:
-        """Switch to the ML Based QC tab."""
-        tab_widget = getattr(self.ui, "centralTabWidget", None)
-        if tab_widget is not None:
+        """Switch to the ML Based QC sub-tab inside the Quality Control tab."""
+        self._go_to_qc_tab()  # Navigate to QC tab first
+        inner_tab = getattr(self.ui, "tabQCInner", None)
+        if inner_tab is not None:
             ml_tab = getattr(self.ui, "tabMLQC", None)
             if ml_tab is not None:
-                idx = tab_widget.indexOf(ml_tab)
+                idx = inner_tab.indexOf(ml_tab)
                 if idx >= 0:
-                    tab_widget.setCurrentIndex(idx)
+                    inner_tab.setCurrentIndex(idx)
 
     def open_calculation_window(self):
         if self.calculation_window is None:
