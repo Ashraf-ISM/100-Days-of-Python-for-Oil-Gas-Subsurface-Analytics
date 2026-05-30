@@ -87,7 +87,7 @@ class MainController:
         self._connect_action("actionMudLog", self._show_mud_log_info)
         # Project Browser sidebar '+ Well' and 'Import' buttons 
         self._connect_widget("btnBrowseAddWell", "clicked", self._import_and_track)
-        self._connect_widget("btnBrowseImport", "clicked", self._import_and_track)
+        self._connect_widget("btnBrowseImport", "clicked", self._import_and_track) 
 
         # Plotting
         self._connect_action("actionNewLogPlot", self.plots.new_log_plot)
