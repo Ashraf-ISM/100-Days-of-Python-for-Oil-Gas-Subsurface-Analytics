@@ -1,0 +1,6 @@
+{
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/notebooks/day-25-petrophysics"
+    ]
+}
