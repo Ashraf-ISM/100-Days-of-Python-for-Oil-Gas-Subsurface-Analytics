@@ -1,0 +1,1742 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MissingLogPrediction</class>
+ <widget class="QMainWindow" name="MissingLogPrediction">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1440</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PetroARX — Missing Log Prediction</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ─── GLOBAL ──────────────────────────────────────────── */
+QMainWindow, QWidget#centralWidget {
+    background-color: #0d1117;
+    color: #e6edf3;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+/* ─── TOP HEADER BAR ──────────────────────────────────── */
+QWidget#headerBar {
+    background-color: #161b22;
+    border-bottom: 1px solid #21262d;
+    min-height: 54px;
+    max-height: 54px;
+}
+QLabel#appTitle {
+    color: #e6edf3;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+QLabel#appSubtitle {
+    color: #8b949e;
+    font-size: 12px;
+}
+QPushButton#btnDoc, QPushButton#btnVideo, QPushButton#btnHelp {
+    background: transparent;
+    color: #8b949e;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-size: 12px;
+}
+QPushButton#btnDoc:hover, QPushButton#btnVideo:hover, QPushButton#btnHelp:hover {
+    color: #e6edf3;
+    border-color: #58a6ff;
+    background: #1f2937;
+}
+
+/* ─── LEFT SIDEBAR ─────────────────────────────────────── */
+QWidget#sidebarWidget {
+    background-color: #161b22;
+    border-right: 1px solid #21262d;
+    min-width: 240px;
+    max-width: 240px;
+}
+QLabel#sidebarSectionLabel {
+    color: #8b949e;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 16px 16px 6px 16px;
+}
+QLabel#targetLogLabel {
+    color: #8b949e;
+    font-size: 11px;
+    padding-left: 2px;
+}
+QLineEdit#targetLogEdit {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    padding: 7px 10px;
+    font-size: 13px;
+    selection-background-color: #1f6feb;
+}
+QLineEdit#targetLogEdit:focus {
+    border-color: #388bfd;
+    background: #0d1117;
+}
+QLabel#dataInfoLabel {
+    color: #8b949e;
+    font-size: 11px;
+    line-height: 1.6;
+}
+QLabel#missingBadge {
+    background: rgba(248, 81, 73, 0.15);
+    color: #f85149;
+    border: 1px solid rgba(248, 81, 73, 0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+QLabel#intervalBadge {
+    color: #58a6ff;
+    font-size: 11px;
+    text-decoration: underline;
+}
+QPushButton#btnAutoSelect {
+    background: #1f2937;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    padding: 7px 0;
+    font-size: 12px;
+}
+QPushButton#btnAutoSelect:hover {
+    border-color: #58a6ff;
+    color: #58a6ff;
+}
+QPushButton#btnFeatureEng {
+    background: rgba(56, 139, 253, 0.12);
+    border: 1px solid rgba(56, 139, 253, 0.4);
+    border-radius: 6px;
+    color: #58a6ff;
+    padding: 7px 0;
+    font-size: 12px;
+    font-weight: 500;
+}
+QPushButton#btnFeatureEng:hover {
+    background: rgba(56, 139, 253, 0.22);
+}
+QPushButton#btnCorrMatrix {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #1f3a5f, stop:1 #1a3052);
+    border: 1px solid #2d5a8e;
+    border-radius: 8px;
+    color: #79c0ff;
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+QPushButton#btnCorrMatrix:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #264a75, stop:1 #1f3f68);
+}
+
+/* ─── FEATURE LIST (QListWidget) ───────────────────────── */
+QListWidget#featureList {
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    font-size: 12px;
+    padding: 4px;
+}
+QListWidget#featureList::item {
+    padding: 5px 8px;
+    border-radius: 4px;
+}
+QListWidget#featureList::item:selected {
+    background: rgba(56, 139, 253, 0.2);
+    color: #79c0ff;
+}
+QListWidget#featureList::item:hover {
+    background: #1c2128;
+}
+QCheckBox {
+    color: #c9d1d9;
+    font-size: 12px;
+    spacing: 8px;
+}
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #30363d;
+    border-radius: 3px;
+    background: #0d1117;
+}
+QCheckBox::indicator:checked {
+    background: #1f6feb;
+    border-color: #388bfd;
+}
+
+/* ─── MAIN CONTENT AREA ─────────────────────────────────── */
+QWidget#mainContent {
+    background: #0d1117;
+}
+
+/* ─── PANEL / CARD STYLE ─────────────────────────────────── */
+QFrame#panelCard {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 10px;
+}
+QLabel#panelTitle {
+    color: #8b949e;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.0px;
+    text-transform: uppercase;
+}
+QLabel#panelIndex {
+    color: #388bfd;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* ─── MODEL CONFIG PANEL ────────────────────────────────── */
+QComboBox {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    padding: 7px 10px;
+    font-size: 13px;
+    min-width: 6em;
+}
+QComboBox:hover { border-color: #58a6ff; }
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+}
+QComboBox::down-arrow {
+    width: 10px;
+    height: 10px;
+}
+QComboBox QAbstractItemView {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    selection-background-color: #1f6feb;
+    border-radius: 6px;
+}
+QLabel#configKey {
+    color: #8b949e;
+    font-size: 12px;
+}
+QLabel#configVal {
+    color: #e6edf3;
+    font-size: 12px;
+    font-weight: 500;
+}
+QSpinBox, QDoubleSpinBox {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    padding: 6px 8px;
+    font-size: 13px;
+}
+QSpinBox:focus, QDoubleSpinBox:focus { border-color: #388bfd; }
+
+/* ─── SLIDER ───────────────────────────────────────────── */
+QSlider::groove:horizontal {
+    height: 4px;
+    background: #21262d;
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    background: #388bfd;
+    border: 2px solid #161b22;
+    width: 14px;
+    height: 14px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::sub-page:horizontal {
+    background: #1f6feb;
+    border-radius: 2px;
+}
+
+/* ─── TOGGLE SWITCH (custom via QPushButton) ────────────── */
+QPushButton#toggleOn {
+    background: #238636;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    min-width: 44px;
+    max-width: 44px;
+    min-height: 20px;
+    max-height: 20px;
+}
+QPushButton#toggleOff {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    color: #8b949e;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    min-width: 44px;
+    max-width: 44px;
+    min-height: 20px;
+    max-height: 20px;
+}
+
+/* ─── METRICS BAR (top-right KPIs) ─────────────────────── */
+QWidget#metricsBar {
+    background: #161b22;
+    border-left: 1px solid #21262d;
+    min-width: 280px;
+    max-width: 280px;
+}
+QLabel#kpiValue {
+    font-size: 26px;
+    font-weight: 700;
+    color: #3fb950;
+    letter-spacing: -0.5px;
+}
+QLabel#kpiValueAlt {
+    font-size: 26px;
+    font-weight: 700;
+    color: #f0883e;
+    letter-spacing: -0.5px;
+}
+QLabel#kpiUnit {
+    color: #8b949e;
+    font-size: 11px;
+}
+QLabel#kpiKey {
+    color: #8b949e;
+    font-size: 11px;
+    font-weight: 500;
+}
+QLabel#kpiSmall {
+    color: #c9d1d9;
+    font-size: 13px;
+    font-weight: 600;
+}
+QLabel#cccValue {
+    color: #3fb950;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* ─── PROGRESS BAR ──────────────────────────────────────── */
+QProgressBar {
+    background: #21262d;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    color: transparent;
+    max-height: 6px;
+}
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #388bfd, stop:1 #56d364);
+    border-radius: 4px;
+}
+QProgressBar#modelBar {
+    max-height: 4px;
+    background: #21262d;
+}
+QProgressBar#modelBar::chunk {
+    background: #388bfd;
+    border-radius: 2px;
+}
+QProgressBar#modelBarNeg::chunk {
+    background: #f85149;
+    border-radius: 2px;
+}
+
+/* ─── TRAINING LOG ──────────────────────────────────────── */
+QTextEdit#trainingLog {
+    background: #010409;
+    border: 1px solid #21262d;
+    border-radius: 6px;
+    color: #3fb950;
+    font-family: "JetBrains Mono", "Cascadia Code", "Consolas", monospace;
+    font-size: 11px;
+    padding: 8px;
+}
+
+/* ─── TABLE WIDGET ──────────────────────────────────────── */
+QTableWidget {
+    background: #0d1117;
+    alternate-background-color: #161b22;
+    border: none;
+    color: #c9d1d9;
+    font-size: 12px;
+    gridline-color: #21262d;
+    selection-background-color: rgba(56, 139, 253, 0.2);
+    selection-color: #e6edf3;
+}
+QTableWidget::item { padding: 6px 10px; }
+QHeaderView::section {
+    background: #161b22;
+    color: #8b949e;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    border: none;
+    border-bottom: 1px solid #21262d;
+    padding: 7px 10px;
+}
+QScrollBar:vertical, QScrollBar:horizontal {
+    background: #0d1117;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: #30363d;
+    border-radius: 4px;
+    min-height: 30px;
+}
+QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+    background: #58a6ff;
+}
+QScrollBar::add-line, QScrollBar::sub-line { height: 0; width: 0; }
+
+/* ─── BOTTOM ACTION BAR ─────────────────────────────────── */
+QWidget#actionBar {
+    background: #161b22;
+    border-top: 1px solid #21262d;
+    min-height: 56px;
+    max-height: 56px;
+}
+QPushButton#btnBack {
+    background: transparent;
+    border: 1px solid #30363d;
+    border-radius: 7px;
+    color: #8b949e;
+    padding: 9px 20px;
+    font-size: 13px;
+}
+QPushButton#btnBack:hover { border-color: #8b949e; color: #c9d1d9; }
+QPushButton#btnReset {
+    background: rgba(248, 81, 73, 0.1);
+    border: 1px solid rgba(248, 81, 73, 0.3);
+    border-radius: 7px;
+    color: #f85149;
+    padding: 9px 20px;
+    font-size: 13px;
+}
+QPushButton#btnReset:hover { background: rgba(248, 81, 73, 0.2); }
+QPushButton#btnPreview {
+    background: #1f2937;
+    border: 1px solid #388bfd;
+    border-radius: 7px;
+    color: #79c0ff;
+    padding: 9px 22px;
+    font-size: 13px;
+    font-weight: 500;
+}
+QPushButton#btnPreview:hover { background: rgba(56, 139, 253, 0.15); }
+QPushButton#btnApply {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #1a7f37, stop:1 #196c2e);
+    border: 1px solid #238636;
+    border-radius: 7px;
+    color: #ffffff;
+    padding: 9px 22px;
+    font-size: 13px;
+    font-weight: 600;
+}
+QPushButton#btnApply:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #238636, stop:1 #1f7a32);
+}
+QPushButton#btnExport {
+    background: #1f2937;
+    border: 1px solid #30363d;
+    border-radius: 7px;
+    color: #c9d1d9;
+    padding: 9px 20px;
+    font-size: 13px;
+}
+QPushButton#btnExport:hover { border-color: #8b949e; }
+
+/* ─── TAB WIDGET ─────────────────────────────────────────── */
+QTabWidget::pane {
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    background: #0d1117;
+    top: -1px;
+}
+QTabBar::tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #8b949e;
+    padding: 8px 18px;
+    font-size: 12px;
+}
+QTabBar::tab:selected {
+    color: #e6edf3;
+    border-bottom: 2px solid #388bfd;
+}
+QTabBar::tab:hover { color: #c9d1d9; }
+
+/* ─── MISC ─────────────────────────────────────────────── */
+QSplitter::handle { background: #21262d; }
+QSplitter::handle:horizontal { width: 1px; }
+QSplitter::handle:vertical { height: 1px; }
+QToolTip {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+   </string>
+  </property>
+
+  <widget class="QWidget" name="centralWidget">
+   <!-- ═══════════════════════════════════════════════
+        ROOT VERTICAL LAYOUT
+        ═══════════════════════════════════════════════ -->
+   <layout class="QVBoxLayout" name="rootLayout">
+    <property name="spacing"><number>0</number></property>
+    <property name="contentsMargins"><rect><x>0</x><y>0</y><width>0</width><height>0</height></rect></property>
+
+    <!-- ── HEADER BAR ── -->
+    <item>
+     <widget class="QWidget" name="headerBar">
+      <layout class="QHBoxLayout" name="headerLayout">
+       <property name="contentsMargins"><rect><x>20</x><y>0</y><width>20</width><height>0</height></rect></property>
+       <property name="spacing"><number>12</number></property>
+
+       <!-- Logo / Icon placeholder -->
+       <item>
+        <widget class="QLabel" name="logoIcon">
+         <property name="text"><string>⬡</string></property>
+         <property name="styleSheet"><string>font-size:20px; color:#388bfd; padding-right:4px;</string></property>
+        </widget>
+       </item>
+
+       <!-- Title block -->
+       <item>
+        <layout class="QVBoxLayout" name="titleBlock">
+         <property name="spacing"><number>1</number></property>
+         <item>
+          <widget class="QLabel" name="appTitle">
+           <property name="text"><string>Missing Log Prediction</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="appSubtitle">
+           <property name="text"><string>ML-powered log reconstruction · PetroARX AI Analytics</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Separator -->
+       <item>
+        <widget class="QFrame" name="headerSep">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="styleSheet"><string>color:#21262d; margin: 10px 4px;</string></property>
+        </widget>
+       </item>
+
+       <!-- Load / Upload buttons -->
+       <item>
+        <widget class="QPushButton" name="btnLoadProject">
+         <property name="text"><string>📂  Load from Project</string></property>
+         <property name="styleSheet">
+          <string>
+background: rgba(56,139,253,0.12);
+border: 1px solid rgba(56,139,253,0.35);
+border-radius: 7px;
+color: #79c0ff;
+padding: 7px 16px;
+font-size: 12px;
+font-weight: 500;
+          </string>
+         </property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnUploadLAS">
+         <property name="text"><string>⬆  Upload LAS</string></property>
+         <property name="styleSheet">
+          <string>
+background: transparent;
+border: 1px solid #30363d;
+border-radius: 7px;
+color: #8b949e;
+padding: 7px 16px;
+font-size: 12px;
+          </string>
+         </property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+
+       <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+
+       <!-- Right header actions -->
+       <item>
+        <widget class="QPushButton" name="btnDoc">
+         <property name="text"><string>Docs</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnVideo">
+         <property name="text"><string>▶  Tutorial</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnHelp">
+         <property name="text"><string>? Help</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- ── BODY: SIDEBAR + MAIN + METRICS PANEL ── -->
+    <item>
+     <widget class="QSplitter" name="bodySplitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+      <property name="childrenCollapsible"><bool>false</bool></property>
+
+      <!-- ════════════════════════════════
+           LEFT SIDEBAR
+           ════════════════════════════════ -->
+      <widget class="QWidget" name="sidebarWidget">
+       <layout class="QVBoxLayout" name="sidebarLayout">
+        <property name="contentsMargins"><rect><x>14</x><y>14</y><width>14</width><height>14</height></rect></property>
+        <property name="spacing"><number>10</number></property>
+
+        <!-- SECTION: Target Log -->
+        <item>
+         <widget class="QLabel" name="sidebarSectionLabel">
+          <property name="text"><string>TARGET LOG</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout">
+          <item>
+           <widget class="QLineEdit" name="targetLogEdit">
+            <property name="text"><string>TCMR</string></property>
+            <property name="placeholderText"><string>e.g. RHOB, DT, NPHI…</string></property>
+            <property name="toolTip"><string>Enter the log mnemonic you want to predict</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="fxLabel">
+            <property name="text"><string>f(x)</string></property>
+            <property name="styleSheet"><string>color:#388bfd; font-size:14px; padding-left:4px;</string></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <!-- Data info grid -->
+        <item>
+         <widget class="QFrame" name="dataInfoFrame">
+          <property name="styleSheet">
+           <string>background:#0d1117; border:1px solid #21262d; border-radius:8px; padding:10px;</string>
+          </property>
+          <layout class="QGridLayout" name="dataInfoGrid">
+           <property name="spacing"><number>6</number></property>
+           <property name="contentsMargins"><rect><x>10</x><y>8</y><width>10</width><height>8</height></rect></property>
+
+           <item row="0" column="0">
+            <widget class="QLabel"><property name="text"><string>Unit:</string></property>
+             <property name="styleSheet"><string>color:#8b949e; font-size:11px;</string></property></widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="unitVal"><property name="text"><string>—</string></property>
+             <property name="styleSheet"><string>color:#e6edf3; font-size:11px; font-weight:500;</string></property></widget>
+           </item>
+
+           <item row="1" column="0">
+            <widget class="QLabel"><property name="text"><string>Data Points:</string></property>
+             <property name="styleSheet"><string>color:#8b949e; font-size:11px;</string></property></widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="dataPointsVal"><property name="text"><string>1,495</string></property>
+             <property name="styleSheet"><string>color:#e6edf3; font-size:11px; font-weight:600;</string></property></widget>
+           </item>
+
+           <item row="2" column="0">
+            <widget class="QLabel"><property name="text"><string>Missing:</string></property>
+             <property name="styleSheet"><string>color:#8b949e; font-size:11px;</string></property></widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="missingBadge"><property name="text"><string>117 (7.8%)</string></property></widget>
+           </item>
+
+           <item row="3" column="0">
+            <widget class="QLabel"><property name="text"><string>Depth:</string></property>
+             <property name="styleSheet"><string>color:#8b949e; font-size:11px;</string></property></widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="depthVal"><property name="text"><string>3918 – 4145 m</string></property>
+             <property name="styleSheet"><string>color:#e6edf3; font-size:11px;</string></property></widget>
+           </item>
+
+           <item row="4" column="0" colspan="2">
+            <widget class="QLabel" name="intervalBadge">
+             <property name="text"><string>→ 1 interval detected</string></property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+        <!-- SECTION: Feature Selection -->
+        <item>
+         <widget class="QLabel" name="sidebarSectionLabel2">
+          <property name="text"><string>FEATURE SELECTION</string></property>
+          <property name="styleSheet"><string>color:#8b949e; font-size:10px; font-weight:700; letter-spacing:1.2px; margin-top:6px;</string></property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout">
+          <item>
+           <widget class="QPushButton" name="btnAutoSelect">
+            <property name="text"><string>⚡ Auto-Select</string></property>
+            <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnFeatureEng">
+            <property name="text"><string>⚙ Engineer</string></property>
+            <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListWidget" name="featureList">
+          <property name="minimumHeight"><number>160</number></property>
+          <property name="alternatingRowColors"><bool>true</bool></property>
+          <!-- Items added at runtime -->
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnCorrMatrix">
+          <property name="text"><string>⬛  Feature Correlation Matrix</string></property>
+          <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+          <property name="minimumHeight"><number>40</number></property>
+         </widget>
+        </item>
+
+        <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+        <!-- SECTION: Missing Intervals -->
+        <item>
+         <widget class="QLabel">
+          <property name="text"><string>MISSING INTERVALS</string></property>
+          <property name="styleSheet"><string>color:#8b949e; font-size:10px; font-weight:700; letter-spacing:1.2px;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="missingIntervalsTable">
+          <property name="minimumHeight"><number>110</number></property>
+          <property name="maximumHeight"><number>130</number></property>
+          <property name="columnCount"><number>3</number></property>
+          <property name="rowCount"><number>3</number></property>
+          <property name="showGrid"><bool>false</bool></property>
+          <property name="alternatingRowColors"><bool>true</bool></property>
+          <column><property name="text"><string>#</string></property></column>
+          <column><property name="text"><string>Top (m)</string></property></column>
+          <column><property name="text"><string>Base (m)</string></property></column>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════
+           CENTRE MAIN CONTENT
+           ════════════════════════════════ -->
+      <widget class="QWidget" name="mainContent">
+       <layout class="QVBoxLayout" name="mainLayout">
+        <property name="contentsMargins"><rect><x>16</x><y>16</y><width>16</width><height>16</height></rect></property>
+        <property name="spacing"><number>12</number></property>
+
+        <!-- ROW 1: Model Config + Training Status -->
+        <item>
+         <layout class="QHBoxLayout" name="row1">
+          <property name="spacing"><number>12</number></property>
+
+          <!-- Model Configuration Card -->
+          <item>
+           <widget class="QFrame" name="panelCard">
+            <property name="minimumWidth"><number>360</number></property>
+            <layout class="QVBoxLayout" name="modelConfigLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>10</number></property>
+
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex"><property name="text"><string>01</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle"><property name="text"><string>MODEL CONFIGURATION</string></property></widget></item>
+               <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+              </layout>
+             </item>
+
+             <item>
+              <layout class="QGridLayout" name="modelConfigGrid">
+               <property name="spacing"><number>8</number></property>
+
+               <item row="0" column="0">
+                <widget class="QLabel" name="configKey"><property name="text"><string>Algorithm</string></property></widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="algorithmCombo">
+                 <item><property name="text"><string>Random Forest Regressor</string></property></item>
+                 <item><property name="text"><string>Gradient Boosting</string></property></item>
+                 <item><property name="text"><string>XGBoost</string></property></item>
+                 <item><property name="text"><string>Neural Network (MLP)</string></property></item>
+                 <item><property name="text"><string>Support Vector Regression</string></property></item>
+                 <item><property name="text"><string>Ensemble (Stacked)</string></property></item>
+                </widget>
+               </item>
+
+               <item row="1" column="0">
+                <widget class="QLabel" name="configKey2"><property name="text"><string>Cross Validation</string></property></widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="cvCombo">
+                 <item><property name="text"><string>5-Fold</string></property></item>
+                 <item><property name="text"><string>10-Fold</string></property></item>
+                 <item><property name="text"><string>Leave-One-Out</string></property></item>
+                </widget>
+               </item>
+
+               <item row="2" column="0">
+                <widget class="QLabel" name="configKey3"><property name="text"><string>Test Split</string></property></widget>
+               </item>
+               <item row="2" column="1">
+                <layout class="QHBoxLayout">
+                 <item>
+                  <widget class="QSlider" name="testSplitSlider">
+                   <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   <property name="minimum"><number>10</number></property>
+                   <property name="maximum"><number>40</number></property>
+                   <property name="value"><number>20</number></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="testSplitVal">
+                   <property name="text"><string>20 %</string></property>
+                   <property name="styleSheet"><string>color:#79c0ff; font-size:12px; font-weight:600; min-width:34px;</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+
+               <item row="3" column="0">
+                <widget class="QLabel" name="configKey4"><property name="text"><string>Random State</string></property></widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="randomStateSpin">
+                 <property name="maximum"><number>999</number></property>
+                 <property name="value"><number>42</number></property>
+                </widget>
+               </item>
+
+               <item row="4" column="0">
+                <widget class="QLabel" name="configKey5"><property name="text"><string>GPU Accelerate</string></property></widget>
+               </item>
+               <item row="4" column="1">
+                <layout class="QHBoxLayout">
+                 <item>
+                  <widget class="QPushButton" name="toggleOn">
+                   <property name="text"><string>ON</string></property>
+                   <property name="checkable"><bool>true</bool></property>
+                   <property name="checked"><bool>true</bool></property>
+                   <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+                  </widget>
+                 </item>
+                 <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Training Status Card -->
+          <item>
+           <widget class="QFrame" name="panelCard2">
+            <layout class="QVBoxLayout" name="trainStatusLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>10</number></property>
+
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex2"><property name="text"><string>02</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle2"><property name="text"><string>TRAINING STATUS</string></property></widget></item>
+               <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+               <item>
+                <widget class="QLabel" name="statusBadge">
+                 <property name="text"><string>✓  Completed</string></property>
+                 <property name="styleSheet"><string>
+background: rgba(63,185,80,0.12);
+border: 1px solid rgba(63,185,80,0.3);
+border-radius: 12px;
+color: #3fb950;
+font-size: 11px;
+font-weight: 600;
+padding: 3px 10px;
+                 </string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+
+             <item>
+              <widget class="QProgressBar" name="trainProgress">
+               <property name="value"><number>100</number></property>
+               <property name="maximum"><number>100</number></property>
+               <property name="textVisible"><bool>false</bool></property>
+              </widget>
+             </item>
+
+             <!-- Stats grid -->
+             <item>
+              <layout class="QGridLayout" name="trainStatsGrid">
+               <property name="spacing"><number>8</number></property>
+
+               <item row="0" column="0"><widget class="QLabel" name="configKey"><property name="text"><string>Validation Samples</string></property></widget></item>
+               <item row="0" column="1"><widget class="QLabel" name="configVal"><property name="text"><string>3,842</string></property></widget></item>
+               <item row="0" column="2"><widget class="QLabel" name="configKey"><property name="text"><string>Features Used</string></property></widget></item>
+               <item row="0" column="3"><widget class="QLabel" name="configVal"><property name="text"><string>7</string></property></widget></item>
+
+               <item row="1" column="0"><widget class="QLabel" name="configKey"><property name="text"><string>Best Iteration</string></property></widget></item>
+               <item row="1" column="1"><widget class="QLabel" name="configVal"><property name="text"><string>186</string></property></widget></item>
+               <item row="1" column="2"><widget class="QLabel" name="configKey"><property name="text"><string>Training Time</string></property></widget></item>
+               <item row="1" column="3"><widget class="QLabel" name="configVal"><property name="text"><string>00:01:24</string></property></widget></item>
+              </layout>
+             </item>
+
+             <!-- Training log -->
+             <item>
+              <widget class="QTextEdit" name="trainingLog">
+               <property name="readOnly"><bool>true</bool></property>
+               <property name="minimumHeight"><number>80</number></property>
+               <property name="plainText"><string>[00:00:00]  Initializing Random Forest pipeline...
+[00:00:04]  Feature engineering applied (7 features)
+[00:01:24]  Fold 5/5 complete — val R²: 0.9165
+[00:01:24]  ✓ Training complete. Best iter: 186</string></property>
+              </widget>
+             </item>
+
+            </layout>
+           </widget>
+          </item>
+
+         </layout>
+        </item>
+
+        <!-- ROW 2: Well Log Track + Residuals + Uncertainty -->
+        <item>
+         <layout class="QHBoxLayout" name="row2">
+          <property name="spacing"><number>12</number></property>
+
+          <!-- Well Log Track Card -->
+          <item>
+           <widget class="QFrame" name="panelCard3">
+            <property name="minimumWidth"><number>340</number></property>
+            <layout class="QVBoxLayout" name="wellLogLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>8</number></property>
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex3"><property name="text"><string>03</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle3"><property name="text"><string>WELL LOG TRACK</string></property></widget></item>
+               <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+               <!-- Track selector buttons -->
+               <item>
+                <widget class="QPushButton">
+                 <property name="text"><string>⊞</string></property>
+                 <property name="styleSheet"><string>background:transparent;border:none;color:#8b949e;font-size:14px;padding:2px 4px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton">
+                 <property name="text"><string>↓</string></property>
+                 <property name="styleSheet"><string>background:transparent;border:none;color:#8b949e;font-size:14px;padding:2px 4px;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+
+             <!-- Track column headers -->
+             <item>
+              <layout class="QHBoxLayout">
+               <property name="spacing"><number>2</number></property>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>GR</string></property>
+                 <property name="styleSheet"><string>background:#f0a500;color:#0d1117;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;text-align:center;</string></property>
+                 <property name="alignment"><set>AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>NPHI</string></property>
+                 <property name="styleSheet"><string>background:#56bcd3;color:#0d1117;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;</string></property>
+                 <property name="alignment"><set>AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>DT</string></property>
+                 <property name="styleSheet"><string>background:#a78bfa;color:#0d1117;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;</string></property>
+                 <property name="alignment"><set>AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>RT</string></property>
+                 <property name="styleSheet"><string>background:#34d399;color:#0d1117;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;</string></property>
+                 <property name="alignment"><set>AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>RHOB ●</string></property>
+                 <property name="styleSheet"><string>background:#1f3a5f;border:1px solid #388bfd;color:#79c0ff;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;</string></property>
+                 <property name="alignment"><set>AlignCenter</set></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>PRED ●</string></property>
+                 <property name="styleSheet"><string>background:#1a3052;border:1px solid #2d5a8e;color:#58a6ff;font-size:10px;font-weight:700;padding:3px 6px;border-radius:3px;</string></property>
+                 <property name="alignment"><set>AlignCenter</set></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+
+             <!-- Log canvas placeholder -->
+             <item>
+              <widget class="QFrame" name="logCanvasFrame">
+               <property name="styleSheet"><string>background:#010409;border:1px solid #21262d;border-radius:6px;</string></property>
+               <property name="minimumHeight"><number>280</number></property>
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QLabel">
+                  <property name="text"><string>[ Well Log Track — QCustomPlot Canvas ]
+Depth: 0.0 – 4,146.0 m</string></property>
+                  <property name="alignment"><set>AlignCenter</set></property>
+                  <property name="styleSheet"><string>color:#30363d;font-size:12px;</string></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+
+             <!-- Legend -->
+             <item>
+              <layout class="QHBoxLayout">
+               <property name="spacing"><number>14</number></property>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>— Actual</string></property>
+                 <property name="styleSheet"><string>color:#79c0ff;font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>— Predicted</string></property>
+                 <property name="styleSheet"><string>color:#f0883e;font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>■ Missing</string></property>
+                 <property name="styleSheet"><string>color:#f85149;font-size:11px;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>+ Error</string></property>
+                 <property name="styleSheet"><string>color:#3fb950;font-size:11px;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Residuals + Uncertainty column -->
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="spacing"><number>12</number></property>
+
+            <!-- Residuals Card -->
+            <item>
+             <widget class="QFrame" name="panelCard4">
+              <layout class="QVBoxLayout" name="residualsLayout">
+               <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+               <property name="spacing"><number>8</number></property>
+               <item>
+                <layout class="QHBoxLayout">
+                 <item><widget class="QLabel" name="panelIndex4"><property name="text"><string>04</string></property></widget></item>
+                 <item><widget class="QLabel" name="panelTitle4"><property name="text"><string>RESIDUALS ANALYSIS</string></property></widget></item>
+                </layout>
+               </item>
+               <!-- Scatter placeholder -->
+               <item>
+                <widget class="QFrame">
+                 <property name="styleSheet"><string>background:#010409;border:1px solid #21262d;border-radius:6px;</string></property>
+                 <property name="minimumHeight"><number>130</number></property>
+                 <layout class="QVBoxLayout">
+                  <item>
+                   <widget class="QLabel">
+                    <property name="text"><string>[ Residuals vs Depth Scatter Plot ]</string></property>
+                    <property name="alignment"><set>AlignCenter</set></property>
+                    <property name="styleSheet"><string>color:#30363d;font-size:11px;</string></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <!-- Histogram placeholder -->
+               <item>
+                <widget class="QFrame">
+                 <property name="styleSheet"><string>background:#010409;border:1px solid #21262d;border-radius:6px;</string></property>
+                 <property name="minimumHeight"><number>100</number></property>
+                 <layout class="QVBoxLayout">
+                  <item>
+                   <widget class="QLabel">
+                    <property name="text"><string>[ Residuals Histogram — Near-Gaussian centred at 0 ]</string></property>
+                    <property name="alignment"><set>AlignCenter</set></property>
+                    <property name="styleSheet"><string>color:#30363d;font-size:11px;</string></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+            <!-- Prediction Uncertainty Card -->
+            <item>
+             <widget class="QFrame" name="panelCard5">
+              <layout class="QVBoxLayout" name="uncertaintyLayout">
+               <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+               <property name="spacing"><number>8</number></property>
+               <item>
+                <layout class="QHBoxLayout">
+                 <item><widget class="QLabel" name="panelIndex5"><property name="text"><string>05</string></property></widget></item>
+                 <item><widget class="QLabel" name="panelTitle5"><property name="text"><string>PREDICTION UNCERTAINTY</string></property></widget></item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QFrame">
+                 <property name="styleSheet"><string>background:#010409;border:1px solid #21262d;border-radius:6px;</string></property>
+                 <property name="minimumHeight"><number>160</number></property>
+                 <layout class="QVBoxLayout">
+                  <item>
+                   <widget class="QLabel">
+                    <property name="text"><string>[ Predicted RHOB ± 95% Confidence Interval ]
+Depth: 0.0 – 4,146.0 m</string></property>
+                    <property name="alignment"><set>AlignCenter</set></property>
+                    <property name="styleSheet"><string>color:#30363d;font-size:11px;</string></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout">
+                 <item>
+                  <widget class="QLabel">
+                   <property name="text"><string>— Predicted</string></property>
+                   <property name="styleSheet"><string>color:#79c0ff;font-size:11px;</string></property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel">
+                   <property name="text"><string>▓ 95% CI</string></property>
+                   <property name="styleSheet"><string>color:#56d364;font-size:11px;</string></property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+
+           </layout>
+          </item>
+
+         </layout>
+        </item>
+
+        <!-- ROW 3: Feature Importance + Hyper-param + Drift + Deploy -->
+        <item>
+         <layout class="QHBoxLayout" name="row3">
+          <property name="spacing"><number>12</number></property>
+
+          <!-- Feature Importance Card -->
+          <item>
+           <widget class="QFrame" name="panelCard6">
+            <property name="minimumWidth"><number>280</number></property>
+            <layout class="QVBoxLayout" name="featureImportanceLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>8</number></property>
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex6"><property name="text"><string>06</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle6"><property name="text"><string>FEATURE IMPORTANCE  (SHAP)</string></property></widget></item>
+               <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+               <item>
+                <widget class="QPushButton">
+                 <property name="text"><string>Explain at Depth</string></property>
+                 <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:5px;color:#8b949e;padding:3px 10px;font-size:11px;</string></property>
+                 <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+
+             <!-- SHAP bars — added at runtime; placeholder rows below -->
+             <item>
+              <layout class="QGridLayout" name="shapGrid">
+               <property name="spacing"><number>5</number></property>
+
+               <!-- DT-Sonic -->
+               <item row="0" column="0">
+                <widget class="QLabel"><property name="text"><string>DT – Sonic</string></property>
+                 <property name="styleSheet"><string>color:#c9d1d9;font-size:11px;min-width:110px;</string></property></widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QProgressBar" name="modelBar">
+                 <property name="value"><number>84</number></property><property name="maximum"><number>100</number></property>
+                 <property name="textVisible"><bool>false</bool></property></widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel"><property name="text"><string>0.42</string></property>
+                 <property name="styleSheet"><string>color:#79c0ff;font-size:11px;font-weight:600;min-width:32px;</string></property></widget>
+               </item>
+
+               <!-- NPHI -->
+               <item row="1" column="0"><widget class="QLabel"><property name="text"><string>NPHI – Neutron</string></property>
+                <property name="styleSheet"><string>color:#c9d1d9;font-size:11px;</string></property></widget></item>
+               <item row="1" column="1"><widget class="QProgressBar" name="modelBar2">
+                <property name="value"><number>56</number></property><property name="maximum"><number>100</number></property>
+                <property name="textVisible"><bool>false</bool></property>
+                <property name="styleSheet"><string>QProgressBar{background:#21262d;border:none;border-radius:2px;max-height:4px;}QProgressBar::chunk{background:#388bfd;border-radius:2px;}</string></property>
+               </widget></item>
+               <item row="1" column="2"><widget class="QLabel"><property name="text"><string>0.28</string></property>
+                <property name="styleSheet"><string>color:#79c0ff;font-size:11px;font-weight:600;</string></property></widget></item>
+
+               <!-- GR -->
+               <item row="2" column="0"><widget class="QLabel"><property name="text"><string>GR – Gamma Ray</string></property>
+                <property name="styleSheet"><string>color:#c9d1d9;font-size:11px;</string></property></widget></item>
+               <item row="2" column="1"><widget class="QProgressBar" name="modelBar3">
+                <property name="value"><number>32</number></property><property name="maximum"><number>100</number></property>
+                <property name="textVisible"><bool>false</bool></property>
+                <property name="styleSheet"><string>QProgressBar{background:#21262d;border:none;border-radius:2px;max-height:4px;}QProgressBar::chunk{background:#388bfd;border-radius:2px;}</string></property>
+               </widget></item>
+               <item row="2" column="2"><widget class="QLabel"><property name="text"><string>0.16</string></property>
+                <property name="styleSheet"><string>color:#79c0ff;font-size:11px;font-weight:600;</string></property></widget></item>
+
+               <!-- RT -->
+               <item row="3" column="0"><widget class="QLabel"><property name="text"><string>RT – Resistivity</string></property>
+                <property name="styleSheet"><string>color:#c9d1d9;font-size:11px;</string></property></widget></item>
+               <item row="3" column="1"><widget class="QProgressBar" name="modelBar4">
+                <property name="value"><number>18</number></property><property name="maximum"><number>100</number></property>
+                <property name="textVisible"><bool>false</bool></property>
+                <property name="styleSheet"><string>QProgressBar{background:#21262d;border:none;border-radius:2px;max-height:4px;}QProgressBar::chunk{background:#388bfd;border-radius:2px;}</string></property>
+               </widget></item>
+               <item row="3" column="2"><widget class="QLabel"><property name="text"><string>0.09</string></property>
+                <property name="styleSheet"><string>color:#79c0ff;font-size:11px;font-weight:600;</string></property></widget></item>
+
+               <!-- PE -->
+               <item row="4" column="0"><widget class="QLabel"><property name="text"><string>PE – Photoelectric</string></property>
+                <property name="styleSheet"><string>color:#c9d1d9;font-size:11px;</string></property></widget></item>
+               <item row="4" column="1"><widget class="QProgressBar" name="modelBarNeg5">
+                <property name="value"><number>4</number></property><property name="maximum"><number>100</number></property>
+                <property name="textVisible"><bool>false</bool></property>
+                <property name="styleSheet"><string>QProgressBar{background:#21262d;border:none;border-radius:2px;max-height:4px;}QProgressBar::chunk{background:#f85149;border-radius:2px;}</string></property>
+               </widget></item>
+               <item row="4" column="2"><widget class="QLabel"><property name="text"><string>-0.02</string></property>
+                <property name="styleSheet"><string>color:#f85149;font-size:11px;font-weight:600;</string></property></widget></item>
+
+              </layout>
+             </item>
+
+             <!-- Model Leaderboard -->
+             <item>
+              <widget class="QLabel">
+               <property name="text"><string>MODEL LEADERBOARD</string></property>
+               <property name="styleSheet"><string>color:#8b949e;font-size:10px;font-weight:700;letter-spacing:1.0px;margin-top:6px;</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTableWidget" name="leaderboardTable">
+               <property name="minimumHeight"><number>90</number></property>
+               <property name="columnCount"><number>3</number></property>
+               <property name="rowCount"><number>3</number></property>
+               <property name="showGrid"><bool>false</bool></property>
+               <property name="alternatingRowColors"><bool>true</bool></property>
+               <column><property name="text"><string>Model</string></property></column>
+               <column><property name="text"><string>R²</string></property></column>
+               <column><property name="text"><string>RMSE</string></property></column>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton">
+               <property name="text"><string>⇄  Compare Models</string></property>
+               <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:6px;color:#8b949e;padding:6px;font-size:12px;</string></property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Hyper-param Optimisation Card -->
+          <item>
+           <widget class="QFrame" name="panelCard7">
+            <layout class="QVBoxLayout" name="hyperParamLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>10</number></property>
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex7"><property name="text"><string>07</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle7"><property name="text"><string>HYPERPARAMETER OPTIMIZATION</string></property></widget></item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QLabel" name="configKey"><property name="text"><string>Method</string></property></widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="hpoMethodCombo">
+               <item><property name="text"><string>Bayesian Optimization</string></property></item>
+               <item><property name="text"><string>Random Search</string></property></item>
+               <item><property name="text"><string>Grid Search</string></property></item>
+               <item><property name="text"><string>Optuna (TPE)</string></property></item>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="configKey"><property name="text"><string>Max Iterations</string></property></widget></item>
+               <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+               <item>
+                <widget class="QSpinBox" name="maxIterSpin">
+                 <property name="minimum"><number>10</number></property>
+                 <property name="maximum"><number>500</number></property>
+                 <property name="value"><number>50</number></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <!-- HPO Convergence placeholder -->
+             <item>
+              <widget class="QFrame">
+               <property name="styleSheet"><string>background:#010409;border:1px solid #21262d;border-radius:6px;</string></property>
+               <property name="minimumHeight"><number>100</number></property>
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QLabel">
+                  <property name="text"><string>[ Convergence Curve ]</string></property>
+                  <property name="alignment"><set>AlignCenter</set></property>
+                  <property name="styleSheet"><string>color:#30363d;font-size:11px;</string></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout">
+               <item>
+                <widget class="QPushButton" name="btnOptimize">
+                 <property name="text"><string>⚡  Optimize</string></property>
+                 <property name="styleSheet">
+                  <string>
+background: qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #6e40c9,stop:1 #5a32a3);
+border:none;border-radius:7px;color:#fff;padding:9px 0;font-size:12px;font-weight:600;
+                  </string>
+                 </property>
+                 <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton">
+                 <property name="text"><string>View Results</string></property>
+                 <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:7px;color:#8b949e;padding:9px 14px;font-size:12px;</string></property>
+                 <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Data Drift Card -->
+          <item>
+           <widget class="QFrame" name="panelCard8">
+            <layout class="QVBoxLayout" name="driftLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>10</number></property>
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex8"><property name="text"><string>08</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle8"><property name="text"><string>DATA DRIFT DETECTION</string></property></widget></item>
+              </layout>
+             </item>
+             <item><widget class="QLabel" name="configKey"><property name="text"><string>Reference Well Set</string></property></widget></item>
+             <item>
+              <widget class="QLineEdit" name="refWellEdit">
+               <property name="text"><string>Training Wells</string></property>
+              </widget>
+             </item>
+             <item><widget class="QLabel" name="configKey"><property name="text"><string>Current Well</string></property></widget></item>
+             <item>
+              <widget class="QLineEdit" name="curWellEdit">
+               <property name="text"><string>GORGONICTHYS_1</string></property>
+              </widget>
+             </item>
+             <!-- Drift Score -->
+             <item>
+              <widget class="QFrame">
+               <property name="styleSheet">
+                <string>background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px;</string>
+               </property>
+               <layout class="QHBoxLayout">
+                <item>
+                 <layout class="QVBoxLayout">
+                  <item>
+                   <widget class="QLabel">
+                    <property name="text"><string>Drift Score</string></property>
+                    <property name="styleSheet"><string>color:#8b949e;font-size:11px;</string></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel">
+                    <property name="text"><string>0.18</string></property>
+                    <property name="styleSheet"><string>color:#3fb950;font-size:26px;font-weight:700;</string></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QLabel">
+                  <property name="text"><string>▲ Low Drift</string></property>
+                  <property name="styleSheet">
+                   <string>
+background:rgba(63,185,80,0.12);
+border:1px solid rgba(63,185,80,0.3);
+border-radius:12px;color:#3fb950;
+font-size:11px;font-weight:600;padding:4px 12px;
+                   </string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton">
+               <property name="text"><string>View Drift Report</string></property>
+               <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:6px;color:#8b949e;padding:7px;font-size:12px;</string></property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+
+          <!-- Model Deployment Card -->
+          <item>
+           <widget class="QFrame" name="panelCard9">
+            <layout class="QVBoxLayout" name="deployLayout">
+             <property name="contentsMargins"><rect><x>16</x><y>14</y><width>16</width><height>14</height></rect></property>
+             <property name="spacing"><number>10</number></property>
+             <item>
+              <layout class="QHBoxLayout">
+               <item><widget class="QLabel" name="panelIndex9"><property name="text"><string>09</string></property></widget></item>
+               <item><widget class="QLabel" name="panelTitle9"><property name="text"><string>MODEL DEPLOYMENT</string></property></widget></item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnSaveModel">
+               <property name="text"><string>💾  Save Model</string></property>
+               <property name="styleSheet"><string>background:#1f2937;border:1px solid #30363d;border-radius:7px;color:#c9d1d9;padding:9px;font-size:12px;</string></property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnLoadModel">
+               <property name="text"><string>📂  Load Model</string></property>
+               <property name="styleSheet"><string>background:#1f2937;border:1px solid #30363d;border-radius:7px;color:#c9d1d9;padding:9px;font-size:12px;</string></property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnDeployNew">
+               <property name="text"><string>🚀  Deploy on New Well</string></property>
+               <property name="styleSheet">
+                <string>
+background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #1a7f37,stop:1 #196c2e);
+border:1px solid #238636;border-radius:7px;color:#fff;
+padding:10px;font-size:12px;font-weight:600;
+                </string>
+               </property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnBatchPred">
+               <property name="text"><string>⬛  Batch Prediction</string></property>
+               <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:7px;color:#8b949e;padding:9px;font-size:12px;</string></property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnExportPkg">
+               <property name="text"><string>↓  Export Model Package</string></property>
+               <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:7px;color:#8b949e;padding:9px;font-size:12px;</string></property>
+               <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+              </widget>
+             </item>
+
+            </layout>
+           </widget>
+          </item>
+
+         </layout>
+        </item>
+
+       </layout>
+      </widget>
+
+      <!-- ════════════════════════════════
+           RIGHT METRICS PANEL
+           ════════════════════════════════ -->
+      <widget class="QWidget" name="metricsBar">
+       <layout class="QVBoxLayout" name="metricsLayout">
+        <property name="contentsMargins"><rect><x>16</x><y>16</y><width>16</width><height>16</height></rect></property>
+        <property name="spacing"><number>16</number></property>
+
+        <!-- Section label -->
+        <item>
+         <widget class="QLabel">
+          <property name="text"><string>PERFORMANCE METRICS</string></property>
+          <property name="styleSheet"><string>color:#8b949e;font-size:10px;font-weight:700;letter-spacing:1.2px;</string></property>
+         </widget>
+        </item>
+
+        <!-- R² KPI -->
+        <item>
+         <widget class="QFrame">
+          <property name="styleSheet"><string>background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px;</string></property>
+          <layout class="QVBoxLayout">
+           <property name="spacing"><number>2</number></property>
+           <item>
+            <widget class="QLabel" name="kpiUnit"><property name="text"><string>R² Score</string></property></widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="kpiValue"><property name="text"><string>0.9165</string></property></widget>
+           </item>
+           <item>
+            <widget class="QProgressBar">
+             <property name="value"><number>92</number></property>
+             <property name="maximum"><number>100</number></property>
+             <property name="textVisible"><bool>false</bool></property>
+             <property name="styleSheet"><string>QProgressBar{background:#21262d;border:none;border-radius:3px;max-height:5px;}QProgressBar::chunk{background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #388bfd,stop:1 #56d364);border-radius:3px;}</string></property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+        <!-- NRMSE KPI -->
+        <item>
+         <widget class="QFrame">
+          <property name="styleSheet"><string>background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px;</string></property>
+          <layout class="QVBoxLayout">
+           <property name="spacing"><number>2</number></property>
+           <item><widget class="QLabel" name="kpiUnit"><property name="text"><string>NRMSE  (%)</string></property></widget></item>
+           <item><widget class="QLabel" name="kpiValueAlt"><property name="text"><string>33.98</string></property></widget></item>
+          </layout>
+         </widget>
+        </item>
+
+        <!-- CCC -->
+        <item>
+         <widget class="QFrame">
+          <property name="styleSheet"><string>background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px;</string></property>
+          <layout class="QVBoxLayout">
+           <property name="spacing"><number>2</number></property>
+           <item><widget class="QLabel" name="kpiUnit"><property name="text"><string>CCC — Concordance Correlation</string></property></widget></item>
+           <item><widget class="QLabel" name="cccValue"><property name="text"><string>0.93</string></property></widget></item>
+          </layout>
+         </widget>
+        </item>
+
+        <!-- Mini stats grid -->
+        <item>
+         <widget class="QFrame">
+          <property name="styleSheet"><string>background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px;</string></property>
+          <layout class="QGridLayout" name="miniStatsGrid">
+           <property name="spacing"><number>8</number></property>
+
+           <item row="0" column="0"><widget class="QLabel" name="kpiKey"><property name="text"><string>Bias</string></property></widget></item>
+           <item row="0" column="1"><widget class="QLabel" name="kpiSmall"><property name="text"><string>0.002</string></property></widget></item>
+           <item row="0" column="2"><widget class="QLabel" name="kpiKey"><property name="text"><string>g/cc</string></property></widget></item>
+
+           <item row="1" column="0"><widget class="QLabel" name="kpiKey"><property name="text"><string>Std Error</string></property></widget></item>
+           <item row="1" column="1"><widget class="QLabel" name="kpiSmall"><property name="text"><string>0.056</string></property></widget></item>
+           <item row="1" column="2"><widget class="QLabel" name="kpiKey"><property name="text"><string>g/cc</string></property></widget></item>
+
+           <item row="2" column="0"><widget class="QLabel" name="kpiKey"><property name="text"><string>NRMSE</string></property></widget></item>
+           <item row="2" column="1"><widget class="QLabel" name="kpiSmall"><property name="text"><string>3.21</string></property></widget></item>
+           <item row="2" column="2"><widget class="QLabel" name="kpiKey"><property name="text"><string>%</string></property></widget></item>
+          </layout>
+         </widget>
+        </item>
+
+        <!-- Feature Engineering Pipeline -->
+        <item>
+         <widget class="QLabel">
+          <property name="text"><string>FEATURE PIPELINE</string></property>
+          <property name="styleSheet"><string>color:#8b949e;font-size:10px;font-weight:700;letter-spacing:1.2px;margin-top:4px;</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame">
+          <property name="styleSheet"><string>background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px;</string></property>
+          <layout class="QVBoxLayout">
+           <item>
+            <widget class="QLabel">
+             <property name="text"><string>Raw Logs → Normalise → Derivatives → Moving Avg → PCA</string></property>
+             <property name="wordWrap"><bool>true</bool></property>
+             <property name="styleSheet"><string>color:#c9d1d9;font-size:11px;line-height:1.6;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton">
+             <property name="text"><string>→  Edit Pipeline</string></property>
+             <property name="styleSheet"><string>background:rgba(56,139,253,0.1);border:1px solid rgba(56,139,253,0.3);border-radius:5px;color:#79c0ff;padding:5px;font-size:11px;</string></property>
+             <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+
+        <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+        <!-- Detailed metrics link -->
+        <item>
+         <widget class="QPushButton">
+          <property name="text"><string>↗  Detailed Metrics Report</string></property>
+          <property name="styleSheet"><string>background:transparent;border:1px solid #30363d;border-radius:7px;color:#8b949e;padding:8px;font-size:12px;</string></property>
+          <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+      <!-- END METRICS PANEL -->
+
+     </widget>
+     <!-- END bodySplitter -->
+    </item>
+
+    <!-- ── BOTTOM ACTION BAR ── -->
+    <item>
+     <widget class="QWidget" name="actionBar">
+      <layout class="QHBoxLayout" name="actionBarLayout">
+       <property name="contentsMargins"><rect><x>20</x><y>0</y><width>20</width><height>0</height></rect></property>
+       <property name="spacing"><number>10</number></property>
+
+       <item>
+        <widget class="QPushButton" name="btnBack">
+         <property name="text"><string>← Back</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnReset">
+         <property name="text"><string>↺  Reset All</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+
+       <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+
+       <!-- Step indicator -->
+       <item>
+        <widget class="QLabel">
+         <property name="text"><string>Step 3 of 4 — Review &amp; Apply</string></property>
+         <property name="styleSheet"><string>color:#8b949e;font-size:12px;</string></property>
+        </widget>
+       </item>
+
+       <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+
+       <item>
+        <widget class="QPushButton" name="btnPreview">
+         <property name="text"><string>👁  Preview on Well</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnApply">
+         <property name="text"><string>✓  Apply &amp; Save to Well</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnExport">
+         <property name="text"><string>↓ Export</string></property>
+         <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+        </widget>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+  <!-- END centralWidget -->
+
+ </widget>
+ <!-- END QMainWindow -->
+
+ <resources/>
+ <connections/>
+</ui>
