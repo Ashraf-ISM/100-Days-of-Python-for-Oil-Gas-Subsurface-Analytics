@@ -1,4 +1,3 @@
-# pyrefly: ignore [missing-import]
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 

@@ -1,6 +1,5 @@
 """Main UI controller wiring actions to services."""
 from __future__ import annotations
-# pyrefly: ignore [missing-import]
 from PyQt5 import QtWidgets
 
 from app.calculation_window import CalculationWindow
@@ -8,7 +7,6 @@ from services.project_service import ProjectService
 from services.data_service import DataService
 from services.plot_service import PlotService
 from services.interpretation_service import InterpretationService
-# pyrefly: ignore [missing-import]
 from services.geomechanics_service import GeomechanicsService
 from services.formation_evaluation_service import FormationEvaluationService
 from services.qc_service import QCService

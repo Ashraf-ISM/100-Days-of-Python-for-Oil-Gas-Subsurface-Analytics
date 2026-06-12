@@ -2,10 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# pyrefly: ignore [missing-import]
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
-# pyrefly: ignore [missing-import]
 from calculations import vshale 
 
 UI_PATH = Path(__file__).resolve().parent.parent / "ui" / "vsh_model_comparison.ui"
