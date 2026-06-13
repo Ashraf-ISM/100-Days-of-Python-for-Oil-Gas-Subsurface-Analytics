@@ -353,7 +353,7 @@ class MainController:
         curves: list[str] = []
         well = self.data._get_current_well()
         if well is not None:
-            df = getattr(well, "data", None)
+            df = getattr(well, "data", None) 
             if df is not None:
                 curves = [str(column) for column in df.columns]
 
