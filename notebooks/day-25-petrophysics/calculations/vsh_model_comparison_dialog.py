@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
-
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+    
+from PyQt5 import QtCore, QtGui, QtWidgets, uic     
 
 from calculations import vshale 
 
