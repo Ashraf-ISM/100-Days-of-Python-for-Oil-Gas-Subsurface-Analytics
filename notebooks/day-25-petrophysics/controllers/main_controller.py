@@ -2,6 +2,7 @@
 from __future__ import annotations
 from PyQt5 import QtWidgets
 
+# pyrefly: ignore [missing-import]
 from app.calculation_window import CalculationWindow
 from services.project_service import ProjectService
 from services.data_service import DataService
