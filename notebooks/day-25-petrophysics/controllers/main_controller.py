@@ -336,7 +336,7 @@ class MainController:
                     tab_widget.setCurrentIndex(idx)
 
     def _go_to_ml_qc_tab(self) -> None:
-        """Switch to the ML Based QC sub-tab inside the Quality Control tab."""  
+        """Switch to the ML Based QC sub-tab inside the Quality Control tab."""   
         self._go_to_qc_tab()  # Navigate to QC tab first
         inner_tab = getattr(self.ui, "tabQCInner", None)
         if inner_tab is not None:
