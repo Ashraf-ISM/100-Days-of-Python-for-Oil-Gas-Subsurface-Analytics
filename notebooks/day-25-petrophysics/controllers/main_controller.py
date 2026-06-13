@@ -348,7 +348,7 @@ class MainController:
 
     def open_calculation_window(self):
         if self.calculation_window is None:
-            self.calculation_window = CalculationWindow(self.ui)
+            self.calculation_window = CalculationWindow(self.ui) 
 
         curves: list[str] = []
         well = self.data._get_current_well()
