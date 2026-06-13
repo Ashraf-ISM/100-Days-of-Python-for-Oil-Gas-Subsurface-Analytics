@@ -5,6 +5,7 @@ import csv
 from pathlib import Path
 from typing import Callable
 
+# pyrefly: ignore [missing-import]
 from core.data_model import Well
 
 
