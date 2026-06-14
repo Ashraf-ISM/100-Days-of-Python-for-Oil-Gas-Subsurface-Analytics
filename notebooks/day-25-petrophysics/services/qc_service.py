@@ -161,6 +161,11 @@ class QCService:
                 outlier_mask = visible_mask & zscore.abs().gt(threshold).fillna(False)
 
         # ── SPIKE DETECTION (enterprise 7-stage engine) ─────────────────────
+        # NOTE: Spikes are *abrupt, random, single-sample* noise bursts.
+        # We deliberately do NOT reuse the outlier 'threshold' slider as the
+        # MAD multiplier — instead we let the curve profile supply the correct
+        # tuned value (typically 4.0–5.0 which is stricter than the outlier
+        # threshold).  Pass None so the detector picks up the profile default.
         if self._is_checked(("checkQCSpikes", "checkLVQCSpikes"), True) and valid_values.size >= 5:
             if _SPIKE_DETECTOR_AVAILABLE:
                 spike_result = SpikeDetector().detect(
@@ -170,7 +175,7 @@ class QCService:
                     all_curves_df=df,
                     mode=spike_mode,
                     window=window,
-                    mad_multiplier=threshold,
+                    mad_multiplier=None,        # ← use curve profile default
                     confidence_threshold=spike_conf,
                     cross_log_validation=cross_log,
                     correction=correction,
@@ -179,6 +184,8 @@ class QCService:
                 spike_confidence_series.loc[valid_index] = spike_result.confidence
             else:
                 # Fallback: legacy rolling-median/MAD (single-pass)
+                # Use a spike-appropriate multiplier (stricter than outlier)
+                spike_mult = max(threshold, 4.0)
                 n = len(valid_values)
                 spike_detected = np.zeros(n, dtype=bool)
                 half_w = max(window // 2, 2)
@@ -191,7 +198,7 @@ class QCService:
                     local_med = np.median(neighbours)
                     local_mad = np.median(np.abs(neighbours - local_med))
                     local_std = max(local_mad * 1.4826, 1e-9)
-                    if abs(valid_values[i] - local_med) > threshold * local_std:
+                    if abs(valid_values[i] - local_med) > spike_mult * local_std:
                         spike_detected[i] = True
                 spike_mask.loc[valid_index] = spike_detected
 
@@ -294,23 +301,34 @@ class QCService:
     ) -> np.ndarray:
         """Isolation Forest outlier detection.
 
-        FIX: contamination now maps the *threshold* slider sensibly.
-        threshold=1  → contamination≈0.10  (aggressive)
-        threshold=3  → contamination≈0.05  (moderate, typical default)
-        threshold=9  → contamination≈0.02  (conservative)
-        Formula: contamination = clip(0.15 / threshold, 0.01, 0.15)
+        Uses only curve-value features (NOT depth) so that outlier detection
+        identifies genuine value-anomalies rather than depth-extreme points.
+
+        Features: value, first-derivative (gradient), second-derivative
+        (curvature) — captures both magnitude and shape anomalies.
+
+        Contamination mapping (conservative):
+        threshold=1  → contamination≈0.05  (aggressive)
+        threshold=3  → contamination≈0.02  (moderate, typical default)
+        threshold=5  → contamination≈0.01  (conservative)
+        Formula: contamination = clip(0.10 / (threshold + 1), 0.005, 0.08)
         """
         try:
             from sklearn.ensemble import IsolationForest
         except Exception:
             return np.zeros(curve_values.shape[0], dtype=bool)
 
-        features = np.column_stack([depth_values, curve_values])
-        feature_std  = np.nanstd(features, axis=0)
+        # Build features from curve values only — no depth bias
+        gradient  = np.gradient(curve_values)
+        curvature = np.gradient(gradient)
+        features  = np.column_stack([curve_values, gradient, curvature])
+
+        feature_std = np.nanstd(features, axis=0)
         feature_std[feature_std == 0] = 1.0
         features = (features - np.nanmean(features, axis=0)) / feature_std
 
-        contamination = float(np.clip(0.15 / max(float(threshold), 0.5), 0.01, 0.15))
+        # More conservative contamination: avoids forcing too many outliers
+        contamination = float(np.clip(0.10 / (max(float(threshold), 0.5) + 1.0), 0.005, 0.08))
         model = IsolationForest(
             contamination=contamination,
             n_estimators=200,
