@@ -632,7 +632,6 @@ class SpikeDetector:
         isolated        local_median
         burst           Savitzky-Golay (fallback: local_median)
         physics         linear interpolation
-        geology_change  keep original (NaN → no correction)
         fallback        uses *default_method*
         """
         n          = len(values)
