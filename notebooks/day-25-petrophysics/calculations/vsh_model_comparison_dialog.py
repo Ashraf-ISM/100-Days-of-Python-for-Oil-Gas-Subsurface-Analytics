@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
     
 from PyQt5 import QtCore, QtGui, QtWidgets, uic     
-
+# 
 from calculations import vshale 
 
 UI_PATH = Path(__file__).resolve().parent.parent / "ui" / "vsh_model_comparison.ui"
