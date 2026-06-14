@@ -416,9 +416,10 @@ class SpikeDetector:
 
         Run length  Interpretation     Action
         ─────────── ──────────────── ─────────────────────────────
-        1 – 2       Likely spike       Keep (allowed through)
-        3 – 5       Suspicious         Keep but penalise confidence
-        > 5         Likely geology     Hard-reject (remove label)
+        1           Likely spike       Keep (allowed through)
+        2           Possible burst     Keep but penalise confidence
+        3           Suspicious         Keep but heavy penalty
+        > 3         Likely geology     Hard-reject (remove label)
 
         Returns
         -------
@@ -438,7 +439,7 @@ class SpikeDetector:
                 run_len = j - i
                 for k in range(i, j):
                     run_lengths[k] = run_len
-                if run_len > 5:       # geology — hard reject
+                if run_len > 3:       # geology — hard reject
                     result[i:j] = False
                 i = j
             else:
@@ -525,9 +526,11 @@ class SpikeDetector:
                 self._W_ISOLATION * iso_score[i]
             )
 
-            # Penalise suspicious (run 3–5) but don't hard-reject
-            if 3 <= run_lengths[i] <= 5:
-                conf *= 0.6
+            # Penalise suspicious runs (2–3) — real spikes are isolated
+            if run_lengths[i] == 2:
+                conf *= 0.5
+            elif run_lengths[i] == 3:
+                conf *= 0.3
 
             confidence[i] = float(np.clip(conf, 0.0, 1.0))
 
@@ -598,7 +601,6 @@ class SpikeDetector:
         "isolated"       – run length 1 (classic single-sample noise spike)
         "burst"          – run length 2–3 (short electronic burst)
         "physics"        – outside physical hard limits
-        "geology_change" – longer run, kept as suspicious
         "none"           – not a spike
         """
         n          = len(is_spike)
@@ -612,8 +614,6 @@ class SpikeDetector:
                 spike_type[i] = "isolated"
             elif rl <= 3:
                 spike_type[i] = "burst"
-            else:
-                spike_type[i] = "geology_change"
 
         return spike_type
 
