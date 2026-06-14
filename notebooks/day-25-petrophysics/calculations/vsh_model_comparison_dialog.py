@@ -21,7 +21,7 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         super().__init__(parent)
         uic.loadUi(str(UI_PATH), self)
         
-        self.data_service = data_service
+        self.data_service = data_service 
         self._well = None
         self._full_df = None
         self._visible_df = None
