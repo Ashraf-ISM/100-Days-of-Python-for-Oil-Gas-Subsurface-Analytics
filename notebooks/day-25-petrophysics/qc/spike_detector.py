@@ -625,7 +625,7 @@ class SpikeDetector:
         win: int,
         default_method: str,
     ) -> np.ndarray:
-        """Context-aware correction method per spike_type.
+        """Context-aware correction method per spike_type. 
 
         Type              Method
         ─────────────── ─────────────────────────────────────────
