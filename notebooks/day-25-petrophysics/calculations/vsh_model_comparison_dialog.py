@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
     
 from PyQt5 import QtCore, QtGui, QtWidgets, uic     
-# 
 from calculations import vshale 
 
 UI_PATH = Path(__file__).resolve().parent.parent / "ui" / "vsh_model_comparison.ui"
@@ -25,10 +24,10 @@ class VshModelComparisonDialog(QtWidgets.QDialog):
         self._well = None
         self._full_df = None
         self._visible_df = None
-        self._gr_curve = "GR"
+        self._gr_curve = "GR"   
         self._latest_payload = None
 
-        self._model_checks: dict[str, QtWidgets.QCheckBox] = {
+        self._model_checks: dict[str, QtWidgets .QCheckBox] = {
             "Linear": self.chkLinear,
             "Larionov Tertiary": self.chkLarionovTertiary,
             "Larionov Older": self.chkLarionovOlder,
