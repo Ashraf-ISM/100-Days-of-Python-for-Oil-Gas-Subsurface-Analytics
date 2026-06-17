@@ -601,7 +601,7 @@ class SpikeDetector:
         "isolated"       – run length 1 (classic single-sample noise spike)
         "burst"          – run length 2–3 (short electronic burst)
         "physics"        – outside physical hard limits
-        "none"           – not a spike
+        "none"           – not a spike 
         """
         n          = len(is_spike)
         spike_type = np.full(n, "none", dtype=object)
@@ -617,86 +617,7 @@ class SpikeDetector:
 
         return spike_type
 
-    @staticmethod
-    def _stage7_correction(
-        values: np.ndarray,
-        is_spike: np.ndarray,
-        spike_type: np.ndarray,
-        win: int,
-        default_method: str,
-    ) -> np.ndarray:
-        """Context-aware correction method per spike_type. 
-
-        Type              Method
-        ─────────────── ─────────────────────────────────────────
-        isolated        local_median
-        burst           Savitzky-Golay (fallback: local_median)
-        physics         linear interpolation
-        fallback        uses *default_method*
-        """
-        n          = len(values)
-        correction = np.full(n, np.nan)
-        half_w     = win // 2
-
-        if not is_spike.any():
-            return correction
-
-        spike_pos = np.where(is_spike)[0]
-        clean_pos = np.where(~is_spike)[0]
-
-        # ── isolated: local median ────────────────────────────────────────────
-        isolated_idx = [i for i in spike_pos if spike_type[i] == "isolated"]
-        for i in isolated_idx:
-            lo = max(0, i - half_w)
-            hi = min(n, i + half_w + 1)
-            nb = np.concatenate([values[lo:i], values[i + 1:hi]])
-            nb = nb[~np.isnan(nb)]
-            correction[i] = float(np.median(nb)) if nb.size > 0 else np.nan
-
-        # ── burst: Savitzky-Golay or local_median fallback ────────────────────
-        burst_idx = [i for i in spike_pos if spike_type[i] == "burst"]
-        if burst_idx:
-            try:
-                from scipy.signal import savgol_filter
-                sg_win   = max(win | 1, 5)  # must be odd and ≥ 5
-                smoothed = savgol_filter(values, window_length=sg_win, polyorder=2)
-                for i in burst_idx:
-                    correction[i] = float(smoothed[i])
-            except (ImportError, Exception):
-                for i in burst_idx:
-                    lo = max(0, i - half_w)
-                    hi = min(n, i + half_w + 1)
-                    nb = np.concatenate([values[lo:i], values[i + 1:hi]])
-                    nb = nb[~np.isnan(nb)]
-                    correction[i] = float(np.median(nb)) if nb.size > 0 else np.nan
-
-        # ── physics: linear interpolation ─────────────────────────────────────
-        physics_idx = [i for i in spike_pos if spike_type[i] == "physics"]
-        if physics_idx and clean_pos.size >= 2:
-            for i in physics_idx:
-                correction[i] = float(np.interp(i, clean_pos, values[clean_pos]))
-
-        # ── geology_change: keep (no correction = NaN stays) ─────────────────
-        # (already NaN by default)
-
-        # ── fallback for any remaining un-classified spikes ───────────────────
-        for i in spike_pos:
-            if not np.isnan(correction[i]):
-                continue
-            if default_method == "local_median":
-                lo = max(0, i - half_w)
-                hi = min(n, i + half_w + 1)
-                nb = np.concatenate([values[lo:i], values[i + 1:hi]])
-                nb = nb[~np.isnan(nb)]
-                correction[i] = float(np.median(nb)) if nb.size > 0 else np.nan
-            elif default_method in ("linear", "cubic") and clean_pos.size >= 2:
-                if default_method == "cubic" and clean_pos.size >= 4:
-                    try:
-                        from scipy.interpolate import CubicSpline
-                        cs = CubicSpline(clean_pos, values[clean_pos], extrapolate=True)
-                        correction[i] = float(cs(i))
-                        continue
-                    except (ImportError, Exception):
+                     except (ImportError, Exception):
                         pass
                 correction[i] = float(np.interp(i, clean_pos, values[clean_pos]))
 
