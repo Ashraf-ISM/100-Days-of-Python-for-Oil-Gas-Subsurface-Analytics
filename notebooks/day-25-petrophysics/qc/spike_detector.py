@@ -611,7 +611,7 @@ class SpikeDetector:
             if s3_physics[i]:
                 spike_type[i] = "physics"
             elif rl == 1:
-                spike_type[i] = "isolated" 
+                spike_type[i] = "isolated"
             elif rl <= 3:
                 spike_type[i] = "burst"
   
