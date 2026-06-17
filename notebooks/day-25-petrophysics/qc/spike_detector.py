@@ -614,7 +614,7 @@ class SpikeDetector:
                 spike_type[i] = "isolated"
             elif rl <= 3:
                 spike_type[i] = "burst"
-
+  
         return spike_type
 
                      except (ImportError, Exception):
