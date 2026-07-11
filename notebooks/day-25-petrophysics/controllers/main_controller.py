@@ -134,6 +134,7 @@ class MainController:
         self._connect_widget("btnResetPhi", "clicked", self.interp.reset_phi_panel)
         self._connect_widget("btnCalcSw", "clicked", self.interp.compute_sw)
         self._connect_widget("btnCalcPerm", "clicked", self.interp.compute_perm)
+        self._connect_widget("btnResetPerm", "clicked", self.interp.reset_perm)
         self._connect_widget("btnCalcNetPay", "clicked", self.interp.compute_net_pay)
         self._connect_widget("btnResetNetPay", "clicked", self.interp.reset_net_pay)
 
@@ -246,6 +247,13 @@ class MainController:
                 self.interp.refresh_sw_workspace()
             except Exception as exc:
                 print(f"[PostLoad] Sw refresh skipped: {exc}")
+
+        # ── Permeability ──────────────────────────────────────────────────────
+        if "PERM" in cols_upper:
+            try:
+                self.interp.refresh_perm_workspace()
+            except Exception as exc:
+                print(f"[PostLoad] Permeability refresh skipped: {exc}")
 
         # ── Net Pay ───────────────────────────────────────────────────────────
         if "NET_PAY" in cols_upper or "PAYFLAG" in cols_upper:

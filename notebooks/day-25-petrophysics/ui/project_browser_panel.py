@@ -48,7 +48,7 @@ _ACCENT_BLUE    = "#2962FF"   # tab underline / scrollbar
 _TAB_SEL_BG     = "#EBF2FF"   # selected tab bg
 _TITLE_GRAD_L   = "#EBF0F7"   # dock title gradient left
 _TITLE_GRAD_R   = "#DCE5F2"   # dock title gradient right 
-_TITLE_FG       = "#1C4A7C"   # dock title text 
+_TITLE_FG = "#1E3A8A"     # Dark Blue   # dock title text 
 
 # Button colours (bg, fg, hover-bg)
 _BTN_ADD  = ("#E8F5E9", "#2E7D32", "#C8E6C9")
@@ -183,6 +183,56 @@ class ProjectBrowserPanel:
         self._style_tree(self._w("treeProject"), col_widths=(155, 110))
         self._style_tree(self._w("treeCurves"))
         self._style_buttons()
+        self._style_plots_tab()
+
+    def _style_plots_tab(self) -> None:
+        """Apply advanced, professional card-like styling to the Plots section."""
+        hint = self._w("lblPlotHint")
+        if hint is not None:
+            hint.setStyleSheet("""
+                QLabel {
+                    color: #475569;
+                    font-size: 11px;
+                    font-style: italic;
+                    margin-bottom: 8px;
+                    padding: 4px;
+                }
+            """)
+
+        plot_btns = [
+            ("btnPlotMultiTrack", "📊 Multi-Track", "#4F46E5"),   # Indigo
+            ("btnPlotTripleCombo", "📈 Triple Combo", "#0891B2"),  # Cyan
+            ("btnPlotCrossplot", "⛖ Crossplot", "#D97706"),        # Amber
+            ("btnPlotHistogram", "📉 Histogram", "#BE185D"),       # Rose
+        ]
+        
+        for name, text, color in plot_btns:
+            btn = self._w(name)
+            if btn is None:
+                continue
+            btn.setText(text)
+            btn.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: #FFFFFF;
+                    color: {color};
+                    border: 1px solid #E2E8F0;
+                    border-left: 4px solid {color};
+                    border-radius: 6px;
+                    padding: 14px 10px;
+                    font-size: 11px;
+                    font-weight: 700;
+                    text-align: left;
+                }}
+                QPushButton:hover {{
+                    background-color: #F8FAFC;
+                    border: 1px solid {color};
+                    border-left: 4px solid {color};
+                }}
+                QPushButton:pressed {{
+                    background-color: #F1F5F9;
+                }}
+            """)
+            btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
     def _style_dock(self) -> None:
         dock = self._w("dockBrowser")
@@ -191,6 +241,7 @@ class ProjectBrowserPanel:
         dock.setStyleSheet(f"""
             QDockWidget {{
                 background: {_BG_PANEL};
+                color: {_TITLE_FG};
                 border: none;
             }}
 
@@ -353,6 +404,12 @@ class ProjectBrowserPanel:
             ("btnBrowseAddWell", *_BTN_ADD),
             ("btnBrowseImport",  *_BTN_IMP),
             ("btnBrowseRefresh", *_BTN_REF),
+            ("btnAddCurveFromBrowser", *_BTN_ADD),
+            ("btnDeleteCurve", "#FFF1F2", "#BE123C", "#FFE4E6"),
+            ("btnCurveInfo", *_BTN_IMP),
+            ("btnAddZone", *_BTN_ADD),
+            ("btnEditZone", *_BTN_IMP),
+            ("btnDeleteZone", "#FFF1F2", "#BE123C", "#FFE4E6"),
         ]
         for name, bg, fg, hover_bg in specs:
             btn = self._w(name)

@@ -492,7 +492,7 @@ class FormationEvaluationService:
         simandoux_term = (vsh * 0.5) + ((archie_a * rw) / (rt * (np.power(np.clip(phi, 1e-6, 1.0), archie_m)) + 1e-9))
         sw_simandoux = pd.Series(np.clip(np.sqrt(np.clip(simandoux_term, 0.0, None)), 0.0, 1.0), index=df.index)
 
-        perm = pd.Series(permeability.compute_perm_timur(phi.to_numpy(dtype=float), sw.to_numpy(dtype=float)), index=df.index)
+        perm = pd.Series(permeability.compute_perm_timur(phi.to_numpy(dtype=float), sw.to_numpy(dtype=float), swi=0.2, coeff_c=0.0316), index=df.index)
         pay_flag = pd.Series(
             net_pay.compute_net_pay(
                 vsh.to_numpy(dtype=float),

@@ -434,23 +434,300 @@ class InterpretationService:
         self.refresh_sw_workspace()
 
     def compute_perm(self):
+        """Compute permeability using the model and parameters selected on the UI."""
+        import pandas as pd
+
         well = self.data._get_current_well()
         if not well:
+            QtWidgets.QMessageBox.warning(
+                self.ui, "Permeability", "No well is loaded. Import data first."
+            )
             return
         df = getattr(well, "data", None)
         if df is None:
             return
-        if "PHIT" not in df.columns:
+
+        # --- Read UI inputs ------------------------------------------------
+        model_name = (self._combo_text("comboPermModel") or "Timur (Coates)").strip()
+        phi_curve = (self._combo_text("comboPermPhie") or "").strip()
+        swi = self._spin_value(("spinPermSwi",), 0.2)
+        coeff_c = self._spin_value(("spinPermC",), 0.0316)
+        out_name = self._line_text("linePermOutName") or "PERM"
+
+        # --- Resolve porosity curve ----------------------------------------
+        if phi_curve and phi_curve in df.columns:
+            phi_col = phi_curve
+        elif "PHIE" in df.columns:
+            phi_col = "PHIE"
+        elif "PHIT" in df.columns:
+            phi_col = "PHIT"
+        else:
+            # Try auto-computing porosity
             self.compute_phi()
-        if "SW" not in df.columns:
-            self.compute_sw()
-        if "PHIT" in df.columns and "SW" in df.columns:
-            out_name = self._line_text("linePermOutName") or "PERM"
-            perm = permeability.compute_perm_timur(df["PHIT"].values, df["SW"].values)
-            df["PERM"] = perm
-            if out_name != "PERM":
-                df[out_name] = perm
-            self.data._refresh_views()
+            if "PHIT" in df.columns:
+                phi_col = "PHIT"
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self.ui,
+                    "Permeability",
+                    "No porosity curve found. Compute porosity first.",
+                )
+                return
+
+        phi_values = pd.to_numeric(df[phi_col], errors="coerce").to_numpy(dtype=float)
+
+        # --- Dispatch to the selected model --------------------------------
+        if model_name.startswith("Timur") or model_name.startswith("Coates"):
+            perm_values = permeability.compute_perm_timur(
+                phi_values, sw=np.zeros_like(phi_values), swi=swi, coeff_c=coeff_c,
+            )
+            equation_text = f"K = {coeff_c} × φ⁴ × ((1−Swi)/Swi)²"
+        elif model_name.startswith("Kozeny"):
+            perm_values = permeability.compute_perm_kozeny_carman(
+                phi_values, coeff_c=coeff_c,
+            )
+            equation_text = f"K = {coeff_c} × φ³ / (1−φ)²"
+        elif model_name.startswith("Wyllie"):
+            perm_values = permeability.compute_perm_wyllie_rose(
+                phi_values, swi=swi, coeff_c=coeff_c,
+            )
+            equation_text = f"K = {coeff_c} × φ³ / Swi²"
+        elif model_name.startswith("Core"):
+            # Core Regression: treat coeff_c as slope, swi as intercept proxy
+            perm_values = permeability.compute_perm_core_regression(
+                phi_values, coeff_a=25.0, coeff_b=-1.5,
+            )
+            equation_text = "K = 10^(25·φ − 1.5)"
+        else:
+            perm_values = permeability.compute_perm_timur(
+                phi_values, sw=np.zeros_like(phi_values), swi=swi, coeff_c=coeff_c,
+            )
+            equation_text = f"K = {coeff_c} × φ⁴ × ((1−Swi)/Swi)²"
+
+        # --- Store results -------------------------------------------------
+        df["PERM"] = perm_values
+        if out_name != "PERM":
+            df[out_name] = perm_values
+
+        # --- Update KPI Cards ----------------------------------------------
+        short_model = model_name.split("(")[0].strip() if "(" in model_name else model_name
+        self._set_label_text("lblPermModelValue", short_model)
+        self._set_label_text("lblPermSwiValue", f"{swi:.2f}")
+        self._set_label_text("lblPermCoeffValue", f"{coeff_c}")
+
+        # --- Render track plot & summary -----------------------------------
+        self._render_perm_results(df, perm_values, phi_col, model_name, equation_text, swi, coeff_c)
+        self.data._refresh_views()
+
+    # ------------------------------------------------------------------
+    # Permeability workspace helpers
+    # ------------------------------------------------------------------
+    def refresh_perm_workspace(self) -> None:
+        """Re-render the permeability tab from current DataFrame state."""
+        well = self.data._get_current_well()
+        if well is None:
+            return
+        df = getattr(well, "data", None)
+        if df is None or "PERM" not in df.columns:
+            return
+
+        model_name = (self._combo_text("comboPermModel") or "Timur (Coates)").strip()
+        swi = self._spin_value(("spinPermSwi",), 0.2)
+        coeff_c = self._spin_value(("spinPermC",), 0.0316)
+        phi_col = "PHIE" if "PHIE" in df.columns else ("PHIT" if "PHIT" in df.columns else None)
+        if phi_col is None:
+            return
+
+        short_model = model_name.split("(")[0].strip() if "(" in model_name else model_name
+        self._set_label_text("lblPermModelValue", short_model)
+        self._set_label_text("lblPermSwiValue", f"{swi:.2f}")
+        self._set_label_text("lblPermCoeffValue", f"{coeff_c}")
+        self._render_perm_results(df, df["PERM"].to_numpy(dtype=float), phi_col, model_name, "", swi, coeff_c)
+
+    def _render_perm_results(
+        self, df, perm_values, phi_col: str, model_name: str,
+        equation_text: str, swi: float, coeff_c: float,
+    ) -> None:
+        """Render the permeability track plot and update the summary notes."""
+        import pandas as pd
+
+        # --- Compute summary statistics ------------------------------------
+        perm = np.asarray(perm_values, dtype=float)
+        valid = perm[np.isfinite(perm) & (perm > 0)]
+        if valid.size > 0:
+            p_mean = float(np.mean(valid))
+            p_median = float(np.median(valid))
+            p_min = float(np.min(valid))
+            p_max = float(np.max(valid))
+            p_p10 = float(np.percentile(valid, 10))
+            p_p90 = float(np.percentile(valid, 90))
+            good_perm_pct = float((valid > 1.0).sum() / valid.size * 100)
+        else:
+            p_mean = p_median = p_min = p_max = p_p10 = p_p90 = good_perm_pct = 0.0
+
+        # --- Generate summary notes ----------------------------------------
+        notes = []
+        notes.append(f"Model: {model_name}")
+        if equation_text:
+            notes.append(f"Equation: {equation_text}")
+        notes.append(f"Porosity input: {phi_col}   |   Swi: {swi:.3f}   |   Coeff C: {coeff_c}")
+        notes.append(f"")
+        notes.append(f"Statistics (valid samples: {valid.size:,}):")
+        notes.append(f"  Mean: {p_mean:.4f} mD   |   Median: {p_median:.4f} mD")
+        notes.append(f"  Min:  {p_min:.4f} mD   |   Max: {p_max:.2f} mD")
+        notes.append(f"  P10:  {p_p10:.4f} mD   |   P90: {p_p90:.4f} mD")
+        notes.append(f"")
+        if good_perm_pct > 50:
+            notes.append(f"✓ {good_perm_pct:.1f}% of intervals have K > 1 mD — generally good reservoir quality.")
+        elif good_perm_pct > 10:
+            notes.append(f"▲ {good_perm_pct:.1f}% of intervals have K > 1 mD — moderate reservoir quality.")
+        else:
+            notes.append(f"▼ Only {good_perm_pct:.1f}% of intervals have K > 1 mD — tight reservoir.")
+        notes.append("Review the permeability trend against pay cutoffs before finalizing net reservoir and net pay intervals.")
+
+        self._set_label_text("lblPermSummaryText", "\n".join(notes))
+
+        # --- Render track plot ---------------------------------------------
+        self._plot_perm_track(df, perm, phi_col)
+
+    def _plot_perm_track(self, df, perm_values, phi_col: str) -> None:
+        """Render a multi-track depth plot (Porosity | Permeability) into framePermCanvas."""
+        import pandas as pd
+
+        try:
+            from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+            from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+            from matplotlib.figure import Figure
+            import matplotlib.ticker as ticker
+        except Exception:
+            return
+
+        host = getattr(self.ui, "framePermCanvas", None)
+        if host is None:
+            return
+
+        # Clear existing widgets
+        layout = host.layout()
+        if layout is None:
+            from PyQt5 import QtWidgets as _Qw
+            layout = _Qw.QVBoxLayout(host)
+            layout.setContentsMargins(4, 4, 4, 4)
+
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        # Hide the placeholder label
+        placeholder = getattr(self.ui, "lblPermPlaceholder", None)
+        if placeholder is not None:
+            placeholder.hide()
+
+        # Resolve depth
+        depth_col = self.data._depth_column(df)
+        if depth_col and depth_col in df.columns:
+            depth = pd.to_numeric(df[depth_col], errors="coerce").to_numpy(dtype=float)
+        else:
+            depth = np.arange(len(df), dtype=float)
+
+        phi = pd.to_numeric(df.get(phi_col, 0), errors="coerce").to_numpy(dtype=float)
+        perm = np.asarray(perm_values, dtype=float)
+
+        # Build the figure
+        fig = Figure(figsize=(7.0, 6.0), dpi=100, constrained_layout=True)
+        fig.patch.set_facecolor("#FFFFFF")
+
+        # Track 1 — Porosity
+        ax1 = fig.add_subplot(1, 2, 1)
+        ax1.plot(phi, depth, color="#2563EB", linewidth=1.2, label=phi_col)
+        ax1.set_xlabel(f"{phi_col} (frac)", fontsize=9, color="#24466B")
+        ax1.set_ylabel("Depth", fontsize=9, color="#24466B")
+        ax1.set_xlim(0, max(0.5, float(np.nanmax(phi)) * 1.1) if np.any(np.isfinite(phi)) else 0.5)
+        ax1.invert_yaxis()
+        ax1.grid(True, linestyle="--", alpha=0.25)
+        ax1.set_title("Porosity", fontsize=10, fontweight="bold", color="#24466B")
+        ax1.legend(loc="upper right", fontsize=8, frameon=False)
+
+        # Track 2 — Permeability (log scale)
+        ax2 = fig.add_subplot(1, 2, 2, sharey=ax1)
+        perm_plot = np.where(perm > 0, perm, np.nan)
+        ax2.plot(perm_plot, depth, color="#D97706", linewidth=1.3, label="PERM")
+        ax2.set_xscale("log")
+        ax2.set_xlabel("Permeability (mD)", fontsize=9, color="#24466B")
+        ax2.set_title("Permeability", fontsize=10, fontweight="bold", color="#24466B")
+        ax2.grid(True, which="both", linestyle="--", alpha=0.25)
+        ax2.legend(loc="upper right", fontsize=8, frameon=False)
+        ax2.yaxis.set_tick_params(labelleft=False)
+
+        # Shade high-perm zones
+        perm_threshold = 1.0  # mD
+        high_perm = perm_plot >= perm_threshold
+        ax2.fill_betweenx(
+            depth, 0.001, perm_plot,
+            where=high_perm, alpha=0.15, color="#D97706", step="mid",
+        )
+
+        canvas = FigureCanvas(fig)
+        canvas.setStyleSheet("background:#FFFFFF;border:none;")
+        toolbar = NavigationToolbar(canvas, host)
+        toolbar.setStyleSheet(
+            "QToolBar { background:#F8FBFE; border:0; border-bottom:1px solid #D7E2EE; }"
+        )
+        layout.addWidget(toolbar)
+        layout.addWidget(canvas, 1)
+        canvas.draw_idle()
+
+        try:
+            from plotting.plot_context_menu import install_plot_context_menu
+            install_plot_context_menu(canvas, fig, host)
+        except Exception:
+            pass
+
+    def reset_perm(self) -> None:
+        """Reset the permeability panel to defaults."""
+        # Reset spinners
+        for name, default in (("spinPermSwi", 0.2), ("spinPermC", 0.0316)):
+            widget = getattr(self.ui, name, None)
+            if widget is not None and hasattr(widget, "setValue"):
+                widget.setValue(default)
+
+        # Reset model combo
+        combo = getattr(self.ui, "comboPermModel", None)
+        if combo is not None and hasattr(combo, "setCurrentIndex"):
+            combo.setCurrentIndex(0)
+
+        # Reset output name
+        line = getattr(self.ui, "linePermOutName", None)
+        if line is not None and hasattr(line, "setText"):
+            line.setText("PERM")
+
+        # Reset KPI cards
+        self._set_label_text("lblPermModelValue", "Timur")
+        self._set_label_text("lblPermSwiValue", "0.20")
+        self._set_label_text("lblPermCoeffValue", "0.0316")
+
+        # Reset summary notes
+        self._set_label_text(
+            "lblPermSummaryText",
+            "Review the permeability trend against pay cutoffs before finalizing net reservoir and net pay intervals.",
+        )
+
+        # Clear canvas — restore placeholder
+        host = getattr(self.ui, "framePermCanvas", None)
+        if host is not None:
+            layout = host.layout()
+            if layout is not None:
+                while layout.count():
+                    item = layout.takeAt(0)
+                    widget = item.widget()
+                    if widget is not None:
+                        widget.setParent(None)
+                        widget.deleteLater()
+        placeholder = getattr(self.ui, "lblPermPlaceholder", None)
+        if placeholder is not None:
+            placeholder.show()
 
     def compute_net_pay(self):
         well = self.data._get_current_well()
